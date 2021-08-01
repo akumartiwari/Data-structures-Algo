@@ -7949,8 +7949,219 @@ Output: [5,4,3,2,1]
 
         return root;
     }
+
+    public int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+        List<Integer>[] list = new ArrayList[n];
+        for (int i = 0; i < n; i++) list[i] = new ArrayList<>();
+
+        int src = 0;
+        for (int i = 0; i < manager.length; i++) {
+            if (manager[i] == -1) {
+                src = i;
+            } else list[manager[i]].add(i);
+        }
+
+        return helper(src, list, informTime);
+    }
+
+    private int helper(int src, List<Integer>[] list, int[] informTime) {
+        int max = 0;
+        for (int e : list[src]) {
+            max = Math.max(helper(e, list, informTime), max);
+        }
+        return max + informTime[src];
+    }
+
+    int max = Integer.MIN_VALUE;
+
+    public int maxPathSum(TreeNode root) {
+        maxGain(root);
+        return max;
+    }
+
+    private int maxGain(TreeNode root) {
+        if (root == null) return 0;
+
+        int left = Math.max(maxGain(root.left), 0);
+        int right = Math.max(maxGain(root.right), 0);
+
+        int priceNewPath = root.val + left + right;
+        max = Math.max(max, priceNewPath);
+
+        return root.val + Math.max(left, right);
+    }
+
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        return getTargetSum(root, new ArrayList<>(), targetSum);
+    }
+
+    private boolean getTargetSum(TreeNode node, ArrayList<TreeNode> nodelist, int targetSum) {
+        if (node != null) {
+            nodelist.add(node);
+        }
+        if (node.left != null) {
+            getTargetSum(node.left, nodelist, targetSum);
+        }
+
+        if (node.right != null) {
+            getTargetSum(node.right, nodelist, targetSum);
+        } else if (node.left == null) {
+            StringBuilder path = new StringBuilder();
+            for (TreeNode treeNode : nodelist) {
+                path.append(treeNode.val);
+            }
+            if (targetSum == Integer.parseInt(path.toString())) return true;
+        }
+        nodelist.remove(node);
+        return false;
+    }
+
+
+    List<String> paths = new ArrayList<>();
+
+    public int sumNumbers(TreeNode root) {
+        printAllPossiblePath(root, new ArrayList<TreeNode>());
+        int sum = 0;
+        for (String num : paths) {
+            System.out.println(num);
+            sum += Integer.parseInt(num);
+        }
+        return sum;
+    }
+
+
+    private void printAllPossiblePath(TreeNode node, ArrayList<TreeNode> nodelist) {
+        if (node != null) {
+            nodelist.add(node);
+        }
+
+        if (node.left != null) {
+            printAllPossiblePath(node.left, nodelist);
+        }
+
+        if (node.right != null) {
+            printAllPossiblePath(node.right, nodelist);
+        } else if (node.left == null) {
+            StringBuilder path = new StringBuilder();
+            for (TreeNode treeNode : nodelist) {
+                path.append(treeNode.val);
+            }
+            paths.add(path.toString());
+        }
+        nodelist.remove(node);
+
+    }
 }
 
+class SolutionAllPossibleSubpaths {
+    int paths;
+    int target;
+
+    public int pathSum(TreeNode root, int targetSum) {
+        this.target = targetSum;
+        this.paths = 0;
+        if (root == null) return 0;
+        countAllPossiblePath(root, new ArrayList<>());
+        return this.paths;
+    }
+
+    private void countAllPossiblePath(TreeNode node, ArrayList<TreeNode> nodelist) {
+        if (node != null) {
+            nodelist.add(node);
+        }
+
+        // count paths where sum is equla to target
+        if (nodelist.stream().mapToInt(e -> e.val).sum() == target) this.paths++;
+
+        if (node.left != null) {
+            countAllPossiblePath(node.left, nodelist);
+        }
+
+        if (node.right != null) {
+            countAllPossiblePath(node.right, nodelist);
+        } else if (node.left == null) {
+            List<Integer> list = new ArrayList<>();
+            for (TreeNode treeNode : nodelist) {
+                list.add(treeNode.val);
+            }
+            if (list.stream().mapToInt(e -> e).sum() == target) this.paths++;
+        }
+        nodelist.remove(node);
+
+    }
+
+    int count = 0;
+    int k;
+    HashMap<Integer, Integer> h = new HashMap<>();
+
+    public void preorder(TreeNode node, int currSum) {
+        if (node == null)
+            return;
+
+        // current prefix sum
+        currSum += node.val;
+
+        // here is the sum we're looking for
+        if (currSum == k)
+            count++;
+
+        // number of times the curr_sum − k has occured already,
+        // determines the number of times a path with sum k
+        // has occured upto the current node
+        count += h.getOrDefault(currSum - k, 0);
+
+        // add the current sum into hashmap
+        // to use it during the child nodes processing
+        h.put(currSum, h.getOrDefault(currSum, 0) + 1);
+
+        // process left subtree
+        preorder(node.left, currSum);
+        // process right subtree
+        preorder(node.right, currSum);
+
+        // remove the current sum from the hashmap
+        // in order not to use it during
+        // the parallel subtree processing
+        h.put(currSum, h.get(currSum) - 1);
+    }
+
+    public int allPathSum(TreeNode root, int sum) {
+        k = sum;
+        preorder(root, 0);
+        return count;
+    }
+
+    int max = Integer.MIN_VALUE;
+
+    public int longestUnivaluePath(TreeNode root) {
+
+        // base case
+        if (root == null) return 0;
+        preorder(root);
+        return max;
+    }
+
+    private int preorder(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+
+        // recursively traverse left subtree
+        int left = preorder(root.left);
+
+        // recursively traverse right subtree
+        int right = preorder(root.right);
+
+        int towardsLeft = 0, towardsRight = 0;
+        if (root.left != null && root.left.val == root.val) towardsLeft += left + 1;
+
+        if (root.right != null && root.right.val == root.val) towardsRight += right + 1;
+
+
+        max = Math.max(towardsLeft + towardsRight, max);
+        return Math.max(towardsLeft, towardsRight);
+    }
+}
 
 
 
