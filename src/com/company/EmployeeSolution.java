@@ -56,4 +56,29 @@ public class EmployeeSolution {
     }
 
 
+    String ans = "~";
+
+    public String smallestFromLeaf(TreeNode root) {
+        dfs(root, new StringBuilder());
+        return ans;
+    }
+
+    private void dfs(TreeNode root, StringBuilder sb) {
+
+        if (root == null) return;
+        sb.append((char) ('a' + root.val));
+        // if node is child
+        if (root.left == null && root.right == null) {
+            sb.reverse();
+            String S = sb.toString();
+            sb.reverse();
+            if (S.compareTo(ans) < 0) ans = S;
+        }
+
+        dfs(root.left, sb);
+        dfs(root.right, sb);
+        sb.deleteCharAt(sb.length() - 1);
+
+    }
+
 }
