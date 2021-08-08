@@ -8664,7 +8664,6 @@ class SolutionHasPath {
         return hasPathRecursive(maze, start[0], start[1], destination, vis);
     }
 
-
     // Recursive solution of maze
     private boolean hasPathRecursive(int[][] maze, int i, int j, int[] destination, int[][] vis) {
 
@@ -8688,9 +8687,82 @@ class SolutionHasPath {
         vis[i][j] = 0;
         return false;
     }
+
+
+    int max = Integer.MIN_VALUE;
+
+    public int maxSumBST(TreeNode root) {
+        if (root == null) return 0;
+        subTree(root);
+        return Math.max(max, 0);
+    }
+
+    private SubTree subTree(TreeNode root) {
+
+        if (root == null) return null;
+
+        SubTree currTree = new SubTree(root.val);
+        SubTree leftSubTree = subTree(root.left);
+        SubTree rightSubTree = subTree(root.right);
+
+        if (leftSubTree != null) {
+            currTree.bst &= leftSubTree.bst && root.val > leftSubTree.max;
+            currTree.min = leftSubTree.min;
+            currTree.sum += leftSubTree.sum;
+        }
+
+        if (rightSubTree != null) {
+            currTree.bst &= rightSubTree.bst && root.val < rightSubTree.min;
+            currTree.max = rightSubTree.max;
+            currTree.sum += rightSubTree.sum;
+        }
+
+        if (currTree.bst) max = Math.max(max, currTree.sum);
+        return currTree;
+    }
+
+    class SubTree {
+        int max;
+        int min;
+        int sum;
+        boolean bst;
+
+        SubTree(int val) {
+            this.max = val;
+            this.min = val;
+            this.sum = val;
+            this.bst = true;
+        }
+    }
+
+
+    /*
+
+      [5,2,1,3,6]
+      val  = 5
+      idx = 1
+      lo = check(-INF, 5, nums)
+      ro = check(5,INF, nums)
+
+     */
+    int idx = 0;
+
+    public boolean verifyPreorder(int[] preorder) {
+        return check(Integer.MIN_VALUE, Integer.MAX_VALUE, preorder);
+    }
+
+    private boolean check(int lb, int up, int[] nums) {
+        // base case
+        if (idx == nums.length) return true;
+
+
+        int val = nums[idx];
+        if (val < lb || val > up) return false;
+
+        idx++;
+        boolean leftOrder = check(lb, val, nums);
+        boolean rightOrder = check(val, up, nums);
+
+        return leftOrder || rightOrder;
+    }
 }
-
-
-
-
-
