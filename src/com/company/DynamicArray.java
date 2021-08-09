@@ -8627,6 +8627,31 @@ class SolutionHasPath {
     int[] diry = {0, 1, 0, -1};
 
 
+    public static String OrderOfFrequencies(String S) {
+
+        //this is default OUTPUT. You can change it.
+        StringBuilder result = new StringBuilder(" ");
+
+        HashMap<Character, Integer> map = new HashMap<>();
+
+        for (int i = 0; i < S.length(); i++) {
+            char c = S.charAt(i);
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+
+        HashMap<Integer, Character> reversedMap = new HashMap<>();
+
+        map.keySet().forEach(elem -> reversedMap.put(map.get(elem), elem));
+
+        Map<Integer, Character> treeMap = new TreeMap<>(reversedMap);
+
+        for (Integer c : treeMap.keySet()) {
+            result.append(treeMap.get(c));
+        }
+
+        return result.toString();
+    }
+
     private boolean validateDest(int[][] maze, int[] destination) {
         int s = destination[0];
         int e = destination[1];
@@ -8765,4 +8790,98 @@ class SolutionHasPath {
 
         return leftOrder || rightOrder;
     }
+
+    public int numIdenticalPairs(int[] nums) {
+
+        int n = nums.length;
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            int cnt = 0;
+            for (int j = i + 1; j < n; j++) {
+                if (nums[j] == nums[i]) cnt++;
+            }
+            ans += cnt;
+        }
+        return ans;
+    }
+
+    List<Integer> ans = new ArrayList<>();
+
+    public List<Integer> rightSideView(TreeNode root) {
+        if (root == null) return ans;
+        helper(root, 0);
+        return ans;
+    }
+
+
+    private void helper(TreeNode root, int level) {
+        if (level == ans.size()) ans.add(root.val);
+        if (root.right != null) helper(root.right, level + 1);
+        if (root.left != null) helper(root.left, level + 1);
+    }
+
+    /*
+     // Algo:-
+       Pseudo code :-
+     - create a tree  with given preorder traversal and traverse to get all subpaths
+     - check for current subpath size
+        - if ss == (num-k) then add to ans
+        - else keep on getting paths
+     - ans array will hold all possible paths with size = nums.size()-k;
+     - scan to get the min value
+     - return min_value
+     */
+
+    public String removeKdigits(String num, int k) {
+        int n = num.length();
+        Stack<Integer> stk = new Stack<>();
+
+        int elem = k;
+        for (int i = 0; i < n; i++) {
+            int curr = Integer.parseInt(String.valueOf(num.charAt(i)));
+            while (!stk.isEmpty() && stk.peek() > curr && elem > 0) {
+                stk.pop();
+                elem--;
+            }
+
+            stk.push(curr);
+        }
+
+        while (stk.size() > n - k) stk.pop(); // It will remove all the trailing sequence of numbers
+
+        if (stk.isEmpty()) return "0";
+        StringBuilder sb = new StringBuilder("");
+        while (!stk.isEmpty()) sb.append(stk.pop());
+
+        String regex = "^0+(?!$)";
+        return sb.reverse().toString().replaceAll(regex, "");
+    }
+    
+    // TBD FROM 11 aug onwards
+    public int[] mostCompetitive(int[] nums, int k) {
+        Deque<Integer> queue = new ArrayDeque<Integer>();
+        int additionalCount = nums.length - k;
+        for (int i = 0; i < nums.length; i++) {
+            while (!queue.isEmpty() && queue.peekLast() > nums[i] && additionalCount > 0) {
+                queue.pollLast();
+                additionalCount--;
+            }
+            queue.addLast(nums[i]);
+        }
+        int[] result = new int[k];
+        for (int i = 0; i < k; i++) {
+            result[i] = queue.pollFirst();
+        }
+        return result;
+    }
 }
+
+
+
+/*
+[3,5,2,6]
+2
+[2,4,3,3,5,4,9,6]
+4
+ */
+
