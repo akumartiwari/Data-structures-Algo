@@ -8858,25 +8858,162 @@ class SolutionHasPath {
     }
 
     // TBD FROM 10 aug onwards
+
     public int[] mostCompetitive(int[] nums, int k) {
-        Deque<Integer> queue = new ArrayDeque<Integer>();
-        int additionalCount = nums.length - k;
-        for (int i = 0; i < nums.length; i++) {
-            while (!queue.isEmpty() && queue.peekLast() > nums[i] && additionalCount > 0) {
-                queue.pollLast();
-                additionalCount--;
-            }
+        Deque<Integer> queue = new ArrayDeque<>();
+        int n = nums.length;
+        for (int i = 0; i < n; i++) {
+            while (!queue.isEmpty() && queue.peekLast() > nums[i] && queue.size() + n - i > k
+            ) queue.pollLast();
+
             queue.addLast(nums[i]);
         }
-        int[] result = new int[k];
-        for (int i = 0; i < k; i++) {
-            result[i] = queue.pollFirst();
-        }
-        return result;
-    }
-    
-}
 
+        int[] ans = new int[k];
+        for (int m = 0; m < k; m++) {
+            ans[m] = queue.pollFirst();
+        }
+
+        return ans;
+    }
+
+    public String smallestSubsequence(String s) {
+        int n = s.length();
+        Stack<Character> stk = new Stack<>();
+
+        int[] freq = new int[26];
+        boolean[] exist = new boolean[26];
+        Arrays.fill(exist, false);
+
+        for (char ch : s.toCharArray()) freq[ch - 'a']++;
+        for (int i = 0; i < n; i++) {
+
+            char ch = s.charAt(i);
+            freq[ch - 'a']--;
+            if (exist[ch - 'a']) continue;
+
+            while (!stk.isEmpty() && stk.peek() > ch && freq[stk.peek() - 'a'] > 0) {
+                char rem = stk.pop();
+                exist[rem - 'a'] = false;
+            }
+
+            stk.push(ch);
+            exist[ch - 'a'] = true;
+        }
+
+        char[] ans = new char[stk.size()];
+        int index = 0;
+        while (!stk.isEmpty()) {
+            ans[index] = stk.pop();
+            index++;
+        }
+        return new StringBuilder(new String(ans)).reverse().toString();
+    }
+
+    public String removeDuplicateLetters(String s) {
+        int n = s.length();
+        Stack<Character> stk = new Stack<>();
+
+        int[] freq = new int[26];
+        boolean[] exist = new boolean[26];
+        Arrays.fill(exist, false);
+
+        for (char ch : s.toCharArray()) freq[ch - 'a']++;
+        for (int i = 0; i < n; i++) {
+
+            char ch = s.charAt(i);
+            freq[ch - 'a']--;
+            if (exist[ch - 'a']) continue;
+
+            while (!stk.isEmpty() && stk.peek() > ch && freq[stk.peek() - 'a'] > 0) {
+                char rem = stk.pop();
+                exist[rem - 'a'] = false;
+            }
+
+            stk.push(ch);
+            exist[ch - 'a'] = true;
+        }
+
+        char[] ans = new char[stk.size()];
+        int index = 0;
+        while (!stk.isEmpty()) {
+            ans[index] = stk.pop();
+            index++;
+        }
+        return new StringBuilder(new String(ans)).reverse().toString();
+    }
+
+    /*
+    "abcd"
+"aaaaa"
+"aabcaabdaab"
+     */
+
+
+    public int longestRepeatingSubstring(String s) {
+        Set<String> set = new HashSet<>();
+
+        int max = 0;
+        int n = s.length();
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (set.contains(s.substring(i, j + 1))) max = Math.max(max, j + 1 - i);
+                else set.add(s.substring(i, j));
+            }
+        }
+        return max;
+    }
+
+
+    List<String> ansStr = new ArrayList<>();
+
+    /*
+"hello"
+"ooolleoooleh"
+"prosperity"
+"properties"
+"ab"
+"eidbaooo"
+"ab"
+"eidboaoo"
+ */
+    // TC = O(N^2)
+    public boolean checkInclusion(String s1, String s2) {
+        substring(s2, s1.length());
+        for (String a : ansStr) {
+            if (exist(s1, a)) return true;
+        }
+
+        return false;
+    }
+
+
+    // Fn to generate all possible  substrings of a given string
+    private void substring(String s, int l) {
+        int n = s.length();
+        for (int i = 0; i <= n - l; i++) {
+            ansStr.add(s.substring(i, i + l));
+        }
+    }
+
+    private boolean exist(String s1, String s2) {
+
+        int freq[] = new int[26];
+
+        // freq[] : stores the  frequency of each
+        // character of a string
+        for (int i = 0; i < s2.length(); i++) {
+            freq[s2.charAt(i) - 'a']++;
+        }
+
+        for (int i = 0; i < s1.length(); i++) {
+            char ch = s1.charAt(i);
+            if (freq[ch - 'a'] > 0) freq[ch - 'a']--;
+            else return false;
+        }
+        return true;
+    }
+}
 
 
 /*
