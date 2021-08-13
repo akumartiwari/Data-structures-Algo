@@ -8987,18 +8987,15 @@ class SolutionHasPath {
         return false;
     }
 
-
     // Fn to generate all possible  substrings of a given string
     private void substring(String s, int l) {
         int n = s.length();
-        for (int i = 0; i <= n - l; i++) {
-            ansStr.add(s.substring(i, i + l));
-        }
+        for (int i = 0; i <= n - l; i++) ansStr.add(s.substring(i, i + l));
     }
 
     private boolean exist(String s1, String s2) {
 
-        int freq[] = new int[26];
+        int[] freq = new int[26];
 
         // freq[] : stores the  frequency of each
         // character of a string
@@ -9013,6 +9010,61 @@ class SolutionHasPath {
         }
         return true;
     }
+
+    public boolean flipEquiv(TreeNode root1, TreeNode root2) {
+        TreeNode root = invertTree(root1);
+        return equals(root, root2);
+    }
+
+    private boolean equals(TreeNode root1, TreeNode root2) {
+
+        if (root1 == null && root2 == null) return true;
+
+        if (root1 != null && root2 != null) {
+            return root1.val == root2.val && equals(root1.left, root2.left) && equals(root1.right, root2.right);
+        }
+
+        return false;
+    }
+
+
+    private TreeNode invertTree(TreeNode root) {
+        if (root == null) return null;
+        TreeNode left = invertTree(root.left);
+        TreeNode right = invertTree(root.right);
+        root.left = right;
+        root.right = left;
+        return root;
+    }
+
+    private List<Integer> whoKnows(int[][] meetings, Integer personId) {
+        HashMap<Integer, LinkedList<Integer[]>> map = new HashMap<>();
+
+        for (int[] meeting : meetings) {
+            map.put(meeting[0], map.getOrDefault(meeting[0], new LinkedList<>()));
+            map.get(meeting[0]).add(new Integer[]{meeting[1], meeting[2]});
+        }
+
+        // Level order traversal to check nodes that knows the story
+        Queue<Integer[]> queue = new LinkedList<>();
+        Set<Integer> visited = new HashSet<>();
+        queue.offer(new Integer[]{meetings[0][0], meetings[0][2]});
+        visited.add(meetings[0][0]); // adding the actual person
+
+        while (!queue.isEmpty()) {
+            Integer[] meeting = queue.poll();
+            LinkedList<Integer[]> children = map.getOrDefault(meeting[0], new LinkedList<>());
+            for (Integer[] child : children) {
+                Integer id = child[0];
+                Integer time = child[1];
+                if (time > meeting[1]) {
+                    visited.add(id);
+                    queue.offer(child);
+                }
+            }
+        }
+        return new ArrayList<>(visited);
+    }
 }
 
 
@@ -9022,4 +9074,3 @@ class SolutionHasPath {
 [2,4,3,3,5,4,9,6]
 4
  */
-
