@@ -9012,9 +9012,15 @@ class SolutionHasPath {
     }
 
     public boolean flipEquiv(TreeNode root1, TreeNode root2) {
-        TreeNode root = invertTree(root1);
-        return equals(root, root2);
+        // base cases
+        if (root1 == root2) return true;
+        if (root1 == null || root2 == null || root1.val != root2.val) return false;
+
+        return (flipEquiv(root1.left, root2.left) && flipEquiv(root1.right, root2.right)) ||
+                (flipEquiv(root1.right, root2.left)
+                        && flipEquiv(root1.left, root2.right));
     }
+
 
     private boolean equals(TreeNode root1, TreeNode root2) {
 
