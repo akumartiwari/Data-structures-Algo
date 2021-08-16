@@ -9071,12 +9071,20 @@ class SolutionHasPath {
         }
         return new ArrayList<>(visited);
     }
+
+    public int trap(int[] height) {
+        int n = height.length;
+        int ans = 0;
+
+        int[] dp = new int[n];
+        dp[0] = height[0];
+
+        for (int i = 1; i < n; i++) {
+            if (dp[i - 1] != height[i]) {
+                ans += Math.abs(dp[i - 1] - height[i]);
+                dp[i] = height[i];
+            }
+        }
+        return ans;
+    }
 }
-
-
-/*
-[3,5,2,6]
-2
-[2,4,3,3,5,4,9,6]
-4
- */
