@@ -9071,12 +9071,38 @@ class SolutionHasPath {
         }
         return new ArrayList<>(visited);
     }
+
+    // kadan's algorithm
+    public int maxSubArray(int[] arr) {
+        int n = arr.length;
+        if (n == 0) return 0;
+
+        int maxSoFar = Integer.MIN_VALUE;
+        int maxEndingHere = 0;
+
+        for (int i = 0; i < n; i++) {
+            maxEndingHere += arr[i];
+            maxSoFar = Math.max(maxEndingHere, maxSoFar);
+            if (maxEndingHere < 0) maxEndingHere = 0;
+        }
+
+        return maxSoFar;
+    }
+
+
+    public int trap(int[] height) {
+        int n = height.length;
+        int ans = 0;
+
+        int[] dp = new int[n];
+        dp[0] = height[0];
+
+        for (int i = 1; i < n; i++) {
+            if (dp[i - 1] != height[i]) {
+                ans += Math.abs(dp[i - 1] - height[i]);
+                dp[i] = height[i];
+            }
+        }
+        return ans;
+    }
 }
-
-
-/*
-[3,5,2,6]
-2
-[2,4,3,3,5,4,9,6]
-4
- */
