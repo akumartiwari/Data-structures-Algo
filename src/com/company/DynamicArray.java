@@ -9354,4 +9354,30 @@ class SolutionHasPath {
             return res;
         }
     }
+
+
+    public int findPeakElement(int[] nums) {
+        int n = nums.length;
+        return search(nums, 0, n - 1);
+    }
+
+    // recursive binary search
+    private int search(int[] nums, int l, int r) {
+        if (l == r) return l;
+        int mid = l + (r - l) / 2;
+        if (nums[mid] > nums[mid + 1]) return search(nums, l, mid);
+        return search(nums, mid + 1, r);
+    }
+
+    // Iterative sollution
+    public int peakIndexInMountainArray(int[] nums) {
+        int n = nums.length;
+        int l = 0, r = n - 1;
+        while (l < r) {
+            int m = l + (r - l) / 2;
+            if (nums[m] < nums[m + 1]) l = m + 1;
+            else r = m;
+        }
+        return l;
+    }
 }
