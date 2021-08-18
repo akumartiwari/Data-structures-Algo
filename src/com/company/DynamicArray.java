@@ -9089,20 +9089,269 @@ class SolutionHasPath {
         return maxSoFar;
     }
 
+    public int[] twoSum(int[] nums, int target) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int[] ans = new int[2];
+        int n = nums.length;
+        for (int i = 0; i < n; i++) {
+            if (map.containsKey(target - nums[i])) {
+                ans[0] = i;
+                ans[1] = map.get(target - nums[i]);
+                break;
+            }
+            map.put(nums[i], i);
+        }
+        return ans;
+    }
 
+    public int twoSumLessThanK(int[] nums, int k) {
+        Arrays.sort(nums);
+        int ans = Integer.MIN_VALUE;
+        int n = nums.length;
+        int i = 0, j = n - 1;
+        while (i < j) {
+            if (nums[i] + nums[j] < k) {
+                ans = Math.max(ans, nums[i] + nums[j]);
+                i++;
+            } else {
+                j--;
+            }
+        }
+        return ans == Integer.MIN_VALUE ? -1 : ans;
+    }
+
+    // TC  = O(N), SC = O(N)
     public int trap(int[] height) {
         int n = height.length;
         int ans = 0;
+        int[] left_max = new int[n], right_max = new int[n];
 
-        int[] dp = new int[n];
-        dp[0] = height[0];
+        left_max[0] = height[0];
+        right_max[n - 1] = height[n - 1];
 
-        for (int i = 1; i < n; i++) {
-            if (dp[i - 1] != height[i]) {
-                ans += Math.abs(dp[i - 1] - height[i]);
-                dp[i] = height[i];
+        for (int i = 1; i < n; i++) left_max[i] = Math.max(left_max[i - 1], height[i]);
+
+        for (int i = n - 2; i >= 0; i--) right_max[i] = Math.max(right_max[i + 1], height[i]);
+
+        for (int i = 1; i < n - 1; i++) {
+            ans += Math.min(left_max[i], right_max[i]) - height[i];
+        }
+        return ans;
+    }
+
+
+    public int trapStack(int[] height) {
+
+        /*
+        // More simplified
+        int n = height.length;
+        int ans = 0, current = 0;
+        Stack<Integer> stk = new Stack<>();// to store the indecies of smaller heights bars
+
+        while (current < n) {
+            while (!stk.isEmpty() && height[stk.peek()] < height[current]) {
+                int top = stk.pop();
+                if (stk.isEmpty()) break;
+                int distance = current - stk.peek() - 1;
+                int bounded_height = Math.min(height[current], height[stk.peek()]) - height[top];
+                ans += bounded_height * distance;
+            }
+
+            stk.push(current++);
+        }
+
+        return ans;
+
+         */
+
+        int n = height.length, left = 0, right = n - 1, left_max = 0, right_max = 0, ans = 0;
+        while (left < right) {
+            // calculate the ans from left towards right
+            if (height[left] < height[right]) {
+                if (height[left] >= left_max) left_max = height[left];
+                else ans += left_max - height[left];
+                left++;
+            }
+
+            // calculate water concentration from right towards left
+            else {
+                if (height[right] >= right_max) right_max = height[right];
+                else ans += right_max - height[right];
+                right--;
             }
         }
         return ans;
+    }
+
+    public int[] countBits(int n) {
+        int[] ans = new int[n + 1];
+        for (int i = 1; i <= n; ++i) {
+            ans[i] = ans[i & (i - 1)] + 1;
+        }
+        return ans;
+    }
+
+    /*
+    // Algorithm:-
+    -  get the left_max, right_max for current index
+    -  Iterate towards left till ht is lesser than current and eventually fill water
+    -  Iterate towards right till ht is lesser than current and eventually fill water
+    -  return the updated array
+    */
+    public int[] pourWater(int[] heights, int volume, int k) {
+        int n = heights.length;
+        // build the condition for eventually fall
+        heights[k] += volume;
+
+        int[] left_max = new int[n], right_max = new int[n];
+
+        left_max[0] = heights[0];
+        right_max[n - 1] = heights[n - 1];
+
+        for (int i = 1; i < n; i++) left_max[i] = Math.max(left_max[i - 1], heights[i]);
+
+        for (int i = n - 2; i >= 0; i--) right_max[i] = Math.max(right_max[i + 1], heights[i]);
+
+
+        int l = k, r = k;
+        while (l-- >= 0) {
+            if (left_max[l] - heights[l] < heights[k]) {
+                heights[l]++;
+                heights[k]--;
+            }
+        }
+
+
+        while (r++ < n) {
+            if (right_max[r] - heights[r] < heights[k]) {
+                heights[r]++;
+                heights[k]--;
+            }
+        }
+
+
+        return heights;
+    }
+
+
+    // TC = O(N^2), SC = O(1)
+    public int threeSumSmaller(int[] nums, int target) {
+        Arrays.sort(nums);
+        int n = nums.length;
+        int ans = 0;
+        for (int i = 0; i < n - 2; i++) ans += twoSumSmallerInRange(nums, i + 1, target - nums[i]);
+
+        return ans;
+    }
+
+    private int twoSumSmallerInRange(int[] nums, int startIndex, int target) {
+        int sum = 0;
+        int left = startIndex;
+        int right = nums.length - 1;
+        while (left < right) {
+            if (nums[left] + nums[right] < target) {
+                sum += right - left;
+                left++;
+            } else {
+                right--;
+            }
+        }
+
+        return sum;
+    }
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        int n = nums.length;
+        List<List<Integer>> ans = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            List<List<Integer>> res = twoSumZero(nums, i + 1, -nums[i]);
+            for (List<Integer> l : res) {
+                List<Integer> triplet = new ArrayList<>();
+                triplet.add(nums[i]);
+                triplet.addAll(l);
+                ans.add(triplet);
+            }
+        }
+        return ans;
+    }
+
+    private List<List<Integer>> twoSumZero(int[] nums, int startIndex, int target) {
+        int left = startIndex;
+        int right = nums.length - 1;
+        List<List<Integer>> res = new ArrayList<>();
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = left; i < right; i++) {
+            if (map.containsKey(target - nums[i])) {
+                List<Integer> ans = new ArrayList<>();
+                ans.add(nums[i]);
+                ans.add(target - nums[i]);
+                res.add(ans);
+            }
+            map.put(nums[i], i);
+        }
+        return res;
+    }
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        int n = nums.length;
+        Arrays.sort(nums);
+        List<List<Integer>> res = new ArrayList<>();
+        for (int i = 0; i < n; ++i) {
+            for (int j = i + 1; j < n; ++j) {
+                if (nums[i] + nums[j] < target) twoSum(nums, j, res, target - (nums[i] + nums[j]), i);
+            }
+        }
+        return res;
+    }
+
+    private void twoSum(int[] nums, int i, List<List<Integer>> res, int target, int startIndex) {
+        Set<Integer> seen = new HashSet<>();
+        int n = nums.length;
+        for (int j = i + 1; j < n; ++j) {
+            int complement = target - nums[j];
+            if (seen.contains(complement)) {
+                res.add(Arrays.asList(nums[startIndex], nums[i], nums[j], complement));
+            }
+            seen.add(nums[j]);
+        }
+    }
+
+    class KSum {
+        public List<List<Integer>> fourSum(int[] nums, int target) {
+            Arrays.sort(nums);
+            return kSum(nums, target, 0, 4);
+        }
+
+        public List<List<Integer>> kSum(int[] nums, int target, int start, int k) {
+            List<List<Integer>> res = new ArrayList<>();
+            if (start == nums.length || nums[start] * k > target || target > nums[nums.length - 1] * k)
+                return res;
+            if (k == 2)
+                return twoSum(nums, target, start);
+
+            for (int i = start; i < nums.length; ++i)
+                if (i == start || nums[i - 1] != nums[i])
+                    for (List<Integer> subset : kSum(nums, target - nums[i], i + 1, k - 1)) {
+                        res.add(new ArrayList<>(Arrays.asList(nums[i])));
+                        res.get(res.size() - 1).addAll(subset);
+                    }
+
+            return res;
+        }
+
+        public List<List<Integer>> twoSum(int[] nums, int target, int start) {
+            List<List<Integer>> res = new ArrayList<>();
+            Set<Integer> s = new HashSet<>();
+
+            for (int i = start; i < nums.length; ++i) {
+                if (res.isEmpty() || res.get(res.size() - 1).get(1) != nums[i])
+                    if (s.contains(target - nums[i]))
+                        res.add(Arrays.asList(target - nums[i], nums[i]));
+                s.add(nums[i]);
+            }
+
+            return res;
+        }
     }
 }
