@@ -9454,5 +9454,52 @@ class SolutionHasPath {
 
         maxOne = Math.max(maxOne, cnt);
     }
-}
 
+    public int findTargetSumWays(int[] nums, int target) {
+        int[][] memo = new int[nums.length][2001];
+        for (int[] rows : memo) Arrays.fill(rows, -1);
+        return calculate(nums, 0, 0, target, memo);
+    }
+
+    private int calculate(int[] nums, int index, int sum, int target, int[][] memo) {
+        if (index == nums.length) {
+            if (sum == target)
+                return 1;
+            return 0;
+        } else {
+
+            if (memo[index][sum + 1000] != -1) return memo[index][sum + 1000];
+            int add = calculate(nums, index + 1, sum + nums[index], target, memo);
+            int subtract = calculate(nums, index + 1, sum - nums[index], target, memo);
+            memo[index][sum + 1000] = add + subtract;
+
+            return memo[index][sum + 1000];
+        }
+    }
+
+    // sliding window technique
+    public int findMaxConsecutiveOnes(int[] nums) {
+        int n = nums.length;
+        int left = 0, right = 0, longest = 0, zeros = 0;
+
+        while (right < n) {
+            // move right ptr towards right direction
+            if (nums[right] == 0) zeros++;
+
+            // check for invalid state
+            while (zeros == 2) {
+                if (nums[left] == 0) zeros--;
+                left++;
+            }
+
+            // update out longest sequnce
+            longest = Math.max(longest, right - left + 1);
+
+            // expand out window
+            right++;
+        }
+        return longest;
+    }
+
+
+}
