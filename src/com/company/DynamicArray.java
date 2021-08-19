@@ -9333,7 +9333,7 @@ class SolutionHasPath {
             for (int i = start; i < nums.length; ++i)
                 if (i == start || nums[i - 1] != nums[i])
                     for (List<Integer> subset : kSum(nums, target - nums[i], i + 1, k - 1)) {
-                        res.add(new ArrayList<>(Arrays.asList(nums[i])));
+                        res.add(new ArrayList<>(Collections.singletonList(nums[i])));
                         res.get(res.size() - 1).addAll(subset);
                     }
 
@@ -9365,7 +9365,8 @@ class SolutionHasPath {
     private int search(int[] nums, int l, int r) {
         if (l == r) return l;
         int mid = l + (r - l) / 2;
-        if (nums[mid] > nums[mid + 1]) return search(nums, l, mid);
+        if (nums[mid] > nums[mid + 1])
+            return search(nums, l, mid);
         return search(nums, mid + 1, r);
     }
 
