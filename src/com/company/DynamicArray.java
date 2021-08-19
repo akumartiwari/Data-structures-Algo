@@ -9381,4 +9381,78 @@ class SolutionHasPath {
         }
         return l;
     }
+
+    // TC=  O(N2) SC=O(N)
+    public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+        int cnt = 0;
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+        for (int n1 : nums1) {
+            for (int n2 : nums2) {
+                int key = n1 + n2;
+                map.put(key, map.getOrDefault(key, 0) + 1);
+            }
+        }
+
+        for (int n3 : nums3) {
+            for (int n4 : nums4) {
+                int key = -(n3 + n4);
+                cnt += map.getOrDefault(key, 0);
+            }
+        }
+        return cnt;
+    }
+
+    public int kNumberSumCount(int[] A, int[] B, int[] C, int[] D) {
+        return kSumCount(new int[][]{A, B, C, D});
+    }
+
+    public int kSumCount(int[][] lists) {
+        Map<Integer, Integer> m = new HashMap<>();
+        addToHash(lists, m, 0, 0);
+        return countComplements(lists, m, lists.length / 2, 0);
+    }
+
+    void addToHash(int[][] lists, Map<Integer, Integer> m, int i, int sum) {
+        if (i == lists.length / 2)
+            m.put(sum, m.getOrDefault(sum, 0) + 1);
+        else
+            for (int a : lists[i])
+                addToHash(lists, m, i + 1, sum + a);
+    }
+
+    int countComplements(int[][] lists, Map<Integer, Integer> m, int i, int complement) {
+        if (i == lists.length)
+            return m.getOrDefault(complement, 0);
+        int cnt = 0;
+        for (int a : lists[i])
+            cnt += countComplements(lists, m, i + 1, complement - a);
+        return cnt;
+    }
+
+    boolean flip = false;
+    int maxOne = Integer.MIN_VALUE;
+
+    public int findMaxConsecutiveOnes(int[] nums) {
+        consective(nums, 0);
+        return maxOne;
+    }
+
+    private void consective(int[] nums, int index) {
+        if (index == nums.length) return;
+
+        int cnt = 0;
+        if (nums[index] == 1) {
+            cnt += 1;
+            consective(nums, index + 1);
+        } else if (!flip) {
+            flip = true;
+            cnt++;
+        } else {
+            cnt = 1;
+        }
+
+        maxOne = Math.max(maxOne, cnt);
+    }
 }
+
