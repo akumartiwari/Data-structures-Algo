@@ -89,8 +89,7 @@ class Solution {
 
 
         // Create a list from elements of HashMap
-        List<Entry<Point, Double>> list =
-                new LinkedList<Entry<Point, Double>>(distMap.entrySet());
+        List<Entry<Point, Double>> list = new LinkedList<>(distMap.entrySet());
 
         // Sort the list
         Collections.sort(list, new Comparator<Entry<Point, Double>>() {
@@ -121,6 +120,7 @@ class Solution {
 }
 
 class SolutionMaxSliding {
+    // O(n2*logn)
     public int[] maxSlidingWindow(int[] nums, int k) {
         int n = nums.length;
         int index = 0;
@@ -204,7 +204,7 @@ output
                 new LinkedList<Entry<Character, Integer>>(freq.entrySet());
 
         // Sort the list
-        Collections.sort(list, new Comparator<Entry<Character, Integer>>() {
+        list.sort(new Comparator<Entry<Character, Integer>>() {
             public int compare(Entry<Character, Integer> o1,
                                Entry<Character, Integer> o2) {
                 return (o2.getValue()).compareTo(o1.getValue());
@@ -715,6 +715,161 @@ Output: 32
             }
             return min;
         }
+
+        // {l,r,u,d,ld,rd,lu,ru}
+        // directions matrix
+        int[] dx8 = {-1, 0, 1, 0, 1, 1, -1, -1};
+        int[] dy8 = {0, -1, 0, 1, -1, 1, -1, 1};
+
+        public int shortestPathBinaryMatrix(int[][] grid) {
+            return bfs(grid);
+        }
+
+        private boolean isSafe(int[][] grid, int i, int j) {
+            int n = grid.length;
+
+            return i >= 0 && i < n && j >= 0 && j < n && grid[i][j] == 0;
+        }
+
+        //  bfs of matrix to count the number of islands
+        private int bfs(int[][] grid) {
+            int n = grid.length, cnt = 0;
+
+            // to store nearest points based on distance
+            PriorityQueue<int[]> queue = new PriorityQueue<>(Comparator.comparingInt(a -> a[a.length - 1]));
+            boolean[][] vis = new boolean[n][n];
+
+            if (grid[0][0] == 1) return -1;
+            cnt++;
+            vis[0][0] = true; // mark as visited
+            queue.offer(new int[]{0, 0, cnt});
+
+            while (!queue.isEmpty()) {
+                int[] elem = queue.poll();
+                if (elem[0] == n - 1 && elem[1] == n - 1) return elem[2];
+
+                for (int val = 0; val < 8; val++) {
+                    int x = dx8[val] + elem[0];
+                    int y = dy8[val] + elem[1];
+                    // apply the check for boundary condition
+                    if (isSafe(grid, x, y) && !vis[x][y]) {
+                        queue.offer(new int[]{x, y, elem[2] + 1});
+                        vis[x][y] = true;
+                    }
+                }
+            }
+            return -1;
+        }
     }
+
+    class BFSBallPLAYER {
+
+        // {l,r,u,d,ld,rd,lu,ru}
+        // directions matrix
+        int[] dx = {-1, 0, 1, 0};
+        int[] dy = {0, -1, 0, 1};
+
+
+        public int minPushBox(char[][] grid) {
+            int m = grid.length;
+            int n = grid[0].length;
+
+            Point ball = new Point();
+            Point player = new Point();
+            Point target = new Point();
+
+            for (int i = 0; i < m; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (grid[i][j] == 'B') {
+                        ball.x = i;
+                        ball.y = j;
+                    } else if (grid[i][j] == 'T') {
+                        target.x = i;
+                        target.y = j;
+                    } else if (grid[i][j] == 'S') {
+                        player.x = i;
+                        player.y = j;
+                    }
+                }
+            }
+
+
+            return bfs(grid, player, ball, target);
+        }
+
+        private boolean isSafe(char[][] grid, int i, int j) {
+            int m = grid.length;
+            int n = grid[0].length;
+
+            return i >= 0 && i < m && j >= 0 && j < n && (grid[i][j] != '#');
+        }
+
+        //  bfs of matrix to count the number of islands
+        private int bfs(char[][] grid, Point player, Point ball, Point target) {
+            int m = grid.length;
+            int n = grid[0].length;
+            // to store nearest points based on distance
+            boolean[][] vis = new boolean[m][n];
+
+            // to store nearest points based on distance
+            PriorityQueue<int[]> queue = new PriorityQueue<>(Comparator.comparingInt(a -> a[a.length - 1]));
+
+            queue.offer(new int[]{ball.x, ball.y, 0});
+            vis[ball.x][ball.y] = true; // mark as visited
+
+            while (!queue.isEmpty()) {
+                int[] elem = queue.poll();
+
+                if (elem[0] == target.x && elem[1] == target.y) return elem[2];
+
+                for (int val = 0; val < 4; val++) {
+                    int x = dx[val] + elem[0];
+                    int y = dy[val] + elem[1];
+                    // apply the check for boundary condition
+                    if (isSafe(grid, x, y) && !vis[x][y]) {
+                        if (isReachable(grid, new Point(elem[0] - dx[val], elem[1] - dy[val]), player)) {
+                            // System.out.println("new point:" + new Point(x, y));
+                            queue.offer(new int[]{x, y, elem[2] + 1});
+                            vis[x][y] = true;
+                            player = new Point(elem[0], elem[1]);
+                            // System.out.println("player location:" + player);
+                        }
+                    }
+                }
+            }
+            return -1;
+        }
+
+
+        private boolean isReachable(char[][] grid, Point ball, Point player) {
+            int m = grid.length;
+            int n = grid[0].length;
+
+            // to store nearest points based on distance
+            Queue<Point> queue = new LinkedList<>();
+            boolean[][] vis = new boolean[m][n];
+            queue.offer(player);
+            vis[player.x][player.y] = true; // mark as visited
+
+            while (!queue.isEmpty()) {
+                Point elem = queue.poll();
+                if (elem.x == ball.x && elem.y == ball.y) return true;
+
+                for (int val = 0; val < 4; val++) {
+                    int x = dx[val] + elem.x;
+                    int y = dy[val] + elem.y;
+                    // apply the check for boundary condition
+                    if (isSafe(grid, x, y) && !vis[x][y]) {
+                        queue.offer(new Point(x, y));
+                        vis[x][y] = true;
+                    }
+                }
+            }
+            return false;
+
+        }
+    }
+
 }
+
 

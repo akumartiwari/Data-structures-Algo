@@ -9577,4 +9577,62 @@ class SolutionHasPath {
         this.recurse(0, 0, 0, 0, new ArrayList<String>());
         return this.answer;
     }
+
+    public int maxScore(int[] cardPoints, int k) {
+        int n = cardPoints.length;
+        int[][] dp = new int[n][n];
+        for (int i = 0; i < n; i++) Arrays.fill(dp[i], -1);
+        return cards(cardPoints, k, 0, n - 1, dp);
+    }
+
+    private int cards(int[] cardPoints, int k, int l, int r, int[][] dp) {
+        // base case
+        if (l > r || k <= 0) {
+            return 0;
+        }
+
+        if (dp[l][r] != -1) return dp[l][r];
+
+        // take a card from left
+        int left = cardPoints[l] + cards(cardPoints, k - 1, l + 1, r, dp);
+        // take a card from right
+        int right = cardPoints[r] + cards(cardPoints, k - 1, l, r - 1, dp);
+
+        dp[l][r] = Math.max(left, right);
+
+        return dp[l][r];
+    }
+    // using prefix sum approach
+
+    public int maxScorePrefixSum(int[] cardPoints, int k) {
+        int n = cardPoints.length;
+        int[] first = new int[k + 1], last = new int[k + 1];
+
+        for (int i = 0; i < k; i++) {
+            first[i + 1] = first[i] + cardPoints[i];
+            last[i + 1] = last[i] + cardPoints[n - 1 - i];
+        }
+
+        int maxScore = 0;
+        for (int i = 0; i <= k; i++) {
+            int currSum = first[i] + last[k - i];
+            maxScore = Math.max(maxScore, currSum);
+        }
+        return maxScore;
+    }
+
+    public TreeNode sortedArrayToBST(int[] nums) {
+        return bst(nums, 0, nums.length - 1);
+    }
+
+    private TreeNode bst(int[] nums, int l, int r) {
+        // base case
+        if (l > r) return null;
+
+        int mid = l + (r - l) / 2;
+        TreeNode node = new TreeNode(nums[mid]);
+        node.left = bst(nums, l, mid - 1);
+        node.right = bst(nums, mid + 1, r);
+        return node;
+    }
 }
