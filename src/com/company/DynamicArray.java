@@ -9635,4 +9635,95 @@ class SolutionHasPath {
         node.right = bst(nums, mid + 1, r);
         return node;
     }
+
+    public int maxSubArrayLen(int[] nums, int target) {
+        int n = nums.length;
+
+        int ans = 0;
+        HashMap<Integer, Integer> map = new HashMap<>(); //map<sum, index>
+        map.put(0, -1);
+
+        for (int i = 0, sum = 0; i < n; i++) {
+            sum += nums[i];
+            if (map.containsKey(target - sum)) {
+                ans = Math.max(ans, i - map.get(target - sum));
+            }
+            map.putIfAbsent(sum, i);
+        }
+        return ans;
+    }
+
+    static class Edge {
+        int v;
+        int nbr;
+        int wt;
+
+        Edge(int v, int nbr, int wt) {
+            this.v = v;
+            this.nbr = nbr;
+            this.wt = wt;
+        }
+    }
+
+    static class Pair {
+        int v;
+        int av; //acquiring vertex (As Prims works on considering next connected min edge)
+        int wt;
+
+        Pair(int v, int av, int wt) {
+            this.v = v;
+            this.av = av;
+            this.wt = wt;
+        }
+    }
+
+    public int minCostConnectPoints(int[][] points) {
+        //Construct Graph
+        int n = points.length;
+        ArrayList<Edge> graph[] = new ArrayList[n];
+
+        for (int i = 0; i < n; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        //Since this graph will be a complete graph so have to connect each and every vertex with each other
+        for (int i = 0; i < n; i++) {
+            int u = i;
+            int xi = points[i][0];
+            int yi = points[i][1];
+            for (int j = i + 1; j < n; j++) {
+                int v = j;
+                int xj = points[j][0];
+                int yj = points[j][1];
+
+                int wt = Math.abs(xi - xj) + Math.abs(yi - yj);
+                graph[u].add(new Edge(u, v, wt));
+                graph[v].add(new Edge(v, u, wt));
+            }
+        }
+        //Now run your Prim's Alogrithm
+        PriorityQueue<Pair> q = new PriorityQueue<>((a, b) -> {
+            return a.wt - b.wt;
+        });
+        q.add(new Pair(0, -1, 0));
+        int cost = 0;
+        boolean visited[] = new boolean[n];
+        while (q.size() > 0) {
+            Pair rem = q.poll();
+
+            if (visited[rem.v] == true) continue;
+            visited[rem.v] = true;
+
+            if (rem.av != -1) {
+                cost = cost + rem.wt;
+            }
+            for (Edge e : graph[rem.v]) {
+                if (visited[e.nbr] == false) {
+                    q.add(new Pair(e.nbr, rem.v, e.wt));
+                }
+            }
+        }
+        return cost;
+    }
 }
+
+
