@@ -9771,4 +9771,74 @@ class SolutionHasPath {
 
         return dp[index][coef];
     }
+
+    public int validSubarrays(int[] nums) {
+        int count = 0;
+        for (int i = 0; i < nums.length; i++) {
+            int num = nums[i];
+            for (int j = i; j < nums.length; j++) {
+                if (nums[i] <= nums[j]) {
+                    count++;
+                    continue;
+                }
+                break;
+            }
+        }
+        return count;
+    }
+
+    // monotonic increasing stack
+    // runtime o(n)
+    public int validSubarraysStack(int[] nums) {
+        Stack<Integer> stack = new Stack<>();
+        int count = 0;
+        for (int i = 0; i < nums.length; i++) {
+            while (!stack.isEmpty() && nums[stack.peek()] > nums[i]) {
+                count += (i - stack.pop());
+            }
+            stack.push(i);
+        }
+        while (!stack.isEmpty()) {
+            count += nums.length - stack.pop();
+        }
+        return count;
+    }
+
+    public int minSwap(int[] nums1, int[] nums2) {
+        int n1 = nums1.length;
+        int n2 = nums2.length;
+
+        // initialize dp table
+        int[][] memo = new int[2][n1];
+        Arrays.fill(memo[0], -1);
+        Arrays.fill(memo[1], -1);
+        memo[0][0] = 0;
+        memo[1][0] = 1;
+
+        return Math.min(recurse(nums1, nums2, n1 - 1, 0, memo), recurse(nums1, nums2, n1 - 1, 1, memo));
+    }
+
+    private int recurse(int[] nums1, int[] nums2, int i, int swap, int[][] memo) {
+        // base cases
+        if (i == 0) return swap;
+
+        //check dp table
+        if (memo[swap][i] != -1)
+            return memo[swap][i];
+
+
+        int res = Integer.MAX_VALUE;
+        // no swap
+        if (nums1[i] > nums1[i - 1] && nums2[i] > nums2[i - 1])
+            res = recurse(nums1, nums2, i - 1, swap, memo);
+
+        // swap
+        if (nums1[i - 1] < nums2[i] && nums2[i - 1] < nums1[i])
+            res = Math.min(res, recurse(nums1, nums2, i - 1, 1 - swap, memo));
+
+        memo[swap][i] = swap == 0 ? res : res + 1;
+        return memo[swap][i];
+    }
+
+
 }
