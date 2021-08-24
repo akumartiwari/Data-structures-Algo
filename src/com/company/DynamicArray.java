@@ -9710,20 +9710,65 @@ class SolutionHasPath {
         while (q.size() > 0) {
             Pair rem = q.poll();
 
-            if (visited[rem.v] == true) continue;
+            if (visited[rem.v]) continue;
             visited[rem.v] = true;
 
             if (rem.av != -1) {
                 cost = cost + rem.wt;
             }
             for (Edge e : graph[rem.v]) {
-                if (visited[e.nbr] == false) {
+                if (!visited[e.nbr]) {
                     q.add(new Pair(e.nbr, rem.v, e.wt));
                 }
             }
         }
         return cost;
     }
+
+
+    public int maxSatisfaction(int[] satisfaction) {
+        Arrays.sort(satisfaction);
+        int n = satisfaction.length;
+
+        int max = 0;
+        for (int i = 0; i < n; i++) {
+            int sum = 0, count = 1;
+            for (int j = i; j < n; j++) {
+                sum += count * satisfaction[j];
+            }
+            max = Math.max(sum, max);
+        }
+        return max;
+    }
+
+    // Recursion with memoisation
+// 2 choices 1 take it and skip it (overall sum will not increase)
+    // TC = O(2^N)
+    // O(N^2)
+    public int maxSatisfactionRecurse(int[] satisfaction) {
+        Arrays.sort(satisfaction);
+        int n = satisfaction.length;
+        int[][] dp = new int[n + 1][n + 1];
+        for (int i = 0; i < n + 1; i++) Arrays.fill(dp[i], -1);
+        return maxsum(satisfaction, dp, 0, 1);
+    }
+
+    private int maxsum(int[] satisfaction, int[][] dp, int index, int coef) {
+
+        // base case
+        if (index == satisfaction.length) return 0;
+
+        if (dp[index][coef] != -1) return dp[index][coef];
+
+        // select
+        int taken = coef * satisfaction[index] + maxsum(satisfaction, dp, index + 1, coef + 1);
+
+        // number is not taken
+        int notTaken = maxsum(satisfaction, dp, index + 1, coef);
+
+        // return max of 2 choices
+        dp[index][coef] = Math.max(taken, notTaken);
+
+        return dp[index][coef];
+    }
 }
-
-
