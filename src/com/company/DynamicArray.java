@@ -9840,5 +9840,1257 @@ class SolutionHasPath {
         return memo[swap][i];
     }
 
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        List<List<Integer>> ans = new ArrayList<>();
+        bfs(new ArrayList<>(), 0, 0, ans, target, candidates);
+        return ans;
+    }
 
+    private void bfs(List<Integer> num, int sum, int index, List<List<Integer>> ans, int k, int[] candidates) {
+        // base case
+        if (sum == k) {
+            if (!ans.contains(num)) ans.add(new ArrayList<>(num));
+        } else if (sum > k) {
+            return;
+        } else {
+            // For all position place numbers
+            for (int p = index; p < candidates.length; p++) {
+                //skip duplicates
+                if (p > index && candidates[p] == candidates[p - 1]) {
+                    continue;
+                }
+
+                num.add(candidates[p]);
+                sum += candidates[p];
+                bfs(num, sum, p + 1, ans, k, candidates);
+                num.remove(new Integer(candidates[p]));
+                sum -= candidates[p];
+            }
+        }
+    }
+}
+
+// Backtracking
+class CombinationSum4 {
+    public int combinationSum4(int[] nums, int target) {
+        int n = nums.length;
+        int[] memo = new int[target + 1];
+        Arrays.fill(memo, -1);
+        return backtrack(nums, target, memo);
+    }
+
+    private int backtrack(int[] nums, int target, int[] memo) {
+        // base cases
+        if (target == 0) return 1;
+        if (target < 0) return 0;
+
+        if (memo[target] != -1) return memo[target];
+
+        int total = 0;
+        for (int i = 0; i < nums.length; i++) {
+            total += backtrack(nums, target - nums[i], memo);
+        }
+        memo[target] = total;
+        return total;
+    }
+}
+
+class CombinationSum {
+    // TC = O(2^n), SC = O(2^n)
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        // Arrays.sort(candidates);
+        List<List<Integer>> ans = new ArrayList<>();
+        bfs(new ArrayList<>(), 0, 0, ans, target, candidates);
+        return ans;
+    }
+
+    private void bfs(List<Integer> num, int sum, int index, List<List<Integer>> ans, int k, int[] candidates) {
+        // base case
+        if (sum == k) {
+            ans.add(new ArrayList<>(num));
+        } else if (sum > k) {
+            return;
+        } else {
+            // For all position place numbers
+            for (int p = index; p < candidates.length; p++) {
+                num.add(candidates[p]);
+                sum += candidates[p];
+                bfs(num, sum, p, ans, k, candidates);
+                num.remove(new Integer(candidates[p]));
+                sum -= candidates[p];
+            }
+        }
+    }
+}
+
+class LargetRectangleArea {
+    public int maximalRectangle(char[][] matrix) {
+        if (matrix == null || matrix.length == 0)
+            return 0;
+        int[] heights = new int[matrix[0].length];
+
+        for (int i = 0; i < matrix[0].length; i++)
+            heights[i] = matrix[0][i] - '0';
+
+        int maxArea = largestRectangleArea(heights);
+
+        for (int i = 1; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (matrix[i][j] == '1')
+                    heights[j]++;
+                else heights[j] = 0;
+            }
+            maxArea = Math.max(maxArea, largestRectangleArea(heights));
+        }
+        return maxArea;
+
+    }
+
+    int largestRectangleArea(int[] heights) {
+        Stack<Integer> st = new Stack<>();
+        int maxArea = 0;
+        st.push(-1);
+        for (int i = 0; i <= heights.length; i++) {
+            int val = i == heights.length ? 0 : heights[i];
+
+            while (st.peek() != -1 && heights[st.peek()] >= val) {
+                int rightMin = i;
+                int height = heights[st.pop()];
+                int leftMin = st.peek();
+                maxArea = Math.max(maxArea, height * (rightMin - leftMin - 1));
+            }
+            st.push(i);
+        }
+        return maxArea;
+    }
+}
+
+class LinkedListRandomNode {
+
+    /**
+     * @param head The linked list's head.
+     * Note that the head is guaranteed to be not null, so it contains at least one node.
+     */
+
+    ListNode head;
+    Random generator;
+
+    public LinkedListRandomNode(ListNode head) {
+        this.head = head;
+        this.generator = new Random();
+    }
+
+    /**
+     * Returns a random node's value.
+     */
+    public int getRandom() {
+        int elem = -1, index = -1;
+        ListNode temp = head;
+        while (temp != null) {
+            index++;
+            if (index == 0) {
+                elem = temp.val;
+            } else {
+                int random = generator.nextInt(index + 1) + 1;
+                if (random == index) {
+                    elem = temp.val;
+                }
+            }
+            temp = temp.next;
+        }
+        return elem;
+    }
+}
+
+class FourSumCount {
+
+    public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+        int n = nums1.length;
+        if (n == 1) {
+            return (nums1[0] + nums2[0] + nums3[0] + nums4[0] == 0) ?
+                    1 : 0;
+        }
+
+        // Put nums3 + nums4 into a HashMap, where
+        // key = nums3[k] + nums4[l], value = count
+        HashMap<Integer, Integer> m = new HashMap<Integer, Integer>();
+        for (int k = 0; k < n; k++) {
+            for (int l = 0; l < n; l++) {
+                int s = nums3[k] + nums4[l];
+                m.put(s, m.getOrDefault(s, 0) + 1);
+            }
+        }
+
+        int r = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                int comp = -nums1[i] - nums2[j];
+                if (m.get(comp) != null) {
+                    r += m.get(comp);
+                }
+            }
+        }
+
+        return r;
+    }
+}
+
+
+// TODO:- This problem needs to be revisted again
+class recoverArrayHard {
+    public int[] recoverArray(int n, int[] sums) {
+        List<Integer> sumList = new ArrayList<>();
+        for (Integer sum : sums) sumList.add(sum);
+        Collections.sort(sumList, (a, b) -> Integer.compare(b, a));
+        int[] res = new int[n];
+        int i = 0;
+
+        while (sumList.size() > 2) {
+            List<Integer> array1 = new ArrayList<>(), array2 = new ArrayList<>();
+            int num = sumList.get(0) - sumList.get(1);
+            Map<Integer, Integer> map = getCountMap(sumList);
+
+            for (int elem : sumList) {
+                if (map.containsKey(elem)) {
+                    array2.add(elem);
+                    array1.add(elem - num);
+                    remove(map, elem);
+                    remove(map, elem - num);
+                }
+            }
+
+            int index = array2.indexOf(num);
+            if (index != -1) {
+                if (array1.get(index) == 0) {
+                    res[i++] = num;
+                    sumList = array1;
+                    continue;
+                }
+            }
+            res[i++] = -num;
+            sumList = array2;
+        }
+
+        if (sumList.get(0) == 0) {
+            res[i++] = sumList.get(1);
+        } else {
+            res[i++] = sumList.get(0);
+        }
+
+        return res;
+    }
+
+    // This function simply descrement the freq of element in map
+    private void remove(Map<Integer, Integer> map, int element) {
+        if (map.containsKey(element)) {
+            if (map.get(element) > 1) {
+                map.put(element, map.get(element) - 1);
+            } else {
+                map.remove(element);
+            }
+        }
+    }
+
+    // This function get the freq of sum in map and return it
+    private Map<Integer, Integer> getCountMap(List<Integer> list) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (Integer num : list) {
+            map.put(num, map.getOrDefault(num, 0) + 1);
+        }
+        return map;
+    }
+}
+
+class SubSet2 {
+    // TC = O(2^n), SC = exponential in nature
+    // backtracking basesd solution
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> result = new ArrayList<>();
+        bfs(nums, 0, result, new ArrayList<Integer>());
+        return result;
+    }
+
+    private void bfs(int[] nums, int index, List<List<Integer>> result, List<Integer> res) {
+        // base case
+        if (!result.contains(res)) result.add(new ArrayList<>(res));
+
+        for (int i = index; i < nums.length; i++) {
+            int num = nums[i];
+            res.add(new Integer(num));
+            bfs(nums, i + 1, result, res);
+            res.remove(new Integer(num));
+        }
+    }
+}
+
+// TODO :- Need to solved again
+class SumSubarrayMins {
+    private static final int mod = 1000000007;
+
+    public int sumSubarrayMins(int[] a) {
+        int sum = 0, n = a.length;
+        int[] left = new int[n], right = new int[n];
+        Stack<Integer> s = new Stack<>();
+        //for each i, first right side number less than me
+        //monotonically increasing stack
+        for (int i = 0, j = 0; i < n; i++) {
+            while (!s.isEmpty() && a[s.peek()] > a[i]) {
+                j = s.pop();
+                right[j] = i - 1 - (j + 1) + 1;
+            }
+            s.push(i);
+        }
+        while (!s.isEmpty()) {
+            int j = s.pop();
+            right[j] = n - 1 - (j + 1) + 1;
+        }
+        //for each i, first left side number less than me
+        //monotonically increasing stack from back
+        for (int i = n - 1, j = 0; i >= 0; i--) {
+            while (!s.isEmpty() && a[s.peek()] >= a[i]) {
+                j = s.pop();
+                left[j] = j - 1 - (i + 1) + 1;
+            }
+            s.push(i);
+        }
+        while (!s.isEmpty()) {
+            int j = s.pop();
+            left[j] = j - 1 - (-1 + 1) + 1;
+        }
+        for (int i = 0; i < n; i++)
+            sum = sum % mod + (a[i] * (left[i] + 1) * (right[i] + 1)) % mod;
+        return sum % mod;
+    }
+}
+
+class Subsets {
+    // TC = O(n), SC = O(n)
+
+    public List<List<Integer>> subsets(int[] nums) {
+        int n = nums.length;
+        LinkedList<List<Integer>> result = new LinkedList<>();
+        if (n == 0) return result;
+        result.add(new ArrayList<>());
+        permuate(nums, 0, result);
+        return result;
+    }
+
+    private void permuate(int[] nums, int index, LinkedList<List<Integer>> result) {
+        int n = nums.length;
+        // base case
+        if (index == n) {
+            return;
+        }
+
+        int ch = nums[index];
+        int size = result.size();
+        LinkedList<Set<Integer>> list = new LinkedList<Set<Integer>>();
+
+        while (size-- > 0) {
+            List<Integer> elem = result.poll();
+            list.add(new HashSet<>(elem));
+            elem.add(ch);
+            list.add(new HashSet<>(elem));
+        }
+        result.addAll(list.stream().map(x -> new ArrayList<>(x)).collect(Collectors.toList()));
+
+        permuate(nums, index + 1, result);
+    }
+}
+
+// Iterative approach
+
+// Algorithm :-
+
+/*
+ - Idea is to take all paths by variation of a  single character (ie. uppercase or lowercase)
+ - Intialise list with first given variation of string
+ - Iterate two loops
+   - i = 0 unitll n (n = size of string)
+   - check for current char ie. if its character then its liable for changes else not
+   - poll elements out of list untill it becomes empty
+   - create both variation and update the stirng to list
+   - Repeat the process untill while string gets exhausted
+  - Return all possible paths
+*/
+// Recursive approach
+class LetterCasePermutation {
+    // TC = O(2*n), SC = O(n!)
+    public List<String> letterCasePermutation(String s) {
+        int n = s.length();
+        List<String> ans = new ArrayList<>();
+        if (n == 0) return ans;
+        StringBuilder sb = new StringBuilder("");
+        permuate(s, sb, 0, ans);
+        return ans;
+    }
+
+    private void permuate(String s, StringBuilder sb, int index, List<String> ans) {
+        int n = s.length();
+        // base case
+        if (index == n) {
+            ans.add(sb.toString());
+            return;
+        }
+
+        char c = s.charAt(index);
+
+        // if char is letter
+        if (Character.isLetter(c)) {
+            Character[] array = new Character[]{Character.toUpperCase(c), Character.toLowerCase(c)};
+            for (char ch : array) {
+                sb.append(ch);
+                permuate(s, sb, index + 1, ans);
+                sb.setLength(sb.length() - 1);
+            }
+        }
+        // else do not make any variation
+        else {
+            sb.append(c);
+            permuate(s, sb, index + 1, ans);
+            sb.setLength(sb.length() - 1);
+        }
+    }
+
+    /*
+
+    // Iterative solution
+      public List<String> letterCasePermutation(String s) {
+        int n = s.length();
+        LinkedList<String> result = new LinkedList<>();
+        if (n == 0) return result;
+        result.add(s);
+        for (int i = 0; i<n; i++) {
+            char ch = s.charAt(i);
+            if (Character.isLetter(ch)) {
+                int size = result.size();
+                while (size--> 0) {
+                    String str = result.poll();
+                    String left = str.substring(0, i);
+                    String right = str.substring(i + 1);
+                    result.add(left + String.valueOf(ch).toUpperCase() + right);
+                    result.add(left + String.valueOf(ch).toLowerCase() + right);
+                }
+            }
+        }
+
+
+        // String[] arr = new String[result.size()];
+        // arr = result.toArray(arr);
+        // // Get lexicographically sorted order results
+        // Arrays.sort(arr);
+        // return Arrays.stream(arr).map(x->x).collect(Collectors.toList());
+        return new ArrayList<>(result);
+    }
+     */
+}
+
+class PickRandomBlacklist {
+    HashMap<Integer, Integer> map;
+    Random generator;
+    int ul;
+
+    public PickRandomBlacklist(int n, int[] blacklist) {
+        this.generator = new Random();
+        this.map = new HashMap<>();
+        for (Integer num : blacklist)
+            this.map.put(num, -1);
+
+        this.ul = n - blacklist.length;
+        int j = n - 1;
+        for (Integer num : blacklist) {
+            if (num < ul) {
+                while (map.containsKey(j)) j--;
+                map.put(num, j);
+                j--;
+            }
+        }
+    }
+
+    public int pick() {
+        int random = generator.nextInt(ul);
+        if (map.containsKey(random))
+            return map.get(random);
+        return random;
+    }
+}
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution obj = new Solution(n, blacklist);
+ * int param_1 = obj.pick();
+ */
+
+class FindDifferentBinaryString {
+    Set<String> set;
+    String res;
+    int len;
+    String[] d = {
+            "1", "0"
+    };
+
+    public String findDifferentBinaryString(String[] nums) {
+        len = nums.length;
+        set = new HashSet<>();
+        for (String s : nums) set.add(s);
+        diff(0, "");
+        return res;
+    }
+
+    private Boolean diff(int index, String str) {
+        // base case
+        if (index == set.size()) {
+            if (!set.contains(str)) {
+                res = str;
+                return true;
+            }
+            return false;
+        }
+        // For all position place string characters
+        for (int k = 0; k < len; k++) {
+            for (int i = 0; i < d.length; i++) {
+                str += d[i];
+                if (diff(index + 1, str)) return true;
+                str = str.substring(0, str.length() - 1);
+            }
+        }
+        return false;
+    }
+}
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ * int val;
+ * ListNode next;
+ * ListNode() {}
+ * ListNode(int val) { this.val = val; }
+ * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class ReverseLinkedList {
+    public ListNode reverseList(ListNode head) {
+
+        if (head == null) return head;
+        ListNode curr = head, prev = null, next;
+        while (curr != null) {
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        head = prev;
+        return head;
+    }
+}
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ * int val;
+ * ListNode next;
+ * ListNode() {}
+ * ListNode(int val) { this.val = val; }
+ * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class ReverseLinkedListKGroup {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (head == null) return head;
+        int len = getLength(head);
+        return reverse(head, k, len);
+    }
+
+    private int getLength(ListNode curr) {
+        int cnt = 0;
+        while (curr != null) {
+            cnt++;
+            curr = curr.next;
+        }
+        return cnt;
+    }
+
+    // Recursive function to reverse in groups
+    private ListNode reverse(ListNode head, int k, int len) {
+        // base case
+        if (len < k) return head;
+
+        ListNode curr = head, prev = null, next = null;
+        for (int i = 0; i < k; i++) {
+            // reverse linked list code
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+
+        ListNode nextNode = reverse(curr, k, len - k);
+        head.next = nextNode;
+        return prev;
+    }
+}
+
+class MaxTaxiEarningsDP {
+
+    // DP + Iteration based solution
+    public long maxTaxiEarnings(int n, int[][] rides) {
+        // sort rides  matrix based on  start time
+        Arrays.sort(rides, (a, b) -> a[0] - b[0]);
+		/*
+		   [[2,5,4],[1,5,1]]
+		   sort ------> [[1 5 1], [2 5 4]]
+		   dp[0]=5-1+1=5
+		   dp[1]=max(7,5)=7
+
+         - dp max for every switch to new point
+         - For every next switch check wrt to prev path and curr and take
+         - Return max value ie. dp[n]
+		   Complexity -->  TC = O(n+k) , SC = O(n);
+		*/
+        long[] dp = new long[n + 1];
+        int j = 0;
+        for (int i = 1; i <= n; i++) {
+            dp[i] = Math.max(dp[i - 1], dp[i]);
+            while (j < rides.length && rides[j][0] == i) {
+                int d = rides[j][1] - rides[j][0] + rides[j][2];
+                dp[rides[j][1]] = Math.max(dp[rides[j][1]], dp[i] + d);
+                ++j;
+            }
+        }
+        return dp[n];
+    }
+}
+
+
+class FindOriginalArray {
+    public int[] findOriginalArray(int[] changed) {
+        int n = changed.length, cnt = 0;
+        List<Integer> ans = new ArrayList<>();
+        HashMap<Integer, List<Integer>> map = new HashMap<>();
+        Arrays.sort(changed);
+
+        // for (Integer ll: changed) System.out.println(ll);
+
+        if (n == 1 || n == 0 || n % 2 != 0) return new int[]{};
+
+        for (int i = 0; i < n; i++) {
+            int e = changed[i];
+            if (e % 2 == 0 && map.containsKey(e / 2) && map.get(e / 2).size() > 0) {
+                ans.add(e / 2);
+                cnt++;
+                List<Integer> list = map.get(e / 2);
+                list.remove(0);
+                if (list.size() > 0) map.put(e / 2, list);
+                else map.remove(e / 2);
+                continue;
+            }
+            if (map.containsKey(e)) {
+                List<Integer> l = map.get(e);
+                l.add(i);
+                map.put(e, l);
+            } else {
+                List<Integer> l = new ArrayList<>();
+                l.add(i);
+                map.put(e, l);
+            }
+        }
+        if (cnt == n / 2) return ans.stream().mapToInt(x -> x).toArray();
+        return new int[]{};
+    }
+}
+
+// TODO: Solve again
+class SplitIntoFibonacci {
+    List<Integer> al = new ArrayList<>();
+
+    public List<Integer> splitIntoFibonacci(String num) {
+        for (int i = 0; i < num.length(); i++) {
+            if (i > 0 && num.charAt(0) == '0') return new ArrayList<Integer>();
+            long a = Long.parseLong(num.substring(0, i + 1));
+            if (a > Integer.MAX_VALUE) break;
+            for (int j = i + 1; j < num.length(); j++) {
+                long b = Long.parseLong(num.substring(i + 1, j + 1));
+                if (b > Integer.MAX_VALUE) break;
+                al.add((int) a);
+                al.add((int) b);
+                if (j > i + 1 && num.charAt(i + 1) == '0') break;
+                if (j + 1 < num.length() && solve((int) a, (int) b, num, j + 1)) return al;
+                else al.remove(al.size() - 1);
+            }
+            al.clear();
+        }
+        return new ArrayList<Integer>();
+    }
+
+    public boolean solve(int a, int b, String num, int index) {
+        if (index == num.length()) return true;
+        String sum = String.valueOf(a + b);
+        if (index + sum.length() > num.length()) {
+            al.remove(al.size() - 1);
+            return false;
+        }
+        String actualSum = num.substring(index, index + sum.length());
+        if (!sum.equals(actualSum)) {
+            al.remove(al.size() - 1);
+            return false;
+        } else {
+            al.add(a + b);
+            return solve(b, a + b, num, index + sum.length());
+        }
+    }
+}
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ * int val;
+ * TreeNode left;
+ * TreeNode right;
+ * TreeNode() {}
+ * TreeNode(int val) { this.val = val; }
+ * TreeNode(int val, TreeNode left, TreeNode right) {
+ * this.val = val;
+ * this.left = left;
+ * this.right = right;
+ * }
+ * }
+ */
+// Algo:-
+
+// - if tree is null retrun empty array list
+// - Apply preorder traversal recursivelyand check of node had beee already taken in map or not
+// - if its taken first time for that level fetch it else skip it
+// - return the global ans
+
+/*
+
+[1,2,3,4,5,6,7]
+   [(0, [1]),(-1, [2]), (-2, [4]),  ]
+
+TC = O(Nlogn) + O(N) ~= O(nlogn)
+SC = O(N)
+*/
+
+class VerticalTraversal {
+    public class Pair implements Comparable<Pair> {
+        int key;
+        int value;
+
+        public Pair(int key, int value) //Constructor of the class
+        {
+            this.key = key;
+            this.value = value;
+        }
+
+        public int compareTo(Pair o) {
+            return this.key - o.key;
+        }
+    }
+
+    // To store the vline and nodes with level on that vline
+    HashMap<Integer, PriorityQueue<Pair>> map = new HashMap<>();
+
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+        if (root == null) return null;
+        inorder(root, 0, 0);
+        List<List<Integer>> ans = new ArrayList<>();
+        Map<Integer, PriorityQueue<Pair>> treemap = new TreeMap<>(map);
+
+        // Iterate through map and get the result in desired format
+        for (Map.Entry<Integer, PriorityQueue<Pair>> entry : treemap.entrySet()) {
+            PriorityQueue<Pair> pq = entry.getValue();
+            // to store level along iwth nodes on that level
+            // grouping the nodes based on level
+            Map<Integer, List<Integer>> hm = new TreeMap<>();
+            List<Integer> colList = new ArrayList<>();
+
+            while (!pq.isEmpty()) {
+                Pair res = pq.poll();
+                if (hm.containsKey(res.key)) {
+                    List<Integer> list = new ArrayList<>();
+                    List<Integer> l = hm.get(res.key);
+                    l.add(res.value);
+                    hm.put(res.key, l);
+                } else hm.put(res.key, new ArrayList<>(Arrays.asList(res.value)));
+            }
+
+            for (Map.Entry<Integer, List<Integer>> e : hm.entrySet()) {
+                List<Integer> pd = e.getValue();
+                Collections.sort(pd);
+                for (Integer data : pd) colList.add(data);
+            }
+            ans.add(colList);
+        }
+        return ans;
+    }
+
+    private void inorder(TreeNode root, int level, int vline) {
+        if (root == null) return;
+
+        vline -= 1;
+        inorder(root.left, level + 1, vline);
+        vline += 1;
+        // node on this vline is already present then add new node in list of this vline
+        if (map.get(vline) != null) {
+            PriorityQueue<Pair> existingpq = map.get(vline);
+            existingpq.add(new Pair(level, root.val));
+            map.put(vline, existingpq);
+        } else {
+            // Else if node on this vline is found first time then simply add it
+            PriorityQueue<Pair> newNode = new PriorityQueue<>();
+            newNode.add(new Pair(level, root.val));
+            map.put(vline, newNode);
+        }
+        inorder(root.right, level + 1, vline + 1);
+    }
+}
+
+class CanPartitionKSubsets {
+    int[] nums;
+    int n;
+    boolean[] vis;
+
+    public boolean canPartitionKSubsets(int[] nums, int k) {
+        this.n = nums.length;
+        this.nums = nums;
+        vis = new boolean[n];
+        int t = 0;
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < n; i++) {
+            t += nums[i];
+            max = Math.max(max, nums[i]);
+        }
+
+        if (t % k != 0) return false;
+
+        for (int i = 0; i < n; i++) if (nums[i] > max) return false;
+
+        int target = t / k;
+        return dfs(0, target, 0, k);
+    }
+
+    private boolean dfs(int sum, int target, int idx, int left) {
+        if (left == 1) return true;
+
+        if (sum == target) {
+            return dfs(0, target, 0, left - 1);
+        }
+
+        if (sum > target || idx >= n) return false;
+
+        for (int i = idx; i < n; i++) {
+            if (!vis[i]) {
+                vis[i] = true;
+                if (dfs(sum + nums[i], target, idx + 1, left)) return true;
+                vis[i] = false;
+            }
+        }
+        return false;
+    }
+}
+
+
+// Intial thoughts:-
+// BFS algorithm
+
+
+//  DP
+//  - create a map to adjancent nodes alogn with distance
+//  - iterate through all nodes and calculate cost of each path recursively
+//  - update minCost path if currNode reaches to destination
+//  - returm minCost;
+// TC  = (2^n)
+// SC = O(n)
+class FindCheapestPriceGraphBFS {
+
+    /*
+    class Solution {
+  int n;
+  int[][] flights;
+  int src;
+  int dst;
+  // create a graph
+  Map<Integer, List < pair >> graph;
+  int minCost = Integer.MAX_VALUE;
+  public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
+    this.n = n;
+    this.flights = flights;
+    this.src = src;
+    this.dst = dst;
+    this.graph = new HashMap<>();
+    //Build graph used for adjancy list and distance
+    for (int i = 0; i < flights.length; i++) {
+      int srcF = flights[i][0];
+      int dest = flights[i][1];
+      int dist = flights[i][2];
+      if (graph.containsKey(srcF)) {
+        List < pair > existing = graph.get(srcF);
+        existing.add(new pair(dest, dist));
+        graph.put(srcF, existing);
+      } else {
+        List < pair > newNodes = new ArrayList < > ();
+        newNodes.add(new pair(dest, dist));
+        graph.put(srcF, newNodes);
+       }
+    }
+
+    int  result  =  cheapest(0, k, src) ;
+    return result == Integer.MAX_VALUE ? -1 : res;
+  }
+
+  private int cheapest(int currStop, int maxStops, int currNode) {
+    // base case
+
+    if (maxStops == 0) {
+     for (pair p :  graph.get(currNode)){
+          if (p.node == dst) return p.dist;
+      }
+    }
+    if (currNode == dst) return 0;
+    if (currStop == maxStops) return -1;
+
+    int currCost = 0;
+    for (pair p :  graph.get(currNode)){
+        int price = cheapest(currStop + 1, maxStops, p.node);
+        if  (price != -1){
+          currCost  = p.dist + price;
+          currCost += p.dist; // add last edge cost
+          minCost = Math.min(minCost, currCost);
+        }
+    }
+    return minCost;
+  }
+
+  class pair {
+    int node;
+    int dist;
+    pair(int node, int dist) {
+      this.node = node;
+      this.dist = dist;
+    }
+
+  }
+}
+     */
+    Map<Integer, List<int[]>> map;
+    Integer dp[][];
+
+    int find(int src, int dest, int k) {
+        if (k < 0) return 1000_000_00;
+        if (src == dest) return 0;
+        if (dp[src][k] != null) return dp[src][k];
+        int max = 1000_000_00;
+        for (int arr[] : map.getOrDefault(src, new ArrayList<>())) {
+            max = Math.min(max, arr[1] + find(arr[0], dest, k - 1));
+        }
+        return dp[src][k] = max;
+    }
+
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
+        map = new HashMap<>();
+        dp = new Integer[n + 1][K + 2];
+        for (int a[] : flights) {
+            map.computeIfAbsent(a[0], k -> new ArrayList<>());
+            map.get(a[0]).add(new int[]{a[1], a[2]});
+        }
+        int temp = find(src, dst, K + 1);
+        return temp >= 1000_000_00 ? -1 : temp;
+    }
+}
+
+// TODO: Solve it again
+class WaysToArriveAtDestnation {
+    public int countPaths(int n, int[][] roads) {
+        final List<List<Node>> graph = new ArrayList<>(n);
+        for (int i = 0; i < n; i++) {
+            graph.add(new ArrayList());
+        }
+        for (final int[] arr : roads) {
+            graph.get(arr[0]).add(new Node(arr[1], arr[2]));
+            graph.get(arr[1]).add(new Node(arr[0], arr[2]));
+        }
+        return this.dfs(graph, n);
+    }
+
+    public int dfs(final List<List<Node>> adj, int n) {
+        final int mod = 1_000_000_007;
+        final Queue<Node> queue = new PriorityQueue<>(n);
+        final long[] costs = new long[n];
+        final long[] ways = new long[n];
+        final boolean[] cache = new boolean[n];
+        queue.add(new Node(0, 0));
+        Arrays.fill(costs, Long.MAX_VALUE);
+        costs[0] = 0;
+        //one way to visit first node
+        ways[0] = 1;
+        while (!queue.isEmpty()) {
+            final Node currentNode = queue.poll();
+            if (currentNode.cost > costs[currentNode.position] || cache[currentNode.position]) {
+                continue;
+            }
+            for (final Node vertex : adj.get(currentNode.position)) {
+                if (costs[currentNode.position] + vertex.cost < costs[vertex.position]) {
+                    costs[vertex.position] = costs[currentNode.position] + vertex.cost;
+                    ways[vertex.position] = ways[currentNode.position] % mod;
+                    queue.add(new Node(vertex.position, costs[vertex.position]));
+                } else if (costs[currentNode.position] + vertex.cost == costs[vertex.position]) {
+                    ways[vertex.position] = (ways[vertex.position] + ways[currentNode.position]) % mod;
+                }
+            }
+        }
+        return (int) ways[n - 1];
+    }
+
+    @SuppressWarnings("ALL")
+    private static class Node implements Comparable<Node> {
+        int position;
+        long cost;
+
+        public Node(int dis, long val) {
+            this.position = dis;
+            this.cost = val;
+        }
+
+
+        @Override
+        public int compareTo(final Node o) {
+            return Long.compare(this.cost, o.cost);
+        }
+    }
+}
+
+
+// TODO: Revisit
+class MaxMatrixSum {
+    public long maxMatrixSum(int[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int mini = Integer.MAX_VALUE;
+        int cnt = 0;
+        long sum = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                sum += Math.abs(matrix[i][j]);
+                if (matrix[i][j] < 0) cnt++;
+                mini = Math.min(mini, Math.abs(matrix[i][j]));
+            }
+        }
+        if (cnt % 2 == 0) return sum;
+        return sum - 2 * mini;
+    }
+}
+
+class WordladderLengthBFS {
+    public int ladderLength(String start, String end, List<String> wordList) {
+        Set<String> dict = new HashSet<>(wordList);
+
+        dict.add(start);
+        Map<String, Integer> distances = new HashMap<>();
+        return bfsHelper(start, end, dict, distances);
+
+    }
+
+    // use BFS, and traverse each word and its neighbors
+    // if we find any word equals to end, we've return the "level" -- distances -- length
+    private int bfsHelper(String start,
+                          String end,
+                          Set<String> dict,
+                          Map<String, Integer> distances) {
+        Queue<String> queue = new LinkedList<>();
+        queue.offer(start);
+        distances.put(start, 0); // distance keep track of how far it is from start
+
+        while (!queue.isEmpty()) {
+            String word = queue.poll();
+            int distance = distances.get(word);
+
+            for (String nextWord : getNextWords(word, dict)) {
+                if (!distances.containsKey(nextWord)) {
+                    queue.offer(nextWord);
+                    distances.put(nextWord, distance + 1);
+                }
+            }
+        }
+
+        printMap(distances);
+
+        if (distances.containsKey(end)) {
+            return distances.get(end) + 1;
+        }
+        return 0;
+    }
+
+    private void printMap(Map<String, Integer> visited) {
+        for (String s : visited.keySet()) {
+            System.out.println(s + " : " + visited.get(s));
+        }
+    }
+
+    private List<String> getNextWords(String word, Set<String> dict) {
+        List<String> res = new ArrayList<>();
+        for (int i = 0; i < word.length(); i++) {
+            char ch = word.charAt(i);
+            for (int j = 0; j < 26; j++) {
+                if (ch != (char) ('a' + j)) {
+                    // substitute word.charAt(i) using (char)('a' + j)
+                    String nextWord = word.substring(0, i) + (char) ('a' + j) + word.substring(i + 1);
+                    if (dict.contains(nextWord)) {
+                        res.add(nextWord);
+                    }
+                }
+            }
+        }
+        return res;
+    }
+}
+
+class BoundaryPathsTree {
+
+    int[] dx = {0, 1, 0, -1};
+    int[] dy = {1, 0, -1, 0};
+    int M = 1000000000 + 7;
+    int m, n;
+
+    public int findPaths(int m, int n, int maxMove, int startRow, int startColumn) {
+        this.m = m;
+        this.n = n;
+        int[][][] dp = new int[m][n][maxMove + 1];
+        for (int[][] l : dp)
+            for (int[] sl : l) Arrays.fill(sl, -1);
+
+        return recursive(m, n, startRow, startColumn, dp, maxMove);
+    }
+
+    // this function will tell that the current node is safe to be visited or not
+    private boolean isSafe(int r, int c) {
+        return (r < m && c < n && r >= 0 && c >= 0);
+    }
+
+    private int recursive(int m, int n, int r, int c, int[][][] dp, int maxMove) {
+        // base cases
+        if (!isSafe(r, c)) return 1;
+        if (maxMove == 0) return 0;
+
+        if (dp[r][c][maxMove] >= 0) return dp[r][c][maxMove];
+
+        dp[r][c][maxMove] = (
+                (recursive(m, n, r + 1, c, dp, maxMove - 1)
+                        + recursive(m, n, r - 1, c, dp, maxMove - 1)) % M
+                        + (recursive(m, n, r, c + 1, dp, maxMove - 1)
+                        + recursive(m, n, r, c - 1, dp, maxMove - 1)) % M
+        ) % M;
+
+        return dp[r][c][maxMove];
+    }
+}
+
+
+//TODO: Revisit
+
+class UniquePathsIIIBFSGrid {
+    int[] dx = {0, 1, 0, -1};
+    int[] dy = {1, 0, -1, 0};
+    boolean[][] visited;
+    int[][] obstacleGrid;
+    int m, n, space = 0;
+    static int paths = 0;
+    // find src and dest points
+    Point src, dest;
+
+    public int uniquePathsIII(int[][] obstacleGrid) {
+        m = obstacleGrid.length;
+        n = obstacleGrid[0].length;
+
+        if (m == 1 && n == 1) {
+            if (obstacleGrid[0][0] == 0) return 1;
+            else return 0;
+        }
+        this.src = new Point();
+        this.dest = new Point();
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (obstacleGrid[i][j] == 1) {
+                    this.src.x = i;
+                    this.src.y = j;
+                } else if (obstacleGrid[i][j] == 2) {
+                    this.dest.x = i;
+                    this.dest.y = j;
+                } else if (obstacleGrid[i][j] == 0) {
+                    space++;
+                }
+            }
+        }
+
+        this.obstacleGrid = obstacleGrid;
+        visited = new boolean[m][n];
+        int[][] dp = new int[m][n];
+        for (int[] rows : dp) Arrays.fill(rows, -1);
+        recursive(m, n, this.src.x, this.src.y, 0);
+        // For a single path once found paths=0 is done to reset the path again and evaluate it
+        int k = paths;
+        paths = 0;
+        return k;
+    }
+
+    // this function will tell that the current node is safe to be visited or not
+    private boolean isSafe(int r, int c) {
+        return (r < m && c < n && r >= 0 && c >= 0 && (obstacleGrid[r][c] != -1));
+    }
+
+    private void recursive(int m, int n, int r, int c, int cells) {
+        // base cases
+        if (r == this.dest.x && c == this.dest.y && cells == space) {
+            paths++;
+            return;
+        } else if (!isSafe(r, c) || visited[r][c]) return;
+        for (int i = 0; i < 4; i++) {
+            int x = r + dx[i];
+            int y = c + dy[i];
+            if (isSafe(x, y) && !visited[x][y]) {
+                visited[r][c] = true;
+                if (obstacleGrid[x][y] == 0) cells += 1;
+                recursive(m, n, x, y, cells);
+                if (obstacleGrid[x][y] == 0) cells -= 1;
+                visited[r][c] = false; // backtrack
+            }
+        }
+        return;
+    }
+
+    class Point {
+        int x;
+        int y;
+
+        Point(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        Point() {
+        }
+    }
+}
+
+//TODO: Revisit
+class SQRTBinarySeach {
+    public int mySqrt(int num) {
+
+        if (num < 2) {
+            return num;
+        }
+
+        long start = 2;
+        long end = num;
+        while (start <= end) {
+            long mid = start + (end - start) / 2;
+            if (mid * mid == num) return (int) mid;
+            else if (mid * mid < num) start = mid + 1;
+            else end = mid - 1;
+        }
+        return (int) (start - 1);
+    }
 }
