@@ -9871,6 +9871,7 @@ class SolutionHasPath {
     }
 }
 
+// TOP_DOWN
 // Backtracking
 class CombinationSum4 {
     public int combinationSum4(int[] nums, int target) {
@@ -10118,7 +10119,7 @@ class SubSet2 {
 
         for (int i = index; i < nums.length; i++) {
             int num = nums[i];
-            res.add(new Integer(num));
+            res.add(num);
             bfs(nums, i + 1, result, res);
             res.remove(new Integer(num));
         }
@@ -11092,5 +11093,21 @@ class SQRTBinarySeach {
             else end = mid - 1;
         }
         return (int) (start - 1);
+    }
+}
+
+class combinationSum4BottomUpDP {
+    // TC = O(n*target), SC = O(1)
+    // Bottom up approach
+    public int combinationSum4(int[] nums, int target) {
+        int n  = nums.length;
+        int[] dp = new int[target+1];
+        dp[0]=1; // Do not take any element at all
+
+        for (int i=1;i<=target;i++){
+            for(int num : nums)
+                if (i >= num) dp[i] += dp[i-num];
+        }
+        return dp[target];
     }
 }
