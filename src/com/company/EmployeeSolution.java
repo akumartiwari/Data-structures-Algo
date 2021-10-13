@@ -170,6 +170,22 @@ public class EmployeeSolution {
         return (c >= zero && c <= nine) || c == '.';
     }
 
+    
+    // Greedy approach
+	// The approach to traverse through the array and check if we get a n 'X'  character then move 3 steps ahead 
+	//  else move only 1 step (normal pace)
+
+	public int minimumMoves(String s) {
+		int n = s.length(), cnt = 0;
+		for (int i = 0; i<n;) {
+			if (s.charAt(i) == 'X') {
+				i += 3;
+				cnt++;
+			} else i++;
+		}
+		return cnt;
+	}
+    
 }
 
 
