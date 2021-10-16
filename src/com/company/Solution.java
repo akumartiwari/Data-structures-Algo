@@ -870,6 +870,93 @@ Output: 32
         }
     }
 
+    // Quick sort algorithm to find out Kth largest element from the array 
+	public int findKthLargest(int[] nums, int k) {
+		int n = nums.length;
+		k = n - k;
+		return quickSelect(nums, 0, n - 1, k);
+	}
+	// Quick select function to find the partition index 
+	private int quickSelect(int[] nums, int l, int h, int k) {
+		if (l == h) return nums[k];
+		int pIndex = partition(nums, l, h);
+		if (pIndex<k) {
+			return quickSelect(nums, pIndex + 1, h, k);
+		} else {
+			return quickSelect(nums, l, pIndex, k);
+		}
+	}
+
+	// Find pIndex based on input provided 
+	private int partition(int[] nums, int l, int h) {
+		int i = l - 1, j = h + 1;
+		int pIndex = (l + h) / 2;
+		int pivot = nums[pIndex];
+		while (true) {
+			while (nums[++i]<pivot);
+			while (nums[--j] > pivot);
+			if (i >= j) return j;
+			swap(nums, i, j);
+		}
+	}
+
+	// swap indexes in array
+	private void swap(int[] nums, int i, int j) {
+		int temp = nums[i];
+		nums[i] = nums[j];
+		nums[j] = temp;
+	}
+    
+     public int minMovesToSeat(int[] seats, int[] students) {
+        int moves = 0;
+        Arrays.sort(seats);
+        Arrays.sort(students);
+        for (int i=0;i<students.length;i++){
+             moves += Math.abs(students[i]-seats[i]);
+        }
+        return moves;
+    }
+    
+    static long INF = (long) 1e10;
+	public long kthSmallestProduct(int[] nums1, int[] nums2, long k) {
+		int m = nums1.length, n = nums2.length;
+		long l = -INF - 1, h = INF + 1;
+
+		while (l<h) {
+			long mid = l + ((h - l) >> 1), cnt = 0;
+
+			// binary search for cnt lesser than expected element
+			for (int num: nums1) {
+				if (num >= 0) {
+					int i = 0, j = n - 1, p = 0;
+					while (i<= j) {
+						int c = i + ((j - i) >> 1);
+						long mul = num * (long) nums2[c];
+						if (mul<= mid) {
+							p = c + 1;
+							i = c + 1;
+						} else j = c - 1;
+					}
+					cnt += p;
+				} else {
+					int i = 0, j = n - 1, p = 0;
+					while (i<= j) {
+						int c = i + ((j - i) >> 1);
+						long mul = num * (long) nums2[c];
+						if (mul<= mid) {
+							p = n - c;
+							j = c - 1;
+						} else i = c + 1;
+					}
+					cnt += p;
+				}
+			}
+			if (cnt >= k) h = mid;
+			else l = mid + 1L;
+		}
+		return l;
+	}
+    
 }
 
 
