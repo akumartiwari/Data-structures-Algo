@@ -956,7 +956,115 @@ Output: 32
 		}
 		return l;
 	}
-    
+    	// The element with greater than n/2 occurrence will have count at least 1 for the its existence vs non-existence
+	public int majorityElement(int[] nums) {
+		int candidate = Integer.MIN_VALUE;
+		int n = nums.length;
+		int cnt = 0;
+		for (int num: nums) {
+			if (cnt == 0) {
+			   candidate = num;
+			}
+			cnt += (candidate == num) ? 1 : -1;
+		}
+		return candidate;
+	}
+	
+	
+	/*
+class Solution {
+	// For all numbers compute the max bitwiuse OR then recursively find all possible subsets
+	public int countMaxOrSubsets(int[] nums) {
+		int n = nums.length;
+		int a = 0;
+		for (int num: nums) a |= num;
+		return subset(nums, n - 1, a, 0);
+	}
+	private int subset(int[] nums, int len, int a, int b) {
+		// Base case 
+		if (len<0) return 0;
+		int ans = 0;
+		if (a == (b | nums[len])) ans = 1;
+		return ans + subset(nums, len - 1, a, b) // Not taken
+			+
+			subset(nums, len - 1, a, b | nums[len]); // Taken
+	}
 }
+*/
+    int cnt = 0, maxOR=0;
+    public int countMaxOrSubsets(int[] nums) {
+        int n = nums.length;
+        subset(nums, 0, 0);
+        return cnt;
+    }
+    
+    private void subset(int [] nums, int ind, int OR){
+        // base case 
+        int n = nums.length;
+        if (ind == n){
+            if (OR > maxOR){
+                maxOR = OR;
+                cnt = 1;
+            } else if (OR == maxOR) cnt ++;
+            return;
+        }
+        
+        
+        // include 
+        subset(nums, ind+1, OR|nums[ind]);
+        // exclude
+        subset(nums, ind+1, OR);
+    }
+}
+
+class Bank {
+	long[] balance;
+	int n;
+	public Bank(long[] balance) {
+		// Intialise objects
+		this.balance = balance;
+		this.n = this.balance.length;
+	}
+
+	public boolean transfer(int account1, int account2, long money) {
+		// validation of accounts
+		if (!(account1 >= 1 && account1<= n) || (!(account2 >= 1 && account2<= n))) return false;
+
+		// check transfer conditions
+		if (balance[account1 - 1] >= money) {
+			balance[account1 - 1] -= money;
+			balance[account2 - 1] += money;
+			return true;
+		}
+		return false;
+	}
+
+	public boolean deposit(int account, long money) {
+		//  validation of accounts
+		if (!(account >= 1 && account<= n)) return false;
+		// Deposit amount in account
+		balance[account - 1] += money;
+		return true;
+	}
+
+	public boolean withdraw(int account, long money) {
+		// validation of account
+		if (!(account >= 1 && account<= n)) return false;
+		// withdraw amount
+		if (balance[account - 1] >= money) {
+			balance[account - 1] -= money;
+			return true;
+		}
+		return false;
+	}
+}
+
+/**
+ * Your Bank object will be instantiated and called as such:
+ * Bank obj = new Bank(balance);
+ * boolean param_1 = obj.transfer(account1,account2,money);
+ * boolean param_2 = obj.deposit(account,money);
+ * boolean param_3 = obj.withdraw(account,money);
+ */
 
 
