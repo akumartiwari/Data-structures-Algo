@@ -11094,6 +11094,43 @@ class SQRTBinarySeach {
         }
         return (int) (start - 1);
     }
+
+	// O(n+m), O(1)
+	/*
+     This problem is called Merge Sorted Array
+     Example:- 
+     Input: nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3
+Output: [1,2,2,3,5,6]
+    Algo :- We start filling the array from right end till all elements of nums1 is consumed 
+        After that remaining element of nums2 is utitlised 
+        */
+
+	public void merge(int[] nums1, int m, int[] nums2, int n) {
+		int i = m - 1, j = n - 1, k = m + n - 1;
+		while (j > -1) {
+			if (i > -1) {
+				nums1[k--] = nums1[i] > nums2[j] ? nums1[i--] : nums2[j--];
+			} else {
+				nums1[k--] = nums2[j--];
+			}
+		}
+	}
+	
+	
+    // This is based on binary search of peak element 
+    // Input: nums = [1,2,3,1]
+    // Output: 2
+    // Explanation: 3 is a peak element and your function should return the index number 2.
+    // TC = O(logn), SC = O(1)
+    public int findPeakElement(int[] nums) {
+        int n = nums.length;
+        int l = 0, r = n - 1;
+        while (l < r) {
+            int m = l + (r - l) / 2;
+            if (nums[m] < nums[m + 1]) l = m + 1;
+            else r = m;
+        }
+        return l;
 }
 
 class combinationSum4BottomUpDP {
