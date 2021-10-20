@@ -11132,6 +11132,35 @@ Output: [1,2,2,3,5,6]
         }
         return l;
 }
+	
+	 // O(logn)
+	// We have to iteratively partition array into haves and evavluate which half is sorted 
+        // and then apply BS for the element 
+	  public int search(int[] nums, int target) {
+		int n = nums.length;
+		int l = 0, r = n - 1;
+
+		// Find 2 halves of array
+		while (l<= r) {
+			int mid = l + (r - l) / 2;
+			if (nums[mid] == target) return mid;
+			// First half is sorted and other half is unsorted
+			if (nums[l]<= nums[mid]) {
+				if (target >= nums[l] && target<nums[mid]) {
+					r = mid - 1;
+				} else l = mid + 1;a
+			}
+			// Seoond half is sorted and other half is unsorted
+			else {
+				if (target > nums[mid] && target<= nums[r]) {
+					l = mid + 1;
+				} else r = mid - 1;
+			}
+		}
+		return -1;
+
+	}
+}
 
 class combinationSum4BottomUpDP {
     // TC = O(n*target), SC = O(1)
