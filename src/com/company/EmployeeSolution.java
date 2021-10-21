@@ -185,9 +185,44 @@ public class EmployeeSolution {
 		}
 		return cnt;
 	}
-    
-}
+	
+	
+	// KADAN's ALGO
+   public int maxSubArray(int[] nums) {
+ 	int n = nums.length;
+ 	int max_sum_so_far = Integer.MIN_VALUE, max_ending_here = 0;
 
+ 	for (int i = 0; i<n; i++) {
+ 		max_ending_here += nums[i];
+ 		max_sum_so_far = Math.max(max_ending_here, max_sum_so_far);
+ 		if (max_ending_here<0) max_ending_here = 0;
+ 	}
+ 	return max_sum_so_far;
+ }
+
+      // O(n+m), O(1)
+	/*
+     This problem is called Merge Sorted Array
+     Example:- 
+     Input: nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3
+Output: [1,2,2,3,5,6]
+
+    Algo :- We start filling the array from right end till all elements of nums1 is consumed 
+        After that remaining element of nums2 is utitlised 
+
+        */
+
+	public void merge(int[] nums1, int m, int[] nums2, int n) {
+		int i = m - 1, j = n - 1, k = m + n - 1;
+		while (j > -1) {
+			if (i > -1) {
+				nums1[k--] = nums1[i] > nums2[j] ? nums1[i--] : nums2[j--];
+			} else {
+				nums1[k--] = nums2[j--];
+			}
+		}
+	}
+}
 
 /*
     private static final int[][] DIRS = new int[][]{{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
@@ -269,4 +304,5 @@ public class EmployeeSolution {
         return false;
     }
  */
+
 
