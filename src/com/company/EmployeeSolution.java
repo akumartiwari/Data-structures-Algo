@@ -222,6 +222,120 @@ Output: [1,2,2,3,5,6]
 			}
 		}
 	}
+	
+		// Thoughts:- 
+
+	/* 
+
+	   TC = O(2^n), Sc = O(n)
+
+	   Algorithm:-
+	  - The idea is to split array in two parts such that 
+	     avg(A) = avg(B)
+	  - Iterate thrugh array elements and for each elem 
+	     check if we can split it in two parts with equals avg 
+
+	  -  We have choice of take or dont take in first part 
+	     ie. if arr(i) is taken in part1 sumA+arr(i)
+	     else sumB + arr(i)
+
+	  - Do above step recursilvely and backtrack
+	  - check if sumA == sumB && (index == n-1) { that means all elements have been segregated into two parts successfuly
+	  } 
+	     - if true return true 
+	      else return false and recurse further 
+	  - Add Memoization to improve exponential time complexity        
+
+	  total  = sumA + sumB
+	  sumB = total - sumA
+
+	  A+B=n
+	  B=n-A
+
+	  sumA/A = sumB/B
+
+	  sumA/A = total-sumA/B
+	  sumA/A = total-sumA/n-A
+	  n*sumA/A  = total
+	  sumA = total * lenA / n
+
+	  problem boils down to finding a subsequence of length len1
+	  with sum equals sumA
+	*/
+
+	public boolean splitArraySameAverage(int[] nums) {
+		int n = nums.length, total = 0;
+		for (int i = 0; i<n; i++) total += nums[i];
+
+		HashMap<String, Boolean> map = new HashMap<>();
+		for (int cnt = 1; cnt<n; cnt++) {
+			if ((total * cnt) % n == 0) {
+				if (isPossible(nums, 0, cnt, (total * cnt) / n, map)) return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean isPossible(int[] nums, int ind, int len, int sum, HashMap<String, Boolean> map) {
+		int n = nums.length;
+		// base case 
+		if (sum == 0 && len == 0) {
+			return true;
+		}
+
+		if (ind >= n || len == 0) return false;
+		String key = len + "-" + sum + "-" + ind;
+		if (map.containsKey(key)) return map.get(key);
+		// if number can be taken
+		if (sum - nums[ind] >= 0) {
+			// taken 
+			boolean case1 = isPossible(nums, ind + 1, len - 1, sum - nums[ind], map);
+
+			// not taken 
+			boolean case2 = isPossible(nums, ind + 1, len, sum, map);
+
+			map.put(key, (case1 || case2));
+			return case1 || case2;
+		}
+
+		// Can't be taken 
+		boolean case2 = isPossible(nums, ind + 1, len, sum, map);
+
+		map.put(key, case2);
+		return case2;
+	}
+	
+// Min. no. of steps to  make both strings equal
+    // Input: word1 = "sea", word2 = "eat"
+    // Output: 2
+    // TC = O(n1*n2), SC =  O(n1*n2)
+	public int minDistance(String word1, String word2) {
+		int n1 = word1.length();
+		int n2 = word2.length();
+		int[][] dp = new int[n1 + 1][n2 + 1]; // To get no of steps after removing a character from either strings 
+
+		for (int i = 0; i<= n1; i++) {
+			for (int j = 0; j<= n2; j++) {
+				// if no character is removed from word1 then steps = no. of characters of word2
+				if (i == 0) dp[i][j] = j;
+				// if no character is removed from word2 then steps = no. of character of word1
+				else if (j == 0) dp[i][j] = i;
+				else {
+					// if prev chartacters are same then steps = prev steps
+					if (word1.charAt(i - 1) == word2.charAt(j - 1)) {
+						dp[i][j] = dp[i - 1][j - 1];
+					}
+
+					// Else take min of both cases 
+					else {
+						dp[i][j] = 1 + Math.min(dp[i - 1][j], dp[i][j - 1]);
+					}
+				}
+			}
+		}
+		return dp[n1][n2];
+
+	}
 }
 
 /*
