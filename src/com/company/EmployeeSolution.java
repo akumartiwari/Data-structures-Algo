@@ -305,7 +305,7 @@ Output: [1,2,2,3,5,6]
 		return case2;
 	}
 	
-// Min. no. of steps to  make both strings equal
+    // Min. no. of steps to  make both strings equal
     // Input: word1 = "sea", word2 = "eat"
     // Output: 2
     // TC = O(n1*n2), SC =  O(n1*n2)
@@ -336,6 +336,56 @@ Output: [1,2,2,3,5,6]
 		return dp[n1][n2];
 
 	}
+	
+    // TC = O(V+E), SC = O(V+E)
+    long maxScore;
+    int count;
+    public int countHighestScoreNodes(int[] parents) {
+        int n = parents.length;
+        // create an adjacancy list of edges of each vertex
+        List<Integer> list[] = new ArrayList[n];
+        
+        for (int i=0;i<n;i++){
+              list[i] = new ArrayList<>();
+        }
+        
+        for (int i=1;i<n;i++){
+            list[parents[i]].add(i);
+        }
+     
+        maxScore = 0L;
+        count = 0;
+        dfs(0, list, n); // dfs to count the  number of nodes in tree with root 0 
+        
+        return count;
+    }
+    
+    
+    // This function calculates the number of node in the subtree of root u 
+    private long dfs(int u, List<Integer> list[], int n){
+
+        int total=0;
+        long prod=1L, rem, val;
+        
+        for (Integer v : list[u]){
+            val = dfs(v, list, n);
+            total += val;
+            prod *= val;
+        }
+        
+        // if nodes  remaning beyond subtree with root u the  it will be taken into consideration
+        rem = (long)(n-total-1);
+        if (rem > 0) prod *= rem;
+        
+        // Logic for maxScore
+        if (prod > maxScore){
+            maxScore = prod;
+            count = 1;
+        } else if (prod == maxScore){
+            count ++;
+        }
+        return total+1;
+    }
 }
 
 /*
