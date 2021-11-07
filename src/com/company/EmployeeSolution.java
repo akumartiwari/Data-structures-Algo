@@ -475,7 +475,133 @@ Output: [1,2,2,3,5,6]
   	return maxTime;
   }
 	
+  // TC = O(n)
+   private boolean isVowel(char ch) {
+		return ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u';
+   }
+   public long countVowels(String word) {
+       long n = word.length();
+       long ans = 0;
+       for (long i=0;i<n;i++){
+           if (isVowel(word.charAt((int) i))) ans += (long) ((n-i) * (i+1) * 1L);
+       }
+       return ans;
+   }
+	
 
+   // TC = O(2n) + O(2n)
+   // Sliding windopw approach
+   // We have found the  count of vowels <= k and then substracted vowels <= k to get vowels == k
+   public int countVowelSubstrings(String word) {
+	 return cntVowelKMaxSubstrings(word, 5) - cntVowelKMaxSubstrings(word, 4);
+   }
+
+   private int cntVowelKMaxSubstrings(String word, int k) {
+		int n = word.length();
+		int i = 0, cnt = 0;
+		HashMap<Character, Integer> map = new HashMap<>();
+		for (int j = 0; j<n; j++) {
+			char ch = word.charAt(j);
+			//when we have reached at a consonant then  directly jump till j
+			if (!isVowel(ch)) {
+				map.clear();
+				i = j + 1;
+				continue;
+			}
+
+			map.put(ch, map.getOrDefault(ch, 0) + 1);
+
+			//count all possible sunstrings with at max K vowels
+			while (map.size() > k) {
+				map.put(word.charAt(i), map.getOrDefault(word.charAt(i), 0) - 1);
+				if (map.get(word.charAt(i)) == 0) map.remove(word.charAt(i));
+				i++;
+			}
+			cnt += (j - i + 1);
+		}
+		return cnt;
+   }
+	
+	
+	// TC = O(n^E) --> Exponential
+        // We have done dfs to get the max path 
+	// As each node can be visisted any number of times and hence  do dfs along with updating  node  vis status backtracking
+	int maxVal;
+	public int maximalPathQuality(int[] values, int[][] edges, int maxTime) {
+		int n = values.length;
+		int[] vis = new int[n];
+		// base case
+		if (edges.length == 0) {
+			if (n > 0) {
+				return values[0];
+			} else return 0;
+		}
+		// Initialise adjancy list for<Integer, List<Pair<Integer, Integer>> type of Map
+		HashMap<Integer, List<Pair<Integer, Integer>>> adj = new HashMap<>();
+		// create adjancy list
+		for (int[] edge: edges) {
+			int u = edge[0];
+			int v = edge[1];
+			int tm = edge[2];
+
+			if (adj.containsKey((u))) {
+				List<Pair<Integer, Integer>> val = adj.get(u);
+				val.add(new Pair(v, tm));
+				adj.put(u, val);
+			} else {
+				adj.put(u, new ArrayList<>() {
+					{
+						add(new Pair(v, tm));
+					}
+				});
+			}
+
+			if (adj.containsKey((v))) {
+				List<Pair<Integer, Integer>> val = adj.get(v);
+				val.add(new Pair(u, tm));
+				adj.put(v, val);
+			} else {
+				// For ArrayList
+				adj.put(v, new ArrayList<>() {
+					{
+						add(new Pair(u, tm));
+					}
+				});
+			}
+
+			maxVal = 0;
+		}
+		// dfs
+		f(0, 0, values, adj, vis, maxTime);
+		// return maxVal
+		return maxVal;
+	}
+
+	private void f(int node, int val, int[] values, HashMap<Integer, List<Pair<Integer, Integer>>> adj, int[] vis, int maxTime) {
+		// base case 
+		if (maxTime<0) return;
+
+		vis[node]++;
+		if (vis[node] == 1) val += values[node];
+
+		if (node == 0) {
+			maxVal = Math.max(maxVal, val);
+		}
+
+		// if only node is contained
+		if (adj.containsKey(node)) {
+			for (Pair<Integer, Integer> p: adj.get(node)) {
+				int child = p.getKey();
+				int time = p.getValue();
+
+				f(child, val, values, adj, vis, maxTime - time);
+			}
+		}
+
+		vis[node]--;
+	}
+	
+	
 }
 
 /*
