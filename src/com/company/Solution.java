@@ -871,192 +871,197 @@ Output: 32
     }
 
     // Quick sort algorithm to find out Kth largest element from the array 
-	public int findKthLargest(int[] nums, int k) {
-		int n = nums.length;
-		k = n - k;
-		return quickSelect(nums, 0, n - 1, k);
-	}
-	// Quick select function to find the partition index 
-	private int quickSelect(int[] nums, int l, int h, int k) {
-		if (l == h) return nums[k];
-		int pIndex = partition(nums, l, h);
-		if (pIndex<k) {
-			return quickSelect(nums, pIndex + 1, h, k);
-		} else {
-			return quickSelect(nums, l, pIndex, k);
-		}
-	}
+    public int findKthLargest(int[] nums, int k) {
+        int n = nums.length;
+        k = n - k;
+        return quickSelect(nums, 0, n - 1, k);
+    }
 
-	// Find pIndex based on input provided 
-	private int partition(int[] nums, int l, int h) {
-		int i = l - 1, j = h + 1;
-		int pIndex = (l + h) / 2;
-		int pivot = nums[pIndex];
-		while (true) {
-			while (nums[++i]<pivot);
-			while (nums[--j] > pivot);
-			if (i >= j) return j;
-			swap(nums, i, j);
-		}
-	}
+    // Quick select function to find the partition index
+    private int quickSelect(int[] nums, int l, int h, int k) {
+        if (l == h) return nums[k];
+        int pIndex = partition(nums, l, h);
+        if (pIndex < k) {
+            return quickSelect(nums, pIndex + 1, h, k);
+        } else {
+            return quickSelect(nums, l, pIndex, k);
+        }
+    }
 
-	// swap indexes in array
-	private void swap(int[] nums, int i, int j) {
-		int temp = nums[i];
-		nums[i] = nums[j];
-		nums[j] = temp;
-	}
-    
-     public int minMovesToSeat(int[] seats, int[] students) {
+    // Find pIndex based on input provided
+    private int partition(int[] nums, int l, int h) {
+        int i = l - 1, j = h + 1;
+        int pIndex = (l + h) / 2;
+        int pivot = nums[pIndex];
+        while (true) {
+            while (nums[++i] < pivot) ;
+            while (nums[--j] > pivot) ;
+            if (i >= j) return j;
+            swap(nums, i, j);
+        }
+    }
+
+    // swap indexes in array
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+    public int minMovesToSeat(int[] seats, int[] students) {
         int moves = 0;
         Arrays.sort(seats);
         Arrays.sort(students);
-        for (int i=0;i<students.length;i++){
-             moves += Math.abs(students[i]-seats[i]);
+        for (int i = 0; i < students.length; i++) {
+            moves += Math.abs(students[i] - seats[i]);
         }
         return moves;
     }
-    
+
     static long INF = (long) 1e10;
-	public long kthSmallestProduct(int[] nums1, int[] nums2, long k) {
-		int m = nums1.length, n = nums2.length;
-		long l = -INF - 1, h = INF + 1;
 
-		while (l<h) {
-			long mid = l + ((h - l) >> 1), cnt = 0;
+    public long kthSmallestProduct(int[] nums1, int[] nums2, long k) {
+        int m = nums1.length, n = nums2.length;
+        long l = -INF - 1, h = INF + 1;
 
-			// binary search for cnt lesser than expected element
-			for (int num: nums1) {
-				if (num >= 0) {
-					int i = 0, j = n - 1, p = 0;
-					while (i<= j) {
-						int c = i + ((j - i) >> 1);
-						long mul = num * (long) nums2[c];
-						if (mul<= mid) {
-							p = c + 1;
-							i = c + 1;
-						} else j = c - 1;
-					}
-					cnt += p;
-				} else {
-					int i = 0, j = n - 1, p = 0;
-					while (i<= j) {
-						int c = i + ((j - i) >> 1);
-						long mul = num * (long) nums2[c];
-						if (mul<= mid) {
-							p = n - c;
-							j = c - 1;
-						} else i = c + 1;
-					}
-					cnt += p;
-				}
-			}
-			if (cnt >= k) h = mid;
-			else l = mid + 1L;
-		}
-		return l;
-	}
-    	// The element with greater than n/2 occurrence will have count at least 1 for the its existence vs non-existence
-	public int majorityElement(int[] nums) {
-		int candidate = Integer.MIN_VALUE;
-		int n = nums.length;
-		int cnt = 0;
-		for (int num: nums) {
-			if (cnt == 0) {
-			   candidate = num;
-			}
-			cnt += (candidate == num) ? 1 : -1;
-		}
-		return candidate;
-	}
-	
-	
-	/*
+        while (l < h) {
+            long mid = l + ((h - l) >> 1), cnt = 0;
+
+            // binary search for cnt lesser than expected element
+            for (int num : nums1) {
+                if (num >= 0) {
+                    int i = 0, j = n - 1, p = 0;
+                    while (i <= j) {
+                        int c = i + ((j - i) >> 1);
+                        long mul = num * (long) nums2[c];
+                        if (mul <= mid) {
+                            p = c + 1;
+                            i = c + 1;
+                        } else j = c - 1;
+                    }
+                    cnt += p;
+                } else {
+                    int i = 0, j = n - 1, p = 0;
+                    while (i <= j) {
+                        int c = i + ((j - i) >> 1);
+                        long mul = num * (long) nums2[c];
+                        if (mul <= mid) {
+                            p = n - c;
+                            j = c - 1;
+                        } else i = c + 1;
+                    }
+                    cnt += p;
+                }
+            }
+            if (cnt >= k) h = mid;
+            else l = mid + 1L;
+        }
+        return l;
+    }
+
+    // The element with greater than n/2 occurrence will have count at least 1 for the its existence vs non-existence
+    public int majorityElement(int[] nums) {
+        int candidate = Integer.MIN_VALUE;
+        int n = nums.length;
+        int cnt = 0;
+        for (int num : nums) {
+            if (cnt == 0) {
+                candidate = num;
+            }
+            cnt += (candidate == num) ? 1 : -1;
+        }
+        return candidate;
+    }
+
+
+    /*
 class Solution {
-	// For all numbers compute the max bitwiuse OR then recursively find all possible subsets
-	public int countMaxOrSubsets(int[] nums) {
-		int n = nums.length;
-		int a = 0;
-		for (int num: nums) a |= num;
-		return subset(nums, n - 1, a, 0);
-	}
-	private int subset(int[] nums, int len, int a, int b) {
-		// Base case 
-		if (len<0) return 0;
-		int ans = 0;
-		if (a == (b | nums[len])) ans = 1;
-		return ans + subset(nums, len - 1, a, b) // Not taken
-			+
-			subset(nums, len - 1, a, b | nums[len]); // Taken
-	}
+    // For all numbers compute the max bitwiuse OR then recursively find all possible subsets
+    public int countMaxOrSubsets(int[] nums) {
+        int n = nums.length;
+        int a = 0;
+        for (int num: nums) a |= num;
+        return subset(nums, n - 1, a, 0);
+    }
+    private int subset(int[] nums, int len, int a, int b) {
+        // Base case
+        if (len<0) return 0;
+        int ans = 0;
+        if (a == (b | nums[len])) ans = 1;
+        return ans + subset(nums, len - 1, a, b) // Not taken
+            +
+            subset(nums, len - 1, a, b | nums[len]); // Taken
+    }
 }
 */
-    int cnt = 0, maxOR=0;
+    int cnt = 0, maxOR = 0;
+
     public int countMaxOrSubsets(int[] nums) {
         int n = nums.length;
         subset(nums, 0, 0);
         return cnt;
     }
-    
-    private void subset(int [] nums, int ind, int OR){
+
+    private void subset(int[] nums, int ind, int OR) {
         // base case 
         int n = nums.length;
-        if (ind == n){
-            if (OR > maxOR){
+        if (ind == n) {
+            if (OR > maxOR) {
                 maxOR = OR;
                 cnt = 1;
-            } else if (OR == maxOR) cnt ++;
+            } else if (OR == maxOR) cnt++;
             return;
         }
-        
-        
+
+
         // include 
-        subset(nums, ind+1, OR|nums[ind]);
+        subset(nums, ind + 1, OR | nums[ind]);
         // exclude
-        subset(nums, ind+1, OR);
+        subset(nums, ind + 1, OR);
     }
 }
 
 class Bank {
-	long[] balance;
-	int n;
-	public Bank(long[] balance) {
-		// Intialise objects
-		this.balance = balance;
-		this.n = this.balance.length;
-	}
+    long[] balance;
+    int n;
 
-	public boolean transfer(int account1, int account2, long money) {
-		// validation of accounts
-		if (!(account1 >= 1 && account1<= n) || (!(account2 >= 1 && account2<= n))) return false;
+    public Bank(long[] balance) {
+        // Intialise objects
+        this.balance = balance;
+        this.n = this.balance.length;
+    }
 
-		// check transfer conditions
-		if (balance[account1 - 1] >= money) {
-			balance[account1 - 1] -= money;
-			balance[account2 - 1] += money;
-			return true;
-		}
-		return false;
-	}
+    public boolean transfer(int account1, int account2, long money) {
+        // validation of accounts
+        if (!(account1 >= 1 && account1 <= n) || (!(account2 >= 1 && account2 <= n))) return false;
 
-	public boolean deposit(int account, long money) {
-		//  validation of accounts
-		if (!(account >= 1 && account<= n)) return false;
-		// Deposit amount in account
-		balance[account - 1] += money;
-		return true;
-	}
+        // check transfer conditions
+        if (balance[account1 - 1] >= money) {
+            balance[account1 - 1] -= money;
+            balance[account2 - 1] += money;
+            return true;
+        }
+        return false;
+    }
 
-	public boolean withdraw(int account, long money) {
-		// validation of account
-		if (!(account >= 1 && account<= n)) return false;
-		// withdraw amount
-		if (balance[account - 1] >= money) {
-			balance[account - 1] -= money;
-			return true;
-		}
-		return false;
-	}
+    public boolean deposit(int account, long money) {
+        //  validation of accounts
+        if (!(account >= 1 && account <= n)) return false;
+        // Deposit amount in account
+        balance[account - 1] += money;
+        return true;
+    }
+
+    public boolean withdraw(int account, long money) {
+        // validation of account
+        if (!(account >= 1 && account <= n)) return false;
+        // withdraw amount
+        if (balance[account - 1] >= money) {
+            balance[account - 1] -= money;
+            return true;
+        }
+        return false;
+    }
 }
 
 /**
