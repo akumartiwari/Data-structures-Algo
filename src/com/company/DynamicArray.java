@@ -11160,6 +11160,66 @@ Output: [1,2,2,3,5,6]
         return -1;
 
     }
+
+    // PQ + BFS
+    // This is a astandard application for PQ and application of BFS
+    //[[u,v] = meeting times list]
+    Map<Integer, Map<Integer, List<Integer>>> g = new HashMap<>();
+
+    public List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+
+        int[] notified = new int[n];
+        Arrays.fill(notified, -1);
+        for (int i = 0; i < n; i++) g.put(i, new HashMap<>());
+        for (int[] m : meetings) getMeetingTimes(m[0], m[1]).add(m[2]);
+        List<Integer> res = new ArrayList<>();
+
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+        pq.offer(new int[]{
+                0,
+                0
+        });
+        pq.offer(new int[]{
+                firstPerson,
+                0
+        });
+
+        while (!pq.isEmpty()) {
+            int[] cur = pq.poll();
+            int u = cur[0];
+            if (notified[u] > -1) continue; //already visited
+            notified[u] = cur[1];
+            res.add(u);
+            for (Map.Entry<Integer, List<Integer>> entry : g.get(u).entrySet()) {
+                int v = entry.getKey();
+                if (notified[v] > -1) continue; // already visited
+                Collections.sort(entry.getValue());
+                for (int time : entry.getValue()) {
+                    //get first time u and v met after person u learned the secret
+                    if (time >= notified[u]) {
+                        pq.offer(new int[]{
+                                v,
+                                time
+                        });
+                        break;
+                    }
+                }
+            }
+            g.remove(u); //u was fully processed
+        }
+
+        return res;
+    }
+
+    private List<Integer> getMeetingTimes(int u, int v) {
+        List<Integer> times = g.get(u).get(v);
+        if (times == null) {
+            times = new ArrayList<>();
+            g.get(u).put(v, times);
+            g.get(v).put(u, times);
+        }
+        return times;
+    }
 }
 
 class combinationSum4BottomUpDP {
