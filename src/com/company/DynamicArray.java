@@ -11220,6 +11220,93 @@ Output: [1,2,2,3,5,6]
         }
         return times;
     }
+
+
+    // TC = O(2^n), SC = O(2^n)
+    // this is based on generating all possivble permuatation of an array of desired length
+//    via backtracking
+    Set<Integer> set = new HashSet<>();
+
+    public int[] findEvenNumbers(int[] digits) {
+        int n = digits.length;
+        boolean[] seen = new boolean[n];
+        permute(0, digits, "", seen);
+        return set.stream().mapToInt(x -> x).sorted().toArray();
+    }
+
+    private void permute(int idx, int[] digits, String curr, boolean[] seen) {
+
+        //base cases
+        if (idx == 3) {
+            set.add(Integer.parseInt(curr));
+            return;
+        }
+
+        for (int i = 0; i < digits.length; i++) {
+            if (seen[i] || (idx == 0 && digits[i] == 0) || (idx == 2 && digits[i] % 2 != 0)) continue;
+            seen[i] = true;
+            permute(idx + 1, digits, curr + digits[i], seen);
+            seen[i] = false;
+        }
+    }
+
+
+    // TC = (n/2), SC = O(1)
+    public ListNode deleteMiddle(ListNode head) {
+        if (head.next == null) return null;
+        ListNode slow = head;
+        ListNode fast = head.next.next;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        slow.next = slow.next.next;
+        return head;
+    }
+
+    // LCA based solution
+    public TreeNode findLCA(TreeNode node, int s, int d) {
+        if (node == null) return null;
+
+        if (node.val == s || node.val == d) return node;
+
+        TreeNode left = findLCA(node.left, s, d);
+        TreeNode right = findLCA(node.right, s, d);
+        if (left != null && right != null) return node;
+        if (left == null && right != null) return right;
+        else return left;
+    }
+
+    public String getDirections(TreeNode root, int startValue, int destValue) {
+        TreeNode CA = findLCA(root, startValue, destValue);
+        StringBuilder ans = new StringBuilder();
+        ArrayDeque<String> q1 = new ArrayDeque<>();
+        helper(CA, startValue, q1);
+        ArrayDeque<String> q2 = new ArrayDeque<>();
+        helper(CA, destValue, q2);
+
+        for (int i = 0; i < q1.size(); i++) ans.append("U");
+        while (!q2.isEmpty()) ans.append(q2.poll());
+
+        return ans.toString();
+    }
+
+    private boolean helper(TreeNode n, int v, ArrayDeque<String> q) {
+        if (n == null) return false;
+        if (n.val == v) return true;
+
+        q.offer("L");
+        boolean left = helper(n.left, v, q);
+        if (left) return true;
+        q.removeLast();
+
+        q.offer("R");
+        boolean right = helper(n.right, v, q);
+        if (right) return true;
+        q.removeLast();
+
+        return false;
+    }
 }
 
 class combinationSum4BottomUpDP {
