@@ -11264,6 +11264,23 @@ Output: [1,2,2,3,5,6]
         return head;
     }
 
+
+    private ListNode deleteMiddleSimpleApproach(ListNode head) {
+        if (head == null || head.next == null) return null;
+        ListNode curr = head;
+        ListNode prev = null;
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast != null && fast.next != null) {
+            prev = curr;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        prev.next = curr.next;
+        return head;
+    }
+
+
     // LCA based solution
     public TreeNode findLCA(TreeNode node, int s, int d) {
         if (node == null) return null;
@@ -11306,6 +11323,29 @@ Output: [1,2,2,3,5,6]
         q.removeLast();
 
         return false;
+    }
+
+
+    public int[] maxSubsequence(int[] nums, int k) {
+        List<Integer> ans = new ArrayList<>();
+        largestSum(ans, nums, k, 0);
+        return ans.stream().mapToInt(x -> x).toArray();
+    }
+
+    private int largestSum(List<Integer> ans, int[] nums, int k, int idx) {
+        if (idx >= nums.length) return 0;
+
+        if (ans.size() < k) {
+            //pick
+            ans.add(nums[idx]);
+            int pick = nums[idx] + largestSum(ans, nums, k, idx + 1);
+            // not pick
+            int npick = largestSum(ans, nums, k, idx + 1);
+            return Math.max(pick, npick);
+        }
+
+        // not pick
+        return largestSum(ans, nums, k, idx + 1);
     }
 }
 

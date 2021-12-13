@@ -2,6 +2,7 @@ package com.company;
 
 import javafx.util.Pair;
 
+import java.sql.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -604,7 +605,77 @@ Output: [1,2,2,3,5,6]
         vis[node]--;
     }
 
+    /*
+     arr = [3,4,3,3]
+     k = 2
 
+    pq = {4, 3, 3, 3}
+    map = { (3, (0, 2,3), (4,1))}
+
+    ans = {1,0,2,3}
+
+   result = [4, ]
+     */
+
+    //    TC = O(nlogn), sc = O(n)
+    /*
+      Dry run for the  given input
+      Input = [18,3,19,-8,30,22,-35,11,16,18,-21,32,-7,-6,38,25,-21,-1,26,-8,-37,-39,-34,6,-36,-3,26,-32,22,-20,35,-35,-30,-8,11,7,-23,-9,-22,1,33,-6,12,2,27,-27,28,-12,21,12,16,21,33]
+50
+     */
+    // TODO:- Not completely solved
+    public int[] maxSubsequence(int[] nums, int k) {
+        int n = nums.length;
+        // max-pq
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+        for (int num : nums) {
+            pq.add(num);
+        }
+
+        // elem-idx map
+        HashMap<Integer, List<Integer>> map = new HashMap<>();
+
+        for (int i = 0; i < n; i++) {
+            if (map.containsKey(nums[i])) {
+                List<Integer> exist = map.get(nums[i]);
+                exist.add(i);
+                map.put(nums[i], exist);
+            } else {
+                List<Integer> list = new ArrayList<>();
+                list.add(i);
+                map.put(nums[i], list);
+            }
+        }
+
+
+        List<Integer> ans = new ArrayList<>();
+        // Fetch k largest elements
+        while (!pq.isEmpty()) {
+            int elem = pq.poll();
+            List<Integer> idx = map.get(elem);
+            Collections.sort(idx);
+            boolean exhausted = false;
+            for (int e : idx) {
+                if (ans.size() < k) ans.add(e);
+                else {
+                    exhausted = true;
+                    break;
+                }
+            }
+            if (exhausted) break;
+        }
+
+        Collections.sort(ans);
+        // for (int idx : ans) System.out.println(idx);
+        int[] result = new int[k];
+        int index = 0;
+        for (int idx : ans) {
+            result[index] = nums[idx];
+            index++;
+        }
+
+        return result;
+    }
 }
 
 /*
@@ -687,5 +758,4 @@ Output: [1,2,2,3,5,6]
         return false;
     }
  */
-
 
