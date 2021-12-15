@@ -611,23 +611,16 @@ Output: [1,2,2,3,5,6]
 
     pq = {4, 3, 3, 3}
     map = { (3, (0, 2,3), (4,1))}
-
     ans = {1,0,2,3}
-
-   result = [4, ]
+    result = [4, 3]
      */
 
     //    TC = O(nlogn), sc = O(n)
-    /*
-      Dry run for the  given input
-      Input = [18,3,19,-8,30,22,-35,11,16,18,-21,32,-7,-6,38,25,-21,-1,26,-8,-37,-39,-34,6,-36,-3,26,-32,22,-20,35,-35,-30,-8,11,7,-23,-9,-22,1,33,-6,12,2,27,-27,28,-12,21,12,16,21,33]
-50
-     */
-    // TODO:- Not completely solved
     public int[] maxSubsequence(int[] nums, int k) {
         int n = nums.length;
         // max-pq
-        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+        // TC = O(nlogn)
+        PriorityQueue<Integer> pq = new PriorityQueue<Integer>(Collections.reverseOrder());
         for (int num : nums) {
             pq.add(num);
         }
@@ -635,6 +628,7 @@ Output: [1,2,2,3,5,6]
         // elem-idx map
         HashMap<Integer, List<Integer>> map = new HashMap<>();
 
+        // TC = O(n)
         for (int i = 0; i < n; i++) {
             if (map.containsKey(nums[i])) {
                 List<Integer> exist = map.get(nums[i]);
@@ -648,10 +642,15 @@ Output: [1,2,2,3,5,6]
         }
 
 
+        // TC = O(nlogn)
         List<Integer> ans = new ArrayList<>();
         // Fetch k largest elements
         while (!pq.isEmpty()) {
             int elem = pq.poll();
+
+            //Poll all same elements
+            while (!pq.isEmpty() && pq.peek() == elem) pq.poll();
+
             List<Integer> idx = map.get(elem);
             Collections.sort(idx);
             boolean exhausted = false;
@@ -666,15 +665,43 @@ Output: [1,2,2,3,5,6]
         }
 
         Collections.sort(ans);
-        // for (int idx : ans) System.out.println(idx);
         int[] result = new int[k];
         int index = 0;
-        for (int idx : ans) {
-            result[index] = nums[idx];
-            index++;
+
+        // TC = O(n)
+        // Traverse the array once again and remove the occurrence of index if present
+        // In this way order can be preserved
+        for (int i = 0; i < n; i++) {
+            if (ans.contains(i)) {
+                result[index++] = nums[i];
+            }
         }
 
         return result;
+    }
+
+    // Sliding window
+    // TC = O(n)
+    public List<Integer> goodDaysToRobBank(int[] security, int time) {
+        int n = security.length;
+        boolean[] left = new boolean[n];
+        int slow = 0;
+        // l->r traversal for sliding window for  non-increasing elements
+        for (int i = 0; i < n; i++) {
+            if (i == 0 || security[i - 1] < security[i]) slow = i;
+            if (i - slow >= time) left[i] = true;
+        }
+
+        slow = n - 1;
+        // r->l traversal for sliding window for  non-descresing elements
+        List<Integer> ans = new ArrayList<>();
+        for (int i = n - 1; i >= 0; i--) {
+            if (i == n - 1 || security[i + 1] < security[i]) slow = i;
+            if (slow - i >= time && left[i]) {
+                ans.add(i);
+            }
+        }
+        return ans;
     }
 }
 
