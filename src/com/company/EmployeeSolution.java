@@ -704,9 +704,170 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    // TC = O(n*n), SC = O(1)
+    // Solution by Anand
+    public String firstPalindrome(String[] words) {
+        int n = words.length;
+        for (String word : words) {
+            if (isPalidrome(word)) return word;
+        }
+        return "";
+    }
 
+    private boolean isPalidrome(String word) {
+        int n = word.length();
+        for (int i = 0; i < Math.abs(n / 2); i++) {
+            if (word.charAt(i) != word.charAt(n - i - 1)) return false;
+        }
+        return true;
+    }
+
+
+    // TC = O(n), SC = O(1)
+    public String addSpaces(String s, int[] spaces) {
+        int n = spaces.length;
+
+        if (n == 0) return s;
+        int idx = 0;
+        StringBuilder ans = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            if (idx < n && i == spaces[idx]) {
+                ans.append(" ").append(s.charAt(i));
+                idx++;
+            } else ans.append(s.charAt(i));
+        }
+        return ans.toString();
+    }
+
+
+    /*
+
+       Constraints:
+
+1 <= prices.length <= 105
+1 <= prices[i] <= 105
+
+
+Input: prices = [3,2,1,4]
+Output: 7
+Explanation: There are 7 smooth descent periods:
+[3], [2], [1], [4], [3,2], [2,1], and [3,2,1]
+Note that a period with one day is a smooth descent period by the definition.
+
+// 12,11,10,9,8,7,6,5,4,3 = 10 * 11 / 2 = 55
+
+[12,11,10,9,8,7,6,5,4,3,4,3,10,9,8,7]
+   TC = O(2n), SC=O(1)
+     */
+    // TODO: Not solved with all edge cases
+    public long getDescentPeriods(int[] prices) {
+        boolean flag = false;
+        long cnt = 0L;
+        int l = 0, h = 0, n = prices.length, idx = 0;
+        boolean isnincreasing = true;
+        while (idx < n) {
+            if (h == 0) {
+                h++;
+            } else if (prices[h - 1] - prices[h] == 1) {
+                flag = true;
+                if (!isnincreasing) {
+                    isnincreasing = true;
+                    l = h - 1;
+                }
+                h++;
+            } else {
+                cnt += (long) Math.abs((h - l + 1) * (h - l) / 2);
+                isnincreasing = false;
+                l = h;
+                h++;
+            }
+            idx++;
+        }
+
+        if (h == idx) {
+            cnt += (long) Math.abs((h - l + 1) * (h - l) / 2);
+        }
+        if (flag) return cnt;
+        return n;
+    }
+
+    // Solved by anand
+    public long getDescentPeriodsSimple(int[] prices) {
+        int n = prices.length;
+        int s = 0, e = 0;
+        long cnt = 1;
+        for (e = 1; e < n; e++) {
+            if (prices[e - 1] - prices[e] == 1)
+                cnt += (e - s + 1);
+            else {
+                s = e;
+                cnt++;
+            }
+        }
+        return cnt;
+    }
+
+    // TODO:-Solve for all edge cases
+    public int numSubarrayBoundedMax(int[] nums, int left, int right) {
+        int n = nums.length;
+        int s = 0;
+        int cnt = 0, max = Integer.MIN_VALUE;
+        for (int e = 0; e < n; e++) {
+            max = Math.max(nums[e], max);
+            if (left <= max && max <= right) {
+                if (!(left <= nums[e] && nums[e] <= right)) cnt++;
+                else cnt += (e - s + 1);
+                System.out.println(cnt);
+            } else {
+                if (left <= nums[e] && nums[e] <= right) cnt++;
+                s = e;
+                while (!(left <= nums[s] && nums[s] <= right)) {
+                    s++;
+                    e++;
+                }
+                e -= 1;
+                max = Integer.MIN_VALUE;
+            }
+        }
+        return cnt;
+    }
+
+    // Solved by anand
+    // TC = O(n), SC = O(1)
+//    Keep on moving right pointer till condition is met
+//    The moment when  coniditon id broken cnt the results and shift left
+//    pointer towards right by just one and repeat above process
+    public int numSubarrayProductLessThanK(int[] nums, int k) {
+        if (k <= 1) return 0;
+        int n = nums.length;
+        int s = 0;
+        int cnt = 0, p = 1;
+        for (int e = 0; e < n; e++) {
+            p *= nums[e];
+            while (p >= k) p /= nums[s++];
+            cnt += (e - s + 1);
+        }
+        return cnt;
+    }
+
+    // Recursive DP based solution
+    // Solved by anand
+    // Apply memoisation
+    // TODO:-
+    public int kIncreasing(int[] arr, int k) {
+        int n = arr.length;
+        int min = Integer.MAX_VALUE;
+        for (int i = 0; i < n; i++) {
+            min = Math.min(minOperation(arr, k, 0), min);
+        }
+        return min;
+    }
+
+    private int minOperation(int[] arr, int k, int idx) {
+
+        return 0;
+    }
 }
-
 /*
     private static final int[][] DIRS = new int[][]{{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 
