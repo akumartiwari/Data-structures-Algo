@@ -2,7 +2,6 @@ package com.company;
 
 import javafx.util.Pair;
 
-import java.sql.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,11 +57,25 @@ public class EmployeeSolution {
         return maxSum;
     }
 
-    Set<String> ans = new HashSet<>();
+    Set<String> result = new HashSet<>();
 
     public List<String> addOperators(String num, int target) {
         calculate(num, 0, target, "");
-        return new ArrayList<>(ans);
+        return new ArrayList<>(result);
+    }
+
+//    Input: num = 526
+//    Output: true
+//    Explanation: Reverse num to get 625, then reverse 625 to get 526, which equals num.
+//    Input: num = 1800
+//    Output: false
+//    Explanation: Reverse num to get 81, then reverse 81 to get 18, which does not equal num.
+
+    // Author: Anand
+    // If a number has traling is zero and its not zero then it must return false
+    public boolean isSameAfterReversals(int num) {
+        if (num != 0 && num % 10 == 0) return false;
+        return true;
     }
 
     private void calculate(String num, int index, int target, String expression) {
@@ -78,7 +91,7 @@ public class EmployeeSolution {
             }
 
             if (sum == target) {
-                ans.add(res);
+                result.add(res);
             }
         } else {
 
@@ -867,6 +880,123 @@ Note that a period with one day is a smooth descent period by the definition.
 
         return 0;
     }
+
+    // Author : Anand
+    // TC = O(2n), SC=O(n)
+    public long[] getDistances(int[] arr) {
+        int n = arr.length;
+        HashMap<Integer, Long> cntMap = new HashMap<>();
+        HashMap<Integer, Long> sumMap = new HashMap<>();
+        long[] ans = new long[n];
+
+        for (int i = 0; i < n; i++) {
+            int key = arr[i];
+            ans[i] += cntMap.getOrDefault(key, 0L) * i - (sumMap.getOrDefault(key, 0L));
+            cntMap.put(key, cntMap.getOrDefault(key, 0L) + 1);
+            sumMap.put(key, sumMap.getOrDefault(key, 0L) + i);
+        }
+        cntMap.clear();
+        sumMap.clear();
+
+        for (int i = n - 1; i >= 0; i--) {
+            int key = arr[i];
+            ans[i] += sumMap.getOrDefault(key, 0L) - (cntMap.getOrDefault(key, 0L) * i);
+            cntMap.put(key, cntMap.getOrDefault(key, 0L) + 1);
+            sumMap.put(key, sumMap.getOrDefault(key, 0L) + i);
+        }
+        return ans;
+    }
+
+    // Author : Anand
+    // Simple BFS travesal must solve the problem
+    // Brute-Force
+    // TC = O(n^2)
+    public int[] executeInstructions(int n, int[] startPos, String s) {
+        int len = s.length();
+        int[] ans = new int[len];
+        int r = n - 1, c = n - 1;
+        for (int i = 0; i < len; i++) {
+            int cnt = 0;
+            int x = startPos[0];
+            int y = startPos[1];
+            for (int j = i; j < len; j++) {
+                if (s.charAt(j) == 'U') x--;
+                else if (s.charAt(j) == 'R') y++;
+                else if (s.charAt(j) == 'L') y--;
+                else x++;
+
+                if (isValidPos(x, y, n)) cnt++;
+                else {
+                    ans[i] = cnt;
+                    break;
+                }
+            }
+            ans[i] = cnt;
+        }
+
+        return ans;
+    }
+
+    private boolean isValidPos(int i, int j, int n) {
+        return (i >= 0 && j >= 0 && i < n && j < n);
+    }
+
+    /*
+    Input: nums = [2,10,6,4,8,12]
+    Output: [3,7,11]
+    Explanation:
+    If arr = [3,7,11] and k = 1, we get lower = [2,6,10] and higher = [4,8,12].
+    Combining lower and higher gives us [2,6,10,4,8,12], which is a permutation of nums.
+    Another valid possibility is that arr = [5,7,9] and k = 3. In that case, lower = [2,4,6] and higher = [8,10,12].
+
+    Input: nums = [1,1,3,3]
+    Output: [2,2]
+    Explanation:
+    If arr = [2,2] and k = 1, we get lower = [1,1] and higher = [3,3].
+    Combining lower and higher gives us [1,1,3,3], which is equal to nums.
+    Note that arr cannot be [1,3] because in that case, the only possible way to obtain [1,1,3,3] is with k = 0.
+    This is invalid since k must be positive.
+     */
+
+    // Author: Anand
+    // Approach:-
+    // For all possible k (integer) check if its possible to segregate array
+    // into two half's then based on that value we can recover the array
+    // TC = O(n2)
+    public int[] recoverArray(int[] nums) {
+        int n = nums.length;
+        Arrays.sort(nums);
+        int lowest = nums[0];
+
+        HashMap<Integer, Integer> map1 = new HashMap<>();// To store cnt of each element
+        for (int num : nums) map1.put(num, map1.getOrDefault(num, 0) + 1);
+
+        for (int i = 1; i < n; i++) {
+            int highest = nums[i];
+            int diff = highest - lowest;
+
+            if (diff > 0 && (highest - lowest) % 2 == 0) {
+                int k = Math.abs((highest - lowest) / 2);
+                List<Integer> ans = new ArrayList<>();
+                Map<Integer, Integer> map = new HashMap<>(map1);
+
+                for (int low : nums) {
+                    int high = low + 2 * k;
+                    // That means it's possible to make a segregation at this place
+                    if (map.containsKey(low) && map.containsKey(high)) {
+                        ans.add(low + k);
+                        map.put(low, map.get(low) - 1);
+                        map.put(high, map.get(high) - 1);
+                        if (map.get(low) == 0) map.remove(low);
+                        if (map.containsKey(high) && map.get(high) == 0) map.remove(high);
+                    }
+                }
+                if (ans.size() == n / 2) return ans.stream().mapToInt(x -> x).toArray();
+            }
+        }
+        return new int[]{};
+    }
+
 }
 /*
     private static final int[][] DIRS = new int[][]{{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
