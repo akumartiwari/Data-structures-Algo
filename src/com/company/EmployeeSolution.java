@@ -820,7 +820,7 @@ Note that a period with one day is a smooth descent period by the definition.
         return cnt;
     }
 
-    // TODO:-Solve for all edge cases
+    // TODO:- Solve for all edge cases
     public int numSubarrayBoundedMax(int[] nums, int left, int right) {
         int n = nums.length;
         int s = 0;
@@ -997,6 +997,82 @@ Note that a period with one day is a smooth descent period by the definition.
         return new int[]{};
     }
 
+    // Author : Anand
+    // TC = O(n), SC = O(1)
+    public int mostWordsFound(String[] sentences) {
+        int max = Integer.MIN_VALUE;
+        for (String bs : sentences) max = Math.max(bs.split(" ").length, max);
+        return max;
+    }
+
+    // Author: Anand
+    // TC = O(mn), SC = O(mn)
+    public int maximalSquare(char[][] matrix) {
+        int row = matrix.length;
+        int col = matrix[0].length;
+
+        // To store max size square formed at coordinate {i,j}
+        int[][] dp = new int[row][col];
+        int maxi = 0;
+
+        // Fill top row and col
+        for (int i = 0; i < col; i++) {
+            dp[0][i] = matrix[0][i] - '0';
+            maxi = Math.max(maxi, dp[0][i]);
+        }
+        for (int i = 0; i < row; i++) {
+            dp[i][0] = matrix[i][0] - '0';
+            maxi = Math.max(maxi, dp[i][0]);
+        }
+
+        for (int i = 1; i < row; i++) {
+            for (int j = 1; j < col; j++) {
+                if ((matrix[i][j] - '0') == 0) {
+                    dp[i][j] = 0;
+                } else {
+                    dp[i][j] = Math.min(dp[i - 1][j], Math.min(dp[i][j - 1], dp[i - 1][j - 1])) + 1;
+                }
+                maxi = Math.max(maxi, dp[i][j]);
+            }
+        }
+
+        return maxi * maxi;
+    }
+
+    /*
+
+    ["bread","sandwich"]
+    [["yeast","flour"],["bread","meat"]]
+    ["yeast","flour","meat"]
+
+    ans = ["bread", "sandwich"]
+
+     */
+    // Author: Anand
+    // TC = O(n), SC = O(1)
+    // TODO: Create hashMaps to get all possible recipes that can be formed
+    public List<String> findAllRecipes(String[] recipes, List<List<String>> ingredients, String[] supplies) {
+        List<String> ans = new ArrayList<>();
+        List<String> supplicates = Arrays.stream(supplies).collect(Collectors.toList());
+        HashMap<String, List<String>> rm = new HashMap<>();
+        HashMap<String, List<String>> im = new HashMap<>();
+        HashMap<String, List<String>> sm = new HashMap<>();
+
+        int idx = 0;
+        for (String r : recipes) {
+            List<String> il = ingredients.get(idx++);
+            boolean isPResent = true;
+            for (String i : il) {
+                if (!supplicates.contains(i) && !ans.contains(i)) {
+                    isPResent = false;
+                    break;
+                }
+            }
+
+            if (isPResent && !ans.contains(r)) ans.add(r);
+        }
+        return ans;
+    }
 }
 /*
     private static final int[][] DIRS = new int[][]{{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
