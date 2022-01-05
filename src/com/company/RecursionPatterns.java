@@ -197,6 +197,87 @@ public class RecursionPatterns {
         }
         return ans;
     }
+
+    //Author: Anand
+    public boolean checkString(String s) {
+        int n = s.length();
+        boolean aFlag = true;
+        for (int i = 0; i < n; i++) {
+            if (aFlag && s.charAt(i) == 'b') {
+                aFlag = false;
+                continue;
+            }
+            if (!aFlag && s.charAt(i) == 'a') return false;
+        }
+        return true;
+    }
+
+    // Author : Anand
+    public int numberOfBeams(String[] bank) {
+        int n = bank.length;
+        int ans = 0;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            int one = countOne(bank[i]);
+            map.put(i, one);
+        }
+
+        int prev = map.get(0);
+        for (int i = 1; i < n; i++) {
+            if (map.get(i) > 0) {
+                ans += prev * map.get(i);
+                prev = map.get(i);
+            }
+        }
+
+        return ans;
+    }
+
+
+    private int countOne(String str) {
+        int cnt = 0;
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) == '1') cnt++;
+        }
+        return cnt;
+    }
+
+
+    // Author : Anand
+    // It is based on BS of closest matching value recursively
+    // TODO: Optimise it for nlogn  solution
+    // TC = O(N^2), SC = O(n)
+    public boolean asteroidsDestroyed(int mass, int[] asteroids) {
+        int n = asteroids.length;
+        Arrays.sort(asteroids);
+
+        List<Integer> coll = Arrays.stream(asteroids).boxed().collect(Collectors.toList());
+        while (n-- > 0) {
+            int idx = closestMass(coll, mass);
+            if (idx >= 0) {
+                if (coll.get(idx) > mass) return false;
+                mass += coll.get(idx);
+                coll.remove(coll.get(idx)); // O(n)
+            }
+        }
+
+        return n <= 0;
+    }
+
+    private int closestMass(List<Integer> asteroids, int mass) {
+        int l = 0, r = asteroids.size() - 1;
+        while (l < r) {
+            int mid = (int) Math.abs(l + (r - l) / 2);
+            if (asteroids.get(mid) > mass) {
+                r = mid - 1;
+            } else if (asteroids.get(mid) < mass) {
+                if (l != mid) l = mid;
+                else return l;
+            } else {
+                return mid;
+            }
+        }
+
+        return l;
+    }
 }
-
-
