@@ -242,35 +242,33 @@ public class RecursionPatterns {
         return cnt;
     }
 
-
     // Author : Anand
     // It is based on BS of closest matching value recursively
-    // TODO: Optimise it for nlogn  solution
-    // TC = O(N^2), SC = O(n)
+    // TC = O(nlogn), SC = O(n)
     public boolean asteroidsDestroyed(int mass, int[] asteroids) {
         int n = asteroids.length;
-        Arrays.sort(asteroids);
+        List<Integer> coll = Arrays.stream(asteroids).boxed().sorted().collect(Collectors.toList());
 
-        List<Integer> coll = Arrays.stream(asteroids).boxed().collect(Collectors.toList());
+        long nMass = mass;
         while (n-- > 0) {
-            int idx = closestMass(coll, mass);
-            if (idx >= 0) {
-                if (coll.get(idx) > mass) return false;
-                mass += coll.get(idx);
-                coll.remove(coll.get(idx)); // O(n)
+            int idx = closestMass(coll, nMass);
+            if ((long) coll.get(idx) > nMass) {
+                return false;
             }
+            nMass += (long) coll.get(idx);
+            coll.remove(idx); // O(1)
         }
 
         return n <= 0;
     }
 
-    private int closestMass(List<Integer> asteroids, int mass) {
+    private int closestMass(List<Integer> asteroids, long mass) {
         int l = 0, r = asteroids.size() - 1;
-        while (l < r) {
+        while (l <= r) {
             int mid = (int) Math.abs(l + (r - l) / 2);
-            if (asteroids.get(mid) > mass) {
+            if ((long) asteroids.get(mid) > mass) {
                 r = mid - 1;
-            } else if (asteroids.get(mid) < mass) {
+            } else if ((long) asteroids.get(mid) < mass) {
                 if (l != mid) l = mid;
                 else return l;
             } else {
@@ -280,4 +278,82 @@ public class RecursionPatterns {
 
         return l;
     }
+
+    // TODO:- REDO it
+    // ALGO:- find cycle + DFS
+    //Author:Anand
+    //Directed acyclic graph based problem
+    // TC = O(n)
+    public int maximumInvitations(int[] favorite) {
+        int n = favorite.length;
+        Set<Integer> visited = new HashSet<>();
+        // initiate dependencies
+        Map<Integer, Set<Integer>> childToParents = new HashMap<>();
+        for (int i = 0; i < favorite.length; i++) {
+            childToParents.computeIfAbsent(favorite[i], k -> new HashSet<>());
+            childToParents.get(favorite[i]).add(i);
+        }
+
+        int max = 0;
+        // all the cycles with size 2, along with its connected chain, can fit into a table
+        int size2Together = 0;
+        for (int i = 0; i < n; i++) {
+            if (visited.contains(i))
+                continue;
+
+            // cycleSize & cycleEntryPoint
+            int[] tableMeta = findCycle(i, favorite, visited);
+            if (tableMeta[0] == 2) {
+                childToParents.get(tableMeta[1]).remove(favorite[tableMeta[1]]);
+                childToParents.get(favorite[tableMeta[1]]).remove(tableMeta[1]);
+
+                tableMeta[0] = dfs(tableMeta[1], childToParents, visited) + dfs(favorite[tableMeta[1]], childToParents, visited);
+                size2Together += tableMeta[0];
+            }
+            max = Math.max(max, tableMeta[0]);
+        }
+
+        return Math.max(max, size2Together);
+
+    }
+
+    // return : new int[] {cycleSize, entryPoint}
+    private int[] findCycle(int startPoint, int[] favorite, Set<Integer> visited) {
+        int next = startPoint;
+        int entryPoint = -1;
+        int cycleSize = 0;
+
+        // find entry point of cycle
+        while (entryPoint == -1) {
+            visited.add(next);
+            cycleSize++;
+            next = favorite[next];
+            if (visited.contains(next))
+                entryPoint = next;
+        }
+
+        // remove the segment from startPoint to entryPoint
+        next = startPoint;
+        while (next != entryPoint) {
+            cycleSize--;
+            next = favorite[next];
+        }
+
+        return new int[]{cycleSize, entryPoint};
+    }
+
+    private int dfs(int child, Map<Integer, Set<Integer>> childToParents, Set<Integer> visited) {
+        visited.add(child);
+
+        if (!childToParents.containsKey(child) || childToParents.get(child).isEmpty())
+            return 1;
+
+        int max = 0;
+        for (int parent : childToParents.get(child)) {
+            max = Math.max(max, dfs(parent, childToParents, visited) + 1);
+        }
+
+        return max;
+    }
+
 }
