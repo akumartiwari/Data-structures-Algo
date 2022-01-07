@@ -356,4 +356,62 @@ public class RecursionPatterns {
         return max;
     }
 
+    //  Author : Anand
+//        Approach is base don the fact that if we can segregate the array into k subparts and
+//        each part will have min operations  (length-LIS)
+//        to make it non-decreasing
+//        then the final answer is overall combination of parts operations.
+//        [12,6,12,6,14,2,13,17,3,8,11,7,4,11,18,8,8,3]
+//        1
+    // TC = O(nlogn), SC = O(n)
+    public int kIncreasing(int[] arr, int k) {
+        int n = arr.length;
+        int total = 0;
+        List<List<Integer>> subsequences = new ArrayList<>();
+        for (int i = 0; i < k; i++) {
+            List<Integer> part = new ArrayList<>();
+            for (int j = i; j < n; j += k) {
+                part.add(arr[j]);
+            }
+            subsequences.add(part);
+        }
+
+        for (List<Integer> part : subsequences) {
+            total += part.size() - LIS(part);
+        }
+
+        return total;
+    }
+
+    private int LIS(List<Integer> part) {
+        List<Integer> ans = new ArrayList<>();
+        int lastItem = part.get(0);
+        for (Integer integer : part) {
+            if (integer >= lastItem) {
+                ans.add(integer);
+            } else {
+                // next greater element than current one in the ans list
+                int idx = nextGreaterElement(ans, integer);
+                ans.set(idx, integer);
+            }
+            lastItem = ans.get(ans.size() - 1);
+        }
+
+        return ans.size();
+    }
+
+    private int nextGreaterElement(List<Integer> ans, Integer item) {
+
+        int l = 0, r = ans.size() - 1;
+        while (l < r) {
+            int mid = (int) Math.abs(l + (r - l) / 2);
+            if (ans.get(mid) <= item) {
+                l = mid + 1;
+            } else {
+                r = mid;
+            }
+        }
+
+        return l;
+    }
 }
