@@ -1,8 +1,10 @@
 package com.company;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.util.Pair;
 
 import java.util.*;
+import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
 
 public class EmployeeSolution {
@@ -217,12 +219,12 @@ public class EmployeeSolution {
     // O(n+m), O(1)
 	/*
      This problem is called Merge Sorted Array
-     Example:- 
+     Example:-
      Input: nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3
 Output: [1,2,2,3,5,6]
 
-    Algo :- We start filling the array from right end till all elements of nums1 is consumed 
-        After that remaining element of nums2 is utitlised 
+    Algo :- We start filling the array from right end till all elements of nums1 is consumed
+        After that remaining element of nums2 is utitlised
 
         */
 
@@ -239,26 +241,26 @@ Output: [1,2,2,3,5,6]
 
     // Thoughts:-
 
-	/* 
+	/*
 
 	   TC = O(2^n), Sc = O(n)
 
 	   Algorithm:-
-	  - The idea is to split array in two parts such that 
+	  - The idea is to split array in two parts such that
 	     avg(A) = avg(B)
-	  - Iterate thrugh array elements and for each elem 
-	     check if we can split it in two parts with equals avg 
+	  - Iterate thrugh array elements and for each elem
+	     check if we can split it in two parts with equals avg
 
-	  -  We have choice of take or dont take in first part 
+	  -  We have choice of take or dont take in first part
 	     ie. if arr(i) is taken in part1 sumA+arr(i)
 	     else sumB + arr(i)
 
 	  - Do above step recursilvely and backtrack
 	  - check if sumA == sumB && (index == n-1) { that means all elements have been segregated into two parts successfuly
-	  } 
-	     - if true return true 
-	      else return false and recurse further 
-	  - Add Memoization to improve exponential time complexity        
+	  }
+	     - if true return true
+	      else return false and recurse further
+	  - Add Memoization to improve exponential time complexity
 
 	  total  = sumA + sumB
 	  sumB = total - sumA
@@ -370,13 +372,13 @@ Output: [1,2,2,3,5,6]
 
         maxScore = 0L;
         count = 0;
-        dfs(0, list, n); // dfs to count the  number of nodes in tree with root 0 
+        dfs(0, list, n); // dfs to count the  number of nodes in tree with root 0
 
         return count;
     }
 
 
-    // This function calculates the number of node in the subtree of root u 
+    // This function calculates the number of node in the subtree of root u
     private long dfs(int u, List<Integer> list[], int n) {
 
         int total = 0;
@@ -1040,40 +1042,296 @@ Note that a period with one day is a smooth descent period by the definition.
     }
 
     /*
-
-    ["bread","sandwich"]
-    [["yeast","flour"],["bread","meat"]]
-    ["yeast","flour","meat"]
+    recipe = ["bread","sandwich"]
+    Ig = [["yeast","flour"],["bread","meat"]]
+    sm = ["yeast","flour","meat"]
 
     ans = ["bread", "sandwich"]
-
+     // Author: Anand
+     // TC = O(mn) where m = # rows, n = # cols of ingredients
+    Instead of thinking the solution from left to right data
+    Think it from right to left so basically we will create list of indexes that can be formed
+    from ingredients via map DS.
+    Maintain a ingredientRecipeCount -> Used to check if recipe is ready to be formed
+    Create a supplyQueue and iterate for all supplies.
+    Suplly will act as an ingredient for the recipe, if ingredient is mapped with some recipes
+    then update its ingredientRecipeCount and check if recipe is ready to me made
+    if yes then add recipe to supply chain and result list
+    Finally return result list
      */
-    // Author: Anand
-    // TC = O(n), SC = O(1)
-    // TODO: Create hashMaps to get all possible recipes that can be formed
-    public List<String> findAllRecipes(String[] recipes, List<List<String>> ingredients, String[] supplies) {
-        List<String> ans = new ArrayList<>();
-        List<String> supplicates = Arrays.stream(supplies).collect(Collectors.toList());
-        HashMap<String, List<String>> rm = new HashMap<>();
-        HashMap<String, List<String>> im = new HashMap<>();
-        HashMap<String, List<String>> sm = new HashMap<>();
 
-        int idx = 0;
-        for (String r : recipes) {
-            List<String> il = ingredients.get(idx++);
-            boolean isPResent = true;
-            for (String i : il) {
-                if (!supplicates.contains(i) && !ans.contains(i)) {
-                    isPResent = false;
-                    break;
+    public List<String> findAllRecipes(String[] recipes, List<List<String>> ingredients, String[] supplies) {
+        if (recipes == null || recipes.length == 0
+                || ingredients == null || ingredients.size() == 0
+                || supplies == null || supplies.length == 0
+                || recipes.length != ingredients.size()
+        ) return new ArrayList<>();
+
+
+        // key- ingredient, value -> List of indexes of recipe
+        Map<String, List<Integer>> ingredientRecipeMap = new HashMap<>();
+
+        for (int i = 0; i < ingredients.size(); i++) {
+            for (int j = 0; j < ingredients.get(i).size(); j++) {
+                String ingredient = ingredients.get(i).get(j);
+                List<Integer> recipeList = ingredientRecipeMap.computeIfAbsent(ingredient, k -> new ArrayList<>());
+                recipeList.add(i);
+            }
+        }
+        // Maintain an Array for count of ingredient for a recipe
+        int[] recipeIngredientCount = new int[recipes.length];
+
+        List<String> result = new ArrayList<>();
+        LinkedList<String> supplyQueue = new LinkedList<String>(Arrays.asList(supplies));
+
+        while (!supplyQueue.isEmpty()) {
+            String ingredient = supplyQueue.poll();
+
+            if (ingredientRecipeMap.containsKey(ingredient)) {
+                List<Integer> recipeList = ingredientRecipeMap.get(ingredient);
+
+                for (Integer index : recipeList) {
+                    recipeIngredientCount[index]++;
+
+                    // All ingredients are present for a recipe then it can be made and added as a suplly
+                    if (recipeIngredientCount[index] == ingredients.get(index).size()) {
+                        supplyQueue.offer(recipes[index]);
+                        result.add(recipes[index]);
+                    }
                 }
             }
-
-            if (isPResent && !ans.contains(r)) ans.add(r);
         }
-        return ans;
+        return result;
+    }
+
+    // ArrayDeque based approach
+    public List<String> findAllRecipesV1(String[] recipes, List<List<String>> ingredients, String[] supplies) {
+        List<String> result = new ArrayList<>();
+        return result;
+    }
+
+    public boolean possibleToStamp(int[][] grid, int stampHeight, int stampWidth) {
+        return false;
+    }
+
+    /*
+
+    [5,4,2,1]
+    len = 4
+
+    lh = [6 6]
+     */
+    public int pairSum(ListNode head) {
+        int maxSum = 0;
+        int len = getLength(head);
+        int ind = 0;
+        List<Integer> lh = new ArrayList<>();
+
+        while (head != null) {
+            if (ind >= len / 2) {
+                lh.set(len - ind - 1, lh.get(len - ind - 1) + head.val);
+                maxSum = Math.max(maxSum, lh.get(len - ind - 1));
+            } else lh.add(head.val);
+
+            ind++;
+            head = head.next;
+        }
+        return maxSum;
+    }
+
+    private int getLength(ListNode head) {
+        int cnt = 0;
+        ListNode curr = head;
+        while (curr != null) {
+            cnt++;
+            curr = curr.next;
+        }
+        return cnt;
+    }
+
+
+    /*
+      TC = O(n), SC = O(n)
+      A palindrome must be mirrored over the center. Suppose we have a palindrome. If we prepend the word "ab" on the left, what must we append on the right to keep it a palindrome?
+      We must append "ba" on the right. The number of times we can do this is the minimum of (occurrences of "ab") and (occurrences of "ba").
+      For words that are already palindromes, e.g. "aa", we can prepend and append these in pairs as described in the previous hint. We can also use exactly one in the middle to form an even longer palindrome.
+      */
+    public int longestPalindrome(String[] words) {
+        int lp = 0;
+        Map<String, Integer> map = new HashMap<>(); // Map of word-count
+
+        for (String word : words) {
+            map.put(word, map.getOrDefault(word, 0) + 1);
+        }
+
+        for (String word : words) {
+            String reverse = new StringBuilder(word).reverse().toString();
+            if (!(word.charAt(0) == word.charAt(word.length() - 1))
+                    && (map.containsKey(word) && map.get(word) > 0 && map.containsKey(reverse) && map.get(reverse) > 0
+            )) {
+                int count = Math.min(map.get(word), map.get(reverse));
+                lp += count * 4;
+                while (count-- > 0) {
+                    map.put(word, map.getOrDefault(word, 0) - 1);
+                    if (map.get(word) <= 0) map.remove(word);
+                    map.put(reverse, map.getOrDefault(reverse, 0) - 1);
+                    if (map.get(reverse) <= 0) map.remove(reverse);
+                }
+            } else if (word.charAt(0) == word.charAt(word.length() - 1)
+                    && (map.containsKey(word) && map.get(word) > 0)
+            ) {
+                int count = map.get(word);
+                int evenCnt = count / 2;
+                lp += evenCnt * 4;
+                map.put(word, map.getOrDefault(word, 0) - (evenCnt * 2));
+                if (map.get(word) <= 0) map.remove(word);
+            }
+        }
+
+        //  We can also use exactly one in the middle to form an even longer palindrome.
+        for (String word : map.keySet()) {
+            if (word.charAt(0) == word.charAt(word.length() - 1)
+                    && map.get(word) == 1) {
+                lp += 2;
+                map.put(word, map.getOrDefault(word, 0) - 1);
+                if (map.get(word) <= 0) map.remove(word);
+                break;
+            }
+        }
+
+        return lp;
+    }
+
+    public boolean checkValid(int[][] matrix) {
+        int n = matrix.length;
+        HashMap<Integer, Boolean> map = new HashMap<>();
+        for (int i = 1; i <= n; i++) map.put(i, false);
+        // traverse row-wise
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                map.put(matrix[i][j], true);
+            }
+            // check if all numbers are occupied
+            for (Map.Entry<Integer, Boolean> entry : map.entrySet()) {
+                if (!entry.getValue()) return false;
+            }
+            for (int id = 1; id <= n; id++) map.put(id, false);
+        }
+
+        // traverse col-wise
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                map.put(matrix[j][i], true);
+            }
+            // check if all numbers are occupied
+            for (Map.Entry<Integer, Boolean> entry : map.entrySet()) {
+                if (!entry.getValue()) return false;
+            }
+            for (int id = 1; id <= n; id++) map.put(id, false);
+        }
+        return true;
+    }
+
+
+    private int LIS(List<Integer> part) {
+        List<Integer> ans = new ArrayList<>();
+        int lastItem = part.get(0);
+        for (Integer integer : part) {
+            if (integer >= lastItem) {
+                ans.add(integer);
+            } else {
+                // next greater element than current one in the ans list
+                int idx = nextGreaterElement(ans, integer);
+                ans.set(idx, integer);
+            }
+            lastItem = ans.get(ans.size() - 1);
+        }
+
+        return ans.size();
+    }
+
+    private int nextGreaterElement(List<Integer> ans, Integer item) {
+
+        int l = 0, r = ans.size() - 1;
+        while (l < r) {
+            int mid = (int) Math.abs(l + (r - l) / 2);
+            if (ans.get(mid) <= item) {
+                l = mid + 1;
+            } else {
+                r = mid;
+            }
+        }
+
+        return l;
+    }
+
+    // Function to find minimum swaps
+// to group all 1's together
+    public int minSwaps(int[] arr) {
+        int noOfOnes = 0;
+
+        int n = arr.length;
+// find total number of all in the array
+        for (int i = 0; i < n; i++) {
+            if (arr[i] == 1)
+                noOfOnes++;
+        }
+
+// length of subarray to check for
+        int x = noOfOnes;
+
+        int maxOnes = Integer.MIN_VALUE;
+
+// array to store number of 1's upto
+// ith index
+        int preCompute[] = new int[n];
+
+// calculate number of 1's upto ith
+// index and store in the array preCompute[]
+        if (arr[0] == 1)
+            preCompute[0] = 1;
+        for (int i = 1; i < n; i++) {
+            if (arr[i] == 1) {
+                preCompute[i] = preCompute[i - 1] + 1;
+            } else
+                preCompute[i] = preCompute[i - 1];
+        }
+
+// using sliding window technique to find
+// max number of ones in subarray of length x
+        for (int i = x - 1; i < n; i++) {
+            if (i == (x - 1))
+                noOfOnes = preCompute[i];
+            else
+                noOfOnes = preCompute[i] - preCompute[i - x];
+
+            if (maxOnes < noOfOnes)
+                maxOnes = noOfOnes;
+        }
+
+// Calculate number of zeros in subarray
+// of length x with maximum number of 1's
+        int noOfZeroes = x - maxOnes;
+
+        int op = Integer.MAX_VALUE;
+        // Because circular array and hence consider swaps here as well
+        if (arr[n - 1] == 1) {
+            op = 0;
+            int countOne = (int) Arrays.stream(arr).boxed().filter(e -> e == 1).count();
+            int countZero = n - countOne;
+            for (int i = 0; i < countOne - 1; i++) {
+                if (arr[i] == 0 && countZero > 0) {
+                    countZero--;
+                    op++;
+                }
+            }
+        }
+
+        return Math.min(noOfZeroes, op);
+
     }
 }
+
 /*
     private static final int[][] DIRS = new int[][]{{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 
