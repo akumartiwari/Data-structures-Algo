@@ -414,4 +414,32 @@ public class RecursionPatterns {
 
         return l;
     }
+
+    // Recursion
+    // Apply memoisation
+    // TC = O(2^n)
+    public static int frogJumpRecursion(int n, int heights[]) {
+        return helper(0, heights);
+    }
+
+    private static int helper(int index, int[] heights) {
+        if (index == (heights.length - 1)) {
+            // Reached the last stair.
+            return 0;
+        }
+
+        // Two available choices.
+        int oneJump = Integer.MAX_VALUE;
+        int twoJump = Integer.MAX_VALUE;
+
+        if ((index + 1) < heights.length) {
+            oneJump = Math.abs(heights[index] - heights[index + 1]) + helper(index + 1, heights);
+        }
+
+        if ((index + 2) < heights.length) {
+            twoJump = Math.abs(heights[index] - heights[index + 2]) + helper(index + 2, heights);
+        }
+
+        return Math.min(oneJump, twoJump);
+    }
 }

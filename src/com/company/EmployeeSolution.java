@@ -1265,71 +1265,62 @@ Note that a period with one day is a smooth descent period by the definition.
         return l;
     }
 
-    // Function to find minimum swaps
-// to group all 1's together
-    public int minSwaps(int[] arr) {
-        int noOfOnes = 0;
+    /*
+    Input: nums = [0,1,0,1,1,0,0]
+    Output: 1
+    Explanation: Here are a few of the ways to group all the 1's together:
+    [0,0,1,1,1,0,0] using 1 swap.
+    [0,1,1,1,0,0,0] using 1 swap.
+    [1,1,0,0,0,0,1] using 2 swaps (using the circular property of the array).
+    There is no way to group all 1's together with 0 swaps.
+    Thus, the minimum number of swaps required is 1.
+    */
+    // TC = O(n)
+    // Author: Anand
+    public static int minSwaps(int[] nums) {
+        int n = nums.length;
 
-        int n = arr.length;
-// find total number of all in the array
-        for (int i = 0; i < n; i++) {
-            if (arr[i] == 1)
-                noOfOnes++;
-        }
+        int total = 0;
+        for (int num : nums) if (num == 1) total++;
 
-// length of subarray to check for
-        int x = noOfOnes;
+        int sbArray = Integer.MAX_VALUE;
+        int ptr = 0;
 
-        int maxOnes = Integer.MIN_VALUE;
-
-// array to store number of 1's upto
-// ith index
-        int preCompute[] = new int[n];
-
-// calculate number of 1's upto ith
-// index and store in the array preCompute[]
-        if (arr[0] == 1)
-            preCompute[0] = 1;
-        for (int i = 1; i < n; i++) {
-            if (arr[i] == 1) {
-                preCompute[i] = preCompute[i - 1] + 1;
-            } else
-                preCompute[i] = preCompute[i - 1];
-        }
-
-// using sliding window technique to find
-// max number of ones in subarray of length x
-        for (int i = x - 1; i < n; i++) {
-            if (i == (x - 1))
-                noOfOnes = preCompute[i];
-            else
-                noOfOnes = preCompute[i] - preCompute[i - x];
-
-            if (maxOnes < noOfOnes)
-                maxOnes = noOfOnes;
-        }
-
-// Calculate number of zeros in subarray
-// of length x with maximum number of 1's
-        int noOfZeroes = x - maxOnes;
-
-        int op = Integer.MAX_VALUE;
-        // Because circular array and hence consider swaps here as well
-        if (arr[n - 1] == 1) {
-            op = 0;
-            int countOne = (int) Arrays.stream(arr).boxed().filter(e -> e == 1).count();
-            int countZero = n - countOne;
-            for (int i = 0; i < countOne - 1; i++) {
-                if (arr[i] == 0 && countZero > 0) {
-                    countZero--;
-                    op++;
+        // Create all subarrays of length=total
+        for (int i = 0; i <= n - total; i++) {
+            if (i == 0) {
+                for (int j = i; j < total; j++) {
+                    if (nums[j] == 0) ptr++;
                 }
+            } else {
+                if (nums[i - 1] == 0) ptr--;
+                if (nums[i - 1 + total] == 0) ptr++;
             }
+            sbArray = Math.min(sbArray, ptr);
         }
 
-        return Math.min(noOfZeroes, op);
+        int[] newArray = Arrays.copyOf(nums, 2 * n);
+        System.arraycopy(nums, 0, newArray, n, n);
 
+        int newN = 2 * n;
+        ptr = 0;
+
+        // Create all subarrays of length=total
+        for (int i = 0; i <= newN - total; i++) {
+            if (i == 0) {
+                for (int j = i; j < total; j++) {
+                    if (newArray[j] == 0) ptr++;
+                }
+            } else {
+                if (newArray[i - 1] == 0) ptr--;
+                if (newArray[i - 1 + total] == 0) ptr++;
+            }
+            sbArray = Math.min(sbArray, ptr);
+        }
+
+        return sbArray;
     }
+
 }
 
 /*
