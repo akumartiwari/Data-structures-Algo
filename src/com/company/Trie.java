@@ -11,6 +11,15 @@ public class Trie {
         System.out.println(wordCount(startWords, targetWords));
     }
 
+    /*
+        Input: startWords = ["ant","act","tack"], targetWords = ["tack","act","acti"]
+        Output: 2
+        Explanation:
+        - In order to form targetWords[0] = "tack", we use startWords[1] = "act", append 'k' to it, and rearrange "actk" to "tack".
+        - There is no string in startWords that can be used to obtain targetWords[1] = "act".
+        Note that "act" does exist in startWords, but we must append one letter to the string before rearranging it.
+        - In order to form targetWords[2] = "acti", we use startWords[1] = "act", append 'i' to it, and rearrange "acti" to "acti" itself.
+     */
 
     // Algorithmic based
     public static int wordCount(String[] startWords, String[] targetWords) {
