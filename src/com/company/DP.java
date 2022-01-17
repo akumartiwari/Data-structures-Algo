@@ -42,6 +42,5 @@ public class DP {
         }
         return dp[n - 1];
     }
-
 }
 
