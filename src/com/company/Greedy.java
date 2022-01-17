@@ -2,6 +2,8 @@ package com.company;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class Greedy {
     /*
@@ -82,5 +84,18 @@ public class Greedy {
             }
         }
         return ans;
+    }
+
+    // TC = O(nlogn)
+    public long maxRunTime(int n, int[] batteries) {
+        long sum = 0L;
+        for (int b : batteries) sum += b;
+        Arrays.sort(batteries);
+        int k = 0;
+        // while max-power battery can be used for 1 of the computer
+        while (batteries[batteries.length - 1 - k] > sum / (n - k))
+            sum -= batteries[batteries.length - 1 - k++];
+
+        return sum / (n - k);
     }
 }
