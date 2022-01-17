@@ -442,4 +442,42 @@ public class RecursionPatterns {
 
         return Math.min(oneJump, twoJump);
     }
+
+    /*
+   Input: questions = [[3,2],[4,3],[4,4],[2,5]]
+   Output: 5
+   Explanation: The maximum points can be earned by solving questions 0 and 3.
+   - Solve question 0: Earn 3 points, will be unable to solve the next 2 questions
+   - Unable to solve questions 1 and 2
+   - Solve question 3: Earn 2 points
+   Total points earned: 3 + 2 = 5. There is no other way to earn 5 or more points.
+   TC = O(n)
+    Author: Anand
+  */
+    public long mostPoints(int[][] questions) {
+        if (questions.length == 0) return 0L;
+        long[] dp = new long[questions.length];
+        Arrays.fill(dp, -1);
+        return recursive(questions, 0, dp);
+    }
+
+    /***
+     * Recursive function to get max points
+     * @param questions
+     * @param index
+     * @return
+     */
+    private long recursive(int[][] questions, int index, long[] dp) {
+        // base case
+        if (index >= questions.length) return 0;
+
+        if (dp[index] != -1) return dp[index];
+        // take
+        long left = questions[index][0] + recursive(questions, index + 1 + questions[index][1], dp);
+
+        //skip
+        long right = recursive(questions, index + 1, dp);
+
+        return dp[index] = Math.max(left, right);
+    }
 }

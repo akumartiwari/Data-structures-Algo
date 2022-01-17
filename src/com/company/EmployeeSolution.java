@@ -1321,7 +1321,66 @@ Note that a period with one day is a smooth descent period by the definition.
         return sbArray;
     }
 
+    // TC = O(MLogM)
+    // Author : Anand
+    public long maxRunTime(int n, int[] batteries) {
+        Queue<Long> pq = new PriorityQueue<>();
+        for (long b : batteries)
+            pq.offer(b);
+        long sum = 0;
+        while (pq.size() != n)
+            sum += pq.poll();
+
+        pq.offer(1_00000_00000_00000L);  //10^14, redundant "great wall"
+
+        long dist = 0, level = pq.peek();
+        while (pq.size() != 1 && sum >= 0) {
+            dist++;
+            long val = pq.poll(), nextVal = pq.peek();
+            if (nextVal > val) {
+                if ((nextVal - val) * dist <= sum) {
+                    sum -= (nextVal - val) * dist;
+                    level = nextVal;
+                } else {
+                    level += sum / dist;
+                    return level;
+                }
+            }
+        }
+        return level;
+    }
 }
+
+    /*
+    // TODO: maxRunTime Binary search solution
+    public:
+    bool fun(vector<int>& a, long long x, long long k){
+        long long val = x*k;
+        for(int i=0; i<a.size(); i++){
+            val -= min((long long)a[i],k);
+        }
+        return val <= 0;
+    }
+    long long maxRunTime(int n, vector<int>& a) {
+        long long sum = 0;
+        for(auto i : a){
+            sum += i;
+        }
+        long long ans = 0;
+        long long l = 0, r = sum;
+        while(l <= r){
+            long long mid = l + (r-l)/2;
+            if(fun(a,n,mid)){
+                ans = mid;
+                l = mid + 1;
+            }
+            else{
+                r = mid - 1;
+            }
+        }
+        return ans;
+    }
+     */
 
 /*
     private static final int[][] DIRS = new int[][]{{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
@@ -1344,6 +1403,7 @@ Note that a period with one day is a smooth descent period by the definition.
         queue.add(new Pair(box, player));
         boolean[][] visited = new boolean[R * C][R * C];
         // in some cases, player needs to push the box further in order to change its direction; hence, tracking the box itself isn't enough,
+
         // we need to track both box and player locations. for example,
         // . # T # .
         // . . . B S
