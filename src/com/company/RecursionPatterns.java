@@ -481,25 +481,4 @@ public class RecursionPatterns {
         return dp[index] = Math.max(left, right);
     }
 
-
-    List<Integer> result = new ArrayList<>();
-
-    public int[] maxSubsequence(int[] nums, int k) {
-        subSequence(nums, k, 0);
-        return result.stream().mapToInt(x -> x).toArray();
-    }
-
-    private int subSequence(int[] nums, int k, int index) {
-        if (index >= nums.length || ans.size() >= k) return 0;
-        // take
-        int left = nums[index] + subSequence(nums, k - 1, index + 1);
-
-        // not-take
-        int right = subSequence(nums, k, index + 1);
-
-        result.add(result.size() == 0 ? Math.max(left, right)
-                : (result.get(result.size() - 1) - Math.max(left, right)));
-        return Math.max(left, right);
-    }
-
 }
