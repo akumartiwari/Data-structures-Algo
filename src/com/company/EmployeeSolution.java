@@ -247,7 +247,7 @@ Output: [1,2,2,3,5,6]
 
 	   Algorithm:-
 	  - The idea is to split array in two parts such that
-	     avg(A) = avg(B)
+	     avg(A) = avg(CF_Templates.B)
 	  - Iterate thrugh array elements and for each elem
 	     check if we can split it in two parts with equals avg
 
@@ -265,12 +265,12 @@ Output: [1,2,2,3,5,6]
 	  total  = sumA + sumB
 	  sumB = total - sumA
 
-	  A+B=n
-	  B=n-A
+	  A+CF_Templates.B=n
+	  CF_Templates.B=n-A
 
-	  sumA/A = sumB/B
+	  sumA/A = sumB/CF_Templates.B
 
-	  sumA/A = total-sumA/B
+	  sumA/A = total-sumA/CF_Templates.B
 	  sumA/A = total-sumA/n-A
 	  n*sumA/A  = total
 	  sumA = total * lenA / n
@@ -1415,7 +1415,7 @@ Note that a period with one day is a smooth descent period by the definition.
         int[] box = new int[2], player = new int[2];
         for (int i = 0; i < R; i++) {
             for (int j = 0; j < C; j++) {
-                if (grid[i][j] == 'B') {
+                if (grid[i][j] == 'CF_Templates.B') {
                     box[0] = i;
                     box[1] = j;
                 } else if (grid[i][j] == 'S') {
@@ -1431,9 +1431,9 @@ Note that a period with one day is a smooth descent period by the definition.
 
         // we need to track both box and player locations. for example,
         // . # T # .
-        // . . . B S
+        // . . . CF_Templates.B S
         // . . . # .
-        // `B` needs to land on location(1,2) twice
+        // `CF_Templates.B` needs to land on location(1,2) twice
         visited[box[0] * C + box[1]][player[0] * C + player[1]] = true;
         int step = 0;
         while (!queue.isEmpty()) {

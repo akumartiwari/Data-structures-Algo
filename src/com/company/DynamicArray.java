@@ -6544,19 +6544,19 @@ l=1
         //when you open the modulus and solve, you get 4 similar cases mentined below
 
         for (i = 0; i < A.length; i++) {
-            //for case type 1 --> (A[i]+B[i]+i)-(A[j]+B[j]+j)
+            //for case type 1 --> (A[i]+CF_Templates.B[i]+i)-(A[j]+CF_Templates.B[j]+j)
             max1 = Math.max(max1, A[i] + B[i] + i);
             min1 = Math.min(min1, A[i] + B[i] + i);
 
-            //for case type 2 --> (A[i]+B[i]-i)-(A[j]+B[j]-j)
+            //for case type 2 --> (A[i]+CF_Templates.B[i]-i)-(A[j]+CF_Templates.B[j]-j)
             max2 = Math.max(max2, A[i] + B[i] - i);
             min2 = Math.min(min2, A[i] + B[i] - i);
 
-            //for case type 3 --> (A[i]-B[i]+i)-(A[j]-B[j]+j)
+            //for case type 3 --> (A[i]-CF_Templates.B[i]+i)-(A[j]-CF_Templates.B[j]+j)
             max3 = Math.max(max3, A[i] - B[i] + i);
             min3 = Math.min(min3, A[i] - B[i] + i);
 
-            //for case type 4 --> (A[i]-B[i]-i)-(A[j]-B[j]-j)
+            //for case type 4 --> (A[i]-CF_Templates.B[i]-i)-(A[j]-CF_Templates.B[j]-j)
             max4 = Math.max(max4, A[i] - B[i] - i);
             min4 = Math.min(min4, A[i] - B[i] - i);
         }

@@ -57,7 +57,7 @@ public class GameTheory {
                 charArray[i] = '-';
                 charArray[i + 1] = '-';
                 String newS = new String(charArray);
-                // If now B can't win and hence A wins so return true
+                // If now CF_Templates.B can't win and hence A wins so return true
                 if (!whoWins(newS, dp)) {
                     dp.put(currentState, true);
                     return true;
@@ -80,14 +80,14 @@ public class GameTheory {
      choosen = {num,x, }
            num E [1, maxChoosableNumber]
            1<=num<=desiredTotal
-    if A choose a number num then  we want to check if B can win with remaining total
+    if A choose a number num then  we want to check if CF_Templates.B can win with remaining total
     ie. desiredTotal-num
 
          Map<Integer, Boolean> mp --> Tell us after choosing x whether current player wins or not
          For every choice store the result in map
          x E [1, maxChoosableNumber]
          Subproblem:-
-            if B chooses x (!choosen.contains(x)) desiredTotal-=x
+            if CF_Templates.B chooses x (!choosen.contains(x)) desiredTotal-=x
 
          if (map.values.contains(true)) --> That was the most optimal step for curr player
          return true (curr)
