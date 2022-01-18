@@ -7871,7 +7871,7 @@ reverseKnodes(2, 2, 3) -->
      */
 
     public ListNode reverseKGroup(ListNode head, int k) {
-        // base case 
+        // base case
         if (head == null) return null;
         ListNode curr = reverseKnodes(head, k);
         return reverseKGroup(curr, k);
@@ -11098,11 +11098,11 @@ class SQRTBinarySeach {
     // O(n+m), O(1)
 	/*
      This problem is called Merge Sorted Array
-     Example:- 
+     Example:-
      Input: nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3
 Output: [1,2,2,3,5,6]
-    Algo :- We start filling the array from right end till all elements of nums1 is consumed 
-        After that remaining element of nums2 is utitlised 
+    Algo :- We start filling the array from right end till all elements of nums1 is consumed
+        After that remaining element of nums2 is utitlised
         */
 
     public void merge(int[] nums1, int m, int[] nums2, int n) {
@@ -11117,7 +11117,7 @@ Output: [1,2,2,3,5,6]
     }
 
 
-    // This is based on binary search of peak element 
+    // This is based on binary search of peak element
     // Input: nums = [1,2,3,1]
     // Output: 2
     // Explanation: 3 is a peak element and your function should return the index number 2.

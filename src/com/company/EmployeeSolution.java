@@ -1488,4 +1488,3 @@ Note that a period with one day is a smooth descent period by the definition.
         return false;
     }
  */
-
