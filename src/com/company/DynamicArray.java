@@ -6544,19 +6544,19 @@ l=1
         //when you open the modulus and solve, you get 4 similar cases mentined below
 
         for (i = 0; i < A.length; i++) {
-            //for case type 1 --> (A[i]+CF_Templates.B[i]+i)-(A[j]+CF_Templates.B[j]+j)
+            //for case type 1 --> (A[i]+B[i]+i)-(A[j]+B[j]+j)
             max1 = Math.max(max1, A[i] + B[i] + i);
             min1 = Math.min(min1, A[i] + B[i] + i);
 
-            //for case type 2 --> (A[i]+CF_Templates.B[i]-i)-(A[j]+CF_Templates.B[j]-j)
+            //for case type 2 --> (A[i]+B[i]-i)-(A[j]+B[j]-j)
             max2 = Math.max(max2, A[i] + B[i] - i);
             min2 = Math.min(min2, A[i] + B[i] - i);
 
-            //for case type 3 --> (A[i]-CF_Templates.B[i]+i)-(A[j]-CF_Templates.B[j]+j)
+            //for case type 3 --> (A[i]-B[i]+i)-(A[j]-B[j]+j)
             max3 = Math.max(max3, A[i] - B[i] + i);
             min3 = Math.min(min3, A[i] - B[i] + i);
 
-            //for case type 4 --> (A[i]-CF_Templates.B[i]-i)-(A[j]-CF_Templates.B[j]-j)
+            //for case type 4 --> (A[i]-B[i]-i)-(A[j]-B[j]-j)
             max4 = Math.max(max4, A[i] - B[i] - i);
             min4 = Math.min(min4, A[i] - B[i] - i);
         }
@@ -7871,7 +7871,7 @@ reverseKnodes(2, 2, 3) -->
      */
 
     public ListNode reverseKGroup(ListNode head, int k) {
-        // base case 
+        // base case
         if (head == null) return null;
         ListNode curr = reverseKnodes(head, k);
         return reverseKGroup(curr, k);
@@ -11098,11 +11098,11 @@ class SQRTBinarySeach {
     // O(n+m), O(1)
 	/*
      This problem is called Merge Sorted Array
-     Example:- 
+     Example:-
      Input: nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3
 Output: [1,2,2,3,5,6]
-    Algo :- We start filling the array from right end till all elements of nums1 is consumed 
-        After that remaining element of nums2 is utitlised 
+    Algo :- We start filling the array from right end till all elements of nums1 is consumed
+        After that remaining element of nums2 is utitlised
         */
 
     public void merge(int[] nums1, int m, int[] nums2, int n) {
@@ -11117,7 +11117,7 @@ Output: [1,2,2,3,5,6]
     }
 
 
-    // This is based on binary search of peak element 
+    // This is based on binary search of peak element
     // Input: nums = [1,2,3,1]
     // Output: 2
     // Explanation: 3 is a peak element and your function should return the index number 2.
