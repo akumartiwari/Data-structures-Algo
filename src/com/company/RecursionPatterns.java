@@ -7,19 +7,21 @@ public class RecursionPatterns {
     private static Set<List<Integer>> ans;
 
     public static void main(String[] args) {
-        int[] arr = {2, 3, 6, 7};
-        int n = 4;
-        int targetSum = 7;
-        List<Integer> ds = new ArrayList<>();
-        printAllSubsequences(arr, targetSum, 0, 0, ds);
-        printAnyoneSubsequence(arr, targetSum, 0, 0, ds);
-        System.out.println();
-        System.out.println("Count: " + printCountSubsequences(arr, targetSum, 0, 0));
-        combinationSum(arr, targetSum);
-        System.out.println((int) ans.stream().filter(x -> x.size() > 0).count());
-        for (List<Integer> list : ans) {
-            System.out.println(list.stream().map(Object::toString).collect(Collectors.joining(", ")));
-        }
+        int[] arr = {2, 3, 0, 1, 4};
+//        int n = 4;
+//        int targetSum = 7;
+//        List<Integer> ds = new ArrayList<>();
+//        printAllSubsequences(arr, targetSum, 0, 0, ds);
+//        printAnyoneSubsequence(arr, targetSum, 0, 0, ds);
+//        System.out.println();
+//        System.out.println("Count: " + printCountSubsequences(arr, targetSum, 0, 0));
+//        combinationSum(arr, targetSum);
+//        System.out.println((int) ans.stream().filter(x -> x.size() > 0).count());
+//        for (List<Integer> list : ans) {
+//            System.out.println(list.stream().map(Object::toString).collect(Collectors.joining(", ")));
+//        }
+
+        System.out.println("jumps=" + minJumps(arr));
     }
 
     /***
@@ -481,4 +483,40 @@ public class RecursionPatterns {
         return dp[index] = Math.max(left, right);
     }
 
+    // Author: Anand
+    // TC = O(n2)
+    public static int minJumps(int[] arr) {
+        if (arr.length == 0) return 0;
+        int[] dp = new int[arr.length];
+        Arrays.fill(dp, -1);
+        return dfs(arr, 0, dp);
+    }
+
+
+    private static int dfs(int[] arr, int index, int[] dp) {
+        // base-case
+        // If you move out of array that jump is invalid and hence count=0
+        if (index >= arr.length - 1) return 0;
+
+        // If precomputed use it
+        if (dp[index] != -1) return dp[index];
+
+        int min = 1_0000_000;
+        int ca = 0;
+        // For all possible jumps we need to consider all possible choices to be made
+        for (int i = 1; i <= arr[index]; i++) {
+
+            int nextPos = index + i;
+
+            if (nextPos < arr.length) {
+                // Take
+                ca = 1 + dfs(arr, nextPos, dp);
+            }
+
+            min = Math.min(ca, min);
+            dp[index] = min;
+        }
+
+        return min;
+    }
 }

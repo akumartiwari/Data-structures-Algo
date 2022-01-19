@@ -1,9 +1,6 @@
 package com.company;
 
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.PriorityQueue;
-import java.util.Queue;
 
 public class Greedy {
     /*
@@ -98,4 +95,32 @@ public class Greedy {
 
         return sum / (n - k);
     }
+
+    // TC = O(n)
+    // Author: Anand
+    // Ladder based greedy problem
+    public static int minJumps(int[] arr) {
+        int n = arr.length;
+
+      /*
+		    The variable 'curEnd stores the last index reachable from the current index
+		    'curFarthest storest the farthest index reachable.
+		*/
+        int minJump = 0, curEnd = 0, curFarthest = 0;
+
+        for (int i = 0; i < n; i++) {
+
+            curFarthest = Math.max(curFarthest, i + arr[i]);
+
+            if (i == curEnd) {
+                // You had exhausted 1 jump completely
+                minJump++;
+                // update farthest index reachable
+                curEnd = curFarthest;
+            }
+
+        }
+        return minJump;
+    }
+
 }
