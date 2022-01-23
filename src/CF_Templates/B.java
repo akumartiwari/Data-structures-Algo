@@ -591,6 +591,7 @@ public class B {
     // {
     // 	fact[i] = mod_mul(fact[i - 1], i, MOD1);
     // 	ifact[i] = mminvprime(fact[i], MOD1);
+
     // }
     //ifact is basically inverse factorial in here!!!!!(imp)
     public static long combination(long n, long r, long m, long[] fact, long[] ifact) {

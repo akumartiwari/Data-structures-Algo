@@ -429,7 +429,6 @@ public class topcoder {
         for (int p = 2; p < limit; p++) {
             if (mark[p] == true) {
                 prime.add(p);
-
             }
         }
     }
