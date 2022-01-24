@@ -78,5 +78,96 @@ public class DP {
         }
         return dp[idx][cnt] = ans;
     }
-}
 
+    // Similar to Frog jump
+    // TODO
+    // Author: Anand
+    int min = Integer.MAX_VALUE;
+    public int minSideJumps(int[] obstacles) {
+        int ans = 0;
+        int lane = 2; // lane can have values  = {1 2 3}
+        recurse(obstacles, 0, ans, lane);
+        return min;
+    }
+
+    private boolean recurse(int[] obstacles, int idx, int ans, int lane) {
+
+        // base case
+        if (idx >= obstacles.length - 1) {
+            min = Math.min(min, ans);
+            System.out.println(min);
+            return true;
+        }
+        for (int i = idx; i < obstacles.length - 1; i++) {
+            // obstacles in current lane
+            if (obstacles[i + 1] == lane) {
+                // 2 possible cases
+                // either go up or down
+
+                if (lane == 2) {
+                    // up
+                    if (obstacles[i] != lane - 1) {
+                        lane--;
+                        ans++;
+                        if (recurse(obstacles, i, ans, lane)) return true;
+                        // backtrack
+                        lane++;
+                        ans--;
+                    }
+
+                    // down
+                    if (obstacles[i] != lane + 1) {
+                        lane++;
+                        ans++;
+                        if (recurse(obstacles, i, ans, lane)) return true;
+                        // backtrack
+                        lane--;
+                        ans--;
+                    }
+                } else if (lane == 3) {
+                    // up
+                    if (obstacles[i] != lane - 1) {
+                        lane--;
+                        ans++;
+                        if (recurse(obstacles, i, ans, lane)) return true;
+                        // backtrack
+                        lane++;
+                        ans--;
+                    }
+
+                    // up
+                    if (obstacles[i] != lane - 2) {
+                        lane -= 2;
+                        ans++;
+                        if (recurse(obstacles, i, ans, lane)) return true;
+                        // backtrack
+                        lane += 2;
+                        ans--;
+                    }
+                } else {
+                    // down
+                    if (obstacles[i] != lane + 1) {
+                        lane += 1;
+                        ans++;
+                        if (recurse(obstacles, i, ans, lane)) return true;
+                        // backtrack
+                        lane -= 1;
+                        ans--;
+                    }
+
+                    // down
+                    if (obstacles[i] != lane + 2) {
+                        lane += 2;
+                        ans++;
+                        if (recurse(obstacles, i, ans, lane)) return true;
+                        // backtrack
+                        lane -= 2;
+                        ans--;
+                    }
+                }
+            }
+            recurse(obstacles, i + 1, ans, lane);
+        }
+        return true;
+    }
+}

@@ -519,4 +519,31 @@ public class RecursionPatterns {
 
         return min;
     }
+
+    /*
+
+     Input: n = 5, k = 2
+     Output: 3
+
+     Sol:-
+     friends = [1 3 4 5]
+     ind = 0
+
+     TC = O(n). SC = O(n) ie. For arraylist
+     Author: Anand
+   */
+    public int findTheWinner(int n, int k) {
+        List<Integer> friends = new ArrayList<>();
+        // Store all person in an ArrayList
+        for (int i = 1; i <= n; i++) friends.add(i);
+
+        return dfs(n, k, friends, 0);
+    }
+
+    private int dfs(int n, int k, List<Integer> friends, int ind) {
+        if (friends.size() == 1) return friends.get(0);
+        int ni = (ind + k - 1) % friends.size();
+        friends.remove(ni);
+        return dfs(n, k, friends, ni);
+    }
 }
