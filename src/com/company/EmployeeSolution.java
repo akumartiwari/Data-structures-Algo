@@ -865,23 +865,6 @@ Note that a period with one day is a smooth descent period by the definition.
         return cnt;
     }
 
-    // Recursive DP based solution
-    // Solved by anand
-    // Apply memoisation
-    // TODO:-
-    public int kIncreasing(int[] arr, int k) {
-        int n = arr.length;
-        int min = Integer.MAX_VALUE;
-        for (int i = 0; i < n; i++) {
-            min = Math.min(minOperation(arr, k, 0), min);
-        }
-        return min;
-    }
-
-    private int minOperation(int[] arr, int k, int idx) {
-
-        return 0;
-    }
 
     // Author : Anand
     // TC = O(2n), SC=O(n)
