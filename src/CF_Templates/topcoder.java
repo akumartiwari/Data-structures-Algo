@@ -782,16 +782,8 @@ public class topcoder {
 
         solve1(vis, mat, r + 1, c, r2 + 1, c2, r1 - 1, c1, r3 - 1, c3);
         solve1(vis, mat, r, c + 1, r2, c2 - 1, r1, c1 + 1, r3, c3 - 1);
-        solve1
-                (vis, mat, r + 1, c + 1, r2 + 1, c2 - 1, r1 - 1, c1 + 1, r3 - 1, c3 - 1);
+        solve1(vis, mat, r + 1, c + 1, r2 + 1, c2 - 1, r1 - 1, c1 + 1, r3 - 1, c3 - 1);
 
-
-    }
-
-
-    private static int solve(int[][] mat, int i, int c, int j, int c2, int k, int c1, int l, int c3) {
-        // TODO Auto-generated method stub
-        return 0;
     }
 
     public static int dfs(int parent, LinkedList<Integer>[] list) {

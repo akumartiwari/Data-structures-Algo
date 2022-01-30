@@ -1,7 +1,11 @@
 package CF_Templates;//some updates in import stuff
 
+import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 //-----CURRENTLY PRESENT-------//
 //Graph
@@ -39,13 +43,59 @@ public class B {
         MyScanner sc = new MyScanner();
         out = new PrintWriter(new BufferedOutputStream(System.out));
 
-        //code below
         int test = sc.nextInt();
         while (test-- > 0) {
-            char[] inp = sc.nextLine().toCharArray();
+            int n = sc.nextInt();
+
+            int[] a = new int[n];
+            int[] b = new int[n];
+            for (int i = 0; i < n; i++) a[i] = sc.nextInt();
+            for (int i = 0; i < n; i++) b[i] = sc.nextInt();
+
+        }
+        out.close();
+    }
+
+    private static int max_min(int n, int[] a, int[] b, int ind, TreeMap<Integer, Integer> tm1, TreeMap<Integer, Integer> tm2) {
+
+        // base case
+        if (ind >= n) return tm1.firstKey() * tm2.firstKey();
+
+        //  cases
+        //  If nr. is swapped then only calclate maxa, maxb
+//        case 1:- swapped
+
+        if (b[ind] == tm2.firstKey() && tm2.firstEntry().getValue() == 1) {
+            tm2.remove(b[ind]);
+        } else {
+            tm2.put(b[ind], tm2.getOrDefault(b[ind], 0) - 1);
         }
 
-        out.close();
+        tm2.put(a[ind], tm2.getOrDefault(a[ind], 0) + 1);
+
+        if (a[ind] == tm1.firstKey() && tm1.firstEntry().getValue() == 1) {
+            tm1.remove(a[ind]);
+        } else {
+            tm1.put(a[ind], tm1.getOrDefault(a[ind], 0) - 1);
+        }
+
+        tm1.put(b[ind], tm1.getOrDefault(b[ind], 0) + 1);
+
+        int left = max_min(n, a, b, ind + 1, tm1, tm2);
+        // backtrack
+        tm2.put(b[ind], tm2.getOrDefault(b[ind], 0) + 1);
+        tm1.put(a[ind], tm1.getOrDefault(a[ind], 0) + 1);
+
+
+        tm2.put(a[ind], tm2.getOrDefault(a[ind], 0) - 1);
+        if (tm2.get(a[ind]) <= 0) tm2.remove(a[ind]);
+
+        tm1.put(b[ind], tm1.getOrDefault(b[ind], 0) - 1);
+        if (tm1.get(b[ind]) <= 0) tm1.remove(b[ind]);
+
+        // case 2 :  no swap
+        int right = max_min(n, a, b, ind + 1, tm1, tm2);
+        return Math.min(left, right);
     }
 
     //Fast input and output
@@ -646,8 +696,43 @@ public class B {
             }
             return str;
         }
-
     }
-    //--------------------------------------------------------
 
+
+    /***
+     * This function checks  the given logic :-
+     * hash(s, p, m) = (val(s[0]) * p0 + val(s[1]) * p1 + ... + val(s[k-1]) * pk-1) mod m.
+     * @param substr
+     * @param power
+     * @param modulo
+     * @return
+     */
+    private int check(String substr, int power, int modulo) {
+
+        int ans = 0;
+        for (int i = 0; i < substr.length(); i++) {
+            int val = substr.charAt(i) - 'a' + 1;
+            ans = (int) (ans % modulo + ((val % modulo) * (powerMODWithMOD((long) power, (long) i, modulo))) % modulo + modulo) % modulo;
+        }
+
+        return ans;
+    }
+
+    //with mod
+    public long powerMODWithMOD(long x, long y, int mod) {
+        long res = 1L;
+        while (y > 0) {
+            // If y is odd, multiply x with result
+            if ((y & 1) != 0) {
+                x %= mod;
+                res %= mod;
+                res = (res * x) % mod;
+            }
+            // y must be even now
+            y = y >> 1; // y = y/2
+            x %= mod;
+            x = (x * x) % mod;  // Change x to x^2
+        }
+        return res % mod;
+    }
 }

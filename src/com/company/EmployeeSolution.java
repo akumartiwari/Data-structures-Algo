@@ -865,23 +865,6 @@ Note that a period with one day is a smooth descent period by the definition.
         return cnt;
     }
 
-    // Recursive DP based solution
-    // Solved by anand
-    // Apply memoisation
-    // TODO:-
-    public int kIncreasing(int[] arr, int k) {
-        int n = arr.length;
-        int min = Integer.MAX_VALUE;
-        for (int i = 0; i < n; i++) {
-            min = Math.min(minOperation(arr, k, 0), min);
-        }
-        return min;
-    }
-
-    private int minOperation(int[] arr, int k, int idx) {
-
-        return 0;
-    }
 
     // Author : Anand
     // TC = O(2n), SC=O(n)
@@ -1374,6 +1357,151 @@ Note that a period with one day is a smooth descent period by the definition.
         return level;
 
     }
+
+    // TC = O(nlogn)
+    // Author : Anand
+    public int findFinalValue(int[] nums, int original) {
+        int n = nums.length;
+        Arrays.sort(nums);
+        int l = 0, r = n - 1;
+        if (n == 1) {
+            if (nums[0] == original) return original * 2;
+            return original;
+        }
+        boolean isFound = false;
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+            if (nums[mid] < original) {
+                l = mid + 1;
+            } else if (nums[mid] > original) {
+                r = mid;
+            } else {
+                // Repeat the process
+                original *= 2;
+                l = 0;
+                r = n - 1;
+            }
+            if (l == r) {
+                if (!isFound) isFound = true;
+                else break;
+            }
+        }
+        return original;
+    }
+
+    /*
+        Input: nums = [0,0,1,0]
+        Output: [2,4]
+        Explanation: Division at index
+
+        Input: nums = [0,0,0]
+        Output: [3]
+
+        Input: nums = [1,1]
+        Output: [0]
+
+ [0,0,0]
+ map = {(0,[0), (1,[1), (2, [2), (3,0], [3,0])}
+
+          */
+    // Tc = O(n)
+    // Author : Anand
+    public List<Integer> maxScoreIndices(int[] nums) {
+
+        int n = nums.length;
+        HashMap<Integer, Integer> map = new HashMap<>();// Used to store sum of 0 left and sum of 1 to right for each index
+
+        int sum_zero = 0, i = 0;
+        for (i = 0; i < n; i++) {
+            map.put(i, sum_zero);
+            if (nums[i] == 0) sum_zero++;
+        }
+
+        // put last_index
+        map.put(i, sum_zero);
+
+        int sum_one = 0;
+        for (int j = n - 1; j >= 0; j--) {
+            int zero = map.get(j);
+            if (nums[j] == 1) sum_one++;
+            map.put(j, sum_one + zero);
+        }
+
+        // calculate sum for each index
+        // map is ready now start doing computation based logic
+        int max_sum = 0;
+        List<Integer> res = new ArrayList<>();
+        for (Map.Entry entry : map.entrySet()) {
+            int sum = (int) entry.getValue();
+            if (sum > max_sum) {
+                res = new ArrayList<>();
+                res.add((Integer) entry.getKey());
+                max_sum = sum;
+            } else if (sum == max_sum)
+                res.add((Integer) entry.getKey());
+        }
+
+        return res;
+    }
+    //--------------------------------------------------------
+
+    public int finalValueAfterOperations(String[] operations) {
+
+        Set<String> plus = new HashSet<>();
+        plus.add("++X");
+        plus.add("X++");
+
+        Set<String> minus = new HashSet<>();
+        minus.add("--X");
+        minus.add("X--");
+        int ans = 0;
+        for (String operation : operations) {
+            if (plus.contains(operation)) ans += 1;
+            if (minus.contains(operation)) ans -= 1;
+        }
+        return ans;
+    }
+
+    /*
+      2, if nums[j] < nums[i] < nums[k], for all 0 <= j < i and for all i < k <= nums.length - 1.
+      1, if nums[i - 1] < nums[i] < nums[i + 1], and the previous condition is not satisfied.
+      0, if none of the previous conditions holds.
+
+
+       */
+    // Tc = O(n)
+    // Author : Anand
+    public int sumOfBeauties(int[] nums) {
+        int ans = 0;
+        int n = nums.length;
+        HashMap<Integer, List<Integer>> map = new HashMap<>();// Used ot store max to left and min to right for each index
+
+        int max_left = nums[0];
+        for (int i = 1; i <= n - 2; i++) {
+            map.put(i, new ArrayList<>(Arrays.asList(max_left)));
+            if (nums[i] > max_left) max_left = nums[i];
+        }
+
+        int min_right = nums[n - 1];
+        for (int i = n - 2; i > 0; i--) {
+            List<Integer> list = map.get(i);
+            list.add(min_right);
+            map.put(i, list);
+            if (nums[i] < min_right) min_right = nums[i];
+        }
+
+
+        // map is ready now start doing computation based logic
+        for (int i = 1; i <= n - 2; i++) {
+            List<Integer> list = map.get(i);
+            if (nums[i] > list.get(0) && nums[i] < list.get(1)) ans += 2;
+            else if (nums[i - 1] < nums[i] && nums[i + 1] > nums[i]) ans++;
+        }
+
+        return ans;
+
+    }
+
 }
 
     /*

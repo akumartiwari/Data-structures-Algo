@@ -7403,8 +7403,6 @@ class SolutionRecursion {
         return right - left > 0 ? right - left + 1 : 0;
     }
 
-
-    // TODO:- FOR 26TH JULY START SOLVING PROBLEMS
     public int[] smallestRange(List<List<Integer>> nums) {
         int n = nums.size();
 
