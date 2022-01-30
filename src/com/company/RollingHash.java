@@ -14,7 +14,6 @@ public class RollingHash {
             if (i + k >= n)
                 pk = pk * p % m;
             else
-
                 cur = (cur - (s.charAt(i + k) - 'a' + 1) * pk % m + m) % m;
             if (cur == hashValue)
                 res = i;
