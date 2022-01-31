@@ -9765,9 +9765,8 @@ class SolutionHasPath {
         int notTaken = maxsum(satisfaction, dp, index + 1, coef);
 
         // return max of 2 choices
-        dp[index][coef] = Math.max(taken, notTaken);
+        return dp[index][coef] = Math.max(taken, notTaken);
 
-        return dp[index][coef];
     }
 
     public int validSubarrays(int[] nums) {
