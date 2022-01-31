@@ -56,48 +56,6 @@ public class B {
         out.close();
     }
 
-    private static int max_min(int n, int[] a, int[] b, int ind, TreeMap<Integer, Integer> tm1, TreeMap<Integer, Integer> tm2) {
-
-        // base case
-        if (ind >= n) return tm1.firstKey() * tm2.firstKey();
-
-        //  cases
-        //  If nr. is swapped then only calclate maxa, maxb
-//        case 1:- swapped
-
-        if (b[ind] == tm2.firstKey() && tm2.firstEntry().getValue() == 1) {
-            tm2.remove(b[ind]);
-        } else {
-            tm2.put(b[ind], tm2.getOrDefault(b[ind], 0) - 1);
-        }
-
-        tm2.put(a[ind], tm2.getOrDefault(a[ind], 0) + 1);
-
-        if (a[ind] == tm1.firstKey() && tm1.firstEntry().getValue() == 1) {
-            tm1.remove(a[ind]);
-        } else {
-            tm1.put(a[ind], tm1.getOrDefault(a[ind], 0) - 1);
-        }
-
-        tm1.put(b[ind], tm1.getOrDefault(b[ind], 0) + 1);
-
-        int left = max_min(n, a, b, ind + 1, tm1, tm2);
-        // backtrack
-        tm2.put(b[ind], tm2.getOrDefault(b[ind], 0) + 1);
-        tm1.put(a[ind], tm1.getOrDefault(a[ind], 0) + 1);
-
-
-        tm2.put(a[ind], tm2.getOrDefault(a[ind], 0) - 1);
-        if (tm2.get(a[ind]) <= 0) tm2.remove(a[ind]);
-
-        tm1.put(b[ind], tm1.getOrDefault(b[ind], 0) - 1);
-        if (tm1.get(b[ind]) <= 0) tm1.remove(b[ind]);
-
-        // case 2 :  no swap
-        int right = max_min(n, a, b, ind + 1, tm1, tm2);
-        return Math.min(left, right);
-    }
-
     //Fast input and output
 
     //-------------------------------------------------------------------
