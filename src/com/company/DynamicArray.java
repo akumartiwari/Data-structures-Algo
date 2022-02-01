@@ -11321,29 +11321,6 @@ Output: [1,2,2,3,5,6]
 
         return false;
     }
-
-
-    public int[] maxSubsequence(int[] nums, int k) {
-        List<Integer> ans = new ArrayList<>();
-        largestSum(ans, nums, k, 0);
-        return ans.stream().mapToInt(x -> x).toArray();
-    }
-
-    private int largestSum(List<Integer> ans, int[] nums, int k, int idx) {
-        if (idx >= nums.length) return 0;
-
-        if (ans.size() < k) {
-            //pick
-            ans.add(nums[idx]);
-            int pick = nums[idx] + largestSum(ans, nums, k, idx + 1);
-            // not pick
-            int npick = largestSum(ans, nums, k, idx + 1);
-            return Math.max(pick, npick);
-        }
-
-        // not pick
-        return largestSum(ans, nums, k, idx + 1);
-    }
 }
 
 class combinationSum4BottomUpDP {
