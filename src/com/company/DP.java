@@ -53,10 +53,10 @@ public class DP {
         int n = corridor.length();
         if (n == 1) return 0;
         int cnt = 0;
-        for (int i = 0; i < n; i++) cnt += corridor.charAt(i) == 'S' ? 1 : 0 ;
+        for (int i = 0; i < n; i++) cnt += corridor.charAt(i) == 'S' ? 1 : 0;
 
         // If no even seats are available possible arrangements can't be done
-        if(cnt % 2 != 0) return 0;
+        if (cnt % 2 != 0) return 0;
 
         int[][] dp = new int[n][3];
         for (int i = 0; i < n; i++) Arrays.fill(dp[i], -1);
@@ -216,4 +216,126 @@ public class DP {
         }
         return Math.min(Math.min(dp[n - 1][0], dp[n - 1][1]), dp[n - 1][2]);
     }
+
+    // TC = O(n*nCk), SC = O(n*nCk)
+    static long maxSum;
+
+    public static long maximumSum(ArrayList<Integer> nums, int k) {
+        maxSum = Long.MIN_VALUE;
+
+        int n = nums.size();
+        if (n < k) return 0;
+
+        sub(nums, k, 0, 0, Long.MIN_VALUE);
+        return maxSum == Long.MIN_VALUE ? -1 : maxSum;
+    }
+
+    private static void sub(ArrayList<Integer> nums, int k, int ind, long sum, long prev) {
+        // base case
+        if (k == 0) {
+            maxSum = Math.max(maxSum, sum);
+            return;
+        }
+
+        if (k < 0 || ind >= nums.size()) {
+            return;
+        }
+
+        if (nums.get(ind) >= prev && nums.get(ind) > 0) {
+            int num = nums.get(ind);
+            // take
+            sum += num;
+            sub(nums, k - 1, ind + 1, sum, nums.get(ind));
+            sum -= num;
+            sub(nums, k, ind + 1, sum, prev);
+        } else sub(nums, k, ind + 1, sum, prev);
+    }
+
+    // TOP-DOWN DP
+    // TC = O(n2*k)
+    // SC = O(n*k)
+
+    public static long maximumSumOptimised(ArrayList<Integer> nums, int k) {
+
+        int n = nums.size();
+        if (n < k) return 0;
+
+        long[][] dp = new long[n][k + 1]; // maximumSum of a subsequence of size = k ending at ind = n
+        for (int i = 0; i < n; i++) Arrays.fill(dp[i], -1);
+
+
+        // Fill for subsequence of size = 1 it'll have current/first element only
+        for (int i = 0; i < n; i++) dp[i][1] = nums.get(i);
+
+        for (int endIndex = 1; endIndex < n; endIndex++) {
+            for (int prev = 0; prev < endIndex; prev++) {
+
+                // valid choice
+                if (nums.get(prev) <= nums.get(endIndex)) {
+                    for (int size = 2; size <= k; size++) {
+                        if (dp[prev][size - 1] != -1) {
+                            dp[endIndex][size] = Math.max((dp[prev][size - 1] + nums.get(endIndex)), dp[endIndex][size]);
+                        }
+                    }
+                }
+            }
+        }
+
+        long max = Long.MIN_VALUE;
+        // For all ending index get  the max_value for size=k
+        for (int endIndex = 0; endIndex < n; endIndex++) {
+            max = Math.max(max, dp[endIndex][k]);
+        }
+        return max;
+
+    }
+
+
+    // TODO : Complete it
+    static int ans = 0;
+
+    // TC = O(m*n*2), SC=O(n)
+    public static int sellMaximum(ArrayList<Integer> desiredSize, ArrayList<Integer> apartmentSize, int k) {
+        int n = desiredSize.size();
+        int m = apartmentSize.size();
+
+        int[] dp = new int[n]; // dp stores for each desiredSize the maximum no. of apartement that can be sold out
+        Arrays.fill(dp, -1);
+        sellMax(desiredSize, apartmentSize, k, 0, 0, new ArrayList<>(), dp);
+
+        return ans;
+    }
+
+    private static int sellMax(ArrayList<Integer> desiredSize, ArrayList<Integer> apartmentSize, int k, int ind, int ca, List<Integer> taken, int[] dp) {
+        int n = desiredSize.size();
+        int m = apartmentSize.size();
+        // base-cases
+        if (ind >= n) {
+            ans = Math.max(ans, ca);
+            return ans;
+        }
+
+        if (dp[ind] != -1) return dp[ind];
+        for (int i = 0; i < m; i++) {
+            // If curr apartment can be taken
+            if ((apartmentSize.get(i) <= desiredSize.get(ind) + k)
+                    && (apartmentSize.get(i) >= desiredSize.get(ind) - k)
+                    && !taken.contains(apartmentSize.get(i))
+            ) {
+                // take
+                taken.add(apartmentSize.get(i));
+                dp[ind] = sellMax(desiredSize, apartmentSize, k, ind + 1, ca + 1, taken, dp);
+                // backtrack
+                taken.remove(apartmentSize.get(i));
+            }
+        }
+        return dp[ind];
+    }
+
+    public int findNumberOfLIS(int[] nums) {
+        int ans = 0;
+        return ans;
+    }
+
+
 }
