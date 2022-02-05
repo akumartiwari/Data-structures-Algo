@@ -1504,6 +1504,163 @@ Note that a period with one day is a smooth descent period by the definition.
 
     }
 
+
+    /*
+    2932
+   4009
+
+    (2,2)(3,1)(9,1)
+
+     */
+    public int minimumSum(int num) {
+        TreeMap<Integer, Integer> freq = new TreeMap<>();  // asc order of elements freq
+        while (num > 0) {
+            int digit = num % 10;
+            freq.put(digit, freq.getOrDefault(digit, 0) + 1);
+            num /= 10;
+        }
+        // Freq map is created
+        // Iterate through the freq map
+        int num1 = 0, num2 = 0;
+        Map<Integer, Integer> map = new HashMap<>();  // to store count of digits in num1 and num2
+
+        for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {
+            int value = entry.getValue();
+            int key = entry.getKey();
+            while (value > 0) {
+                int cnt1 = map.getOrDefault(1, 0);
+                int cnt2 = map.getOrDefault(2, 0);
+                if (cnt1 <= cnt2) {
+                    num1 = num1 * 10 + key;
+                    map.put(1, map.getOrDefault(num1, 0) + 1);
+                    value--;
+                    if (value-- > 0) {
+                        num2 = num2 * 10 + key;
+                        map.put(2, map.getOrDefault(num2, 0) + 1);
+                    }
+                    System.out.println("num1:" + num1 + " num2:" + num2);
+                } else {
+                    num2 = num2 * 10 + key;
+                    map.put(2, map.getOrDefault(num2, 0) + 1);
+                    value--;
+                    if (value-- > 0) {
+                        num1 = num1 * 10 + key;
+                        map.put(1, map.getOrDefault(num1, 0) + 1);
+                    }
+                    System.out.println("num1:" + num1 + " num2:" + num2);
+                }
+            }
+        }
+
+        return num1 + num2;
+    }
+
+    public int[] pivotArray(int[] nums, int pivot) {
+        List<Integer> list1 = new ArrayList<>();
+        List<Integer> list2 = new ArrayList<>();
+        int freq = 0;
+        for (int num : nums) {
+            if (num == pivot) freq++;
+            if (num < pivot) list1.add(num);
+            else if (num > pivot) list2.add(num);
+        }
+        int[] ans = new int[nums.length];
+        int ind = 0;
+        for (int n : list1) {
+            ans[ind++] = n;
+        }
+        while (freq-- > 0) ans[ind++] = pivot;
+        for (int n : list2) {
+            ans[ind++] = n;
+        }
+        return ans;
+    }
+
+    /*
+    Input: startAt = 1, moveCost = 2, pushCost = 1, targetSeconds = 600
+    Output: 6
+
+     */
+    // Author: Anand
+    // TODO
+    public int minCostSetTime(int startAt, int moveCost, int pushCost, int targetSeconds) {
+        int minS = Integer.MAX_VALUE;
+
+        int mins = targetSeconds / 60;
+        int seconds = targetSeconds % 60;
+
+        int digits = 0;
+        int copy = targetSeconds;
+        List<Integer> dig = new ArrayList<>();
+        while (targetSeconds > 0) {
+            digits++;
+            targetSeconds /= 10;
+            dig.add(targetSeconds % 10);
+        }
+
+        Collections.reverse(dig);
+        if (digits <= 2) {
+            int cost = 0;
+            int curr = startAt;
+            for (int d : dig) {
+                if (curr != d) {
+                    cost += 2; // move
+                    cost += 1;// push
+                    curr = d;
+                } else {
+                    cost += 1; // simply push
+                }
+            }
+            minS = Math.min(minS, cost);
+        }
+
+        int cost = 0;
+        int curr = startAt;
+        int mrev = reverse(mins);
+        while (mrev > 0) {
+            int d = mrev % 10;
+            if (curr != d) {
+                cost += 2; // move
+                cost += 1;// push
+                curr = d;
+            } else {
+                cost += 1; // simply push
+            }
+            mrev /= 10;
+        }
+
+        int srev = reverse(seconds);
+        while (srev > 0) {
+            int d = srev % 10;
+            if (curr != d) {
+                cost += 2; // move
+                cost += 1;// push
+                curr = d;
+            } else {
+                cost += 1; // simply push
+            }
+            srev /= 10;
+        }
+
+        minS = Math.min(minS, cost);
+        return minS;
+    }
+
+    private int reverse(int number) {
+        int reverse = 0;
+        while (number != 0) {
+            int remainder = number % 10;
+            reverse = reverse * 10 + remainder;
+            number = number / 10;
+        }
+        return reverse;
+    }
+
+    // TODO
+    public long minimumDifference(int[] nums) {
+        long ans = 0;
+        return ans;
+    }
 }
 
     /*
