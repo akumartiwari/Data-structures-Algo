@@ -1505,13 +1505,6 @@ Note that a period with one day is a smooth descent period by the definition.
     }
 
 
-    /*
-    2932
-   4009
-
-    (2,2)(3,1)(9,1)
-
-     */
     public int minimumSum(int num) {
         TreeMap<Integer, Integer> freq = new TreeMap<>();  // asc order of elements freq
         while (num > 0) {
@@ -1576,26 +1569,28 @@ Note that a period with one day is a smooth descent period by the definition.
         return ans;
     }
 
-    /*
-    Input: startAt = 1, moveCost = 2, pushCost = 1, targetSeconds = 600
-    Output: 6
-
-     */
     // Author: Anand
-    // TODO
     public int minCostSetTime(int startAt, int moveCost, int pushCost, int targetSeconds) {
         int minS = Integer.MAX_VALUE;
 
         int mins = targetSeconds / 60;
         int seconds = targetSeconds % 60;
 
+        if (mins > 99) {
+            mins = 99;
+            seconds += 60;
+            if (seconds > 99) {
+                seconds = 99;
+            }
+        }
+
         int digits = 0;
         int copy = targetSeconds;
         List<Integer> dig = new ArrayList<>();
-        while (targetSeconds > 0) {
+        while (copy > 0) {
             digits++;
-            targetSeconds /= 10;
-            dig.add(targetSeconds % 10);
+            dig.add(copy % 10);
+            copy /= 10;
         }
 
         Collections.reverse(dig);
@@ -1604,65 +1599,221 @@ Note that a period with one day is a smooth descent period by the definition.
             int curr = startAt;
             for (int d : dig) {
                 if (curr != d) {
-                    cost += 2; // move
-                    cost += 1;// push
+                    cost += moveCost; // move
+                    cost += pushCost;// push
                     curr = d;
                 } else {
-                    cost += 1; // simply push
+                    cost += pushCost; // simply push
                 }
             }
+
             minS = Math.min(minS, cost);
         }
 
-        int cost = 0;
-        int curr = startAt;
-        int mrev = reverse(mins);
-        while (mrev > 0) {
-            int d = mrev % 10;
-            if (curr != d) {
-                cost += 2; // move
-                cost += 1;// push
-                curr = d;
-            } else {
-                cost += 1; // simply push
-            }
-            mrev /= 10;
+        // 1st case
+        minS = Math.min(cal(mins, seconds, startAt, moveCost, pushCost), minS);
+
+        if (seconds == 0) {
+            minS = Math.min(cal(mins - 1, 60, startAt, moveCost, pushCost), minS);
         }
 
-        int srev = reverse(seconds);
-        while (srev > 0) {
-            int d = srev % 10;
-            if (curr != d) {
-                cost += 2; // move
-                cost += 1;// push
-                curr = d;
-            } else {
-                cost += 1; // simply push
-            }
-            srev /= 10;
+        // 2nd case
+        if (seconds <= 39 && mins > 0) {
+            minS = Math.min(cal(mins - 1, 60 + seconds, startAt, moveCost, pushCost), minS);
         }
 
-        minS = Math.min(minS, cost);
         return minS;
     }
 
-    private int reverse(int number) {
-        int reverse = 0;
-        while (number != 0) {
-            int remainder = number % 10;
-            reverse = reverse * 10 + remainder;
-            number = number / 10;
+    private int cal(int mins, int seconds, int startAt, int moveCost, int pushCost) {
+        int cost = 0;
+        int curr = startAt;
+
+        String ms = String.valueOf(mins);
+
+        String ss = String.valueOf(seconds);
+
+        for (int i = 0; i < ms.length(); i++) {
+            int d = Integer.parseInt(String.valueOf(ms.charAt(i)));
+            if (curr != d) {
+                cost += moveCost; // move
+                cost += pushCost;// push
+                curr = d;
+            } else {
+                cost += pushCost; // simply push
+            }
         }
-        return reverse;
+
+
+        if (seconds == 0) {
+            if (curr != 0) {
+                cost += moveCost; // move
+            }
+            cost += (2 * pushCost);// push 2 times
+        } else {
+            // if single digit then append zero
+            if (seconds / 10 == 0) {
+                if (curr != 0) {
+                    cost += moveCost; // move
+                }
+                cost += pushCost;// push
+                curr = 0;
+            }
+
+            for (int i = 0; i < ss.length(); i++) {
+                int d = Integer.parseInt(String.valueOf(ss.charAt(i)));
+                if (curr != d) {
+                    cost += moveCost; // move
+                    cost += pushCost;// push
+                    curr = d;
+                } else {
+                    cost += pushCost; // simply push
+                }
+            }
+        }
+        return cost;
     }
 
-    // TODO
+    /*
+    Input: nums = [3,1,2]
+    Output: -1
+
+
+    Input: nums = [7,9,5,8,1,3]
+    Output: 1
+
+ */
     public long minimumDifference(int[] nums) {
-        long ans = 0;
-        return ans;
+        Map<Integer, Integer> map = new HashMap<>();// elem-ind
+        int ind = 0;
+        for (int num : nums) map.putIfAbsent(ind++, num);
+        long f = Long.MAX_VALUE, s = Long.MIN_VALUE;
+        first(nums, 0, 0, f, 0, map);
+        System.out.println("f=" + f);
+        second(nums, 0, 0, s, 0, map);
+        System.out.println("s=" + s);
+        return f - s;
     }
-}
 
+    private void first(int[] nums, int ind, long sum, long f, int cnt, Map<Integer, Integer> map) {
+
+        // base case
+        if (ind >= nums.length) return;
+        if (cnt == nums.length) {
+            f = Math.min(f, sum);
+            return;
+        }
+        if (cnt > nums.length) return;
+
+        // t
+        map.remove(ind);
+        sum += nums[ind];
+        cnt++;
+        first(nums, ind + 1, sum, f, cnt, map);
+
+        // nt
+        // backtrack
+        map.putIfAbsent(ind, nums[ind]);
+        sum -= nums[ind];
+        cnt--;
+        first(nums, ind + 1, sum, f, cnt, map);
+
+    }
+
+    private void second(int[] nums, int ind, long sum, long s, int cnt, Map<Integer, Integer> map) {
+
+
+        // base case
+        if (ind >= nums.length) return;
+        if (cnt == nums.length) {
+            s = Math.max(s, sum);
+            return;
+        }
+        if (cnt > nums.length) return;
+
+        long t, nt;
+        // t
+        if (map.containsKey(ind)) {
+            // t
+            map.remove(ind);
+            sum += nums[ind];
+            cnt++;
+            second(nums, ind + 1, sum, s, cnt, map);
+
+            // nt
+            // backtrack
+            map.putIfAbsent(ind, nums[ind]);
+            sum -= nums[ind];
+            cnt--;
+            second(nums, ind + 1, sum, s, cnt, map);
+        } else second(nums, ind + 1, sum, s, cnt, map);
+    }
+
+    public int[] sortEvenOdd(int[] nums) {
+        List<Integer> even = new ArrayList<>();
+        List<Integer> odd = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (i % 2 == 0) {
+                even.add(nums[i]);
+            } else odd.add(nums[i]);
+        }
+        Collections.sort(even);
+        Collections.sort(odd);
+        Collections.reverse(odd);
+        int ind = 0;
+
+        int i = 0;
+        while (even.size() > 0 || odd.size() > 0) {
+            if (i < even.size() - 1) {
+                nums[ind++] = even.get(i);
+            }
+            if (i < odd.size() - 1) {
+                nums[ind++] = odd.get(i);
+            }
+            i++;
+        }
+
+        return nums;
+    }
+
+    // Author: Anand
+    public long smallestNumber(long num) {
+        long abs = Math.abs(num);
+        long[] digits = Arrays.stream(String.valueOf(abs).chars().toArray()).map(x -> x - '0').mapToLong(x -> x).toArray();
+        StringBuilder ans = new StringBuilder();
+        Arrays.sort(digits);
+
+        if (num > 0) {
+            for (long d : digits) {
+                ans.append(d);
+            }
+            if (ans.toString().startsWith("0")) {
+                int cnt = 0;
+                StringBuilder newAns = new StringBuilder();
+                for (char c : ans.toString().toCharArray()) {
+                    if (c != '0') {
+                        newAns.append(c);
+                        break;
+                    } else cnt++;
+                }
+
+                while (cnt-- > 0) {
+                    newAns.append('0');
+                }
+                for (int i = newAns.length(); i < ans.length(); i++) {
+                    newAns.append(ans.charAt(i));
+                }
+                return Long.parseLong(newAns.toString());
+            }
+            return Long.parseLong(ans.toString());
+        } else {
+            for (int i = digits.length - 1; i >= 0; i--) ans.append(digits[i]);
+            return -Long.parseLong(ans.toString());
+        }
+    }
+
+
+}
     /*
     // TODO: maxRunTime Binary search solution
     public:
