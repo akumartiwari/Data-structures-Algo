@@ -41,13 +41,10 @@ public class B {
 
         int test = sc.nextInt();
         while (test-- > 0) {
-            int n = sc.nextInt();
             int k = sc.nextInt();
             String s = sc.nextLine();
-            Set<String> set = new HashSet<>();
             StringBuilder sb = new StringBuilder(s);
-            set.add(sb.toString());
-            while (k-- > 0) {
+            if (k > 0) {
                 StringBuilder sbe = new StringBuilder(sb);
                 StringBuilder reve = new StringBuilder(sbe);
                 reve.reverse();
@@ -61,29 +58,6 @@ public class B {
             System.out.println(1);
         }
         out.close();
-    }
-
-
-    private static void countPermute(String s, int n, int k) {
-        Set<String> set = new HashSet<>();
-        StringBuilder sb = new StringBuilder(s);
-        set.add(sb.toString());
-        while (k-- > 0) {
-            // If set is non empty get all the variation for all of them
-            Set<String> newSet = new HashSet<>();
-
-            for (String e : set) {
-                StringBuilder sbe = new StringBuilder(e);
-                StringBuilder reve = new StringBuilder(sbe);
-                reve.reverse();
-                String first = sbe.toString() + reve.toString();
-                String sec = reve.toString() + sbe.toString();
-                newSet.add(first);
-                newSet.add(sec);
-            }
-            set = newSet;
-        }
-        System.out.println(set.size());
     }
 
     //Fast input and output
