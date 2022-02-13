@@ -1808,7 +1808,138 @@ Note that a period with one day is a smooth descent period by the definition.
         }
     }
 
+    public int countOperations(int num1, int num2) {
+        int ans = 0;
+        while (num1 != 0 && num2 != 0) {
 
+            if (num1 >= num2) num1 -= num2;
+            else num2 -= num1;
+            ans++;
+        }
+        return ans;
+    }
+
+    public int minimumOperations(int[] nums) {
+        int ans = 0;
+        int n = nums.length;
+
+        if (n == 1) return 0;
+        if (n == 2) return nums[0] == nums[1] ? 1 : 0;
+        Map<Integer, Integer> first = new TreeMap<>();
+        Map<Integer, Integer> second = new TreeMap<>();
+
+        for (int i = 0; i < n; i++) {
+            if (i % 2 == 0) {
+                first.put(nums[i], first.getOrDefault(nums[i], 0) + 1);
+            } else {
+                second.put(nums[i], second.getOrDefault(nums[i], 0) + 1);
+            }
+        }
+
+        List<Map.Entry<Integer, Integer>> fl = new ArrayList<>(first.entrySet());
+        fl.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
+
+
+        List<Map.Entry<Integer, Integer>> sl = new ArrayList<>(second.entrySet());
+        sl.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
+
+        int c1 = fl.get(0).getKey(), c2 = sl.get(0).getKey();
+        int ind = 1;
+
+        while (c1 == c2) {
+            if (fl.size() > ind && sl.size() > ind) {
+                if ((int) fl.get(ind).getValue() > (int) sl.get(ind).getValue()) {
+                    c1 = (int) fl.get(ind).getKey();
+                } else {
+                    c2 = (int) sl.get(ind).getKey();
+                }
+            } else {
+                if (fl.size() > ind) {
+                    c1 = (int) fl.get(ind).getKey();
+                } else if (sl.size() > ind) {
+                    c2 = (int) sl.get(ind).getKey();
+                }
+            }
+
+            if (fl.size() < ind && sl.size() < ind) break;
+            ind++;
+        }
+
+        if (c1 == c2) {
+            c2 = Integer.MAX_VALUE;
+        }
+        // c1 and c2 is ready
+        for (int i = 0; i < n; i++) {
+            if (i % 2 == 0) {
+                if (nums[i] != c1) ans++;
+            } else {
+                if (nums[i] != c2) ans++;
+            }
+        }
+        return ans;
+    }
+
+    /*
+    Input: beans = [4,1,6,5]
+    Output: 4
+    Explanation:
+    - We remove 1 bean from the bag with only 1 bean.
+      This results in the remaining bags: [4,0,6,5]
+    - Then we remove 2 beans from the bag with 6 beans.
+      This results in the remaining bags: [4,0,4,5]
+    - Then we remove 1 bean from the bag with 5 beans.
+      This results in the remaining bags: [4,0,4,4]
+    We removed a total of 1 + 2 + 1 = 4 beans to make the remaining non-empty bags have an equal number of beans.
+    There are no other solutions that remove 4 beans or fewer.
+     */
+
+    // Author: Anand
+    // TC = O(nlogn)
+    public long minimumRemoval(int[] beans) {
+        int n = beans.length;
+        Arrays.sort(beans);
+        long total = 0L;
+        for (int bean : beans) total += bean;
+        long ans = Long.MAX_VALUE;
+        long m = n;
+        for (int i = 0; i < n; i++, m--) {
+            ans = Math.min(ans, total - (m * beans[i]));
+        }
+        return ans;
+    }
+
+    // Author: Anand
+    // dfs :- Iterate all possible combinations and get best possible state after memo (to reduce recursive calls)
+    public int maximumANDSum(int[] nums, int numSlots) {
+        int[] slots = new int[numSlots + 1];
+        for (int i = 1; i <= numSlots; i++) {
+            slots[i] = 2;
+        }
+
+        Map<String, Integer> map = new HashMap<>();
+        return dfs(nums, slots, 0, map);
+    }
+
+    private int dfs(int[] nums, int[] slots, int ind, Map<String, Integer> map) {
+        // base case
+        if (ind == nums.length) return 0;
+
+        String key = Arrays.toString(slots) + "," + ind;
+        if (map.containsKey(key)) return map.get(key);
+
+        int ans = Integer.MIN_VALUE;
+        for (int i = 1; i < slots.length; i++) {
+            // Means slots had already been taken
+            if (slots[i] == 0) continue;
+
+            slots[i]--;
+            ans = Math.max(ans, dfs(nums, slots, ind + 1, map) + (nums[ind] & i));
+            slots[i]++;// backtrack
+        }
+
+        map.put(key, ans);
+        return ans;
+    }
 }
     /*
     // TODO: maxRunTime Binary search solution
