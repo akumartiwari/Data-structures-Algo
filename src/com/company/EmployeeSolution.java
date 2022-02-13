@@ -1,12 +1,8 @@
 package com.company;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.util.Pair;
 
-import java.awt.*;
 import java.util.*;
-import java.util.List;
-import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
 
 public class EmployeeSolution {
@@ -1504,8 +1500,447 @@ Note that a period with one day is a smooth descent period by the definition.
 
     }
 
-}
 
+    public int minimumSum(int num) {
+        TreeMap<Integer, Integer> freq = new TreeMap<>();  // asc order of elements freq
+        while (num > 0) {
+            int digit = num % 10;
+            freq.put(digit, freq.getOrDefault(digit, 0) + 1);
+            num /= 10;
+        }
+        // Freq map is created
+        // Iterate through the freq map
+        int num1 = 0, num2 = 0;
+        Map<Integer, Integer> map = new HashMap<>();  // to store count of digits in num1 and num2
+
+        for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {
+            int value = entry.getValue();
+            int key = entry.getKey();
+            while (value > 0) {
+                int cnt1 = map.getOrDefault(1, 0);
+                int cnt2 = map.getOrDefault(2, 0);
+                if (cnt1 <= cnt2) {
+                    num1 = num1 * 10 + key;
+                    map.put(1, map.getOrDefault(num1, 0) + 1);
+                    value--;
+                    if (value-- > 0) {
+                        num2 = num2 * 10 + key;
+                        map.put(2, map.getOrDefault(num2, 0) + 1);
+                    }
+                    System.out.println("num1:" + num1 + " num2:" + num2);
+                } else {
+                    num2 = num2 * 10 + key;
+                    map.put(2, map.getOrDefault(num2, 0) + 1);
+                    value--;
+                    if (value-- > 0) {
+                        num1 = num1 * 10 + key;
+                        map.put(1, map.getOrDefault(num1, 0) + 1);
+                    }
+                    System.out.println("num1:" + num1 + " num2:" + num2);
+                }
+            }
+        }
+
+        return num1 + num2;
+    }
+
+    public int[] pivotArray(int[] nums, int pivot) {
+        List<Integer> list1 = new ArrayList<>();
+        List<Integer> list2 = new ArrayList<>();
+        int freq = 0;
+        for (int num : nums) {
+            if (num == pivot) freq++;
+            if (num < pivot) list1.add(num);
+            else if (num > pivot) list2.add(num);
+        }
+        int[] ans = new int[nums.length];
+        int ind = 0;
+        for (int n : list1) {
+            ans[ind++] = n;
+        }
+        while (freq-- > 0) ans[ind++] = pivot;
+        for (int n : list2) {
+            ans[ind++] = n;
+        }
+        return ans;
+    }
+
+    // Author: Anand
+    public int minCostSetTime(int startAt, int moveCost, int pushCost, int targetSeconds) {
+        int minS = Integer.MAX_VALUE;
+
+        int mins = targetSeconds / 60;
+        int seconds = targetSeconds % 60;
+
+        if (mins > 99) {
+            mins = 99;
+            seconds += 60;
+            if (seconds > 99) {
+                seconds = 99;
+            }
+        }
+
+        int digits = 0;
+        int copy = targetSeconds;
+        List<Integer> dig = new ArrayList<>();
+        while (copy > 0) {
+            digits++;
+            dig.add(copy % 10);
+            copy /= 10;
+        }
+
+        Collections.reverse(dig);
+        if (digits <= 2) {
+            int cost = 0;
+            int curr = startAt;
+            for (int d : dig) {
+                if (curr != d) {
+                    cost += moveCost; // move
+                    cost += pushCost;// push
+                    curr = d;
+                } else {
+                    cost += pushCost; // simply push
+                }
+            }
+
+            minS = Math.min(minS, cost);
+        }
+
+        // 1st case
+        minS = Math.min(cal(mins, seconds, startAt, moveCost, pushCost), minS);
+
+        if (seconds == 0) {
+            minS = Math.min(cal(mins - 1, 60, startAt, moveCost, pushCost), minS);
+        }
+
+        // 2nd case
+        if (seconds <= 39 && mins > 0) {
+            minS = Math.min(cal(mins - 1, 60 + seconds, startAt, moveCost, pushCost), minS);
+        }
+
+        return minS;
+    }
+
+    private int cal(int mins, int seconds, int startAt, int moveCost, int pushCost) {
+        int cost = 0;
+        int curr = startAt;
+
+        String ms = String.valueOf(mins);
+
+        String ss = String.valueOf(seconds);
+
+        for (int i = 0; i < ms.length(); i++) {
+            int d = Integer.parseInt(String.valueOf(ms.charAt(i)));
+            if (curr != d) {
+                cost += moveCost; // move
+                cost += pushCost;// push
+                curr = d;
+            } else {
+                cost += pushCost; // simply push
+            }
+        }
+
+
+        if (seconds == 0) {
+            if (curr != 0) {
+                cost += moveCost; // move
+            }
+            cost += (2 * pushCost);// push 2 times
+        } else {
+            // if single digit then append zero
+            if (seconds / 10 == 0) {
+                if (curr != 0) {
+                    cost += moveCost; // move
+                }
+                cost += pushCost;// push
+                curr = 0;
+            }
+
+            for (int i = 0; i < ss.length(); i++) {
+                int d = Integer.parseInt(String.valueOf(ss.charAt(i)));
+                if (curr != d) {
+                    cost += moveCost; // move
+                    cost += pushCost;// push
+                    curr = d;
+                } else {
+                    cost += pushCost; // simply push
+                }
+            }
+        }
+        return cost;
+    }
+
+    /*
+    Input: nums = [3,1,2]
+    Output: -1
+
+
+    Input: nums = [7,9,5,8,1,3]
+    Output: 1
+
+ */
+    public long minimumDifference(int[] nums) {
+        Map<Integer, Integer> map = new HashMap<>();// elem-ind
+        int ind = 0;
+        for (int num : nums) map.putIfAbsent(ind++, num);
+        long f = Long.MAX_VALUE, s = Long.MIN_VALUE;
+        first(nums, 0, 0, f, 0, map);
+        System.out.println("f=" + f);
+        second(nums, 0, 0, s, 0, map);
+        System.out.println("s=" + s);
+        return f - s;
+    }
+
+    private void first(int[] nums, int ind, long sum, long f, int cnt, Map<Integer, Integer> map) {
+
+        // base case
+        if (ind >= nums.length) return;
+        if (cnt == nums.length) {
+            f = Math.min(f, sum);
+            return;
+        }
+        if (cnt > nums.length) return;
+
+        // t
+        map.remove(ind);
+        sum += nums[ind];
+        cnt++;
+        first(nums, ind + 1, sum, f, cnt, map);
+
+        // nt
+        // backtrack
+        map.putIfAbsent(ind, nums[ind]);
+        sum -= nums[ind];
+        cnt--;
+        first(nums, ind + 1, sum, f, cnt, map);
+
+    }
+
+    private void second(int[] nums, int ind, long sum, long s, int cnt, Map<Integer, Integer> map) {
+
+
+        // base case
+        if (ind >= nums.length) return;
+        if (cnt == nums.length) {
+            s = Math.max(s, sum);
+            return;
+        }
+        if (cnt > nums.length) return;
+
+        long t, nt;
+        // t
+        if (map.containsKey(ind)) {
+            // t
+            map.remove(ind);
+            sum += nums[ind];
+            cnt++;
+            second(nums, ind + 1, sum, s, cnt, map);
+
+            // nt
+            // backtrack
+            map.putIfAbsent(ind, nums[ind]);
+            sum -= nums[ind];
+            cnt--;
+            second(nums, ind + 1, sum, s, cnt, map);
+        } else second(nums, ind + 1, sum, s, cnt, map);
+    }
+
+    public int[] sortEvenOdd(int[] nums) {
+        List<Integer> even = new ArrayList<>();
+        List<Integer> odd = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (i % 2 == 0) {
+                even.add(nums[i]);
+            } else odd.add(nums[i]);
+        }
+        Collections.sort(even);
+        Collections.sort(odd);
+        Collections.reverse(odd);
+        int ind = 0;
+
+        int i = 0;
+        while (even.size() > 0 || odd.size() > 0) {
+            if (i < even.size() - 1) {
+                nums[ind++] = even.get(i);
+            }
+            if (i < odd.size() - 1) {
+                nums[ind++] = odd.get(i);
+            }
+            i++;
+        }
+
+        return nums;
+    }
+
+    // Author: Anand
+    public long smallestNumber(long num) {
+        long abs = Math.abs(num);
+        long[] digits = Arrays.stream(String.valueOf(abs).chars().toArray()).map(x -> x - '0').mapToLong(x -> x).toArray();
+        StringBuilder ans = new StringBuilder();
+        Arrays.sort(digits);
+
+        if (num > 0) {
+            for (long d : digits) {
+                ans.append(d);
+            }
+            if (ans.toString().startsWith("0")) {
+                int cnt = 0;
+                StringBuilder newAns = new StringBuilder();
+                for (char c : ans.toString().toCharArray()) {
+                    if (c != '0') {
+                        newAns.append(c);
+                        break;
+                    } else cnt++;
+                }
+
+                while (cnt-- > 0) {
+                    newAns.append('0');
+                }
+                for (int i = newAns.length(); i < ans.length(); i++) {
+                    newAns.append(ans.charAt(i));
+                }
+                return Long.parseLong(newAns.toString());
+            }
+            return Long.parseLong(ans.toString());
+        } else {
+            for (int i = digits.length - 1; i >= 0; i--) ans.append(digits[i]);
+            return -Long.parseLong(ans.toString());
+        }
+    }
+
+    public int countOperations(int num1, int num2) {
+        int ans = 0;
+        while (num1 != 0 && num2 != 0) {
+
+            if (num1 >= num2) num1 -= num2;
+            else num2 -= num1;
+            ans++;
+        }
+        return ans;
+    }
+
+    public int minimumOperations(int[] nums) {
+        int ans = 0;
+        int n = nums.length;
+
+        if (n == 1) return 0;
+        if (n == 2) return nums[0] == nums[1] ? 1 : 0;
+        Map<Integer, Integer> first = new TreeMap<>();
+        Map<Integer, Integer> second = new TreeMap<>();
+
+        for (int i = 0; i < n; i++) {
+            if (i % 2 == 0) {
+                first.put(nums[i], first.getOrDefault(nums[i], 0) + 1);
+            } else {
+                second.put(nums[i], second.getOrDefault(nums[i], 0) + 1);
+            }
+        }
+
+        List<Map.Entry<Integer, Integer>> fl = new ArrayList<>(first.entrySet());
+        fl.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
+
+
+        List<Map.Entry<Integer, Integer>> sl = new ArrayList<>(second.entrySet());
+        sl.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
+
+        int c1 = fl.get(0).getKey(), c2 = sl.get(0).getKey();
+        int ind = 1;
+
+        while (c1 == c2) {
+            if (fl.size() > ind && sl.size() > ind) {
+                if ((int) fl.get(ind).getValue() > (int) sl.get(ind).getValue()) {
+                    c1 = (int) fl.get(ind).getKey();
+                } else {
+                    c2 = (int) sl.get(ind).getKey();
+                }
+            } else {
+                if (fl.size() > ind) {
+                    c1 = (int) fl.get(ind).getKey();
+                } else if (sl.size() > ind) {
+                    c2 = (int) sl.get(ind).getKey();
+                }
+            }
+
+            if (fl.size() < ind && sl.size() < ind) break;
+            ind++;
+        }
+
+        if (c1 == c2) {
+            c2 = Integer.MAX_VALUE;
+        }
+        // c1 and c2 is ready
+        for (int i = 0; i < n; i++) {
+            if (i % 2 == 0) {
+                if (nums[i] != c1) ans++;
+            } else {
+                if (nums[i] != c2) ans++;
+            }
+        }
+        return ans;
+    }
+
+    /*
+    Input: beans = [4,1,6,5]
+    Output: 4
+    Explanation:
+    - We remove 1 bean from the bag with only 1 bean.
+      This results in the remaining bags: [4,0,6,5]
+    - Then we remove 2 beans from the bag with 6 beans.
+      This results in the remaining bags: [4,0,4,5]
+    - Then we remove 1 bean from the bag with 5 beans.
+      This results in the remaining bags: [4,0,4,4]
+    We removed a total of 1 + 2 + 1 = 4 beans to make the remaining non-empty bags have an equal number of beans.
+    There are no other solutions that remove 4 beans or fewer.
+     */
+
+    // Author: Anand
+    // TC = O(nlogn)
+    public long minimumRemoval(int[] beans) {
+        int n = beans.length;
+        Arrays.sort(beans);
+        long total = 0L;
+        for (int bean : beans) total += bean;
+        long ans = Long.MAX_VALUE;
+        long m = n;
+        for (int i = 0; i < n; i++, m--) {
+            ans = Math.min(ans, total - (m * beans[i]));
+        }
+        return ans;
+    }
+
+    // Author: Anand
+    // dfs :- Iterate all possible combinations and get best possible state after memo (to reduce recursive calls)
+    public int maximumANDSum(int[] nums, int numSlots) {
+        int[] slots = new int[numSlots + 1];
+        for (int i = 1; i <= numSlots; i++) {
+            slots[i] = 2;
+        }
+
+        Map<String, Integer> map = new HashMap<>();
+        return dfs(nums, slots, 0, map);
+    }
+
+    private int dfs(int[] nums, int[] slots, int ind, Map<String, Integer> map) {
+        // base case
+        if (ind == nums.length) return 0;
+
+        String key = Arrays.toString(slots) + "," + ind;
+        if (map.containsKey(key)) return map.get(key);
+
+        int ans = Integer.MIN_VALUE;
+        for (int i = 1; i < slots.length; i++) {
+            // Means slots had already been taken
+            if (slots[i] == 0) continue;
+
+            slots[i]--;
+            ans = Math.max(ans, dfs(nums, slots, ind + 1, map) + (nums[ind] & i));
+            slots[i]++;// backtrack
+        }
+
+        map.put(key, ans);
+        return ans;
+    }
+}
     /*
     // TODO: maxRunTime Binary search solution
     public:
