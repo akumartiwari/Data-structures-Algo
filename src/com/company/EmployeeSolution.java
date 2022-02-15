@@ -1910,37 +1910,36 @@ Note that a period with one day is a smooth descent period by the definition.
 
     // Author: Anand
     // dfs :- Iterate all possible combinations and get best possible state after memo (to reduce recursive calls)
+    // Author : Anand
     public int maximumANDSum(int[] nums, int numSlots) {
         int[] slots = new int[numSlots + 1];
-        for (int i = 1; i <= numSlots; i++) {
-            slots[i] = 2;
-        }
-
-        Map<String, Integer> map = new HashMap<>();
-        return dfs(nums, slots, 0, map);
+        Map<List<Integer>, Integer> map = new HashMap<>();
+        return f(nums, slots, numSlots, 0, map);
     }
 
-    private int dfs(int[] nums, int[] slots, int ind, Map<String, Integer> map) {
+    private int f(int[] nums, int[] slots, int numSlots, int ind, Map<List<Integer>, Integer> map) {
         // base case
-        if (ind == nums.length) return 0;
+        if (ind >= nums.length) return 0;
 
-        String key = Arrays.toString(slots) + "," + ind;
-        if (map.containsKey(key)) return map.get(key);
+        List<Integer> slotList = Arrays.stream(slots).boxed().collect(Collectors.toList());
+        slotList.add(ind);
+        if (map.containsKey(slotList)) return map.get(slotList);
 
+        // Explore all possibilities
         int ans = Integer.MIN_VALUE;
-        for (int i = 1; i < slots.length; i++) {
-            // Means slots had already been taken
-            if (slots[i] == 0) continue;
-
-            slots[i]--;
-            ans = Math.max(ans, dfs(nums, slots, ind + 1, map) + (nums[ind] & i));
-            slots[i]++;// backtrack
+        for (int i = 1; i <= numSlots; i++) {
+            // num can be placed inside the slot
+            if (slots[i] < 2) {
+                slots[i]++;
+                ans = Math.max(ans, ((nums[ind] & i) + f(nums, slots, numSlots, ind + 1, map)));
+                slots[i]--;
+            }
         }
-
-        map.put(key, ans);
+        map.put(slotList, ans);
         return ans;
     }
 }
+
     /*
     // TODO: maxRunTime Binary search solution
     public:
