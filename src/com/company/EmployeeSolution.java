@@ -1938,6 +1938,33 @@ Note that a period with one day is a smooth descent period by the definition.
         map.put(slotList, ans);
         return ans;
     }
+
+    // Author : Anand
+    public int countPairs(int[] nums, int k) {
+        int cnt = 0;
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                if ((nums[i] == nums[j]) && (nums[i] * nums[j]) % k == 0) cnt++;
+            }
+        }
+        return cnt;
+    }
+
+    // Author : Anand
+    public long[] sumOfThree(long num) {
+        long[] ans = new long[3];
+        if ((num % 3 != 0)) return new long[]{};
+        long val = num / 3;
+        ans[0] = val - 1;
+        ans[1] = val;
+        ans[2] = val + 1;
+        return ans;
+    }
+
+    public long goodTriplets(int[] nums1, int[] nums2) {
+        long ans = 0;
+        return ans;
+    }
 }
 
     /*
