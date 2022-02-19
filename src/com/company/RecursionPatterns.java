@@ -546,4 +546,49 @@ public class RecursionPatterns {
         friends.remove(ni);
         return dfs(n, k, friends, ni);
     }
+
+    // Author : Anand
+    List<Long> res = new ArrayList<>();
+    boolean solFound = false;
+
+    public List<Long> maximumEvenSplit(long finalSum) {
+        if (finalSum % 2 != 0) return res;
+        if (finalSum == 2) {
+            res.add(2L);
+            return res;
+        }
+
+        mes(finalSum, 2, 0, new ArrayList<>());
+        return res;
+    }
+
+    private void mes(long finalSum, long num, long sum, List<Long> ds) {
+        // base case
+        if (solFound) {
+            return;
+        }
+
+        if (sum == finalSum) {
+            res = new ArrayList<>(ds);
+            solFound = true;
+            return;
+        }
+
+
+        if (sum + num > finalSum) return;
+
+        // not-take
+        if (sum + num <= finalSum) {
+            //take
+            ds.add(num);
+            mes(finalSum, num + 2, sum + num, ds);
+            // backtrack
+            ds.remove(ds.size() - 1);
+        }
+
+        mes(finalSum, num + 2, sum, ds);
+    }
+
+
+
 }
