@@ -1961,9 +1961,75 @@ Note that a period with one day is a smooth descent period by the definition.
         return ans;
     }
 
+    public String repeatLimitedString(String s, int repeatLimit) {
+
+        Map<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+
+        StringBuilder ans = new StringBuilder();
+        for (int i = 25; i >= 0; i--) {
+            char ch = (char) ('a' + i);
+            boolean taken = false;
+            if (map.containsKey(ch)) {
+                while (map.containsKey(ch)) {
+                    if (!taken) {
+                        if (map.get(ch) < repeatLimit) {
+                            int rl = map.get(ch);
+                            StringBuilder perm = new StringBuilder();
+                            while (rl-- > 0) {
+                                perm.append(ch);
+                            }
+                            ans.append(perm.toString());
+                            map.remove(ch);
+                        } else {
+                            int rl = repeatLimit;
+                            if (map.get(ch) <= 0) map.remove(ch);
+                            StringBuilder perm = new StringBuilder();
+                            while (rl-- > 0) {
+                                perm.append(ch);
+                            }
+                            ans.append(perm.toString());
+                            map.put(ch, map.get(ch) - repeatLimit);
+                        }
+                        taken = true;
+                    } else {
+                        boolean isNextCharPresent = false;
+                        for (int j = (int) ch - 1; j >= 0; j--) {
+                            char nc = (char) ('a' + j);
+
+                            if (map.containsKey(nc) && map.get(nc) > 0) {
+                                map.put(nc, map.get(nc) - 1);
+                                isNextCharPresent = true;
+                            }
+                            if (map.get(nc) <= 0) map.remove(nc);
+                            ans.append(nc);
+                            break;
+                        }
+                        if (!isNextCharPresent) return ans.toString();
+                        taken = false;
+                    }
+                }
+            }
+        }
+        return ans.toString();
+    }
+
     public long goodTriplets(int[] nums1, int[] nums2) {
         long ans = 0;
         return ans;
+    }
+
+    public long coutPairs(int[] nums, int k) {
+        long cnt = 0;
+        for (int i=0;i<nums.length;i++){
+            for (int j=i+1;j<nums.length;j++){
+                if (nums[i]*nums[j] % k == 0) cnt ++;
+            }
+        }
+        return cnt;
     }
 }
 
