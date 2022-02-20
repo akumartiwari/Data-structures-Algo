@@ -11321,6 +11321,50 @@ Output: [1,2,2,3,5,6]
 
         return false;
     }
+
+    //Represent the head and tail of the singly linked list
+    ListNode curr = null;
+    ListNode tail = null;
+
+    //addNode() will add a new node to the list
+    public void addNode(int data) {
+        //Create a new node
+        ListNode newNode = new ListNode(data);
+
+        //Checks if the list is empty
+        if (curr == null) {
+            //If list is empty, both head and tail will point to new node
+            curr = newNode;
+            tail = newNode;
+        } else {
+            //newNode will be added after tail such that tail's next will point to newNode
+            tail.next = newNode;
+            //newNode will become new tail of the list
+            tail = newNode;
+        }
+    }
+
+    // Author: Anand
+    public ListNode mergeNodes(ListNode head) {
+        int sum = 0;
+        int zero = 0;
+
+        while (head != null) {
+            sum += head.val;
+            if (head.val == 0) {
+                zero++;
+            }
+            if (zero == 2) {
+                addNode(sum);
+                zero = 1;
+                sum = 0;
+            }
+            head = head.next;
+        }
+
+
+        return curr;
+    }
 }
 
 class combinationSum4BottomUpDP {
