@@ -1940,17 +1940,6 @@ Note that a period with one day is a smooth descent period by the definition.
     }
 
     // Author : Anand
-    public int countPairs(int[] nums, int k) {
-        int cnt = 0;
-        for (int i = 0; i < nums.length; i++) {
-            for (int j = i + 1; j < nums.length; j++) {
-                if ((nums[i] == nums[j]) && (nums[i] * nums[j]) % k == 0) cnt++;
-            }
-        }
-        return cnt;
-    }
-
-    // Author : Anand
     public long[] sumOfThree(long num) {
         long[] ans = new long[3];
         if ((num % 3 != 0)) return new long[]{};
@@ -2022,14 +2011,27 @@ Note that a period with one day is a smooth descent period by the definition.
         return ans;
     }
 
-    public long coutPairs(int[] nums, int k) {
-        long cnt = 0;
-        for (int i=0;i<nums.length;i++){
-            for (int j=i+1;j<nums.length;j++){
-                if (nums[i]*nums[j] % k == 0) cnt ++;
+    public long countPairs(int[] nums, int k) {
+        Map<Long, Long> gcdMap = new HashMap<>(); // to store gcd factors count seen so far
+        long result = 0;
+        for (int n : nums) {
+            long gcd = __gcd(n, k);
+            for (long num : gcdMap.keySet()) {
+                if ((long) gcd * num % k == 0) {
+                    result += gcdMap.get(num);
+                }
             }
+            gcdMap.put(gcd, gcdMap.getOrDefault(gcd, 0L) + 1);
         }
-        return cnt;
+        return result;
+    }
+
+    //long version for gcd
+    public long __gcd(long a, long b) {
+        if (b == 0)
+            return a;
+
+        return __gcd(b, a % b);
     }
 }
 
