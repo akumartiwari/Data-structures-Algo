@@ -1,6 +1,4 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.StringTokenizer;
 
 public class CF {
@@ -50,9 +48,6 @@ public class CF {
         }
     }
 
-    static int cnt = 0;
-
-    // TODO
     public static void main(String[] args) {
         MyScanner sc = new MyScanner();
         out = new PrintWriter(new BufferedOutputStream(System.out));
@@ -60,38 +55,49 @@ public class CF {
         int test = sc.nextInt();
         while (test-- > 0) {
             int n = sc.nextInt();
-            List<Integer> substr = new ArrayList<>();
-            for (int i = 1; i <= n; i++) {
-                substr.add(i);
+            int x = sc.nextInt();
+            int[] arr = new int[n];
+            for (int i = 0; i < n; i++) {
+                arr[i] = sc.nextInt();
             }
-            solve(n, substr, new ArrayList<>());
+
+            solve(arr, x);
         }
         out.close();
     }
 
-    private static void solve(int n, List<Integer> substr, List<Integer> list) {
-        if (substr.size() == 0) {
-            boolean isValid = true;
-            for (int i = 1; i < list.size() - 1; i++) {
-                if (list.get(i - 1) + list.get(i) == list.get(i + 1)) {
-                    isValid = false;
-                    break;
-                }
+    private static void solve(int[] arr, int x) {
+
+
+    }
+
+    private static void antiFib(int n, int[] str) {
+        for (int i = n; i >= 1; i--) {
+            StringBuilder ans = new StringBuilder();
+            StringBuilder left = new StringBuilder();
+            StringBuilder right = new StringBuilder();
+
+            // Let's fix i and generate subsequences
+            for (int j = i - 2; j >= 0; j--) {
+                left.append(str[j]);
+                left.append(" ");
             }
 
-            if (isValid && cnt < n) {
-                System.out.println();
-                list.forEach(x -> System.out.print(x + " "));
-                cnt++;
+            for (int j = str.length - 1; j >= i; j--) {
+                right.append(str[j]);
+                right.append(" ");
             }
-            return;
+
+            ans.append(i).append(" ");
+            ans.append(right);
+            ans.append(left);
+
+            System.out.println();
+            // print the string
+            for (char c : ans.toString().toCharArray()) {
+                System.out.print(c);
+            }
         }
 
-        for (int i = 0; i < n; i++) {
-            substr.remove(i);
-            list.add(i+1);
-            solve(n, substr, list);
-            substr.add(i+1);
-        }
     }
 }

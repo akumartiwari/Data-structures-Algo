@@ -389,5 +389,44 @@ public class DP {
         return ans;
     }
 
+    /*
+    Input: nums1 = [4,0,1,3,2], nums2 = [4,1,0,2,3]
+    Output: 4
+    */
+    // Author: Anand
+    // TC = O(2n)
+    public long goodTriplets(int[] nums1, int[] nums2) {
+        Map<Integer, Integer> map = new HashMap<>();// To look-up elements in nums2
+        int idx = 0;
+        for (int e : nums2) map.put(e, idx++);
+        Map<String, Long> dp = new HashMap<>();// To look-up elements in nums2
+
+        return recurse(nums1, 0, 3, true, map, new ArrayList<>(), dp);
+    }
+
+    private long recurse(int[] nums1, int idx, int t, boolean valid, Map<Integer, Integer> map, List<Integer> choices, Map<String, Long> dp) {
+        // base case
+        if (t == 0) {
+            if (valid) return 1;
+            return 0;
+        }
+        if (!valid) return 0;
+        String key = idx + "-" + t + "-" + valid;
+        if (dp.containsKey(key)) dp.get(key);
+
+        int take = 0, nt = 0;
+        // t
+        if (choices.size() == 0 || map.get(nums1[idx]) > choices.get(choices.size() - 1)) {
+            choices.add(map.get(nums1[idx]));
+            take += recurse(nums1, idx + 1, t - 1, valid, map, choices, dp);
+            choices.remove(choices.size() - 1); // remove at last index in O(1)
+        } else recurse(nums1, idx + 1, t, false, map, choices, dp);
+
+        // nt
+        nt += recurse(nums1, idx + 1, t - 1, valid, map, choices, dp);
+        long ans = take + nt;
+        dp.put(key, ans);
+        return ans;
+    }
 
 }
