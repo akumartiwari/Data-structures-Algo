@@ -2046,7 +2046,6 @@ Note that a period with one day is a smooth descent period by the definition.
         ans.set(ans.size() - 1, finalSum + ans.peekLast());
         return ans;
     }
-
 }
 
     /*
