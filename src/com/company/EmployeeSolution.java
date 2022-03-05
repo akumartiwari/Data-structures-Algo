@@ -2033,7 +2033,7 @@ Note that a period with one day is a smooth descent period by the definition.
 
         return __gcd(b, a % b);
     }
-    
+
     // Author : Anand
     public int mostFrequent(int[] nums, int key) {
 
