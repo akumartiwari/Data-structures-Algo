@@ -2033,6 +2033,62 @@ Note that a period with one day is a smooth descent period by the definition.
 
         return __gcd(b, a % b);
     }
+    
+    // Author : Anand
+    public int mostFrequent(int[] nums, int key) {
+
+        int ans = 0;
+        int n = nums.length;
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
+
+        Set<Integer> targets = new HashSet<>();
+        for (int i = 0; i < n - 1; i++) if (nums[i] == key) targets.add(nums[i + 1]);
+
+        for (int t : targets) {
+            int cnt = 0;
+            for (int i = 0; i < n; i++) {
+                if (nums[i] == key && nums[i + 1] == t) cnt++;
+            }
+            ans = Math.max(ans, cnt);
+        }
+        return ans;
+    }
+
+    // Author : Anand
+    public int[] sortJumbled(int[] mapping, int[] nums) {
+        Map<Integer, List<Integer>> freq = new TreeMap<>();
+        for (int num : nums) {
+            int nv = num;
+            StringBuilder sb = new StringBuilder();
+            if (num == 0) sb.append(mapping[0]);
+            else {
+                while (num > 0) {
+                    sb.append(mapping[num % 10]);
+                    num /= 10;
+                }
+            }
+
+            int v = Integer.parseInt(sb.reverse().toString());
+            if (freq.containsKey(v)) {
+                List<Integer> elem = freq.get(v);
+                elem.add(nv);
+                freq.put(v, elem);
+            } else {
+                freq.put(v, new ArrayList<>(Arrays.asList(nv)));
+            }
+        }
+
+        int[] ans = new int[nums.length];
+        int idx = 0;
+        for (int e : freq.keySet()) {
+            List<Integer> elem = freq.get(e);
+            for (int v : elem) {
+                ans[idx++] = v;
+            }
+        }
+        return ans;
+    }
 }
 
     /*
