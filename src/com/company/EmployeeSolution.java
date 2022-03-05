@@ -2046,7 +2046,67 @@ Note that a period with one day is a smooth descent period by the definition.
         ans.set(ans.size() - 1, finalSum + ans.peekLast());
         return ans;
     }
+
+    // Author: Anand
+    public int prefixCount(String[] words, String pref) {
+        int cnt = 0;
+        for (String word : words) {
+            if (word.startsWith(pref)) cnt++;
+        }
+        return cnt;
+    }
+
+    // Author: Anand
+    public int minSteps(String s, String t) {
+        int cnt = 0;
+        Map<Character, Integer> freq1 = new HashMap<>();
+        Map<Character, Integer> freq2 = new HashMap<>();
+        for (char c : s.toCharArray()) {
+            freq1.put(c, freq1.getOrDefault(c, 0) + 1);
+        }
+
+        for (char c : t.toCharArray()) {
+            freq2.put(c, freq2.getOrDefault(c, 0) + 1);
+        }
+
+        for (int i = 0; i < t.length(); i++) {
+            char c = t.charAt(i);
+            if (freq1.containsKey(c)) {
+                freq1.put(c, freq1.getOrDefault(c, 0) - 1);
+                if (freq1.get(c) <= 0) freq1.remove(c);
+            } else cnt++;
+        }
+
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (freq2.containsKey(c)) {
+                freq2.put(c, freq2.getOrDefault(c, 0) - 1);
+                if (freq2.get(c) <= 0) freq2.remove(c);
+            } else cnt++;
+        }
+        return cnt;
+    }
+
+
+    // Author: Anand
+    // TC = O(nlogn)
+    public long minimumTime(int[] time, int totalTrips) {
+        long ans = 0;
+        long l = 0, h = (long) 1e14;
+        while (l <= h) {
+            long mid = l + (h - l) / 2;
+            ans = 0;
+            for (int t : time) {
+                ans += mid / t;
+            }
+            if (ans > totalTrips) h = mid - 1;
+            else if (ans < totalTrips) l = mid;
+            else return ans;
+        }
+        return ans;
+    }
 }
+
 
     /*
     // TODO: maxRunTime Binary search solution
