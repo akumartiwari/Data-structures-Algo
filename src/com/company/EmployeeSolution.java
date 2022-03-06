@@ -1,9 +1,11 @@
 package com.company;
 
 import javafx.util.Pair;
+import sun.reflect.generics.tree.Tree;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class EmployeeSolution {
     String name;
@@ -2152,78 +2154,38 @@ Note that a period with one day is a smooth descent period by the definition.
      * }
      * }
      */
-    // TODO: TBD
     public TreeNode createBinaryTree(int[][] descriptions) {
-        TreeNode root = null;
-        int r = descriptions.length;
-        boolean isRootPresent = false;
-        Map<Integer, List<Integer>> map = new HashMap<>(); // to store root with their left and right child
-        for (int[] description : descriptions) {
-            int p = description[0];
-            int c = description[1];
-            int isLeft = description[2];
-            if (!isRootPresent) {
-                root = new TreeNode(p);
-                isRootPresent = true;
-            }
+        Map<Integer, TreeNode> map = new HashMap<>();
+        Set<Integer> children = new HashSet<>();
 
-            // if root was not a child of some node
-            if (!map.containsKey(c)) {
-                if (isLeft == 1) {
-                    if (map.get(root.val).size() == 2) {
-                        if (root.left.val == p) root = root.left;
-                        else root = root.right;
-                    }
-                    root.left = new TreeNode(c);
-                    if (map.containsKey(root.val)) {
-                        List<Integer> childs = map.get(root.val);
-                        childs.add(root.left.val);
-                        map.put(root.val, childs);
-                    } else {
-                        map.put(root.val, new ArrayList<>(Collections.singletonList(root.left.val)));
-                    }
-                } else {
-                    if (map.get(root.val).size() == 2) {
-                        if (root.left.val == p) root = root.left;
-                        else root = root.right;
-                    }
-                    root.right = new TreeNode(c);
-                    if (map.containsKey(root.val)) {
-                        List<Integer> childs = map.get(root.val);
-                        childs.add(root.right.val);
-                        map.put(root.val, childs);
-                    } else {
-                        map.put(root.val, new ArrayList<>(Collections.singletonList(root.right.val)));
-                    }
-                }
+        for (int[] desc : descriptions) {
+            int p = desc[0];
+            int c = desc[1];
+            int isLeft = desc[2];
+
+            children.add(c);
+            TreeNode node = map.getOrDefault(p, new TreeNode(p));
+            if (isLeft == 1) {
+                node.left = map.getOrDefault(c, new TreeNode(c));
+                map.put(c, node.left);
             } else {
-                TreeNode temp = root;
-                root = new TreeNode(p);
-                if (isLeft == 1) {
-                    root.left = temp;
-                    if (map.containsKey(root.val)) {
-                        List<Integer> childs = map.get(root.val);
-                        childs.add(root.left.val);
-                        map.put(root.val, childs);
-                    } else {
-                        map.put(root.val, new ArrayList<>(Collections.singletonList(root.left.val)));
-                    }
-                } else {
-                    root.right = temp;
-                    if (map.containsKey(root.val)) {
-                        List<Integer> childs = map.get(root.val);
-                        childs.add(root.right.val);
-                        map.put(root.val, childs);
-                    } else {
-                        map.put(root.val, new ArrayList<>(Collections.singletonList(root.right.val)));
-                    }
-                }
+                node.right = map.getOrDefault(c, new TreeNode(c));
+                map.put(c, node.right);
             }
-
+            map.put(p, node);
         }
-        return root;
-    }
 
+        int root = -1;
+
+        for (int[] desc : descriptions) {
+            // Root parent is a node which is not a child of any node
+            if (!children.contains(desc[0])) {
+                root = desc[0];
+                break;
+            }
+        }
+        return map.getOrDefault(root, null);
+    }
 }
 
 
