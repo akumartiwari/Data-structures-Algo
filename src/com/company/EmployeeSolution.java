@@ -2094,26 +2094,7 @@ Note that a period with one day is a smooth descent period by the definition.
         return cnt;
     }
 
-
-    // Author: Anand
-    // TC = O(nlogn)
-    public long minimumTime(int[] time, int totalTrips) {
-        long ans = 0;
-        long l = 0, h = (long) 1e14;
-        while (l <= h) {
-            long mid = l + (h - l) / 2;
-            ans = 0;
-            for (int t : time) {
-                ans += mid / t;
-            }
-            if (ans > totalTrips) h = mid - 1;
-            else if (ans < totalTrips) l = mid;
-            else return ans;
-        }
-        return ans;
-    }
-
-      // Author : Anand
+    // Author : Anand
     public int mostFrequent(int[] nums, int key) {
 
         int ans = 0;
