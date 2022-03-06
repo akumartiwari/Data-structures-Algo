@@ -1,9 +1,11 @@
 package com.company;
 
 import javafx.util.Pair;
+import sun.reflect.generics.tree.Tree;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class EmployeeSolution {
     String name;
@@ -2006,6 +2008,11 @@ Note that a period with one day is a smooth descent period by the definition.
         return ans.toString();
     }
 
+    public long goodTriplets(int[] nums1, int[] nums2) {
+        long ans = 0;
+        return ans;
+    }
+
     public long countPairs(int[] nums, int k) {
         Map<Long, Long> gcdMap = new HashMap<>(); // to store gcd factors count seen so far
         long result = 0;
@@ -2104,6 +2111,157 @@ Note that a period with one day is a smooth descent period by the definition.
             else return ans;
         }
         return ans;
+    }
+
+      // Author : Anand
+    public int mostFrequent(int[] nums, int key) {
+
+        int ans = 0;
+        int n = nums.length;
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
+
+        Set<Integer> targets = new HashSet<>();
+        for (int i = 0; i < n - 1; i++) if (nums[i] == key) targets.add(nums[i + 1]);
+
+        for (int t : targets) {
+            int cnt = 0;
+            for (int i = 0; i < n; i++) {
+                if (nums[i] == key && nums[i + 1] == t) cnt++;
+            }
+            ans = Math.max(ans, cnt);
+        }
+        return ans;
+    }
+
+    // Author : Anand
+    public int[] sortJumbled(int[] mapping, int[] nums) {
+        Map<Integer, List<Integer>> freq = new TreeMap<>();
+        for (int num : nums) {
+            int nv = num;
+            StringBuilder sb = new StringBuilder();
+            if (num == 0) sb.append(mapping[0]);
+            else {
+                while (num > 0) {
+                    sb.append(mapping[num % 10]);
+                    num /= 10;
+                }
+            }
+
+            int v = Integer.parseInt(sb.reverse().toString());
+            if (freq.containsKey(v)) {
+                List<Integer> elem = freq.get(v);
+                elem.add(nv);
+                freq.put(v, elem);
+            } else {
+                freq.put(v, new ArrayList<>(Arrays.asList(nv)));
+            }
+        }
+
+        int[] ans = new int[nums.length];
+        int idx = 0;
+        for (int e : freq.keySet()) {
+            List<Integer> elem = freq.get(e);
+            for (int v : elem) {
+                ans[idx++] = v;
+            }
+        }
+        return ans;
+    }
+
+    // Author : Anand
+    public List<String> cellsInRange(String s) {
+        String[] cells = s.split(":");
+        String first = cells[0];
+        String last = cells[1];
+        int r = last.charAt(0) - first.charAt(0) + 1;
+        int c = last.charAt(1) - first.charAt(1) + 1;
+        List<String> ans = new ArrayList<>();
+        int rn = 0;
+
+        boolean isF = true;
+        while (r-- > 0) {
+            int cn = 0;
+            while (c-- > 0) {
+                String val = "";
+                if (isF) val = first;
+                else val = last;
+                StringBuilder res = new StringBuilder(String.valueOf((char) (val.charAt(0) + rn)));
+                res.append(Integer.parseInt(String.valueOf(val.charAt(1))) + cn++);
+                System.out.println(res.toString());
+                ans.add(res.toString());
+            }
+            isF = false;
+            rn++;
+        }
+        return ans;
+    }
+
+    // Author : Anand
+    public long minimalKSum(int[] nums, int k) {
+        int len = nums.length;
+        Arrays.sort(nums);
+        long sumK = (long) k * (k + 1) / 2;
+        for (int i = 0; i < len; i++) {
+            if (nums[i] <= k) {
+                if (i > 0 && nums[i] == nums[i - 1]) {
+                } else {
+                    sumK -= nums[i];
+                    k++;
+                    sumK += k;
+                }
+            } else break;
+        }
+        return sumK;
+    }
+
+
+    /**
+     * Definition for a binary tree node.
+     * public class TreeNode {
+     * int val;
+     * TreeNode left;
+     * TreeNode right;
+     * TreeNode() {}
+     * TreeNode(int val) { this.val = val; }
+     * TreeNode(int val, TreeNode left, TreeNode right) {
+     * this.val = val;
+     * this.left = left;
+     * this.right = right;
+     * }
+     * }
+     */
+    public TreeNode createBinaryTree(int[][] descriptions) {
+        Map<Integer, TreeNode> map = new HashMap<>();
+        Set<Integer> children = new HashSet<>();
+
+        for (int[] desc : descriptions) {
+            int p = desc[0];
+            int c = desc[1];
+            int isLeft = desc[2];
+
+            children.add(c);
+            TreeNode node = map.getOrDefault(p, new TreeNode(p));
+            if (isLeft == 1) {
+                node.left = map.getOrDefault(c, new TreeNode(c));
+                map.put(c, node.left);
+            } else {
+                node.right = map.getOrDefault(c, new TreeNode(c));
+                map.put(c, node.right);
+            }
+            map.put(p, node);
+        }
+
+        int root = -1;
+
+        for (int[] desc : descriptions) {
+            // Root parent is a node which is not a child of any node
+            if (!children.contains(desc[0])) {
+                root = desc[0];
+                break;
+            }
+        }
+        return map.getOrDefault(root, null);
     }
 }
 
