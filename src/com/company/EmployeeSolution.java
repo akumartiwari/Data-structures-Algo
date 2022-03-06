@@ -2089,7 +2089,143 @@ Note that a period with one day is a smooth descent period by the definition.
         }
         return ans;
     }
+
+    // Author : Anand
+    public List<String> cellsInRange(String s) {
+        String[] cells = s.split(":");
+        String first = cells[0];
+        String last = cells[1];
+        int r = last.charAt(0) - first.charAt(0) + 1;
+        int c = last.charAt(1) - first.charAt(1) + 1;
+        List<String> ans = new ArrayList<>();
+        int rn = 0;
+
+        boolean isF = true;
+        while (r-- > 0) {
+            int cn = 0;
+            while (c-- > 0) {
+                String val = "";
+                if (isF) val = first;
+                else val = last;
+                StringBuilder res = new StringBuilder(String.valueOf((char) (val.charAt(0) + rn)));
+                res.append(Integer.parseInt(String.valueOf(val.charAt(1))) + cn++);
+                System.out.println(res.toString());
+                ans.add(res.toString());
+            }
+            isF = false;
+            rn++;
+        }
+        return ans;
+    }
+
+    // Author : Anand
+    public long minimalKSum(int[] nums, int k) {
+        int len = nums.length;
+        Arrays.sort(nums);
+        long sumK = (long) k * (k + 1) / 2;
+        for (int i = 0; i < len; i++) {
+            if (nums[i] <= k) {
+                if (i > 0 && nums[i] == nums[i - 1]) {
+                } else {
+                    sumK -= nums[i];
+                    k++;
+                    sumK += k;
+                }
+            } else break;
+        }
+        return sumK;
+    }
+
+
+    /**
+     * Definition for a binary tree node.
+     * public class TreeNode {
+     * int val;
+     * TreeNode left;
+     * TreeNode right;
+     * TreeNode() {}
+     * TreeNode(int val) { this.val = val; }
+     * TreeNode(int val, TreeNode left, TreeNode right) {
+     * this.val = val;
+     * this.left = left;
+     * this.right = right;
+     * }
+     * }
+     */
+    // TODO: TBD
+    public TreeNode createBinaryTree(int[][] descriptions) {
+        TreeNode root = null;
+        int r = descriptions.length;
+        boolean isRootPresent = false;
+        Map<Integer, List<Integer>> map = new HashMap<>(); // to store root with their left and right child
+        for (int[] description : descriptions) {
+            int p = description[0];
+            int c = description[1];
+            int isLeft = description[2];
+            if (!isRootPresent) {
+                root = new TreeNode(p);
+                isRootPresent = true;
+            }
+
+            // if root was not a child of some node
+            if (!map.containsKey(c)) {
+                if (isLeft == 1) {
+                    if (map.get(root.val).size() == 2) {
+                        if (root.left.val == p) root = root.left;
+                        else root = root.right;
+                    }
+                    root.left = new TreeNode(c);
+                    if (map.containsKey(root.val)) {
+                        List<Integer> childs = map.get(root.val);
+                        childs.add(root.left.val);
+                        map.put(root.val, childs);
+                    } else {
+                        map.put(root.val, new ArrayList<>(Collections.singletonList(root.left.val)));
+                    }
+                } else {
+                    if (map.get(root.val).size() == 2) {
+                        if (root.left.val == p) root = root.left;
+                        else root = root.right;
+                    }
+                    root.right = new TreeNode(c);
+                    if (map.containsKey(root.val)) {
+                        List<Integer> childs = map.get(root.val);
+                        childs.add(root.right.val);
+                        map.put(root.val, childs);
+                    } else {
+                        map.put(root.val, new ArrayList<>(Collections.singletonList(root.right.val)));
+                    }
+                }
+            } else {
+                TreeNode temp = root;
+                root = new TreeNode(p);
+                if (isLeft == 1) {
+                    root.left = temp;
+                    if (map.containsKey(root.val)) {
+                        List<Integer> childs = map.get(root.val);
+                        childs.add(root.left.val);
+                        map.put(root.val, childs);
+                    } else {
+                        map.put(root.val, new ArrayList<>(Collections.singletonList(root.left.val)));
+                    }
+                } else {
+                    root.right = temp;
+                    if (map.containsKey(root.val)) {
+                        List<Integer> childs = map.get(root.val);
+                        childs.add(root.right.val);
+                        map.put(root.val, childs);
+                    } else {
+                        map.put(root.val, new ArrayList<>(Collections.singletonList(root.right.val)));
+                    }
+                }
+            }
+
+        }
+        return root;
+    }
+
 }
+
 
     /*
     // TODO: maxRunTime Binary search solution
