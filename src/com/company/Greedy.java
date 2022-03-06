@@ -123,4 +123,48 @@ public class Greedy {
         return minJump;
     }
 
+    /*
+    Input: s = "aabb"
+    Output: 2
+    Explanation:
+    We can obtain two palindromes from s, "abba" and "baab".
+    - We can obtain "abba" from s in 2 moves: "aabb" -> "abab" -> "abba".
+    - We can obtain "baab" from s in 2 moves: "aabb" -> "abab" -> "baab".
+    Thus, the minimum number of moves needed to make s a palindrome is 2.
+     */
+    public int minMovesToMakePalindrome(String s) {
+        int count = 0;
+
+        while (s.length() > 2) {
+            char ch1 = s.charAt(0);
+            int len = s.length();
+            char ch2 = s.charAt(len - 1);
+
+            if (ch1 == ch2) {
+                s = s.substring(1, len - 1);
+            } else {
+                int id1 = s.lastIndexOf(ch1);
+                int id2 = s.indexOf(ch2);
+
+                int steps1 = len - id1 - 1;
+                int steps2 = id2;
+
+                StringBuilder sb = new StringBuilder();
+
+                if (steps1 > steps2) {
+                    count += steps2;
+                    sb.append(s.substring(0, id2));
+                    sb.append(s.substring(id2 + 1, len - 1));
+                } else {
+                    count += steps1;
+                    sb.append(s.substring(1, id1));
+                    sb.append(s.substring(id1 + 1));
+                }
+
+                s = sb.toString();
+            }
+        }
+
+        return count;
+    }
 }
