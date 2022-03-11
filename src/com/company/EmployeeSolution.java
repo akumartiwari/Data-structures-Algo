@@ -1,11 +1,9 @@
 package com.company;
 
 import javafx.util.Pair;
-import sun.reflect.generics.tree.Tree;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class EmployeeSolution {
     String name;
@@ -2186,9 +2184,53 @@ Note that a period with one day is a smooth descent period by the definition.
         }
         return map.getOrDefault(root, null);
     }
+
+    // Author: Anand
+    // TODO :- Use factor based approach
+    public List<Integer> replaceNonCoprimes(int[] nums) {
+        int n = nums.length;
+        int i = 0;
+        Map<Integer, Integer> map = new HashMap<>();
+
+        List<Integer> ans = new ArrayList<>();
+        for (int ind = 0; ind < n; ind++) map.put(ind, nums[ind]);
+        while (i < n - 1) {
+            long gcd = __gcd((long) nums[i], (long) nums[i + 1]);
+
+            if (gcd > 1) {
+                int lcm;
+                if (nums[i] == nums[i + 1]) lcm = nums[i];
+                else lcm = (int) (nums[i] * (nums[i + 1] / gcd));
+                map.remove(i);
+                nums[i + 1] = lcm;
+                map.put(i + 1, lcm);
+            }
+            i++;
+        }
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            ans.add(entry.getValue());
+        }
+
+
+        // check for all numbers unitl its extreme left
+        // use factors based method to store factors till CI
+        int k = 1;
+        while (k < ans.size()) {
+            long gcd = __gcd((long) ans.get(k), (long) ans.get(k - 1));
+            if (gcd > 1) {
+                int lcm;
+                if (ans.get(k).equals(ans.get(k - 1))) lcm = ans.get(k);
+                else lcm = (int) (ans.get(k) * (ans.get(k - 1) / gcd));
+                ans.remove(k - 1);
+                ans.set(k - 1, lcm);
+                continue;
+            }
+            k++;
+        }
+
+        return ans;
+    }
 }
-
-
     /*
     // TODO: maxRunTime Binary search solution
     public:
