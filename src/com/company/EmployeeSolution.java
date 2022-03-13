@@ -2230,6 +2230,57 @@ Note that a period with one day is a smooth descent period by the definition.
 
         return ans;
     }
+
+
+    public List<Integer> findKDistantIndices(int[] nums, int key, int k) {
+        Set<Integer> ans = new HashSet<>();
+        List<Integer> choice = new ArrayList<>();
+
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == key) choice.add(i);
+        }
+
+        for (int c : choice) {
+            for (int i = 0; i < nums.length; i++) {
+                if (Math.abs(c - i) <= k) ans.add(i);
+            }
+        }
+
+        List<Integer> sortedList = new ArrayList<>(ans);
+        Collections.sort(sortedList);
+        return sortedList;
+    }
+
+    // Author : Anand
+    public int maximumTop(int[] nums, int k) {
+        int max = -1;
+
+        if (nums.length == 1) {
+            if (k % 2 != 0) {
+                return -1;
+            }
+        }
+        if (k >= nums.length) {
+            for (int num : nums) {
+                if (k == 1) return max;
+                max = Math.max(max, num);
+                k--;
+            }
+        } else {
+            for (int i = 0; i < nums.length; i++) {
+                if (k == 1) {
+                    int r = Integer.MIN_VALUE;
+                    if (i + 1 < nums.length) {
+                        r = Math.max(max, nums[i + 1]);
+                    }
+                    return Math.max(r, max);
+                }
+                max = Math.max(max, nums[i]);
+                if (k-- == 0) return max;
+            }
+        }
+        return max;
+    }
 }
     /*
     // TODO: maxRunTime Binary search solution

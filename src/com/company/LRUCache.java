@@ -1,42 +1,31 @@
 package com.company;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 // TODO
-public class LRUCache {
-    int capacity;
-    Deque<Integer> cache;
-    Map<Integer, Integer> map;
+class LRUCache extends LinkedHashMap<Integer, Integer> {
+    private int capacity;
 
     public LRUCache(int capacity) {
+        super(capacity, 0.75F, true);
         this.capacity = capacity;
-        this.map = new LinkedHashMap<>();
-        this.cache = new ArrayDeque<>();
     }
 
     public int get(int key) {
-        if (map.containsKey(key)) {
-            cache.remove(key);
-            cache.offerLast(key);
-            return map.get(key);
-        }
-        return -1;
+        return super.getOrDefault(key, -1);
     }
 
     public void put(int key, int value) {
-        map.remove(key);
-        cache.add(value);
-        if (cache.size() > capacity) {
-            int first = cache.stream().findFirst().get();
-            cache.removeFirst();
-            cache.offerLast(value);
-            map.remove(first);
-        }
-        map.put(key, value);
+        super.put(key, value);
     }
+
+    @Override
+    protected boolean removeEldestEntry(Map.Entry<Integer, Integer> eldest) {
+        return size() > capacity;
+    }
+
+    // Solve it using doubly linked list
 }
 
 /**
