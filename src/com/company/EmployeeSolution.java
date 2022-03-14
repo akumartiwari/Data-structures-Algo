@@ -2281,6 +2281,33 @@ Note that a period with one day is a smooth descent period by the definition.
         }
         return max;
     }
+
+    // Author : Anand
+    public int digArtifacts(int n, int[][] artifacts, int[][] dig) {
+        Set<List<Integer>> digsWell = new HashSet<>();
+        for (int[] d : dig) digsWell.add(Arrays.stream(d).boxed().collect(Collectors.toList()));
+
+        int cnt = 0;
+        // For all artifacts check if its completely covered
+        for (int[] art : artifacts) {
+            int r1 = art[0];
+            int c1 = art[1];
+            int r2 = art[2];
+            int c2 = art[3];
+
+            boolean fl = true;
+            for (int i = r1; i <= r2 && fl; i++) {
+                for (int j = c1; j <= c2; j++) {
+                    if (!digsWell.contains(new ArrayList<>(Arrays.asList(i, j)))) {
+                        fl = false;
+                        break;
+                    }
+                }
+            }
+            cnt += fl ? 1 : 0;
+        }
+        return cnt;
+    }
 }
     /*
     // TODO: maxRunTime Binary search solution
