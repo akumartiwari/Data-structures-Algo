@@ -1,11 +1,9 @@
 package com.company;
 
 import javafx.util.Pair;
-import sun.reflect.generics.tree.Tree;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class EmployeeSolution {
     String name;
@@ -2244,9 +2242,131 @@ Note that a period with one day is a smooth descent period by the definition.
         }
         return map.getOrDefault(root, null);
     }
+
+    // Author: Anand
+    // TODO :- Use factor based approach
+    public List<Integer> replaceNonCoprimes(int[] nums) {
+        int n = nums.length;
+        int i = 0;
+        Map<Integer, Integer> map = new HashMap<>();
+
+        List<Integer> ans = new ArrayList<>();
+        for (int ind = 0; ind < n; ind++) map.put(ind, nums[ind]);
+        while (i < n - 1) {
+            long gcd = __gcd((long) nums[i], (long) nums[i + 1]);
+
+            if (gcd > 1) {
+                int lcm;
+                if (nums[i] == nums[i + 1]) lcm = nums[i];
+                else lcm = (int) (nums[i] * (nums[i + 1] / gcd));
+                map.remove(i);
+                nums[i + 1] = lcm;
+                map.put(i + 1, lcm);
+            }
+            i++;
+        }
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            ans.add(entry.getValue());
+        }
+
+
+        // check for all numbers unitl its extreme left
+        // use factors based method to store factors till CI
+        int k = 1;
+        while (k < ans.size()) {
+            long gcd = __gcd((long) ans.get(k), (long) ans.get(k - 1));
+            if (gcd > 1) {
+                int lcm;
+                if (ans.get(k).equals(ans.get(k - 1))) lcm = ans.get(k);
+                else lcm = (int) (ans.get(k) * (ans.get(k - 1) / gcd));
+                ans.remove(k - 1);
+                ans.set(k - 1, lcm);
+                continue;
+            }
+            k++;
+        }
+
+        return ans;
+    }
+
+
+    public List<Integer> findKDistantIndices(int[] nums, int key, int k) {
+        Set<Integer> ans = new HashSet<>();
+        List<Integer> choice = new ArrayList<>();
+
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == key) choice.add(i);
+        }
+
+        for (int c : choice) {
+            for (int i = 0; i < nums.length; i++) {
+                if (Math.abs(c - i) <= k) ans.add(i);
+            }
+        }
+
+        List<Integer> sortedList = new ArrayList<>(ans);
+        Collections.sort(sortedList);
+        return sortedList;
+    }
+
+    // Author : Anand
+    public int maximumTop(int[] nums, int k) {
+        int max = -1;
+
+        if (nums.length == 1) {
+            if (k % 2 != 0) {
+                return -1;
+            }
+        }
+        if (k >= nums.length) {
+            for (int num : nums) {
+                if (k == 1) return max;
+                max = Math.max(max, num);
+                k--;
+            }
+        } else {
+            for (int i = 0; i < nums.length; i++) {
+                if (k == 1) {
+                    int r = Integer.MIN_VALUE;
+                    if (i + 1 < nums.length) {
+                        r = Math.max(max, nums[i + 1]);
+                    }
+                    return Math.max(r, max);
+                }
+                max = Math.max(max, nums[i]);
+                if (k-- == 0) return max;
+            }
+        }
+        return max;
+    }
+
+    // Author : Anand
+    public int digArtifacts(int n, int[][] artifacts, int[][] dig) {
+        Set<List<Integer>> digsWell = new HashSet<>();
+        for (int[] d : dig) digsWell.add(Arrays.stream(d).boxed().collect(Collectors.toList()));
+
+        int cnt = 0;
+        // For all artifacts check if its completely covered
+        for (int[] art : artifacts) {
+            int r1 = art[0];
+            int c1 = art[1];
+            int r2 = art[2];
+            int c2 = art[3];
+
+            boolean fl = true;
+            for (int i = r1; i <= r2 && fl; i++) {
+                for (int j = c1; j <= c2; j++) {
+                    if (!digsWell.contains(new ArrayList<>(Arrays.asList(i, j)))) {
+                        fl = false;
+                        break;
+                    }
+                }
+            }
+            cnt += fl ? 1 : 0;
+        }
+        return cnt;
+    }
 }
-
-
     /*
     // TODO: maxRunTime Binary search solution
     public:
