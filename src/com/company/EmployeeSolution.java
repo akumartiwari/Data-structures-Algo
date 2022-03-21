@@ -2308,6 +2308,77 @@ Note that a period with one day is a smooth descent period by the definition.
         }
         return cnt;
     }
+
+    // Author :Anand
+    public int countHillValley(int[] nums) {
+
+        int cnt = 0;
+        int last = -1;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == last) continue;
+            last = nums[i];
+            boolean hill = false, valley = false;
+            for (int j = i - 1; j >= 0; j--) {
+                if (nums[i] > nums[j]) {
+                    hill = true;
+                    break;
+                } else if (nums[i] < nums[j]) {
+                    valley = true;
+                    break;
+                }
+            }
+
+            for (int j = i + 1; j < nums.length; j++) {
+                if (hill && nums[i] > nums[j]) {
+                    cnt++;
+                    break;
+                } else if (valley && nums[i] < nums[j]) {
+                    cnt++;
+                    break;
+                } else if (nums[i] == nums[j]) continue;
+                else break;
+            }
+        }
+        return cnt;
+    }
+
+    // Author :Anand
+    public int countCollisions(String directions) {
+        int cnt = 0;
+        StringBuilder sb = new StringBuilder(directions);
+        for (int i = 0; i < sb.length(); i++) {
+            if (i == sb.length() - 1) {
+                if (sb.charAt(i) == 'L') {
+                    if (sb.charAt(i - 1) == 'R') cnt += 2;
+                    if (sb.charAt(i - 1) == 'S') cnt++;
+                    sb.setCharAt(i - 1, 'S');
+                    sb.setCharAt(i, 'S');
+                }
+            }
+            else if (sb.charAt(i) == 'R') {
+                if (sb.charAt(i + 1) == 'L') cnt += 2;
+                if (sb.charAt(i + 1) == 'S') cnt++;
+                sb.setCharAt(i + 1, 'S');
+                sb.setCharAt(i, 'S');
+            } else if (sb.charAt(i) == 'S') {
+                if (sb.charAt(i + 1) == 'L') {
+                    cnt++;
+                    sb.setCharAt(i + 1, 'S');
+                }
+                if (i > 0 && sb.charAt(i - 1) == 'R') {
+                    cnt++;
+                    sb.setCharAt(i - 1, 'S');
+                }
+            } else if (sb.charAt(i) == 'L' && i > 0) {
+                if (sb.charAt(i - 1) == 'R') cnt += 2;
+                if (sb.charAt(i - 1) == 'S') cnt++;
+                sb.setCharAt(i - 1, 'S');
+                sb.setCharAt(i, 'S');
+            }
+        }
+        return cnt;
+    }
+
 }
     /*
     // TODO: maxRunTime Binary search solution
