@@ -2448,7 +2448,7 @@ Note that a period with one day is a smooth descent period by the definition.
         return ans;
     }
 
-      //Author: Anand
+    //Author: Anand
     public boolean divideArray(int[] nums) {
 
         Map<Integer, Integer> freq = new HashMap<>();
