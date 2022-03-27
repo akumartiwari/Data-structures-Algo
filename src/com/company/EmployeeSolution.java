@@ -2,7 +2,12 @@ package com.company;
 
 import javafx.util.Pair;
 
+import javax.swing.text.html.parser.Entity;
+import java.awt.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class EmployeeSolution {
@@ -2441,6 +2446,96 @@ Note that a period with one day is a smooth descent period by the definition.
             } else ans[idx++] = Long.parseLong(nnumber.toString());
         }
         return ans;
+    }
+
+    //Author: Anand
+    public boolean divideArray(int[] nums) {
+
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
+
+        for (Map.Entry entry : freq.entrySet()) {
+            if ((int) entry.getValue() % 2 != 0) return false;
+        }
+        return true;
+    }
+
+    //Author: Anand
+    public long maximumSubsequenceCount(String text, String pattern) {
+        int n = text.length();
+        char f = pattern.charAt(0);
+        char l = pattern.charAt(1);
+        long ans = 0;
+
+        if (f == l) {
+            int cnt = 0;
+            for (int i = 0; i < n; i++) {
+                if (text.charAt(i) == f) cnt++;
+            }
+            return (long) cnt * (cnt + 1) / 2;
+        }
+        // Adding f at start
+        Map<Integer, Integer> map = new LinkedHashMap<>(); // cnt of f before lth index
+        int cntf = 1;
+        for (int i = 0; i < n; i++) {
+            if (text.charAt(i) == f) cntf++;
+            else if (text.charAt(i) == l) {
+                map.put(i, cntf);
+                cntf = 0;
+            }
+        }
+
+        int size = map.size();
+        int curr = 0;
+        for (Map.Entry entry : map.entrySet()) {
+            ans += (long) (size - curr) * (int) entry.getValue();
+            curr++;
+        }
+
+        // Adding l at last
+        Map<Integer, Integer> mapl = new LinkedHashMap<>();// cnt of f before lth index
+        int cntl = 0;
+        String nt = text.concat(String.valueOf(l));
+        for (int i = 0; i < nt.length(); i++) {
+            if (nt.charAt(i) == f) cntl++;
+            else if (nt.charAt(i) == l) {
+                mapl.put(i, cntl);
+                cntl = 0;
+            }
+        }
+
+        long ansl = 0;
+        int szl = mapl.size();
+        int currl = 0;
+        for (Map.Entry entry : mapl.entrySet()) {
+            ansl += (long) (szl - currl) * (int) entry.getValue();
+            currl++;
+        }
+
+        return Math.max(ansl, ans);
+    }
+
+    // Author: Anand
+    public int halveArray(int[] nums) {
+        PriorityQueue<BigDecimal> pq = new PriorityQueue<>(Collections.reverseOrder());
+        for (int num : nums) pq.add(new BigDecimal((double) num).setScale(2, RoundingMode.HALF_UP));
+
+        long ls = 0;
+        for (int num : nums) ls += num;
+        BigDecimal sum = BigDecimal.valueOf(ls);
+        BigDecimal ns = sum;
+        int cnt = 0;
+        while (!pq.isEmpty()) {
+            if (ns.compareTo(sum.divide(BigDecimal.valueOf(2))) <= 0) {
+                return cnt;
+            }
+
+            BigDecimal greatest = pq.poll();
+            ns = ns.subtract(greatest.divide(BigDecimal.valueOf(2)));
+            pq.offer(greatest.divide(BigDecimal.valueOf(2)));
+            cnt++;
+        }
+        return cnt;
     }
 }
     /*
