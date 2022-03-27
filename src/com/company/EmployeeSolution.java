@@ -2354,8 +2354,7 @@ Note that a period with one day is a smooth descent period by the definition.
                     sb.setCharAt(i - 1, 'S');
                     sb.setCharAt(i, 'S');
                 }
-            }
-            else if (sb.charAt(i) == 'R') {
+            } else if (sb.charAt(i) == 'R') {
                 if (sb.charAt(i + 1) == 'L') cnt += 2;
                 if (sb.charAt(i + 1) == 'S') cnt++;
                 sb.setCharAt(i + 1, 'S');
@@ -2379,6 +2378,70 @@ Note that a period with one day is a smooth descent period by the definition.
         return cnt;
     }
 
+    /*
+    Input: nums1 = [1,2,3], nums2 = [2,4,6]
+    Output: [[1,3],[4,6]]
+    Input: nums1 = [1,2,3,3], nums2 = [1,1,2,2]
+    Output: [[3],[]]
+
+     */
+    // Author : Anand
+    public List<List<Integer>> findDifference(int[] nums1, int[] nums2) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> ans1 = Arrays.stream(nums1).boxed().distinct().collect(Collectors.toList());
+        ans1.removeAll(Arrays.stream(nums2).boxed().distinct().collect(Collectors.toList()));
+
+        List<Integer> ans2 = Arrays.stream(nums2).boxed().distinct().collect(Collectors.toList());
+        ans1.removeAll(Arrays.stream(nums1).boxed().distinct().collect(Collectors.toList()));
+
+        ans.add(ans1);
+        ans.add(ans2);
+        return ans;
+    }
+
+    // Author : Anand
+    public int minDeletion(int[] nums) {
+        int ans = 0;
+        int n = nums.length;
+
+        for (int i = 0; i < n - 1; i++) {
+            int pos = i - ans;
+            if (pos % 2 == 0 && nums[i] == nums[i + 1]) ans++;
+        }
+
+        return (n - ans) % 2 == 0 ? ans : ans + 1;
+    }
+
+    /*
+    Input: queries = [1,2,3,4,5,90], intLength = 3
+    Output: [101,111,121,131,141,999]
+    Explanation:
+    The first few palindromes of length 3 are:
+    101, 111, 121, 131, 141, 151, 161, 171, 181, 191, 201, ...
+    The 90th palindrome of length 3 is 999.
+
+     */
+    // Author : Anand
+    public long[] kthPalindrome(int[] queries, int intLength) {
+        long[] ans = new long[queries.length];
+        int pw = intLength % 2 == 0 ? (intLength / 2) - 1 : (intLength / 2);
+        int start = (int) Math.pow(10, pw);
+
+        int idx = 0;
+        for (int q : queries) {
+            StringBuilder number = new StringBuilder();
+            number.append(start + q - 1);
+            StringBuilder rev = new StringBuilder(number);
+            rev.reverse();
+            StringBuilder nnumber = new StringBuilder();
+            nnumber.append(number);
+            nnumber.append(intLength % 2 == 1 ? rev.substring(1) : rev);
+            if (nnumber.length() != intLength) {
+                ans[idx++] = -1;
+            } else ans[idx++] = Long.parseLong(nnumber.toString());
+        }
+        return ans;
+    }
 }
     /*
     // TODO: maxRunTime Binary search solution
