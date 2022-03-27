@@ -389,5 +389,29 @@ public class DP {
         return ans;
     }
 
+    // Author: Anand
+    // TC = O(mn)
+    public int maxValueOfCoins(List<List<Integer>> piles, int k) {
+        int[][] dp = new int[piles.size()][k + 1];
+        for (int[] e : dp) Arrays.fill(e, -1);
 
+        return (int) f(piles, 0, k, dp);
+    }
+
+    private long f(List<List<Integer>> piles, int idx, int k, int[][] dp) {
+        // base case
+        if (idx >= piles.size() || k <= 0) return 0;
+
+        if (dp[idx][k] != -1) return dp[idx][k];
+
+        // not take
+        long best = f(piles, idx + 1, k, dp);
+        long sum = 0;
+        // take
+        for (int i = 1; i <= Math.min(k, piles.get(idx).size()); i++) {
+            sum += piles.get(idx).get(i - 1);
+            best = Math.max(best, sum + f(piles, idx + 1, (k - i), dp));
+        }
+        return dp[idx][k] = (int) best;
+    }
 }
