@@ -2348,39 +2348,23 @@ Note that a period with one day is a smooth descent period by the definition.
     }
 
     // Author :Anand
-    public int countCollisions(String directions) {
-        int cnt = 0;
-        StringBuilder sb = new StringBuilder(directions);
-        for (int i = 0; i < sb.length(); i++) {
-            if (i == sb.length() - 1) {
-                if (sb.charAt(i) == 'L') {
-                    if (sb.charAt(i - 1) == 'R') cnt += 2;
-                    if (sb.charAt(i - 1) == 'S') cnt++;
-                    sb.setCharAt(i - 1, 'S');
-                    sb.setCharAt(i, 'S');
-                }
-            } else if (sb.charAt(i) == 'R') {
-                if (sb.charAt(i + 1) == 'L') cnt += 2;
-                if (sb.charAt(i + 1) == 'S') cnt++;
-                sb.setCharAt(i + 1, 'S');
-                sb.setCharAt(i, 'S');
-            } else if (sb.charAt(i) == 'S') {
-                if (sb.charAt(i + 1) == 'L') {
-                    cnt++;
-                    sb.setCharAt(i + 1, 'S');
-                }
-                if (i > 0 && sb.charAt(i - 1) == 'R') {
-                    cnt++;
-                    sb.setCharAt(i - 1, 'S');
-                }
-            } else if (sb.charAt(i) == 'L' && i > 0) {
-                if (sb.charAt(i - 1) == 'R') cnt += 2;
-                if (sb.charAt(i - 1) == 'S') cnt++;
-                sb.setCharAt(i - 1, 'S');
-                sb.setCharAt(i, 'S');
-            }
+    public int countCollisions(String s) {
+        int l = 0, n = s.length(), r = n - 1, ans = 0;
+
+        while (l < n && s.charAt(l) == 'L')
+            l++;
+
+        while (r >= 0 && s.charAt(r) == 'R')
+            r--;
+
+        while (l <= r) {
+            if (s.charAt(l) != 'S')
+                ans++;
+
+            l++;
         }
-        return cnt;
+
+        return ans;
     }
 
     /*
