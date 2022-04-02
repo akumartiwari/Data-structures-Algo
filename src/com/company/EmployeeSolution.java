@@ -2564,6 +2564,29 @@ Note that a period with one day is a smooth descent period by the definition.
         return ans.get(0);
     }
 
+    // Author: Anand
+    public long numberOfWays(String s) {
+        long ans = 0;
+
+        int t0 = 0, t1 = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '0') t0++;
+            else t1++;
+        }
+
+        int c0 = 0, c1 = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '0') {
+                ans += (long) c1 * (t1 - c1);
+                c0++;
+            } else {
+                ans += (long) c0 * (t1 - c0);
+                c1++;
+            }
+        }
+
+        return ans;
+    }
 }
     /*
     // TODO: maxRunTime Binary search solution

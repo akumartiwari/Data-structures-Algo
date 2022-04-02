@@ -416,8 +416,7 @@ public class DP {
     }
 
     // Author: Anand
-    // TODO: check of TLE
-    public long numberOfWays(String s) {
+    public long numberOfWaysDp(String s) {
         long[][][] dp = new long[100003][3][4];
         for (long[][] r : dp) {
             for (long[] c : r) Arrays.fill(c, -1);
