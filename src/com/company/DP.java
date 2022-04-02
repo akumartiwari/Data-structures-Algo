@@ -414,4 +414,34 @@ public class DP {
         }
         return dp[idx][k] = (int) best;
     }
+
+    // Author: Anand
+    // TODO: check of TLE
+    public long numberOfWays(String s) {
+        long[][][] dp = new long[100003][3][4];
+        for (long[][] r : dp) {
+            for (long[] c : r) Arrays.fill(c, -1);
+        }
+
+        return cntWays(s, 0, 0, 9, dp);
+    }
+
+    private long cntWays(String s, int i, int cnt, int prev, long[][][] dp) {
+        // base case
+        if (cnt == 3) return 1;
+        if (i >= s.length()) return 0;
+
+        if (dp[i][prev][cnt] != -1) return dp[i][prev][cnt];
+
+        long take = 0;
+        if (prev != s.charAt(i)) {
+            take = cntWays(s, i + 1, cnt + 1, (int) s.charAt(i) - '0', dp);
+        }
+        long ntake = cntWays(s, i + 1, cnt, (int) prev - '0', dp);
+
+        long ans = take + ntake;
+
+        dp[i][prev][cnt] = ans;
+        return ans;
+    }
 }
