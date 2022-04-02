@@ -2521,6 +2521,72 @@ Note that a period with one day is a smooth descent period by the definition.
         }
         return cnt;
     }
+
+    // Author: Anand
+    public int minBitFlips(int start, int goal) {
+        String bstart = Integer.toBinaryString(start);
+        String bgoal = Integer.toBinaryString(goal);
+        int len = Math.max(bstart.length(), bgoal.length());
+
+        if (bstart.length() < len) {
+            int cnt = len - bstart.length();
+            StringBuilder newbstart = new StringBuilder(bstart);
+            while (cnt-- > 0) {
+                newbstart.insert(0, '0');
+            }
+            bstart = newbstart.toString();
+        } else if (bgoal.length() < len) {
+            int cnt = len - bgoal.length();
+            StringBuilder newbgoal = new StringBuilder(bgoal);
+            while (cnt-- > 0) {
+                newbgoal.insert(0, '0');
+            }
+            bgoal = newbgoal.toString();
+        }
+
+        int ans = 0;
+        for (int i = bgoal.length() - 1; i >= 0; i--) {
+            if (bgoal.charAt(i) != bstart.charAt(i)) ans++;
+        }
+        return ans;
+    }
+
+    // Author: Anand
+    public int triangularSum(int[] nums) {
+        List<Integer> ans = Arrays.stream(nums).boxed().collect(Collectors.toList());
+        while (ans.size() > 1) {
+            for (int i = 0; i < ans.size() - 1; i++) {
+                int e = (ans.get(i) + ans.get(i + 1)) % 10;
+                ans.set(i, e);
+            }
+            ans.remove(ans.size() - 1);
+        }
+        return ans.get(0);
+    }
+
+    // Author: Anand
+    public long numberOfWays(String s) {
+        long ans = 0;
+
+        int t0 = 0, t1 = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '0') t0++;
+            else t1++;
+        }
+
+        int c0 = 0, c1 = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '0') {
+                ans += (long) c1 * (t1 - c1);
+                c0++;
+            } else {
+                ans += (long) c0 * (t1 - c0);
+                c1++;
+            }
+        }
+
+        return ans;
+    }
 }
     /*
     // TODO: maxRunTime Binary search solution
