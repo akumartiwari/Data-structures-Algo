@@ -2587,6 +2587,88 @@ Note that a period with one day is a smooth descent period by the definition.
 
         return ans;
     }
+
+
+    /*
+    Input: current = "02:30", correct = "04:35"
+    Output: 3
+    Explanation:
+    We can convert current to correct in 3 operations as follows:
+    - Add 60 minutes to current. current becomes "03:30".
+    - Add 60 minutes to current. current becomes "04:30".
+    - Add 5 minutes to current. current becomes "04:35".
+    It can be proven that it is not possible to convert current to correct in fewer than 3 operations.
+     */
+    // Author: Anand
+    public int convertTime(String current, String correct) {
+        long curMin = Integer.parseInt(current.split(":")[0]) * 60L + Integer.parseInt(current.split(":")[1]);
+
+        long correctMin = Integer.parseInt(correct.split(":")[0]) * 60 + Integer.parseInt(correct.split(":")[1]);
+
+        long diff = correctMin - curMin;
+
+        int op = 0;
+        while (diff != 0) {
+            if (curMin + 60 <= correctMin) {
+                curMin += 60;
+            } else if (curMin + 15 <= correctMin) {
+                curMin += 15;
+            } else if (curMin + 5 <= correctMin) {
+                curMin += 5;
+            } else if (curMin + 1 <= correctMin) {
+                curMin += 1;
+            } else break;
+            op++;
+            diff = correctMin - curMin;
+        }
+
+        return op;
+
+    }
+
+    /*
+    Input: matches = [[1,3],[2,3],[3,6],[5,6],[5,7],[4,5],[4,8],[4,9],[10,4],[10,9]]
+    Output: [[1,2,10],[4,5,7,8]]
+    Explanation:
+    Players 1, 2, and 10 have not lost any matches.
+    Players 4, 5, 7, and 8 each have lost one match.
+    Players 3, 6, and 9 each have lost two matches.
+    Thus, answer[0] = [1,2,10] and answer[1] = [4,5,7,8].
+     */
+    // Author: Anand
+
+    public List<List<Integer>> findWinners(int[][] matches) {
+        Map<Integer, Integer> playerWinsMap = new HashMap<>();
+
+        Map<Integer, Integer> playerLoseMap = new HashMap<>();
+
+        for (int[] match : matches) {
+            int w = match[0];
+            int l = match[1];
+            playerWinsMap.put(w, playerWinsMap.getOrDefault(w, 0) + 1);
+            playerLoseMap.put(l, playerLoseMap.getOrDefault(l, 0) + 1);
+        }
+
+        List<List<Integer>> ans = new ArrayList<>();
+
+        List<Integer> win = new ArrayList<>();
+        List<Integer> loseOne = new ArrayList<>();
+
+        for (Map.Entry entry : playerWinsMap.entrySet()) {
+            if (!playerLoseMap.containsKey(entry.getKey())) win.add((int) entry.getKey());
+        }
+
+        for (Map.Entry entry : playerLoseMap.entrySet()) {
+            if ((int) entry.getValue() == 1) loseOne.add((int) entry.getKey());
+        }
+
+        Collections.sort(win);
+        Collections.sort(loseOne);
+        ans.add(win);
+        ans.add(loseOne);
+        return ans;
+    }
+
 }
     /*
     // TODO: maxRunTime Binary search solution
