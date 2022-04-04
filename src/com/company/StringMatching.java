@@ -1,6 +1,6 @@
 package com.company;
 
-// String Hashing Solution || O(n) precompute + O(nlogn) runtime
+// TODO: String Hashing Solution || O(n) precompute + O(nlogn) runtime
 public class StringMatching {
     public long[] hsh, hsh2, pw, pw2;
     public int mod = (int) 1e9 + 7;
