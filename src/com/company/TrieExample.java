@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 public class TrieExample {
     class TrieNode {
-        int count; // keeps count of words endihg at current node;
+        int count; // keeps count of words ending at current node;
         TrieNode[] letter;
 
         public TrieNode() {
@@ -88,7 +88,7 @@ public class TrieExample {
                 p = p.letter[word2.charAt(i) - 97];
                 if (p == null) return 0;
             }
-            return p.count; // count of numbe rof words ending at that node
+            return p.count; // count of number of words ending at that node
         }
     }
 
