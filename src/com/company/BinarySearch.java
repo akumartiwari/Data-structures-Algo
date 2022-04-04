@@ -1,5 +1,9 @@
 package com.company;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class BinarySearch {
     /*
     Input: candies = [5,8,6], k = 3
@@ -51,5 +55,65 @@ public class BinarySearch {
         }
 
         return (int) binarySearch(n, k, arr, max);
+    }
+
+    /*
+       Return the length of longest increasing subsequence
+       For eg.
+       Input = [1 5 2 8 9]
+       Output = 4 ({1 5 8 9} | {1 2 8 9})
+       The idea is to use binarySearch based solution
+       Steps:-
+       - Iterate through array and check if current is larger than previous selected element
+       - if yes then simply store it next to prev
+       - Else BS for index at which it can  be inserted (lower_bound function), Replace the new element at that index
+       - Update length if LIS
+       - Return length
+
+       TC = O(nlogn), SC = O(n)
+     */
+    private int lower(int[] arr, int target) {
+        if (arr == null || arr.length == 0) {
+            return 0;
+        }
+        int l = 0;
+        int r = arr.length - 1;
+        if (target <= arr[0]) {
+            return 0;
+        }
+        if (target > arr[r]) {
+            return -1;
+        }
+        while (l < r) {
+            int m = l + (r - l) / 2;
+
+            if (arr[m] >= target) {
+                r = m;
+            } else {
+                l = m + 1;
+            }
+        }
+        return r;
+    }
+
+    public int lengthOfLIS(int[] arr) {
+        List<Integer> lis = new ArrayList<>();
+        int len = 0;
+        for (int a : arr) {
+
+            if (lis.size() == 0) {
+                lis.add(a);
+                len++;
+                continue;
+            }
+            if (a > lis.get(lis.size() - 1)) {
+                lis.add(a);
+                len++;
+            } else {
+                int idx = lower(lis.stream().mapToInt(x -> x).toArray(), a);
+                lis.set(idx, a);
+            }
+        }
+        return len;
     }
 }
