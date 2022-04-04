@@ -443,4 +443,30 @@ public class DP {
         dp[i][prev][cnt] = ans;
         return ans;
     }
+
+    // Author: Anand
+    // Tabulated solution
+    // Rules
+    /*
+       - Fetch changing parameters and write them in rev order
+       - Copy recurrence
+       - Write base cases
+       TC = O(n2), SC=O(n*2)
+     */
+    public int lengthOfLISTabulated(int[] nums) {
+        int[] curr = new int[nums.length + 1], next = new int[nums.length + 1];
+        for (int idx = nums.length - 1; idx >= 0; idx--) {
+            for (int prev_idx = idx - 1; prev_idx >= -1; prev_idx--) {
+                // not-take
+                int len = next[prev_idx + 1];
+                if (prev_idx == -1 || nums[idx] > nums[prev_idx]) {
+                    len = Math.max(len, 1 + next[idx + 1]);
+                }
+                curr[prev_idx + 1] = len;
+            }
+            next = curr;
+        }
+
+        return curr[-1 + 1];
+    }
 }

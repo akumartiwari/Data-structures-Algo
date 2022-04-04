@@ -589,6 +589,26 @@ public class RecursionPatterns {
         mes(finalSum, num + 2, sum, ds);
     }
 
+    // Recursion pattern
+    // TC = O(n2), SC = O(N*2)
+    public int lengthOfLIS(int[] nums) {
+        if (nums.length == 0) return 0;
+        int[][] dp = new int[nums.length][nums.length + 1];
+        for (int[] d : dp) Arrays.fill(d, -1);
+        return recurse(nums, 0, -1, dp);
+    }
 
+    private int recurse(int[] nums, int idx, int prev_idx, int[][] dp) {
 
+        // base case
+        if (idx == nums.length) return 0;
+
+        if (dp[idx][prev_idx + 1] != -1) return dp[idx][prev_idx + 1];
+        // not-take
+        int len = recurse(nums, idx + 1, prev_idx, dp);
+        if (prev_idx == -1 || nums[idx] > nums[prev_idx]) {
+            len = Math.max(len, 1 + recurse(nums, idx + 1, idx, dp));
+        }
+        return dp[idx][prev_idx + 1] = len;
+    }
 }
