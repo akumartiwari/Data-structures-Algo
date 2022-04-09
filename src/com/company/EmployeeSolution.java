@@ -1218,39 +1218,6 @@ Note that a period with one day is a smooth descent period by the definition.
         return true;
     }
 
-
-    private int LIS(List<Integer> part) {
-        List<Integer> ans = new ArrayList<>();
-        int lastItem = part.get(0);
-        for (Integer integer : part) {
-            if (integer >= lastItem) {
-                ans.add(integer);
-            } else {
-                // next greater element than current one in the ans list
-                int idx = nextGreaterElement(ans, integer);
-                ans.set(idx, integer);
-            }
-            lastItem = ans.get(ans.size() - 1);
-        }
-
-        return ans.size();
-    }
-
-    private int nextGreaterElement(List<Integer> ans, Integer item) {
-
-        int l = 0, r = ans.size() - 1;
-        while (l < r) {
-            int mid = (int) Math.abs(l + (r - l) / 2);
-            if (ans.get(mid) <= item) {
-                l = mid + 1;
-            } else {
-                r = mid;
-            }
-        }
-
-        return l;
-    }
-
     /*
     Input: nums = [0,1,0,1,1,0,0]
     Output: 1
@@ -2669,48 +2636,6 @@ Note that a period with one day is a smooth descent period by the definition.
         return ans;
     }
 
-
-    // print the LIS
-    /*
-        dp[n] and initialise with size = 1
-        dp[i] signifies the length of  LIS till index i
-        i -> 0 to n
-        prev -> 0 to i
-        Recurrence :-
-        dp[i] = Math.max(dp[prev]+1, dp[i]);
-       return dp[n-1] as max length of LIS
-     */
-    public void printLIS(int[] arr) {
-        int[] dp = new int[arr.length];
-        int[] hash = new int[arr.length];
-        Arrays.fill(dp, 1);
-        int len = -1;
-        int li = 0;
-        for (int i = 0; i < arr.length; i++) {
-            hash[i] = i;
-            for (int prev = 0; prev < i; prev++) {
-                if (arr[prev] < arr[i]) {
-                    hash[i] = prev;
-                    dp[i] = Math.max(dp[prev] + 1, dp[i]);
-                }
-            }
-
-            if (len < dp[i]) {
-                len = dp[i];
-                li = i;
-            }
-        }
-
-        // hash is ready to backtrack
-        List<Integer> temp = new ArrayList<>();
-        temp.add(arr[li]);
-        while (hash[li] != li) {
-            li = hash[li];
-            temp.add(arr[li]);
-        }
-        Collections.reverse(temp);
-        System.out.println(temp);
-    }
 }
     /*
     // TODO: maxRunTime Binary search solution
