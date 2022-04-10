@@ -204,7 +204,6 @@ public class LIS {
         }
 
         int maxi = 0;
-
         for (int i = n - 1; i >= 0; i--) {
             for (int prev = n - 1; prev > i; prev--) {
                 if (arr[i] > arr[prev] && dp2[prev] + 1 > dp2[i]) {

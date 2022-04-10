@@ -2636,7 +2636,95 @@ Note that a period with one day is a smooth descent period by the definition.
         return ans;
     }
 
+    // Author: Anand
+    public int largestInteger(int num) {
+        List<Integer> even = new ArrayList<>();
+        List<Integer> odd = new ArrayList<>();
+
+        int numc = num;
+        while (numc > 0) {
+            int d = numc % 10;
+            if (d % 2 == 0) even.add(d);
+            else odd.add(d);
+            numc /= 10;
+        }
+
+        Collections.sort(even);
+        Collections.sort(odd);
+
+        String nums = String.valueOf(num);
+
+        StringBuilder ans = new StringBuilder();
+        for (int i = 0; i < nums.length(); i++) {
+            if (Integer.parseInt(String.valueOf(nums.charAt(i))) % 2 == 0 && even.size() > 0) {
+                ans.append(even.get(even.size() - 1));
+                even.remove(even.size() - 1);
+            } else if (odd.size() > 0) {
+                ans.append(odd.get(odd.size() - 1));
+                odd.remove(odd.size() - 1);
+            } else break;
+        }
+
+        return Integer.parseInt(ans.toString());
+    }
+
+    // Author: Anand
+    // TODO : Complete it
+    public String minimizeResult(String expression) {
+        int mini = Integer.MAX_VALUE;
+        int idx = expression.indexOf('+');
+        String ans = "";
+        for (int i = 0; i < expression.length(); i++) {
+            String eval = "";
+            if (i != 0) eval += expression.substring(0, i);
+            eval += "(";
+            eval += expression.substring(i, idx);
+            eval += "+";
+            String prev = eval;
+            for (int j = idx + 1; j < expression.length(); j++) {
+                if (j != idx + 1) eval += expression.substring(idx + 1, j);
+                eval += expression.charAt(j) + ")";
+                if (j + 1 < expression.length()) eval += expression.substring(j + 1);
+                System.out.println(eval);
+                int val = evaluate(eval);
+                ans = eval;
+                if (val < mini) {
+                    ans = eval;
+                    mini = val;
+                }
+                eval = prev;
+            }
+        }
+        return ans;
+    }
+
+    private int evaluate(String expression) {
+        int ans = -1;
+
+        int left = expression.indexOf('(');
+        int right = expression.indexOf(')');
+        int plus = expression.indexOf('+');
+
+        int a1 = 0;
+        if (!expression.substring(left + 1, plus).equals(""))
+            a1 = Integer.parseInt(expression.substring(left + 1, plus));
+
+        int a2 = 0;
+        if (!expression.substring(plus + 1, right).equals(""))
+            a2 = Integer.parseInt(expression.substring(plus + 1, right));
+        ans = a1 + a2;
+        if (!expression.substring(0, left).equals("")) {
+            ans *= Integer.parseInt(expression.substring(0, left));
+        }
+        if (!expression.substring(right + 1).equals("")) {
+            ans *= Integer.parseInt(expression.substring(right + 1));
+        }
+
+        return ans;
+    }
+
 }
+
     /*
     // TODO: maxRunTime Binary search solution
     public:
