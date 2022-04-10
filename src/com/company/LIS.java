@@ -215,6 +215,42 @@ public class LIS {
 
         return maxi;
     }
+
+    /*
+        I = [1 3 6 5 7]
+        O = 2 ## { [1 3 5 7], [1 3 6 7]} ##
+        This gives count of longest length LIS subsequence
+        TC = O(n2)
+        SC = O(n)
+     */
+    public int countLISSubsequence(int[] arr) {
+        int n = arr.length;
+        int[] dp = new int[arr.length];
+        int[] count = new int[arr.length];
+        Arrays.fill(dp, 1);
+        Arrays.fill(count, 1);
+
+        int maxi = 1; // length of LIS
+        for (int i = 0; i < arr.length; i++) {
+            for (int prev = 0; prev < i; prev++) {
+                if (arr[i] > arr[prev] && dp[prev] + 1 > dp[i]) {
+                    dp[i] = dp[prev] + 1;
+                    count[i] = count[prev];
+                } else if (dp[prev] + 1 > dp[i]) {
+                    count[i] += count[prev];
+                }
+            }
+
+            maxi = Math.max(maxi, dp[i]);
+        }
+
+        int cntOfLIS = 0;
+        for (int i = 0; i < n; i++) {
+            if (dp[i] == maxi) cntOfLIS += count[i];
+        }
+
+        return cntOfLIS;
+    }
 }
 
 
