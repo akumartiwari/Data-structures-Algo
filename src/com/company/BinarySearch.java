@@ -116,4 +116,78 @@ public class BinarySearch {
         }
         return len;
     }
+
+    /*
+      Intution
+    - Sort the array ,
+    - choose every pivot from end to begin where element is less than target and make this = target
+    - keep count of element >= target
+    - Distribute remaining newFlowers from begining till index where it can be afforded
+    - Check for max
+     TC = O(nlogn), SC = O(n)
+     TODO: Understand this
+     */
+    public long maximumBeauty(int[] flowers, long newFlowers, int target, int full, int partial) {
+        int len = flowers.length;
+        long cumulativeCostArray[] = new long[len];
+        Arrays.sort(flowers);
+
+        for (int i = 1; i < len; i++) {
+            cumulativeCostArray[i] = cumulativeCostArray[i - 1] + (long) i * (flowers[i] - flowers[i - 1]);
+        }
+
+        long max = 0;
+        int i;
+        int countComplete = 0;
+        for (i = len - 1; i >= 0; i--) {
+            if (flowers[i] < target)
+                break;
+            countComplete++;
+        }
+
+        if (countComplete == len)
+            return ((countComplete * (long) full));
+
+        int id = binarySearchCumulativeCost(cumulativeCostArray, newFlowers, 0, i);
+        max = currentPartitionCost(flowers, newFlowers, target, full, partial, cumulativeCostArray, max, countComplete, id);
+
+        for (int j = i; j >= 0; j--) {
+            newFlowers = newFlowers - (target - flowers[j]);
+            if (newFlowers < 0)
+                break;
+            countComplete++;
+            if (j == 0) {
+                max = Math.max(max, countComplete * (long) full);
+                break;
+            }
+            id = binarySearchCumulativeCost(cumulativeCostArray, newFlowers, 0, j - 1);
+            max = Math.max(max, currentPartitionCost(flowers, newFlowers, target, full, partial, cumulativeCostArray, max,
+                    countComplete, id));
+        }
+
+        return max;
+    }
+
+    private long currentPartitionCost(int[] flowers, long newFlowers, int target, int full, int partial,
+                                      long[] costArray, long max, int countComplete, int id) {
+        if (id >= 0) {
+            long rem = (newFlowers - costArray[id]);
+            long minToAddFromRem = rem / (id + 1);
+            max = ((countComplete * (long) full) + ((Math.min(target - 1, minToAddFromRem + flowers[id])) * (long) partial));
+        }
+        return max;
+    }
+
+    public int binarySearchCumulativeCost(long cost[], long num, int s, int e) {
+        int i = s, j = e;
+        while (i < j) {
+            int mid = (i + j) / 2;
+            if (cost[mid] <= num) {
+                i = mid + 1;
+            } else {
+                j = mid;
+            }
+        }
+        return cost[i] <= num ? i : (i - 1);
+    }
 }

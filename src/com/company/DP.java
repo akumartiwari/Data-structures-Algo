@@ -444,20 +444,6 @@ public class DP {
         return ans;
     }
 
-    private long maxf(int[] nums, int idx, int k, long prod) {
-        // base case
-        if (idx >= nums.length || k <= 0) return 0;
-
-        // not take
-        long best = maxf(nums, idx + 1, k, prod);
-        // take
-        for (int i = 0; i < Math.min(k, nums.length); i++) {
-            prod *= (nums[i] + 1);
-            best = Math.max(best, prod * maxf(nums, idx + 1, (k - i), prod));
-        }
-        return best;
-    }
-
     //Author : Anand
     // TODO : Complete this
     public long maximumBeauty(int[] flowers, long newFlowers, int target, int full, int partial) {
