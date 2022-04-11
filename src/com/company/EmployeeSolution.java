@@ -2669,58 +2669,57 @@ Note that a period with one day is a smooth descent period by the definition.
     }
 
     // Author: Anand
-    // TODO : Complete it
     public String minimizeResult(String expression) {
-        int mini = Integer.MAX_VALUE;
+        int n = expression.length();
         int idx = expression.indexOf('+');
+        int mini = Integer.MAX_VALUE;
         String ans = "";
-        for (int i = 0; i < expression.length(); i++) {
-            String eval = "";
-            if (i != 0) eval += expression.substring(0, i);
-            eval += "(";
-            eval += expression.substring(i, idx);
-            eval += "+";
-            String prev = eval;
-            for (int j = idx + 1; j < expression.length(); j++) {
-                if (j != idx + 1) eval += expression.substring(idx + 1, j);
-                eval += expression.charAt(j) + ")";
-                if (j + 1 < expression.length()) eval += expression.substring(j + 1);
-                System.out.println(eval);
-                int val = evaluate(eval);
-                ans = eval;
-                if (val < mini) {
-                    ans = eval;
-                    mini = val;
+        for (int i = idx + 1; i < n; i++) {
+            int e1 = Integer.parseInt(expression.substring(idx + 1, i + 1));
+            for (int j = idx - 1; j >= 0; j--) {
+                int e2 = Integer.parseInt(expression.substring(j, idx));
+                int addition = e1 + e2;
+                int left = 1, right = 1;
+                if (!expression.substring(0, j).equals("")) left = Integer.parseInt(expression.substring(0, j));
+                if (!expression.substring(i + 1).equals("")) right = Integer.parseInt(expression.substring(i + 1));
+
+                int res = left * right * addition;
+                if (res < mini) {
+                    StringBuilder sb = new StringBuilder(expression);
+                    mini = res;
+                    sb.insert(j, '(');
+                    sb.insert(i + 2, ')');
+                    ans = sb.toString();
                 }
-                eval = prev;
             }
         }
         return ans;
     }
 
-    private int evaluate(String expression) {
-        int ans = -1;
+    // Author: Anand
+    public int maximumProduct(int[] nums, int k) {
+        int MOD = 1_000_000_000 + 7;
 
-        int left = expression.indexOf('(');
-        int right = expression.indexOf(')');
-        int plus = expression.indexOf('+');
-
-        int a1 = 0;
-        if (!expression.substring(left + 1, plus).equals(""))
-            a1 = Integer.parseInt(expression.substring(left + 1, plus));
-
-        int a2 = 0;
-        if (!expression.substring(plus + 1, right).equals(""))
-            a2 = Integer.parseInt(expression.substring(plus + 1, right));
-        ans = a1 + a2;
-        if (!expression.substring(0, left).equals("")) {
-            ans *= Integer.parseInt(expression.substring(0, left));
-        }
-        if (!expression.substring(right + 1).equals("")) {
-            ans *= Integer.parseInt(expression.substring(right + 1));
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        for (int num : nums) pq.offer(num);
+        while (k > 0) {
+            int num = pq.poll();
+            num += 1;
+            k--;
+            pq.offer(num);
         }
 
-        return ans;
+        long prod = 1;
+        while (!pq.isEmpty()) {
+            prod = mod_mul(prod, pq.poll(), MOD);
+        }
+        return (int) prod;
+    }
+
+    public long mod_mul(long a, long b, long m) {
+        a = a % m;
+        b = b % m;
+        return (((a * b) % m) + m) % m;
     }
 
 }

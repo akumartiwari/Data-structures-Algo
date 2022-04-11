@@ -444,29 +444,44 @@ public class DP {
         return ans;
     }
 
-    // Author: Anand
-    // Tabulated solution
-    // Rules
-    /*
-       - Fetch changing parameters and write them in rev order
-       - Copy recurrence
-       - Write base cases
-       TC = O(n2), SC=O(n*2)
-     */
-    public int lengthOfLISTabulated(int[] nums) {
-        int[] curr = new int[nums.length + 1], next = new int[nums.length + 1];
-        for (int idx = nums.length - 1; idx >= 0; idx--) {
-            for (int prev_idx = idx - 1; prev_idx >= -1; prev_idx--) {
-                // not-take
-                int len = next[prev_idx + 1];
-                if (prev_idx == -1 || nums[idx] > nums[prev_idx]) {
-                    len = Math.max(len, 1 + next[idx + 1]);
-                }
-                curr[prev_idx + 1] = len;
-            }
-            next = curr;
+    private long maxf(int[] nums, int idx, int k, long prod) {
+        // base case
+        if (idx >= nums.length || k <= 0) return 0;
+
+        // not take
+        long best = maxf(nums, idx + 1, k, prod);
+        // take
+        for (int i = 0; i < Math.min(k, nums.length); i++) {
+            prod *= (nums[i] + 1);
+            best = Math.max(best, prod * maxf(nums, idx + 1, (k - i), prod));
+        }
+        return best;
+    }
+
+    //Author : Anand
+    // TODO : Complete this
+    public long maximumBeauty(int[] flowers, long newFlowers, int target, int full, int partial) {
+        Arrays.sort(flowers);
+        return mb(flowers, newFlowers, full, partial, target, 0, 0);
+    }
+
+    private long mb(int[] flowers, long newFlowers, int full, int partial, int target, int idx, long sum) {
+        // base case
+
+        if (idx == flowers.length) return 0;
+        long max = Integer.MIN_VALUE;
+        // take
+        for (int i = 0; i < target; i++) {
+            newFlowers -= i;
+            if (newFlowers >= 0 && flowers[idx] + i >= target) sum += full;
+            max = Math.max(max, sum + mb(flowers, newFlowers, full, partial, target, idx + 1, sum));
         }
 
-        return curr[-1 + 1];
+        // Let's not add new flowers to garden
+        int mini = Integer.MAX_VALUE;
+        for (int flower : flowers) mini = Math.min(mini, flower);
+
+        return Math.max(max, sum + (long) mini * partial);
     }
+
 }
