@@ -2636,7 +2636,94 @@ Note that a period with one day is a smooth descent period by the definition.
         return ans;
     }
 
+    // Author: Anand
+    public int largestInteger(int num) {
+        List<Integer> even = new ArrayList<>();
+        List<Integer> odd = new ArrayList<>();
+
+        int numc = num;
+        while (numc > 0) {
+            int d = numc % 10;
+            if (d % 2 == 0) even.add(d);
+            else odd.add(d);
+            numc /= 10;
+        }
+
+        Collections.sort(even);
+        Collections.sort(odd);
+
+        String nums = String.valueOf(num);
+
+        StringBuilder ans = new StringBuilder();
+        for (int i = 0; i < nums.length(); i++) {
+            if (Integer.parseInt(String.valueOf(nums.charAt(i))) % 2 == 0 && even.size() > 0) {
+                ans.append(even.get(even.size() - 1));
+                even.remove(even.size() - 1);
+            } else if (odd.size() > 0) {
+                ans.append(odd.get(odd.size() - 1));
+                odd.remove(odd.size() - 1);
+            } else break;
+        }
+
+        return Integer.parseInt(ans.toString());
+    }
+
+    // Author: Anand
+    public String minimizeResult(String expression) {
+        int n = expression.length();
+        int idx = expression.indexOf('+');
+        int mini = Integer.MAX_VALUE;
+        String ans = "";
+        for (int i = idx + 1; i < n; i++) {
+            int e1 = Integer.parseInt(expression.substring(idx + 1, i + 1));
+            for (int j = idx - 1; j >= 0; j--) {
+                int e2 = Integer.parseInt(expression.substring(j, idx));
+                int addition = e1 + e2;
+                int left = 1, right = 1;
+                if (!expression.substring(0, j).equals("")) left = Integer.parseInt(expression.substring(0, j));
+                if (!expression.substring(i + 1).equals("")) right = Integer.parseInt(expression.substring(i + 1));
+
+                int res = left * right * addition;
+                if (res < mini) {
+                    StringBuilder sb = new StringBuilder(expression);
+                    mini = res;
+                    sb.insert(j, '(');
+                    sb.insert(i + 2, ')');
+                    ans = sb.toString();
+                }
+            }
+        }
+        return ans;
+    }
+
+    // Author: Anand
+    public int maximumProduct(int[] nums, int k) {
+        int MOD = 1_000_000_000 + 7;
+
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        for (int num : nums) pq.offer(num);
+        while (k > 0) {
+            int num = pq.poll();
+            num += 1;
+            k--;
+            pq.offer(num);
+        }
+
+        long prod = 1;
+        while (!pq.isEmpty()) {
+            prod = mod_mul(prod, pq.poll(), MOD);
+        }
+        return (int) prod;
+    }
+
+    public long mod_mul(long a, long b, long m) {
+        a = a % m;
+        b = b % m;
+        return (((a * b) % m) + m) % m;
+    }
+
 }
+
     /*
     // TODO: maxRunTime Binary search solution
     public:
