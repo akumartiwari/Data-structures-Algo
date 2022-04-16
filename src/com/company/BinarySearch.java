@@ -129,7 +129,7 @@ public class BinarySearch {
      */
     public long maximumBeauty(int[] flowers, long newFlowers, int target, int full, int partial) {
         int len = flowers.length;
-        long cumulativeCostArray[] = new long[len];
+        long[] cumulativeCostArray = new long[len];
         Arrays.sort(flowers);
 
         for (int i = 1; i < len; i++) {
