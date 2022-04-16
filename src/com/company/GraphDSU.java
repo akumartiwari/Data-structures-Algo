@@ -163,10 +163,9 @@ class UnionFind {
             list[i] = new Node(scores[i]);
             maxscore = Math.max(scores[i], maxscore);
         }
-        for (int i = 0; i < edges.length; i++) {
-            int[] p = edges[i];
-            Node start = list[p[0]];
-            Node end = list[p[1]];
+        for (int[] edge : edges) {
+            Node start = list[edge[0]];
+            Node end = list[edge[1]];
             start.add(end);
         }
 
@@ -216,7 +215,7 @@ class UnionFind {
         return maxSum;
     }
 
-    class Node {
+    static class Node {
         int value;
         Set<Node> next = new HashSet<>();
 
