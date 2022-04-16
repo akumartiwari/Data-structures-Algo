@@ -128,72 +128,105 @@ class UnionFind {
     public boolean isConnected(int x, int y) {
         return find(x) == find(y);
     }
-    
-    // Topological sort
+
+    /*
+    For each edge (i, j) in edges,
+    we find a neighbour ii of node i,
+    we find a neighbour jj of node i,
+    If ii, i, j,jj has no duplicate, then that's a valid sequence.
+
+    Ad the intuition mentioned,
+    we don't have to enumearte all neignbours,
+    but only some nodes with big value.
+
+    But how many is enough?
+    I'll say 3.
+    For example, we have ii, i, j now,
+    we can enumerate 3 of node j biggest neighbour,
+    there must be at least one node different node ii and node i.
+
+    So we need to iterate all edges (i, j),
+    for each node we keep at most 3 biggest neighbour, which this can be done in O(3) or O(log3).
+
+     */
     // Author: Anand
+    // TC = O(n+m); n = length of edges, m = max neighbours of a node
+    // SC = O(n)
     public int maximumScore(int[] scores, int[][] edges) {
+
+        int maxSum = -1;
         int n = scores.length;
-        final List<List<Node>> graph = new ArrayList<>(n);
-        for (int i = 0; i < n; i++) {
-            graph.add(new ArrayList());
-        }
-        for (final int[] arr : edges) {
-            graph.get(arr[0]).add(new Node(arr[1], 0));
-            graph.get(arr[1]).add(new Node(arr[0], 0));
-        }
-        return this.dfs(graph, n);
-    }
+        int maxscore = 0;
+        Node[] list = new Node[n];
 
-    public int dfs(final List<List<Node>> adj, int n) {
-        int ans = -1;
-        final int mod = 1_000_000_007;
-        final Queue<Node> queue = new PriorityQueue<>(n);
-        final long[] costs = new long[n];
-        final long[] ways = new long[n];
-        final boolean[] cache = new boolean[n];
-        queue.add(new Node(0, 0));
-        Arrays.fill(costs, Long.MAX_VALUE);
-        costs[0] = 0;
-        //one way to visit first node
-        ways[0] = 1;
-        int nodesCount = 1;
-        while (!queue.isEmpty()) {
-            final Node currentNode = queue.poll();
-            if (currentNode.cost < costs[currentNode.position] || cache[currentNode.position]) {
+        for (int i = 0; i < list.length; i++) {
+            list[i] = new Node(scores[i]);
+            maxscore = Math.max(scores[i], maxscore);
+        }
+        for (int i = 0; i < edges.length; i++) {
+            int[] p = edges[i];
+            Node start = list[p[0]];
+            Node end = list[p[1]];
+            start.add(end);
+        }
+
+        for (int[] edge : edges) {
+            Node start = list[edge[0]];
+            Node end = list[edge[1]];
+
+            if (start.value + end.value + maxscore + maxscore <= maxSum) continue;
+            Queue<Node> queue = new PriorityQueue<>((a, b) -> b.value - a.value);
+
+            for (Node node : start.next) {
+                if (node != end) queue.offer(node);
+            }
+
+            if (queue.size() == 0) continue;
+            // pull 2 adjacent neighbours out of queue
+            Node start1 = queue.poll();
+            Node start2 = queue.poll();
+
+            queue.clear();
+
+            for (Node node : end.next) {
+                if (node != start) queue.offer(node);
+            }
+
+            if (queue.size() == 0) continue;
+            // pull 2 adjacent neighbours out of queue
+            Node end1 = queue.poll();
+            Node end2 = queue.poll();
+
+            int sum = start.value + end.value + start1.value;
+
+            if (start1 != end1) {
+                sum += end1.value;
+            } else if (start2 == null && end2 == null) {
                 continue;
+            } else if (start2 != null && end2 != null) {
+                sum += Math.max(start2.value, end2.value);
+            } else if (start2 == null) {
+                sum += end2.value;
+            } else {
+                sum += start2.value;
             }
-            for (final Node vertex : adj.get(currentNode.position)) {
-                if (costs[currentNode.position] + vertex.cost > costs[vertex.position]) {
-                    costs[vertex.position] = costs[currentNode.position] + vertex.cost;
-                    ways[vertex.position] = ways[currentNode.position] % mod;
-                    queue.add(new Node(vertex.position, costs[vertex.position]));
-                } else if (costs[currentNode.position] + vertex.cost == costs[vertex.position]) {
-                    ways[vertex.position] = (ways[vertex.position] + ways[currentNode.position]) % mod;
-                }
-            }
-            nodesCount++;
-            if (nodesCount == 4) {
-                ans = Math.max(ans, (int) costs[currentNode.position]);
-                nodesCount = 0;
-            }
+            maxSum = Math.max(sum, maxSum);
+
         }
-        return ans;
+        return maxSum;
     }
 
-    @SuppressWarnings("ALL")
-    private class Node implements Comparable<Node> {
-        int position;
-        long cost;
+    class Node {
+        int value;
+        Set<Node> next = new HashSet<>();
 
-        public Node(int dis, long val) {
-            this.position = dis;
-            this.cost = val;
+        Node(int val) {
+            this.value = val;
         }
 
-
-        @Override
-        public int compareTo(final Node o) {
-            return Long.compare(this.cost, o.cost);
+        void add(Node node) {
+            next.add(node); // a ---> [b]
+            node.next.add(this); // b --> [a]
         }
     }
 }
