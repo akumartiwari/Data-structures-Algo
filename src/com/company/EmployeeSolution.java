@@ -2889,12 +2889,95 @@ Note that a period with one day is a smooth descent period by the definition.
             }
         }
     }
-/**
- * Your ATM object will be instantiated and called as such:
- * ATM obj = new ATM();
- * obj.deposit(banknotesCount);
- * int[] param_2 = obj.withdraw(amount);
- */
+
+    /**
+     * Your ATM object will be instantiated and called as such:
+     * ATM obj = new ATM();
+     * obj.deposit(banknotesCount);
+     * int[] param_2 = obj.withdraw(amount);
+     */
+    // Author: Anand
+    public String digitSum(String s, int k) {
+        while (s.length() > k) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < s.length(); i += k) {
+                String newString = i + k < s.length() ? s.substring(i, i + k) : s.substring(i);
+                int d = 0;
+                for (int j = 0; j < newString.length(); j++) {
+                    d += Integer.parseInt(String.valueOf(newString.charAt(j)));
+                }
+                sb.append(d);
+            }
+            s = sb.toString();
+        }
+        return s;
+    }
+
+    // Author: Anand
+    public int minimumRounds(int[] tasks) {
+
+        int ans = 0;
+        Map<Integer, Integer> freq = new TreeMap<>();
+
+        Arrays.sort(tasks);
+        for (int task : tasks) freq.put(task, freq.getOrDefault(task, 0) + 1);
+
+        for (Map.Entry entry : freq.entrySet()) {
+            int value = (int) entry.getValue();
+            int cnt3 = value / 3;
+            int cnt2 = (value % 3) / 2;
+            if (cnt3 * 3 == value) {
+                ans += cnt3;
+                continue;
+            }
+
+            boolean success = false;
+            while (cnt3 >= 1) {
+                if (cnt3 * 3 + (cnt2 * 2) == value) {
+                    ans += cnt3 + cnt2;
+                    success = true;
+                    break;
+                }
+                cnt3--;
+                cnt2 = (value - cnt3 * 3) / 2;
+            }
+
+            if (success) continue;
+            if (value % 2 == 0) {
+                ans += value / 2;
+                continue;
+            }
+
+            return -1;
+        }
+        return ans;
+    }
+
+    // Author: Anand
+    // TODO
+    public int maxTrailingZeros(int[][] grid) {
+        int R = grid.length, C = grid[0].length;
+        Set<String> seen = new HashSet<>(); // Set used to prune duplicates.
+        int ans = 1;
+        // PriorityQueue sorted by (distance, price, row, col).
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[0] == b[0] ? a[1] == b[1] ? a[2] == b[2] ? a[3] - b[3] : a[2] - b[2] : a[1] - b[1] : a[0] - b[0]);
+        pq.offer(new int[]{0, grid[0][0], 0, 0}); // BFS starting point.
+        while (!pq.isEmpty()) {
+            int[] cur = pq.poll();
+            int distance = cur[0], price = cur[1], r = cur[2], c = cur[3]; // distance, price, row & column.
+
+            for (int m = 0; m < 2; ++m) { // traverse 4 neighbors.
+                int i = r + 1, j = c + 1;
+                // in boundary, not wall, and not visited yet?
+                if (0 <= i && i < R && 0 <= j && j < C && grid[i][j] > 0 && seen.add(i + "," + j)) {
+                    pq.offer(new int[]{distance + 1, grid[i][j], i, j});
+                }
+            }
+            ans *= distance;
+        }
+
+        return ans % 10;
+    }
 }
 
     /*
