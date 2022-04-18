@@ -2723,9 +2723,8 @@ Note that a period with one day is a smooth descent period by the definition.
     }
 
     /*
-      [2,-1,1]
-
-
+      I = [2,-1,1]
+      O = 1
      */
     // Author : Anand
     public int findClosestNumber(int[] nums) {
@@ -2773,128 +2772,21 @@ Note that a period with one day is a smooth descent period by the definition.
     }
 
     // Author: Anand
-
-    // Author: Anand
-    class ATM {
-        Map<Integer, Long> notes;
-
-        public ATM() {
-            notes = new TreeMap<>();
-            notes.put(20, 0L);
-            notes.put(50, 0L);
-            notes.put(100, 0L);
-            notes.put(200, 0L);
-            notes.put(500, 0L);
-        }
-
-        public void deposit(int[] banknotesCount) {
-            int idx = 0;
-            for (Map.Entry entry : notes.entrySet()) {
-                notes.put((int) entry.getKey(), (long) entry.getValue() + banknotesCount[idx++]);
-            }
-        }
-
-        public int[] withdraw(int amount) {
-            int[] ans = new int[5];
-            int idx = 4;
-            // Use reverseOrder() method in the constructor
-            TreeMap<Integer, Long> treeMap = new TreeMap<>(Collections.reverseOrder());
-            treeMap.putAll(notes);
-            for (Map.Entry entry : treeMap.entrySet()) {
-                if (amount > 0) {
-                    int key = (int) entry.getKey();
-                    long value = (long) entry.getValue();
-                    long cnt = Math.min(amount / key, value);
-                    amount -= (int) key * cnt;
-                    ans[idx--] = (int) cnt;
-                } else break;
-            }
-
-            if (amount == 0) {
-                int i = 0;
-                for (Map.Entry entry : notes.entrySet()) {
-                    notes.put((int) entry.getKey(), (long) entry.getValue() - ans[i++]);
+    public String digitSum(String s, int k) {
+        while (s.length() > k) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < s.length(); i += k) {
+                String newString = i + k < s.length() ? s.substring(i, i + k) : s.substring(i);
+                int d = 0;
+                for (int j = 0; j < newString.length(); j++) {
+                    d += Integer.parseInt(String.valueOf(newString.charAt(j)));
                 }
-                return ans;
+                sb.append(d);
             }
-            return new int[]{-1};
+            s = sb.toString();
         }
+        return s;
     }
-
-    // Author: Anand
-    class Solution {
-        public int maximumScore(int[] scores, int[][] edges) {
-            int n = scores.length;
-            final List<List<Node>> graph = new ArrayList<>(n);
-            for (int i = 0; i < n; i++) {
-                graph.add(new ArrayList());
-            }
-            for (final int[] arr : edges) {
-                graph.get(arr[0]).add(new Node(arr[1], arr[2]));
-                graph.get(arr[1]).add(new Node(arr[0], arr[2]));
-            }
-            return this.dfs(graph, n);
-        }
-
-        public int dfs(final List<List<Node>> adj, int n) {
-            int ans = -1;
-            final int mod = 1_000_000_007;
-            final Queue<Node> queue = new PriorityQueue<>(n);
-            final long[] costs = new long[n];
-            final long[] ways = new long[n];
-            final boolean[] cache = new boolean[n];
-            queue.add(new Node(0, 0));
-            Arrays.fill(costs, Long.MAX_VALUE);
-            costs[0] = 0;
-            //one way to visit first node
-            ways[0] = 1;
-            int nodesCount = 1;
-            while (!queue.isEmpty()) {
-                final Node currentNode = queue.poll();
-                if (currentNode.cost < costs[currentNode.position] || cache[currentNode.position]) {
-                    continue;
-                }
-                for (final Node vertex : adj.get(currentNode.position)) {
-                    if (costs[currentNode.position] + vertex.cost > costs[vertex.position]) {
-                        costs[vertex.position] = costs[currentNode.position] + vertex.cost;
-                        ways[vertex.position] = ways[currentNode.position] % mod;
-                        queue.add(new Node(vertex.position, costs[vertex.position]));
-                    } else if (costs[currentNode.position] + vertex.cost == costs[vertex.position]) {
-                        ways[vertex.position] = (ways[vertex.position] + ways[currentNode.position]) % mod;
-                    }
-                }
-                nodesCount++;
-                if (nodesCount == 4) {
-                    ans = Math.max(ans, (int) costs[currentNode.position]);
-                    nodesCount = 0;
-                }
-            }
-            return ans;
-        }
-
-        @SuppressWarnings("ALL")
-        private class Node implements Comparable<Node> {
-            int position;
-            long cost;
-
-            public Node(int dis, long val) {
-                this.position = dis;
-                this.cost = val;
-            }
-
-
-            @Override
-            public int compareTo(final Node o) {
-                return Long.compare(this.cost, o.cost);
-            }
-        }
-    }
-/**
- * Your ATM object will be instantiated and called as such:
- * ATM obj = new ATM();
- * obj.deposit(banknotesCount);
- * int[] param_2 = obj.withdraw(amount);
- */
 }
 
     /*
