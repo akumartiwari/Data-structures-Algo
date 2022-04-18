@@ -34,44 +34,44 @@ for each node we keep at most 3 biggest neighbour, which this can be done in O(3
         int maxSum = -1;
         int n = scores.length;
         int maxscore = 0;
-        UnionFind.Node[] list = new UnionFind.Node[n];
+        Node[] list = new Node[n];
 
         for (int i = 0; i < list.length; i++) {
-            list[i] = new UnionFind.Node(scores[i]);
+            list[i] = new Node(scores[i]);
             maxscore = Math.max(scores[i], maxscore);
         }
         for (int[] edge : edges) {
-            UnionFind.Node start = list[edge[0]];
-            UnionFind.Node end = list[edge[1]];
+            Node start = list[edge[0]];
+            Node end = list[edge[1]];
             start.add(end);
         }
 
         for (int[] edge : edges) {
-            UnionFind.Node start = list[edge[0]];
-            UnionFind.Node end = list[edge[1]];
+            Node start = list[edge[0]];
+            Node end = list[edge[1]];
 
             if (start.value + end.value + maxscore + maxscore <= maxSum) continue;
-            Queue<UnionFind.Node> queue = new PriorityQueue<>((a, b) -> b.value - a.value);
+            Queue<Node> queue = new PriorityQueue<>((a, b) -> b.value - a.value);
 
-            for (UnionFind.Node node : start.next) {
+            for (Node node : start.next) {
                 if (node != end) queue.offer(node);
             }
 
             if (queue.size() == 0) continue;
             // pull 2 adjacent neighbours out of queue
-            UnionFind.Node start1 = queue.poll();
-            UnionFind.Node start2 = queue.poll();
+            Node start1 = queue.poll();
+            Node start2 = queue.poll();
 
             queue.clear();
 
-            for (UnionFind.Node node : end.next) {
+            for (Node node : end.next) {
                 if (node != start) queue.offer(node);
             }
 
             if (queue.size() == 0) continue;
             // pull 2 adjacent neighbours out of queue
-            UnionFind.Node end1 = queue.poll();
-            UnionFind.Node end2 = queue.poll();
+            Node end1 = queue.poll();
+            Node end2 = queue.poll();
 
             int sum = start.value + end.value + start1.value;
 
