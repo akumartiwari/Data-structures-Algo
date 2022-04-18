@@ -2773,8 +2773,6 @@ Note that a period with one day is a smooth descent period by the definition.
     }
 
     // Author: Anand
-
-    // Author: Anand
     class ATM {
         Map<Integer, Long> notes;
 
@@ -2821,75 +2819,6 @@ Note that a period with one day is a smooth descent period by the definition.
         }
     }
 
-    // Author: Anand
-    class Solution {
-        public int maximumScore(int[] scores, int[][] edges) {
-            int n = scores.length;
-            final List<List<Node>> graph = new ArrayList<>(n);
-            for (int i = 0; i < n; i++) {
-                graph.add(new ArrayList());
-            }
-            for (final int[] arr : edges) {
-                graph.get(arr[0]).add(new Node(arr[1], arr[2]));
-                graph.get(arr[1]).add(new Node(arr[0], arr[2]));
-            }
-            return this.dfs(graph, n);
-        }
-
-        public int dfs(final List<List<Node>> adj, int n) {
-            int ans = -1;
-            final int mod = 1_000_000_007;
-            final Queue<Node> queue = new PriorityQueue<>(n);
-            final long[] costs = new long[n];
-            final long[] ways = new long[n];
-            final boolean[] cache = new boolean[n];
-            queue.add(new Node(0, 0));
-            Arrays.fill(costs, Long.MAX_VALUE);
-            costs[0] = 0;
-            //one way to visit first node
-            ways[0] = 1;
-            int nodesCount = 1;
-            while (!queue.isEmpty()) {
-                final Node currentNode = queue.poll();
-                if (currentNode.cost < costs[currentNode.position] || cache[currentNode.position]) {
-                    continue;
-                }
-                for (final Node vertex : adj.get(currentNode.position)) {
-                    if (costs[currentNode.position] + vertex.cost > costs[vertex.position]) {
-                        costs[vertex.position] = costs[currentNode.position] + vertex.cost;
-                        ways[vertex.position] = ways[currentNode.position] % mod;
-                        queue.add(new Node(vertex.position, costs[vertex.position]));
-                    } else if (costs[currentNode.position] + vertex.cost == costs[vertex.position]) {
-                        ways[vertex.position] = (ways[vertex.position] + ways[currentNode.position]) % mod;
-                    }
-                }
-                nodesCount++;
-                if (nodesCount == 4) {
-                    ans = Math.max(ans, (int) costs[currentNode.position]);
-                    nodesCount = 0;
-                }
-            }
-            return ans;
-        }
-
-        @SuppressWarnings("ALL")
-        private class Node implements Comparable<Node> {
-            int position;
-            long cost;
-
-            public Node(int dis, long val) {
-                this.position = dis;
-                this.cost = val;
-            }
-
-
-            @Override
-            public int compareTo(final Node o) {
-                return Long.compare(this.cost, o.cost);
-            }
-        }
-    }
-
     /**
      * Your ATM object will be instantiated and called as such:
      * ATM obj = new ATM();
@@ -2913,26 +2842,19 @@ Note that a period with one day is a smooth descent period by the definition.
         return s;
     }
 
+
     // Author: Anand
     public int minimumRounds(int[] tasks) {
-
         int ans = 0;
-        Map<Integer, Integer> freq = new TreeMap<>();
-
-        Arrays.sort(tasks);
+        Map<Integer, Integer> freq = new HashMap<>();
         for (int task : tasks) freq.put(task, freq.getOrDefault(task, 0) + 1);
 
         for (Map.Entry entry : freq.entrySet()) {
             int value = (int) entry.getValue();
+            boolean success = false;
             int cnt3 = value / 3;
             int cnt2 = (value % 3) / 2;
-            if (cnt3 * 3 == value) {
-                ans += cnt3;
-                continue;
-            }
-
-            boolean success = false;
-            while (cnt3 >= 1) {
+            while (cnt3 >= 0) {
                 if (cnt3 * 3 + (cnt2 * 2) == value) {
                     ans += cnt3 + cnt2;
                     success = true;
@@ -2943,11 +2865,6 @@ Note that a period with one day is a smooth descent period by the definition.
             }
 
             if (success) continue;
-            if (value % 2 == 0) {
-                ans += value / 2;
-                continue;
-            }
-
             return -1;
         }
         return ans;
