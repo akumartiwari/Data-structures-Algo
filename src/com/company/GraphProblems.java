@@ -6,26 +6,27 @@ import java.util.Queue;
 import java.util.Set;
 
 public class GraphProblems {
+
     /*
-For each edge (i, j) in edges,
-we find a neighbour ii of node i,
-we find a neighbour jj of node i,
-If ii, i, j,jj has no duplicate, then that's a valid sequence.
+    For each edge (i, j) in edges,
+    we find a neighbour ii of node i,
+    we find a neighbour jj of node i,
+    If ii, i, j,jj has no duplicate, then that's a valid sequence.
 
-Ad the intuition mentioned,
-we don't have to enumearte all neignbours,
-but only some nodes with big value.
+    Ad the intuition mentioned,
+    we don't have to enumearte all neignbours,
+    but only some nodes with big value.
 
-But how many is enough?
-I'll say 3.
-For example, we have ii, i, j now,
-we can enumerate 3 of node j biggest neighbour,
-there must be at least one node different node ii and node i.
+    But how many is enough?
+    I'll say 3.
+    For example, we have ii, i, j now,
+    we can enumerate 3 of node j biggest neighbour,
+    there must be at least one node different node ii and node i.
 
-So we need to iterate all edges (i, j),
-for each node we keep at most 3 biggest neighbour, which this can be done in O(3) or O(log3).
+    So we need to iterate all edges (i, j),
+    for each node we keep at most 3 biggest neighbour, which this can be done in O(3) or O(log3).
 
- */
+     */
     // Author: Anand
     // TC = O(n+m); n = length of edges, m = max neighbours of a node
     // SC = O(n)
