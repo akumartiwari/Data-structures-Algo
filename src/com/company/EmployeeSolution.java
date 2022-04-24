@@ -2,7 +2,6 @@ package com.company;
 
 import javafx.util.Pair;
 
-import javax.swing.text.html.parser.Entity;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -2786,6 +2785,84 @@ Note that a period with one day is a smooth descent period by the definition.
             s = sb.toString();
         }
         return s;
+    }
+
+
+    //Author: Anand
+    public List<Integer> intersection(int[][] nums) {
+        List<Integer> ans = new ArrayList<>();
+        for (int[] num : nums) {
+            List<Integer> list = Arrays.stream(num).boxed().collect(Collectors.toList());
+            if (ans.isEmpty()) ans = list;
+            else ans = list.stream()
+                    .distinct()
+                    .filter(ans::contains)
+                    .collect(Collectors.toList());
+        }
+        Collections.sort(ans);
+        return ans;
+    }
+
+    //Author: Anand
+    public int countLatticePoints(int[][] circles) {
+        Set<Point> ans = new HashSet<>();
+        final int[] dx = {-1, 0, 1, 0}, dy = {0, -1, 0, 1};
+        for (int[] c : circles) {
+
+            int x = c[0];
+            int y = c[1];
+            int r = c[2];
+            ans.add(new Point(x, y));
+
+            for (int rad = 0; rad < r; rad++) {
+                if (rad > 0) {
+                    for (int k = 0; k < rad; k++) {
+                        for (int m = 0; m < rad; m++) {
+                            for (int i = 0; i < 4; i++) {
+                                int nx = x + dx[i] + m;
+                                int ny = y + dy[i];
+                                ans.add(new Point(nx, ny));
+                            }
+                        }
+
+                        for (int m = 0; m < rad; m++) {
+                            for (int i = 0; i < 4; i++) {
+                                int nx = x + dx[i];
+                                int ny = y + dy[i] + m;
+                                ans.add(new Point(nx, ny));
+                            }
+                        }
+
+                        for (int m = 0; m < rad; m++) {
+                            for (int i = 0; i < 4; i++) {
+                                int nx = x + dx[i] - m;
+                                int ny = y + dy[i];
+                                ans.add(new Point(nx, ny));
+                            }
+                        }
+
+                        for (int m = 0; m < rad; m++) {
+                            for (int i = 0; i < 4; i++) {
+                                int nx = x + dx[i];
+                                int ny = y + dy[i] - m;
+                                ans.add(new Point(nx, ny));
+                            }
+                        }
+
+                        ans.add(new Point(x + 1 + k, y + 1 + k));
+                        ans.add(new Point(x - 1 - k, y + 1 + k));
+                        ans.add(new Point(x - 1 - k, y - 1 - k));
+                        ans.add(new Point(x + 1 + k, y - 1 - k));
+                    }
+                }
+                for (int i = 0; i < 4; i++) {
+                    int nx = x + dx[i] + ((dx[i] == 1 || dx[i] == 0) ? rad : -rad);
+                    int ny = y + dy[i] + ((dy[i] == 1 || dy[i] == 0) ? rad : -rad);
+                    ans.add(new Point(nx, ny));
+                }
+            }
+        }
+        return ans.size();
     }
 }
 
