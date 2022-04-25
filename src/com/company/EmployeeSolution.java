@@ -5,8 +5,9 @@ import javafx.util.Pair;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
 import java.util.List;
+import java.util.Queue;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class EmployeeSolution {
@@ -2777,9 +2778,8 @@ Note that a period with one day is a smooth descent period by the definition.
             for (int i = 0; i < s.length(); i += k) {
                 String newString = i + k < s.length() ? s.substring(i, i + k) : s.substring(i);
                 int d = 0;
-                for (int j = 0; j < newString.length(); j++) {
+                for (int j = 0; j < newString.length(); j++)
                     d += Integer.parseInt(String.valueOf(newString.charAt(j)));
-                }
                 sb.append(d);
             }
             s = sb.toString();
@@ -2806,64 +2806,21 @@ Note that a period with one day is a smooth descent period by the definition.
     //Author: Anand
     public int countLatticePoints(int[][] circles) {
         Set<Point> ans = new HashSet<>();
-        final int[] dx = {-1, 0, 1, 0}, dy = {0, -1, 0, 1};
-        for (int[] c : circles) {
 
+        for (int[] c : circles) {
             int x = c[0];
             int y = c[1];
             int r = c[2];
-            ans.add(new Point(x, y));
-
-            for (int rad = 0; rad < r; rad++) {
-                if (rad > 0) {
-                    for (int k = 0; k < rad; k++) {
-                        for (int m = 0; m < rad; m++) {
-                            for (int i = 0; i < 4; i++) {
-                                int nx = x + dx[i] + m;
-                                int ny = y + dy[i];
-                                ans.add(new Point(nx, ny));
-                            }
-                        }
-
-                        for (int m = 0; m < rad; m++) {
-                            for (int i = 0; i < 4; i++) {
-                                int nx = x + dx[i];
-                                int ny = y + dy[i] + m;
-                                ans.add(new Point(nx, ny));
-                            }
-                        }
-
-                        for (int m = 0; m < rad; m++) {
-                            for (int i = 0; i < 4; i++) {
-                                int nx = x + dx[i] - m;
-                                int ny = y + dy[i];
-                                ans.add(new Point(nx, ny));
-                            }
-                        }
-
-                        for (int m = 0; m < rad; m++) {
-                            for (int i = 0; i < 4; i++) {
-                                int nx = x + dx[i];
-                                int ny = y + dy[i] - m;
-                                ans.add(new Point(nx, ny));
-                            }
-                        }
-
-                        ans.add(new Point(x + 1 + k, y + 1 + k));
-                        ans.add(new Point(x - 1 - k, y + 1 + k));
-                        ans.add(new Point(x - 1 - k, y - 1 - k));
-                        ans.add(new Point(x + 1 + k, y - 1 - k));
-                    }
-                }
-                for (int i = 0; i < 4; i++) {
-                    int nx = x + dx[i] + ((dx[i] == 1 || dx[i] == 0) ? rad : -rad);
-                    int ny = y + dy[i] + ((dy[i] == 1 || dy[i] == 0) ? rad : -rad);
-                    ans.add(new Point(nx, ny));
+            for (int i = x - r; i <= x + r; i++) {
+                for (int j = y - r; j <= y + r; j++) {
+                    // calculate distance and check if its within curcumference of circle
+                    if ((x - i) * (x - i) + (y - j) * (y - j) <= r * r) ans.add(new Point(i, j));
                 }
             }
         }
         return ans.size();
     }
+
 }
 
     /*
