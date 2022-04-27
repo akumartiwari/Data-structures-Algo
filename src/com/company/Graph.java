@@ -140,6 +140,135 @@ public class Graph {
     }
 
     //Directed Graphs
+    //Quick Find - Eager Approach
+    class QuickFindUFEager {
+        private int[] id;
+
+        QuickFindUFEager(int N) {
+            id = new int[N];
+            for (int i = 0; i < N; i++) id[i] = i;
+        }
+
+
+        // check whether p and q are in the same component (2 array accesses)
+        private boolean isConnected(int p, int q) {
+            return id[p] == id[q];
+        }
+
+
+        // change all entries with id[p] to id[q] (at most 2N + 2 array accesses)
+        private void union(int p, int q) {
+            int pid = id[p];
+            int qid = id[q];
+            for (int i = 0; i < id.length; i++)
+                if (id[i] == pid) id[i] = qid;
+        }
+    }
+
+    // Quick Find - Lazy Approach
+    class QuickFindUFLazy {
+        private int[] id;
+
+        QuickFindUFLazy(int N) {
+            id = new int[N];
+            for (int i = 0; i < N; i++) id[i] = i;
+        }
+
+        // check if p and q have same root (depth of p and q array accesses)
+        private boolean isConnected(int p, int q) {
+            return id[p] == id[q];
+        }
+
+        // chase parent pointers until reach root (depth of i array accesses)
+        private int root(int p) {
+            while (id[p] != p) p = id[p];
+            return p;
+        }
+
+        // change root of p to point to root of q (depth of p and q array accesses)
+        private void union(int p, int q) {
+            int i = root(p);
+            int j = root(q);
+            id[i] = j;
+        }
+    }
+
+
+    // Weighted Quick Union
+    class WeightQuickUnionUF {
+
+        int[] id, sz;
+
+        WeightQuickUnionUF(int N) {
+            id = new int[N];
+            sz = new int[N];
+
+            for (int i = 0; i < N; i++) {
+                id[i] = i;
+                sz[i] = i;
+            }
+        }
+
+        // check if p and q have same root (depth of p and q array accesses)
+        private boolean isConnected(int p, int q) {
+            return id[p] == id[q];
+        }
+
+        // chase parent pointers until reach root (depth of i array accesses)
+        private int root(int p) {
+            while (id[p] != p) p = id[p];
+            return p;
+        }
+
+
+        // change root of p to point to root of q (depth of p and q array accesses)
+        private void union(int p, int q) {
+            int i = root(p);
+            int j = root(q);
+            if (i == j) return;
+            if (sz[i] < sz[j]) {
+                id[i] = j; // connect node smaller parent wt with larger parent wt
+                sz[j] += sz[i];
+            } else {
+                id[j] = i; // connect node smaller parent wt with larger parent wt
+                sz[i] += sz[j];
+            }
+        }
+    }
+
+    // Quick Union + path comparison
+    class QuickUnionPathComparisonUF {
+
+        int[] id;
+
+        QuickUnionPathComparisonUF(int N) {
+            id = new int[N];
+            for (int i = 0; i < N; i++) id[i] = i;
+        }
+
+        // check if p and q have same root (depth of p and q array accesses)
+        private boolean isConnected(int p, int q) {
+            return root(p) == root(q);
+        }
+
+        // chase parent pointers until reach root (depth of i array accesses)
+        private int root(int i) {
+            while (id[i] != i) {
+                id[i] = id[id[i]];
+                i = id[i];
+            }
+
+            return i;
+        }
+
+
+        // change root of p to point to root of q (depth of p and q array accesses)
+        private void union(int p, int q) {
+            int i = root(p);
+            int j = root(q);
+            id[i] = j;
+        }
+    }
 }
 
 
