@@ -2821,6 +2821,66 @@ Note that a period with one day is a smooth descent period by the definition.
         return ans.size();
     }
 
+    //Author: Anand
+    public String removeDigit(String number, char digit) {
+        String maxi = "";
+
+        for (int i = 0; i < number.length(); i++) {
+            if (number.charAt(i) == digit) {
+                String newNum = number.substring(0, i) + number.substring(i + 1);
+                if (maxi.equals("")) {
+                    maxi = newNum;
+                    continue;
+                }
+                for (int j = 0; j < newNum.length(); j++) {
+                    if (Integer.parseInt(String.valueOf(newNum.charAt(j))) > Integer.parseInt(String.valueOf(maxi.charAt(j)))) {
+                        maxi = newNum;
+                    } else if (Integer.parseInt(String.valueOf(newNum.charAt(j))) < Integer.parseInt(String.valueOf(maxi.charAt(j)))) {
+                        break;
+                    }
+                }
+            }
+        }
+        return maxi;
+    }
+
+
+    //Author: Anand
+    public int minimumCardPickup(int[] cards) {
+        int ans = Integer.MAX_VALUE;
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < cards.length; i++) {
+            if (map.containsKey(cards[i])) {
+                ans = Math.min(Math.abs((i - map.get(cards[i]) + 1)), ans);
+            }
+            map.put(cards[i], i);
+        }
+        return ans == Integer.MAX_VALUE ? -1 : ans;
+    }
+
+    //Author: Anand
+    public int countDistinct(int[] nums, int k, int p) {
+
+        Set<List<Integer>> lists = new HashSet<>();
+        int ans = 0;
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j <= nums.length; j++) {
+                List<Integer> subArray = new ArrayList<>();
+                int cnt = 0;
+
+                for (int m = i; m < j; m++) {
+                    if (nums[m] % p == 0) cnt++;
+                    subArray.add(nums[m]);
+                }
+
+                if (cnt <= k && !subArray.isEmpty() && !lists.contains(subArray)) {
+                    ans++;
+                    lists.add(subArray);
+                }
+            }
+        }
+        return ans;
+    }
 }
 
     /*
