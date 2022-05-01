@@ -2825,7 +2825,7 @@ Note that a period with one day is a smooth descent period by the definition.
     // Easy, can skip
     public int countPrefixes(String[] words, String s) {
         int cnt = 0;
-        for(String word: words) if (s.startsWith(word)) cnt ++;
+        for (String word : words) if (s.startsWith(word)) cnt++;
         return cnt;
     }
 
@@ -2834,11 +2834,11 @@ Note that a period with one day is a smooth descent period by the definition.
     public int minimumAverageDifference(int[] nums) {
         int n = nums.length;
         long[] prefSum = new long[n];
-        for (int i=0;i<nums.length;i++) prefSum[i] = (i > 0 ? prefSum[i-1]: 0) + nums[i];
+        for (int i = 0; i < nums.length; i++) prefSum[i] = (i > 0 ? prefSum[i - 1] : 0) + nums[i];
         long mini = Long.MAX_VALUE;
         int idx = -1;
-        for (int i=0;i<nums.length;i++) {
-            long curr = Math.abs((long) prefSum[i]/(i+1) - (long) ((n-1-i) > 0 ? (prefSum[n-1]-prefSum[i])/(n-1-i) : 0));
+        for (int i = 0; i < nums.length; i++) {
+            long curr = Math.abs((long) prefSum[i] / (i + 1) - (long) ((n - 1 - i) > 0 ? (prefSum[n - 1] - prefSum[i]) / (n - 1 - i) : 0));
             if (curr < mini) {
                 idx = i;
                 mini = curr;
@@ -2848,7 +2848,7 @@ Note that a period with one day is a smooth descent period by the definition.
         return idx;
     }
 
-    
+
     //Author: Anand
     public String removeDigit(String number, char digit) {
         String maxi = "";
