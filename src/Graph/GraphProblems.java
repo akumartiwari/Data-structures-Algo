@@ -1,4 +1,4 @@
-package com.company;
+package Graph;
 
 import java.util.*;
 
@@ -150,14 +150,16 @@ public class GraphProblems {
 
 
     /*
-     // Algorithm
-     - Store locations of fire Queue
-     - while queue is not empty keep on spreading all fires  for a min
-     - Apply bfs  and check if user is reachable
-     - If yes then increment min and again spread fire
-     - Else return min.
-     // TC = O(mn/4(m+n)), SC = O(m+n)
-    */
+    ###BFS+BS###
+   // Algorithm
+   - Store locations of fire Queue
+   - Spread fire upto mn time
+   - Apply bfs+BS and check if user is reachable with t time
+   - If yes then  l = mid
+   - Else  r = mid-1
+   - return l;
+   // TC = O(mnlognm), SC = O(mn)
+  */
     private static final int[][] DIRS = new int[][]{{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 
     public int maximumMinutes(int[][] grid) {
@@ -171,71 +173,74 @@ public class GraphProblems {
             }
         }
 
-        boolean moved = false;
-        int min = 0;
-        while(true){
-            boolean[] traversal = bfs(grid, new int[]{0, 0}, new int[]{m - 1, n - 1}, false);
-            moved = traversal[1] || moved;
-            if (traversal[0] && traversal[1]) {
-                // spread fire
-                min++;
-                for (int[] fire : fires) {
-                    for (int[] dir : DIRS) {
-                        int newx = dir[0] + fire[0];
-                        int newy = dir[1] + fire[1];
-                        if (isSafe(grid, newx, newy)) {
-                            grid[newx][newy] = 1;
-                        }
-                    }
-                }
-            }
-            break;
-        }
 
-        return !moved ? 1_000_000_000 : min;
+        int l = -1, r = m * n;
+        while (l < r) {
+            int mid = l + (r - l) / 2 + 1;
+            if (reachable(grid, fires, mid)) l = mid;
+            else r = mid - 1;
+        }
+        return (int) (l == m * n ? 1e9 : l);
     }
 
-    // BFS ---> To check if  user is reachable
-    private boolean[] bfs(int[][] grid, int[] start, int[] dest, boolean state) {
+    // BFS ---> To check if  user is reachable after t min of fire spread
+    private boolean reachable(int[][] grid, List<int[]> fires, int moves) {
+        int[][] copy = clone(grid);
+
+        Queue<int[]> fire = new LinkedList<>(fires);
+
+        while (!fire.isEmpty() && moves-- > 0) {
+            if (spread(fire, copy)) return false;
+        }
+
+        //check if person is reachable to dest
+        Queue<int[]> person = new LinkedList<>();
+
+        person.add(new int[]{0, 0});
+        while (!person.isEmpty()) {
+            boolean onFire = spread(fire, copy);
+            boolean dest = spread(person, copy);
+
+            if (dest) return true;
+            if (onFire) return false;
+        }
+        return false;
+    }
+
+    private boolean spread(Queue<int[]> queue, int[][] grid) {
         int m = grid.length;
         int n = grid[0].length;
-        Queue<int[]> queue = new LinkedList<>();
-        queue.offer(start);
+        int sz = queue.size();
 
-        boolean[][] vis = new boolean[m][n];
-        while (!queue.isEmpty()) {
+        while (sz-- > 0) {
             int[] point = queue.poll();
             for (int[] dir : DIRS) {
+                assert point != null;
                 int newx = dir[0] + point[0];
                 int newy = dir[1] + point[1];
-                if (newx == m - 1 && newy == n - 1) return new boolean[]{true, state};
-                if (newx >= 0 && newx < grid.length && newy >= 0 && newy < grid[0].length && grid[newx][newy] != 2 && grid[newx][newy] != 1) {
-                    if (vis[newx][newy]) continue;
-                    vis[newx][newy] = true;
-                    grid[newx][newy] = 1;
-                    state = true;
+                if (newx == m - 1 && newy == n - 1) return true;
+                if (isSafe(grid, newx, newy)) {
+                    grid[newx][newy] = -1;
                     queue.offer(new int[]{newx, newy});
                 }
             }
         }
-        return new boolean[]{false, state};
+        return false;
     }
 
     // This will tell us if coordinate is within extrimities OR safe to visit the point
     private boolean isSafe(int[][] grid, int x, int y) {
-        return x >= 0 && x < grid.length && y >= 0 && y < grid[0].length && grid[x][y] != 2;
+        return x >= 0 && x < grid.length && y >= 0 && y < grid[0].length && grid[x][y] == 0;
     }
 
+    private int[][] clone(int[][] grid) {
+        int[][] copy = new int[grid.length][grid[0].length];
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                copy[i][j] = grid[i][j];
+            }
+        }
 
-//  Shortest path in an unweighted graph
-    public class pathUnweighted {
-
-    public static void main(String[] args) {
-        // No of vertices
-        int v = 8;
-
+        return copy;
     }
-
-    }
-
 }
