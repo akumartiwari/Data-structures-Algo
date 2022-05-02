@@ -2,12 +2,12 @@ package com.company;
 
 import javafx.util.Pair;
 
-import javax.swing.text.html.parser.Entity;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
 import java.util.List;
+import java.util.Queue;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class EmployeeSolution {
@@ -2778,14 +2778,136 @@ Note that a period with one day is a smooth descent period by the definition.
             for (int i = 0; i < s.length(); i += k) {
                 String newString = i + k < s.length() ? s.substring(i, i + k) : s.substring(i);
                 int d = 0;
-                for (int j = 0; j < newString.length(); j++) {
+                for (int j = 0; j < newString.length(); j++)
                     d += Integer.parseInt(String.valueOf(newString.charAt(j)));
-                }
                 sb.append(d);
             }
             s = sb.toString();
         }
         return s;
+    }
+
+
+    //Author: Anand
+    public List<Integer> intersection(int[][] nums) {
+        List<Integer> ans = new ArrayList<>();
+        for (int[] num : nums) {
+            List<Integer> list = Arrays.stream(num).boxed().collect(Collectors.toList());
+            if (ans.isEmpty()) ans = list;
+            else ans = list.stream()
+                    .distinct()
+                    .filter(ans::contains)
+                    .collect(Collectors.toList());
+        }
+        Collections.sort(ans);
+        return ans;
+    }
+
+    //Author: Anand
+    public int countLatticePoints(int[][] circles) {
+        Set<Point> ans = new HashSet<>();
+
+        for (int[] c : circles) {
+            int x = c[0];
+            int y = c[1];
+            int r = c[2];
+            for (int i = x - r; i <= x + r; i++) {
+                for (int j = y - r; j <= y + r; j++) {
+                    // calculate distance and check if its within curcumference of circle
+                    if ((x - i) * (x - i) + (y - j) * (y - j) <= r * r) ans.add(new Point(i, j));
+                }
+            }
+        }
+        return ans.size();
+    }
+
+    // Author : Anand
+    // Easy, can skip
+    public int countPrefixes(String[] words, String s) {
+        int cnt = 0;
+        for (String word : words) if (s.startsWith(word)) cnt++;
+        return cnt;
+    }
+
+    // Author: Anand
+    // Have a look at edge case, precisely
+    public int minimumAverageDifference(int[] nums) {
+        int n = nums.length;
+        long[] prefSum = new long[n];
+        for (int i = 0; i < nums.length; i++) prefSum[i] = (i > 0 ? prefSum[i - 1] : 0) + nums[i];
+        long mini = Long.MAX_VALUE;
+        int idx = -1;
+        for (int i = 0; i < nums.length; i++) {
+            long curr = Math.abs((long) prefSum[i] / (i + 1) - (long) ((n - 1 - i) > 0 ? (prefSum[n - 1] - prefSum[i]) / (n - 1 - i) : 0));
+            if (curr < mini) {
+                idx = i;
+                mini = curr;
+            }
+        }
+
+        return idx;
+    }
+
+
+    //Author: Anand
+    public String removeDigit(String number, char digit) {
+        String maxi = "";
+
+        for (int i = 0; i < number.length(); i++) {
+            if (number.charAt(i) == digit) {
+                String newNum = number.substring(0, i) + number.substring(i + 1);
+                if (maxi.equals("")) {
+                    maxi = newNum;
+                    continue;
+                }
+                for (int j = 0; j < newNum.length(); j++) {
+                    if (Integer.parseInt(String.valueOf(newNum.charAt(j))) > Integer.parseInt(String.valueOf(maxi.charAt(j)))) {
+                        maxi = newNum;
+                    } else if (Integer.parseInt(String.valueOf(newNum.charAt(j))) < Integer.parseInt(String.valueOf(maxi.charAt(j)))) {
+                        break;
+                    }
+                }
+            }
+        }
+        return maxi;
+    }
+
+
+    //Author: Anand
+    public int minimumCardPickup(int[] cards) {
+        int ans = Integer.MAX_VALUE;
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < cards.length; i++) {
+            if (map.containsKey(cards[i])) {
+                ans = Math.min(Math.abs((i - map.get(cards[i]) + 1)), ans);
+            }
+            map.put(cards[i], i);
+        }
+        return ans == Integer.MAX_VALUE ? -1 : ans;
+    }
+
+    //Author: Anand
+    public int countDistinct(int[] nums, int k, int p) {
+
+        Set<List<Integer>> lists = new HashSet<>();
+        int ans = 0;
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j <= nums.length; j++) {
+                List<Integer> subArray = new ArrayList<>();
+                int cnt = 0;
+
+                for (int m = i; m < j; m++) {
+                    if (nums[m] % p == 0) cnt++;
+                    subArray.add(nums[m]);
+                }
+
+                if (cnt <= k && !subArray.isEmpty() && !lists.contains(subArray)) {
+                    ans++;
+                    lists.add(subArray);
+                }
+            }
+        }
+        return ans;
     }
 }
 

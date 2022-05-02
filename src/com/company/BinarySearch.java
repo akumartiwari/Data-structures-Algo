@@ -1,8 +1,6 @@
 package com.company;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class BinarySearch {
     /*
@@ -37,10 +35,7 @@ public class BinarySearch {
 //this is the number of people who can get candy
             peopleServed += arr[i] / val;
         }
-        if (peopleServed >= k) {
-            return true;
-        }
-        return false;
+        return peopleServed >= k;
     }
 
     public int maximumCandies(int[] candies, long k) {
@@ -189,5 +184,68 @@ public class BinarySearch {
             }
         }
         return cost[i] <= num ? i : (i - 1);
+    }
+
+    /*
+    Input: rectangles = [[1,1],[2,2],[3,3]], points = [[1,3],[1,1]]
+    Output: [1,3]
+    Explanation:
+    The first rectangle contains only the point (1, 1).
+    The second rectangle contains only the point (1, 1).
+    The third rectangle contains the points (1, 3) and (1, 1).
+    The number of rectangles that contain the point (1, 3) is 1.
+    The number of rectangles that contain the point (1, 1) is 3.
+    Therefore, we return [1, 3].
+     */
+    //Author: Anand
+    // TC = O(nlogn)
+    public int[] countRectangles(int[][] rectangles, int[][] points) {
+        TreeMap<Integer, List<Integer>> map = new TreeMap<>(); // k=y, v=[x]
+
+        int max = Integer.MIN_VALUE;
+        int[] ans = new int[points.length];
+
+        for (int[] r : rectangles) {
+            int key = r[1];
+            int value = r[0];
+            List<Integer> list = new ArrayList<>();
+            if (map.containsKey(key)) list = map.get(key);
+            list.add(value);
+            map.put(key, list);
+            max = Math.max(max, key);
+        }
+
+        for (int key : map.keySet()) Collections.sort(map.get(key));
+
+        for (int i = 0; i < points.length; i++) {
+            int key = points[i][0];
+            int value = points[i][1];
+
+            if (value > max) continue;
+            int count = 0;
+
+            // search for all x <= key
+            for (int entry : map.subMap(value, max + 1).keySet())
+                count += bs(map.get(entry), key);
+
+            ans[i] = count;
+        }
+
+        return ans;
+    }
+
+    private int bs(List<Integer> xc, int key) {
+
+        int l = 0, h = xc.size() - 1;
+        int idx = -1;
+        while (l <= h) {
+            int m = l + (h - l) / 2;
+            if (xc.get(m) >= key) {
+                idx = m;
+                h = m - 1;
+            } else l = m + 1;
+        }
+
+        return idx < 0 ? 0 : xc.size() - idx;
     }
 }
