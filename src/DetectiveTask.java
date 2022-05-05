@@ -1,7 +1,7 @@
 import java.io.*;
-import java.util.*;
+import java.util.StringTokenizer;
 
-public class FoodforAnimals {
+public class DetectiveTask {
     //-----------PrintWriter for faster output---------------------------------
     public static PrintWriter out;
 
@@ -57,18 +57,6 @@ public class FoodforAnimals {
             for (int i = 0; i < 5; i++) {
                 arr[i] = sc.nextInt();
             }
-            int dogs = arr[3];
-            int cats = arr[4];
-
-            dogs -= arr[0];
-            cats -= arr[1];
-
-            dogs = Math.max(dogs, 0);
-            cats = Math.max(cats, 0);
-
-            if ((dogs <= 0 && cats <= 0) || dogs + cats <= arr[2])
-                System.out.println("YES");
-            else System.out.println("NO");
         }
         out.close();
     }

@@ -1,5 +1,3 @@
-package CF_Templates;
-
 import java.io.*;
 import java.util.*;
 
