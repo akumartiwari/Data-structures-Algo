@@ -1,5 +1,6 @@
 package com.company;
 
+import com.sun.org.apache.bcel.internal.generic.INEG;
 import javafx.util.Pair;
 
 import java.awt.*;
@@ -2908,6 +2909,21 @@ Note that a period with one day is a smooth descent period by the definition.
             }
         }
         return ans;
+    }
+
+    // Author: Anand
+    public String largestGoodInteger(String num) {
+
+        Set<String> goodIntegers = new HashSet<>();
+        for (int i = 0; i < num.length() - 2; i++) {
+            if (num.charAt(i) == num.charAt(i + 1) && num.charAt(i + 1) == num.charAt(i + 2))
+                goodIntegers.add(num.substring(i, i + 3));
+        }
+        int max = Integer.MIN_VALUE;
+        for (String ge : goodIntegers) {
+            max = Math.max(max, Integer.parseInt(ge));
+        }
+        return max == Integer.MIN_VALUE ? "" : String.format("%03d", max);
     }
 }
 
