@@ -2997,56 +2997,6 @@ Note that a period with one day is a smooth descent period by the definition.
         return ans;
     }
 
-    /*
-
-    intervals = [[8,43],[13,16],[26,33],[28,36],[29,37]]
-    Input
-    ["CountIntervals", "add", "add", "count", "add", "count"]
-    [[], [2, 3], [7, 10], [], [5, 8], []]
-    Output
-    [null, null, null, 6, null, 8]
-
-     */
-    //Author: Anand
-    // TODO: TC = O(n2) make it O(nlogn)
-    class CountIntervals {
-
-        Map<Integer, int[]> intervals;
-
-        public CountIntervals() {
-            this.intervals = new TreeMap<>();
-        }
-
-        public void add(int left, int right) {
-            intervals.put(left, new int[]{left, right});
-        }
-
-        public int count() {
-            int count = 0;
-
-            int left = -1;
-            // Merge overalpping intervals while counting
-            for (Map.Entry entry : intervals.entrySet()) {
-                int curr = 0;
-                if (left != -1)
-                    curr = Math.max(((int[]) entry.getValue())[1] - Math.max((int) entry.getKey(), left), 0) + (left < (int) entry.getKey() ? 1 : 0);
-                else
-                    curr = ((int[]) entry.getValue())[1] - (int) entry.getKey() + 1;
-
-                count += curr;
-                if (curr > 0) left = ((int[]) entry.getValue())[1];
-            }
-
-            return count;
-        }
-    }
-
-/**
- * Your CountIntervals object will be instantiated and called as such:
- * CountIntervals obj = new CountIntervals();
- * obj.add(left,right);
- * int param_2 = obj.count();
- */
 }
 
     /*
