@@ -2909,6 +2909,94 @@ Note that a period with one day is a smooth descent period by the definition.
         }
         return ans;
     }
+
+    /*
+    list = ["abba","cd","cd"]
+    Input: words = ["abba","cd"]
+    Output: ["abba","cd"]
+
+     */
+    //Author: Anand
+    public List<String> removeAnagrams(String[] words) {
+
+        List<String> list = Arrays.stream(words).collect(Collectors.toList());
+        while (list.size() > 1) {
+
+            boolean flag = false;
+            for (int i = 0; i < list.size() - 1; i++) {
+                if (ana(list.get(i), list.get(i + 1))) {
+                    flag = true;
+                    list.remove(list.get(i + 1));
+                    break;
+                }
+            }
+
+            if (!flag) break;
+        }
+
+
+        return list;
+    }
+
+    private boolean ana(String word1, String word2) {
+
+        if (word1.length() != word2.length()) return false;
+
+        Map<Character, Integer> freq = new HashMap<>();
+        for (int i = 0; i < word1.length(); i++) freq.put(word1.charAt(i), freq.getOrDefault(word1.charAt(i), 0) + 1);
+
+        for (int i = 0; i < word2.length(); i++) {
+            Character key = word2.charAt(i);
+            if (freq.containsKey(key)) {
+                freq.put(key, freq.get(key) - 1);
+                if (freq.get(key) <= 0) {
+                    freq.remove(key);
+                }
+            } else return false;
+        }
+        return true;
+    }
+
+    //Author: Anand
+    public int maxConsecutive(int bottom, int top, int[] special) {
+
+        int ans = 0;
+        Arrays.sort(special);
+        int prev = bottom;
+        boolean first = false;
+        for (int s : special) {
+            if (!first) ans = Math.max(ans, s - prev);
+            else {
+                if (s - prev > 1) {
+                    ans = Math.max(ans, s - prev - 1);
+                }
+            }
+            prev = s;
+            first = true;
+        }
+
+        ans = Math.max(ans, top - prev);
+        return ans;
+    }
+
+    //Author: Anand
+    // The idea is to count numbers that share same bit and maximise them
+    public int largestCombination(int[] candidates) {
+        int max = Integer.MIN_VALUE;
+        for (int c : candidates) max = Math.max(max, c);
+
+        int ans = 0;
+        // check for every bit and count numbers that share same bit
+        for (int b = 1; b <= max; b <<= 1) {
+            int count = 0;
+            for (int c : candidates) {
+                if ((c & b) > 0) count++;
+            }
+            ans = Math.max(ans, count);
+        }
+        return ans;
+    }
+
 }
 
     /*
