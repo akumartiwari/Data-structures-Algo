@@ -2997,7 +2997,7 @@ Note that a period with one day is a smooth descent period by the definition.
         return ans;
     }
 
-    
+
     // Author: Anand
     public String largestGoodInteger(String num) {
 
@@ -3178,8 +3178,6 @@ Note that a period with one day is a smooth descent period by the definition.
         }
         return ans;
     }
-
-
 }
 
     /*
