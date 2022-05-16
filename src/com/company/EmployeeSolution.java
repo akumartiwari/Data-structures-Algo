@@ -2911,6 +2911,94 @@ Note that a period with one day is a smooth descent period by the definition.
         return ans;
     }
 
+    /*
+    list = ["abba","cd","cd"]
+    Input: words = ["abba","cd"]
+    Output: ["abba","cd"]
+
+     */
+    //Author: Anand
+    public List<String> removeAnagrams(String[] words) {
+
+        List<String> list = Arrays.stream(words).collect(Collectors.toList());
+        while (list.size() > 1) {
+
+            boolean flag = false;
+            for (int i = 0; i < list.size() - 1; i++) {
+                if (ana(list.get(i), list.get(i + 1))) {
+                    flag = true;
+                    list.remove(list.get(i + 1));
+                    break;
+                }
+            }
+
+            if (!flag) break;
+        }
+
+
+        return list;
+    }
+
+    private boolean ana(String word1, String word2) {
+
+        if (word1.length() != word2.length()) return false;
+
+        Map<Character, Integer> freq = new HashMap<>();
+        for (int i = 0; i < word1.length(); i++) freq.put(word1.charAt(i), freq.getOrDefault(word1.charAt(i), 0) + 1);
+
+        for (int i = 0; i < word2.length(); i++) {
+            Character key = word2.charAt(i);
+            if (freq.containsKey(key)) {
+                freq.put(key, freq.get(key) - 1);
+                if (freq.get(key) <= 0) {
+                    freq.remove(key);
+                }
+            } else return false;
+        }
+        return true;
+    }
+
+    //Author: Anand
+    public int maxConsecutive(int bottom, int top, int[] special) {
+
+        int ans = 0;
+        Arrays.sort(special);
+        int prev = bottom;
+        boolean first = false;
+        for (int s : special) {
+            if (!first) ans = Math.max(ans, s - prev);
+            else {
+                if (s - prev > 1) {
+                    ans = Math.max(ans, s - prev - 1);
+                }
+            }
+            prev = s;
+            first = true;
+        }
+
+        ans = Math.max(ans, top - prev);
+        return ans;
+    }
+
+    //Author: Anand
+    // The idea is to count numbers that share same bit and maximise them
+    public int largestCombination(int[] candidates) {
+        int max = Integer.MIN_VALUE;
+        for (int c : candidates) max = Math.max(max, c);
+
+        int ans = 0;
+        // check for every bit and count numbers that share same bit
+        for (int b = 1; b <= max; b <<= 1) {
+            int count = 0;
+            for (int c : candidates) {
+                if ((c & b) > 0) count++;
+            }
+            ans = Math.max(ans, count);
+        }
+        return ans;
+    }
+
+
     // Author: Anand
     public String largestGoodInteger(String num) {
 
@@ -2924,6 +3012,142 @@ Note that a period with one day is a smooth descent period by the definition.
             max = Math.max(max, Integer.parseInt(ge));
         }
         return max == Integer.MIN_VALUE ? "" : String.format("%03d", max);
+    }
+
+    // Author: Anand
+    public int firstUniqChar(String s) {
+        Map<Character, List<Integer>> freq = new LinkedHashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            Character key = s.charAt(i);
+            if (freq.containsKey(key)) {
+                List<Integer> exist = freq.get(key);
+                exist.add(i);
+                freq.put(key, exist);
+            } else freq.put(key, new ArrayList<>(Collections.singletonList(i)));
+        }
+
+        for (Map.Entry entry : freq.entrySet()) {
+            if ((int) ((List<Integer>) entry.getValue()).size() == 1)
+                return s.indexOf((Character) entry.getKey());
+        }
+        return -1;
+    }
+
+    // Author: Anand
+    public char findTheDifference(String s, String t) {
+
+        Map<Character, Integer> freq = new HashMap<>();
+
+        for (int i = 0; i < s.length(); i++)
+            freq.put(s.charAt(i), freq.getOrDefault(s.charAt(i), 0) + 1);
+
+        for (int i = 0; i < t.length(); i++) {
+            if (freq.containsKey(t.charAt(i))) {
+                freq.put(t.charAt(i), freq.get(t.charAt(i)) - 1);
+                if (freq.get(t.charAt(i)) <= 0) freq.remove(t.charAt(i));
+            } else return t.charAt(i);
+        }
+
+        return '\n';
+    }
+
+    /*
+    1 <= n <= 10^9
+
+    Input: n = 9
+    Output: 6
+    Explanation:
+    arr = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    arr = [2, 4, 6, 8]
+    arr = [2, 6]
+    arr = [6]
+     */
+    // Author: Anand
+    // TODO: clone list and remove  and mark operations on it
+    public int lastRemaining(int n) {
+        if (n >= 9) {
+            if (n % 2 == 0) return 8;
+            else return 6;
+        } else {
+            List<Integer> nums = new ArrayList<>();
+            for (int i = 1; i <= n; i++) {
+                nums.add(i);
+            }
+
+            boolean left = true;
+            while (nums.size() > 1) {
+                if (left) {
+                    boolean flag = true;
+                    for (int num : nums) {
+                        if (flag) {
+                            nums.remove(num);
+                            flag = false;
+                        } else {
+                            flag = true;
+                        }
+                    }
+                    left = false;
+                } else {
+                    boolean flag = true;
+                    for (int i = nums.size() - 1; i >= 0; i--) {
+                        if (flag) {
+                            nums.remove(nums.get(i));
+                            flag = false;
+                        } else {
+                            flag = true;
+                        }
+                    }
+                    flag = false;
+                }
+            }
+            return nums.get(0);
+        }
+    }
+
+    // Author: Anand
+    public int divisorSubstrings(int num, int k) {
+
+        int ans = 0;
+        String numstr = String.valueOf(num);
+        for (int i = 0; i < numstr.length(); i++) {
+            if (numstr.substring(i, Math.min(i + k, numstr.length())).length() == k) {
+                long divisor = Long.parseLong(numstr.substring(i, Math.min(i + k, numstr.length())));
+                if (num != 0 && divisor != 0 && (num % divisor == 0)) {
+                    ans++;
+                }
+            }
+        }
+        return ans;
+    }
+
+    /*
+    Input: nums = [10,4,-8,7]
+    Output: 2
+    Explanation:
+    There are three ways of splitting nums into two non-empty parts:
+    - Split nums at index 0. Then, the first part is [10], and its sum is 10. The second part is [4,-8,7], and its sum is 3. Since 10 >= 3, i = 0 is a valid split.
+    - Split nums at index 1. Then, the first part is [10,4], and its sum is 14. The second part is [-8,7], and its sum is -1. Since 14 >= -1, i = 1 is a valid split.
+    - Split nums at index 2. Then, the first part is [10,4,-8], and its sum is 6. The second part is [7], and its sum is 7. Since 6 < 7, i = 2 is not a valid split.
+    Thus, the number of valid splits in nums is 2.
+
+     */
+    // Author: Anand
+    public int waysToSplitArray(int[] nums) {
+
+        long[] prefixSum = new long[nums.length];
+        int idx = 0;
+        for (int num : nums) {
+            prefixSum[idx] = idx > 0 ? (prefixSum[idx - 1] + num) : num;
+            idx++;
+        }
+
+        long tt = prefixSum[nums.length - 1];
+
+        int ans = 0;
+        for (int i = 0; i < nums.length - 1; i++) {
+            if (prefixSum[i] >= (tt - prefixSum[i])) ans++;
+        }
+        return ans;
     }
 }
 
