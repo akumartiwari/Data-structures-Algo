@@ -3148,36 +3148,6 @@ Note that a period with one day is a smooth descent period by the definition.
         }
         return ans;
     }
-
-    /*
-    Input: tiles = [[1,5],[10,11],[12,18],[20,25],[30,32]], carpetLen = 10
-    Output: 9
-    Explanation: Place the carpet starting on tile 10.
-    It covers 9 white tiles, so we return 9.
-    Note that there may be other places where the carpet covers 9 white tiles.
-    It can be shown that the carpet cannot cover more than 9 white tiles.
-     */
-    // Author: Anand
-    public int maximumWhiteTiles(int[][] tiles, int carpetLen) {
-        int ans = 0;
-        int n = tiles.length;
-        int l = 0, r = 0;
-
-        while (l <= r && r < n) {
-            int len = 0;
-            if ((tiles[r][1] - tiles[r][0] + 1) < carpetLen) {
-                len += (tiles[r][1] - tiles[r][0]) + 1;
-                if (1 + Math.abs(tiles[r][1] - tiles[l][0]) >= carpetLen) {
-                    l++;
-                }
-                r++;
-                ans = Math.max(len, ans);
-            } else {
-                return carpetLen;
-            }
-        }
-        return ans;
-    }
 }
 
     /*
