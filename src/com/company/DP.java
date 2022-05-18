@@ -389,7 +389,62 @@ public class DP {
         return ans;
     }
 
-    /*
+    // Author: Anand
+    // TC = O(mn)
+    public int maxValueOfCoins(List<List<Integer>> piles, int k) {
+        int[][] dp = new int[piles.size()][k + 1];
+        for (int[] e : dp) Arrays.fill(e, -1);
+
+        return (int) f(piles, 0, k, dp);
+    }
+
+    private long f(List<List<Integer>> piles, int idx, int k, int[][] dp) {
+        // base case
+        if (idx >= piles.size() || k <= 0) return 0;
+
+        if (dp[idx][k] != -1) return dp[idx][k];
+
+        // not take
+        long best = f(piles, idx + 1, k, dp);
+        long sum = 0;
+        // take
+        for (int i = 1; i <= Math.min(k, piles.get(idx).size()); i++) {
+            sum += piles.get(idx).get(i - 1);
+            best = Math.max(best, sum + f(piles, idx + 1, (k - i), dp));
+        }
+        return dp[idx][k] = (int) best;
+    }
+
+    // Author: Anand
+    public long numberOfWaysDp(String s) {
+        long[][][] dp = new long[100003][3][4];
+        for (long[][] r : dp) {
+            for (long[] c : r) Arrays.fill(c, -1);
+        }
+
+        return cntWays(s, 0, 0, 9, dp);
+    }
+
+    private long cntWays(String s, int i, int cnt, int prev, long[][][] dp) {
+        // base case
+        if (cnt == 3) return 1;
+        if (i >= s.length()) return 0;
+
+        if (dp[i][prev][cnt] != -1) return dp[i][prev][cnt];
+
+        long take = 0;
+        if (prev != s.charAt(i)) {
+            take = cntWays(s, i + 1, cnt + 1, (int) s.charAt(i) - '0', dp);
+        }
+        long ntake = cntWays(s, i + 1, cnt, (int) prev - '0', dp);
+
+        long ans = take + ntake;
+
+        dp[i][prev][cnt] = ans;
+        return ans;
+    }
+
+        /*
     Input: nums1 = [4,0,1,3,2], nums2 = [4,1,0,2,3]
     Output: 4
     */
@@ -427,6 +482,32 @@ public class DP {
         long ans = take + nt;
         dp.put(key, ans);
         return ans;
+    }
+
+    //Author : Anand
+    // TODO : Complete this
+    public long maximumBeauty(int[] flowers, long newFlowers, int target, int full, int partial) {
+        Arrays.sort(flowers);
+        return mb(flowers, newFlowers, full, partial, target, 0, 0);
+    }
+
+    private long mb(int[] flowers, long newFlowers, int full, int partial, int target, int idx, long sum) {
+        // base case
+
+        if (idx == flowers.length) return 0;
+        long max = Integer.MIN_VALUE;
+        // take
+        for (int i = 0; i < target; i++) {
+            newFlowers -= i;
+            if (newFlowers >= 0 && flowers[idx] + i >= target) sum += full;
+            max = Math.max(max, sum + mb(flowers, newFlowers, full, partial, target, idx + 1, sum));
+        }
+
+        // Let's not add new flowers to garden
+        int mini = Integer.MAX_VALUE;
+        for (int flower : flowers) mini = Math.min(mini, flower);
+
+        return Math.max(max, sum + (long) mini * partial);
     }
 
 }

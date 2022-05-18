@@ -1,6 +1,8 @@
 package com.company;
 
-import java.util.Arrays;
+import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 public class Greedy {
     /*
@@ -166,5 +168,65 @@ public class Greedy {
         }
 
         return count;
+    }
+
+    // Author: Anand
+    // TODO:- Complete it
+    public int minimumWhiteTiles(String floor, int numCarpets, int carpetLen) {
+        // Store c
+        HashMap<Point, Integer> map = new HashMap<>(); // ((s-e), length)
+        int stillVisible = 0;
+        for (int i = 0; i < floor.length(); i++) {
+            if (floor.charAt(i) == 1) stillVisible++;
+        }
+
+        int start = -1, end = -1;
+        for (int i = 0; i < floor.length(); i++) {
+
+            if (start == -1) {
+                if (floor.charAt(i) == 1) {
+                    start = i;
+                }
+            } else {
+                if (floor.charAt(i) == 1) {
+                    end = i;
+                }
+                map.put(new Point(start, end), end - start + 1);
+                start = -1;
+                end = -1;
+            }
+        }
+
+        // Sort map based on values
+        sortByValue(map);
+        int canBeUsed = 0;
+        for (Map.Entry<Point, Integer> aa : map.entrySet()) {
+            int tiles = (int) aa.getValue() / carpetLen;
+            canBeUsed += (int) aa.getValue() % carpetLen;
+            stillVisible -= tiles;
+            carpetLen -= tiles;
+            if (carpetLen <= 0) return stillVisible;
+        }
+        return -1;
+    }
+
+    public HashMap<Point, Integer> sortByValue(HashMap<Point, Integer> hm) {
+
+
+        List<Map.Entry<Point, Integer>> list = new LinkedList<Map.Entry<Point, Integer>>(hm.entrySet());
+
+        Collections.sort(list, new Comparator<Map.Entry<Point, Integer>>() {
+            public int compare(Map.Entry<Point, Integer> o1,
+                               Map.Entry<Point, Integer> o2) {
+                return (o1.getValue()).compareTo(o2.getValue());
+            }
+        });
+
+        HashMap<Point, Integer> temp = new LinkedHashMap<Point, Integer>();
+        for (Map.Entry<Point, Integer> aa : list) {
+            temp.put(aa.getKey(), aa.getValue());
+        }
+
+        return temp;
     }
 }

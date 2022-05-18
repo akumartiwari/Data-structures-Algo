@@ -1,7 +1,13 @@
 package com.company;
 
+import com.sun.org.apache.bcel.internal.generic.INEG;
 import javafx.util.Pair;
 
+import java.awt.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
+import java.util.Queue;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -1213,39 +1219,6 @@ Note that a period with one day is a smooth descent period by the definition.
         return true;
     }
 
-
-    private int LIS(List<Integer> part) {
-        List<Integer> ans = new ArrayList<>();
-        int lastItem = part.get(0);
-        for (Integer integer : part) {
-            if (integer >= lastItem) {
-                ans.add(integer);
-            } else {
-                // next greater element than current one in the ans list
-                int idx = nextGreaterElement(ans, integer);
-                ans.set(idx, integer);
-            }
-            lastItem = ans.get(ans.size() - 1);
-        }
-
-        return ans.size();
-    }
-
-    private int nextGreaterElement(List<Integer> ans, Integer item) {
-
-        int l = 0, r = ans.size() - 1;
-        while (l < r) {
-            int mid = (int) Math.abs(l + (r - l) / 2);
-            if (ans.get(mid) <= item) {
-                l = mid + 1;
-            } else {
-                r = mid;
-            }
-        }
-
-        return l;
-    }
-
     /*
     Input: nums = [0,1,0,1,1,0,0]
     Output: 1
@@ -2133,7 +2106,7 @@ Note that a period with one day is a smooth descent period by the definition.
                 elem.add(nv);
                 freq.put(v, elem);
             } else {
-                freq.put(v, new ArrayList<>(Arrays.asList(nv)));
+                freq.put(v, Collections.singletonList(nv));
             }
         }
 
@@ -2366,7 +2339,876 @@ Note that a period with one day is a smooth descent period by the definition.
         }
         return cnt;
     }
+
+    // Author :Anand
+    public int countHillValley(int[] nums) {
+
+        int cnt = 0;
+        int last = -1;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == last) continue;
+            last = nums[i];
+            boolean hill = false, valley = false;
+            for (int j = i - 1; j >= 0; j--) {
+                if (nums[i] > nums[j]) {
+                    hill = true;
+                    break;
+                } else if (nums[i] < nums[j]) {
+                    valley = true;
+                    break;
+                }
+            }
+
+            for (int j = i + 1; j < nums.length; j++) {
+                if (hill && nums[i] > nums[j]) {
+                    cnt++;
+                    break;
+                } else if (valley && nums[i] < nums[j]) {
+                    cnt++;
+                    break;
+                } else if (nums[i] == nums[j]) continue;
+                else break;
+            }
+        }
+        return cnt;
+    }
+
+    // Author :Anand
+    public int countCollisions(String s) {
+        int l = 0, n = s.length(), r = n - 1, ans = 0;
+
+        while (l < n && s.charAt(l) == 'L')
+            l++;
+
+        while (r >= 0 && s.charAt(r) == 'R')
+            r--;
+
+        while (l <= r) {
+            if (s.charAt(l) != 'S')
+                ans++;
+
+            l++;
+        }
+
+        return ans;
+    }
+
+    /*
+    Input: nums1 = [1,2,3], nums2 = [2,4,6]
+    Output: [[1,3],[4,6]]
+    Input: nums1 = [1,2,3,3], nums2 = [1,1,2,2]
+    Output: [[3],[]]
+
+     */
+    // Author : Anand
+    public List<List<Integer>> findDifference(int[] nums1, int[] nums2) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> ans1 = Arrays.stream(nums1).boxed().distinct().collect(Collectors.toList());
+        ans1.removeAll(Arrays.stream(nums2).boxed().distinct().collect(Collectors.toList()));
+
+        List<Integer> ans2 = Arrays.stream(nums2).boxed().distinct().collect(Collectors.toList());
+        ans1.removeAll(Arrays.stream(nums1).boxed().distinct().collect(Collectors.toList()));
+
+        ans.add(ans1);
+        ans.add(ans2);
+        return ans;
+    }
+
+    // Author : Anand
+    public int minDeletion(int[] nums) {
+        int ans = 0;
+        int n = nums.length;
+
+        for (int i = 0; i < n - 1; i++) {
+            int pos = i - ans;
+            if (pos % 2 == 0 && nums[i] == nums[i + 1]) ans++;
+        }
+
+        return (n - ans) % 2 == 0 ? ans : ans + 1;
+    }
+
+    /*
+    Input: queries = [1,2,3,4,5,90], intLength = 3
+    Output: [101,111,121,131,141,999]
+    Explanation:
+    The first few palindromes of length 3 are:
+    101, 111, 121, 131, 141, 151, 161, 171, 181, 191, 201, ...
+    The 90th palindrome of length 3 is 999.
+
+     */
+    // Author : Anand
+    public long[] kthPalindrome(int[] queries, int intLength) {
+        long[] ans = new long[queries.length];
+        int pw = intLength % 2 == 0 ? (intLength / 2) - 1 : (intLength / 2);
+        int start = (int) Math.pow(10, pw);
+
+        int idx = 0;
+        for (int q : queries) {
+            StringBuilder number = new StringBuilder();
+            number.append(start + q - 1);
+            StringBuilder rev = new StringBuilder(number);
+            rev.reverse();
+            StringBuilder nnumber = new StringBuilder();
+            nnumber.append(number);
+            nnumber.append(intLength % 2 == 1 ? rev.substring(1) : rev);
+            if (nnumber.length() != intLength) {
+                ans[idx++] = -1;
+            } else ans[idx++] = Long.parseLong(nnumber.toString());
+        }
+        return ans;
+    }
+
+    //Author: Anand
+    public boolean divideArray(int[] nums) {
+
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
+
+        for (Map.Entry entry : freq.entrySet()) {
+            if ((int) entry.getValue() % 2 != 0) return false;
+        }
+        return true;
+    }
+
+    //Author: Anand
+    public long maximumSubsequenceCount(String text, String pattern) {
+        int n = text.length();
+        char f = pattern.charAt(0);
+        char l = pattern.charAt(1);
+        long ans = 0;
+
+        if (f == l) {
+            int cnt = 0;
+            for (int i = 0; i < n; i++) {
+                if (text.charAt(i) == f) cnt++;
+            }
+            return (long) cnt * (cnt + 1) / 2;
+        }
+        // Adding f at start
+        Map<Integer, Integer> map = new LinkedHashMap<>(); // cnt of f before lth index
+        int cntf = 1;
+        for (int i = 0; i < n; i++) {
+            if (text.charAt(i) == f) cntf++;
+            else if (text.charAt(i) == l) {
+                map.put(i, cntf);
+                cntf = 0;
+            }
+        }
+
+        int size = map.size();
+        int curr = 0;
+        for (Map.Entry entry : map.entrySet()) {
+            ans += (long) (size - curr) * (int) entry.getValue();
+            curr++;
+        }
+
+        // Adding l at last
+        Map<Integer, Integer> mapl = new LinkedHashMap<>();// cnt of f before lth index
+        int cntl = 0;
+        String nt = text.concat(String.valueOf(l));
+        for (int i = 0; i < nt.length(); i++) {
+            if (nt.charAt(i) == f) cntl++;
+            else if (nt.charAt(i) == l) {
+                mapl.put(i, cntl);
+                cntl = 0;
+            }
+        }
+
+        long ansl = 0;
+        int szl = mapl.size();
+        int currl = 0;
+        for (Map.Entry entry : mapl.entrySet()) {
+            ansl += (long) (szl - currl) * (int) entry.getValue();
+            currl++;
+        }
+
+        return Math.max(ansl, ans);
+    }
+
+    // Author: Anand
+    public int halveArray(int[] nums) {
+        PriorityQueue<BigDecimal> pq = new PriorityQueue<>(Collections.reverseOrder());
+        for (int num : nums) pq.add(BigDecimal.valueOf((double) num).setScale(2, RoundingMode.HALF_UP));
+
+        long ls = 0;
+        for (int num : nums) ls += num;
+        BigDecimal sum = BigDecimal.valueOf(ls);
+        BigDecimal ns = sum;
+        int cnt = 0;
+        while (!pq.isEmpty()) {
+            if (ns.compareTo(sum.divide(BigDecimal.valueOf(2))) <= 0) {
+                return cnt;
+            }
+
+            BigDecimal greatest = pq.poll();
+            ns = ns.subtract(greatest.divide(BigDecimal.valueOf(2)));
+            pq.offer(greatest.divide(BigDecimal.valueOf(2)));
+            cnt++;
+        }
+        return cnt;
+    }
+
+    // Author: Anand
+    public int minBitFlips(int start, int goal) {
+        String bstart = Integer.toBinaryString(start);
+        String bgoal = Integer.toBinaryString(goal);
+        int len = Math.max(bstart.length(), bgoal.length());
+
+        if (bstart.length() < len) {
+            int cnt = len - bstart.length();
+            StringBuilder newbstart = new StringBuilder(bstart);
+            while (cnt-- > 0) {
+                newbstart.insert(0, '0');
+            }
+            bstart = newbstart.toString();
+        } else if (bgoal.length() < len) {
+            int cnt = len - bgoal.length();
+            StringBuilder newbgoal = new StringBuilder(bgoal);
+            while (cnt-- > 0) {
+                newbgoal.insert(0, '0');
+            }
+            bgoal = newbgoal.toString();
+        }
+
+        int ans = 0;
+        for (int i = bgoal.length() - 1; i >= 0; i--) {
+            if (bgoal.charAt(i) != bstart.charAt(i)) ans++;
+        }
+        return ans;
+    }
+
+    // Author: Anand
+    public int triangularSum(int[] nums) {
+        List<Integer> ans = Arrays.stream(nums).boxed().collect(Collectors.toList());
+        while (ans.size() > 1) {
+            for (int i = 0; i < ans.size() - 1; i++) {
+                int e = (ans.get(i) + ans.get(i + 1)) % 10;
+                ans.set(i, e);
+            }
+            ans.remove(ans.size() - 1);
+        }
+        return ans.get(0);
+    }
+
+    // Author: Anand
+    public long numberOfWays(String s) {
+        long ans = 0;
+
+        int t0 = 0, t1 = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '0') t0++;
+            else t1++;
+        }
+
+        int c0 = 0, c1 = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '0') {
+                ans += (long) c1 * (t1 - c1);
+                c0++;
+            } else {
+                ans += (long) c0 * (t1 - c0);
+                c1++;
+            }
+        }
+
+        return ans;
+    }
+
+
+    /*
+    Input: current = "02:30", correct = "04:35"
+    Output: 3
+    Explanation:
+    We can convert current to correct in 3 operations as follows:
+    - Add 60 minutes to current. current becomes "03:30".
+    - Add 60 minutes to current. current becomes "04:30".
+    - Add 5 minutes to current. current becomes "04:35".
+    It can be proven that it is not possible to convert current to correct in fewer than 3 operations.
+     */
+    // Author: Anand
+    public int convertTime(String current, String correct) {
+        long curMin = Integer.parseInt(current.split(":")[0]) * 60L + Integer.parseInt(current.split(":")[1]);
+
+        long correctMin = Integer.parseInt(correct.split(":")[0]) * 60 + Integer.parseInt(correct.split(":")[1]);
+
+        long diff = correctMin - curMin;
+
+        int op = 0;
+        while (diff != 0) {
+            if (curMin + 60 <= correctMin) {
+                curMin += 60;
+            } else if (curMin + 15 <= correctMin) {
+                curMin += 15;
+            } else if (curMin + 5 <= correctMin) {
+                curMin += 5;
+            } else if (curMin + 1 <= correctMin) {
+                curMin += 1;
+            } else break;
+            op++;
+            diff = correctMin - curMin;
+        }
+
+        return op;
+
+    }
+
+    /*
+    Input: matches = [[1,3],[2,3],[3,6],[5,6],[5,7],[4,5],[4,8],[4,9],[10,4],[10,9]]
+    Output: [[1,2,10],[4,5,7,8]]
+    Explanation:
+    Players 1, 2, and 10 have not lost any matches.
+    Players 4, 5, 7, and 8 each have lost one match.
+    Players 3, 6, and 9 each have lost two matches.
+    Thus, answer[0] = [1,2,10] and answer[1] = [4,5,7,8].
+     */
+    // Author: Anand
+
+    public List<List<Integer>> findWinners(int[][] matches) {
+        Map<Integer, Integer> playerWinsMap = new HashMap<>();
+
+        Map<Integer, Integer> playerLoseMap = new HashMap<>();
+
+        for (int[] match : matches) {
+            int w = match[0];
+            int l = match[1];
+            playerWinsMap.put(w, playerWinsMap.getOrDefault(w, 0) + 1);
+            playerLoseMap.put(l, playerLoseMap.getOrDefault(l, 0) + 1);
+        }
+
+        List<List<Integer>> ans = new ArrayList<>();
+
+        List<Integer> win = new ArrayList<>();
+        List<Integer> loseOne = new ArrayList<>();
+
+        for (Map.Entry entry : playerWinsMap.entrySet()) {
+            if (!playerLoseMap.containsKey(entry.getKey())) win.add((int) entry.getKey());
+        }
+
+        for (Map.Entry entry : playerLoseMap.entrySet()) {
+            if ((int) entry.getValue() == 1) loseOne.add((int) entry.getKey());
+        }
+
+        Collections.sort(win);
+        Collections.sort(loseOne);
+        ans.add(win);
+        ans.add(loseOne);
+        return ans;
+    }
+
+    // Author: Anand
+    public int largestInteger(int num) {
+        List<Integer> even = new ArrayList<>();
+        List<Integer> odd = new ArrayList<>();
+
+        int numc = num;
+        while (numc > 0) {
+            int d = numc % 10;
+            if (d % 2 == 0) even.add(d);
+            else odd.add(d);
+            numc /= 10;
+        }
+
+        Collections.sort(even);
+        Collections.sort(odd);
+
+        String nums = String.valueOf(num);
+
+        StringBuilder ans = new StringBuilder();
+        for (int i = 0; i < nums.length(); i++) {
+            if (Integer.parseInt(String.valueOf(nums.charAt(i))) % 2 == 0 && even.size() > 0) {
+                ans.append(even.get(even.size() - 1));
+                even.remove(even.size() - 1);
+            } else if (odd.size() > 0) {
+                ans.append(odd.get(odd.size() - 1));
+                odd.remove(odd.size() - 1);
+            } else break;
+        }
+
+        return Integer.parseInt(ans.toString());
+    }
+
+    // Author: Anand
+    public String minimizeResult(String expression) {
+        int n = expression.length();
+        int idx = expression.indexOf('+');
+        int mini = Integer.MAX_VALUE;
+        String ans = "";
+        for (int i = idx + 1; i < n; i++) {
+            int e1 = Integer.parseInt(expression.substring(idx + 1, i + 1));
+            for (int j = idx - 1; j >= 0; j--) {
+                int e2 = Integer.parseInt(expression.substring(j, idx));
+                int addition = e1 + e2;
+                int left = 1, right = 1;
+                if (!expression.substring(0, j).equals("")) left = Integer.parseInt(expression.substring(0, j));
+                if (!expression.substring(i + 1).equals("")) right = Integer.parseInt(expression.substring(i + 1));
+
+                int res = left * right * addition;
+                if (res < mini) {
+                    StringBuilder sb = new StringBuilder(expression);
+                    mini = res;
+                    sb.insert(j, '(');
+                    sb.insert(i + 2, ')');
+                    ans = sb.toString();
+                }
+            }
+        }
+        return ans;
+    }
+
+    // Author: Anand
+    public int maximumProduct(int[] nums, int k) {
+        int MOD = 1_000_000_000 + 7;
+
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        for (int num : nums) pq.offer(num);
+        while (k > 0) {
+            int num = pq.poll();
+            num += 1;
+            k--;
+            pq.offer(num);
+        }
+
+        long prod = 1;
+        while (!pq.isEmpty()) {
+            prod = mod_mul(prod, pq.poll(), MOD);
+        }
+        return (int) prod;
+    }
+
+    public long mod_mul(long a, long b, long m) {
+        a = a % m;
+        b = b % m;
+        return (((a * b) % m) + m) % m;
+    }
+
+    /*
+      I = [2,-1,1]
+      O = 1
+     */
+    // Author : Anand
+    public int findClosestNumber(int[] nums) {
+        int ans = Integer.MAX_VALUE;
+        List<Integer> list = new ArrayList<>();
+        for (int num : nums) {
+            if (Math.abs(num) < ans && list.size() > 0) {
+                list.remove(list.size() - 1);
+                list.add(num);
+            } else if (Math.abs(num) == ans && list.size() > 0) list.add(num);
+            else if (list.size() == 0) list.add(num);
+            ans = Math.min(ans, Math.abs(num));
+
+        }
+
+        Collections.sort(list);
+        return list.get(list.size() - 1);
+    }
+
+    // Author : Anand
+
+    /*
+    Input: total = 20, cost1 = 10, cost2 = 5
+    Output: 9
+    Explanation: The price of a pen is 10 and the price of a pencil is 5.
+    - If you buy 0 pens, you can buy 0, 1, 2, 3, or 4 pencils.
+    - If you buy 1 pen, you can buy 0, 1, or 2 pencils.
+    - If you buy 2 pens, you cannot buy any pencils.
+    The total number of ways to buy pens and pencils is 5 + 3 + 1 = 9.
+     */
+    // Author : Anand
+    public long waysToBuyPensPencils(int total, int cost1, int cost2) {
+        long ans = 0;
+        if (total < cost1 && total < cost2) return 1;
+        int larger = Math.max(cost1, cost2);
+        int smaller = Math.min(cost1, cost2);
+        int ind = 0;
+        while (total - larger * ind >= 0) {
+            int newtotal = total - larger * ind;
+            ans += newtotal / smaller + 1;
+            ind++;
+        }
+
+        return ans;
+    }
+
+    // Author: Anand
+    public String digitSum(String s, int k) {
+        while (s.length() > k) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < s.length(); i += k) {
+                String newString = i + k < s.length() ? s.substring(i, i + k) : s.substring(i);
+                int d = 0;
+                for (int j = 0; j < newString.length(); j++)
+                    d += Integer.parseInt(String.valueOf(newString.charAt(j)));
+                sb.append(d);
+            }
+            s = sb.toString();
+        }
+        return s;
+    }
+
+
+    //Author: Anand
+    public List<Integer> intersection(int[][] nums) {
+        List<Integer> ans = new ArrayList<>();
+        for (int[] num : nums) {
+            List<Integer> list = Arrays.stream(num).boxed().collect(Collectors.toList());
+            if (ans.isEmpty()) ans = list;
+            else ans = list.stream()
+                    .distinct()
+                    .filter(ans::contains)
+                    .collect(Collectors.toList());
+        }
+        Collections.sort(ans);
+        return ans;
+    }
+
+    //Author: Anand
+    public int countLatticePoints(int[][] circles) {
+        Set<Point> ans = new HashSet<>();
+
+        for (int[] c : circles) {
+            int x = c[0];
+            int y = c[1];
+            int r = c[2];
+            for (int i = x - r; i <= x + r; i++) {
+                for (int j = y - r; j <= y + r; j++) {
+                    // calculate distance and check if its within curcumference of circle
+                    if ((x - i) * (x - i) + (y - j) * (y - j) <= r * r) ans.add(new Point(i, j));
+                }
+            }
+        }
+        return ans.size();
+    }
+
+    // Author : Anand
+    // Easy, can skip
+    public int countPrefixes(String[] words, String s) {
+        int cnt = 0;
+        for (String word : words) if (s.startsWith(word)) cnt++;
+        return cnt;
+    }
+
+    // Author: Anand
+    // Have a look at edge case, precisely
+    public int minimumAverageDifference(int[] nums) {
+        int n = nums.length;
+        long[] prefSum = new long[n];
+        for (int i = 0; i < nums.length; i++) prefSum[i] = (i > 0 ? prefSum[i - 1] : 0) + nums[i];
+        long mini = Long.MAX_VALUE;
+        int idx = -1;
+        for (int i = 0; i < nums.length; i++) {
+            long curr = Math.abs((long) prefSum[i] / (i + 1) - (long) ((n - 1 - i) > 0 ? (prefSum[n - 1] - prefSum[i]) / (n - 1 - i) : 0));
+            if (curr < mini) {
+                idx = i;
+                mini = curr;
+            }
+        }
+
+        return idx;
+    }
+
+
+    //Author: Anand
+    public String removeDigit(String number, char digit) {
+        String maxi = "";
+
+        for (int i = 0; i < number.length(); i++) {
+            if (number.charAt(i) == digit) {
+                String newNum = number.substring(0, i) + number.substring(i + 1);
+                if (maxi.equals("")) {
+                    maxi = newNum;
+                    continue;
+                }
+                for (int j = 0; j < newNum.length(); j++) {
+                    if (Integer.parseInt(String.valueOf(newNum.charAt(j))) > Integer.parseInt(String.valueOf(maxi.charAt(j)))) {
+                        maxi = newNum;
+                    } else if (Integer.parseInt(String.valueOf(newNum.charAt(j))) < Integer.parseInt(String.valueOf(maxi.charAt(j)))) {
+                        break;
+                    }
+                }
+            }
+        }
+        return maxi;
+    }
+
+
+    //Author: Anand
+    public int minimumCardPickup(int[] cards) {
+        int ans = Integer.MAX_VALUE;
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < cards.length; i++) {
+            if (map.containsKey(cards[i])) {
+                ans = Math.min(Math.abs((i - map.get(cards[i]) + 1)), ans);
+            }
+            map.put(cards[i], i);
+        }
+        return ans == Integer.MAX_VALUE ? -1 : ans;
+    }
+
+    //Author: Anand
+    public int countDistinct(int[] nums, int k, int p) {
+
+        Set<List<Integer>> lists = new HashSet<>();
+        int ans = 0;
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j <= nums.length; j++) {
+                List<Integer> subArray = new ArrayList<>();
+                int cnt = 0;
+
+                for (int m = i; m < j; m++) {
+                    if (nums[m] % p == 0) cnt++;
+                    subArray.add(nums[m]);
+                }
+
+                if (cnt <= k && !subArray.isEmpty() && !lists.contains(subArray)) {
+                    ans++;
+                    lists.add(subArray);
+                }
+            }
+        }
+        return ans;
+    }
+
+    /*
+    list = ["abba","cd","cd"]
+    Input: words = ["abba","cd"]
+    Output: ["abba","cd"]
+
+     */
+    //Author: Anand
+    public List<String> removeAnagrams(String[] words) {
+
+        List<String> list = Arrays.stream(words).collect(Collectors.toList());
+        while (list.size() > 1) {
+
+            boolean flag = false;
+            for (int i = 0; i < list.size() - 1; i++) {
+                if (ana(list.get(i), list.get(i + 1))) {
+                    flag = true;
+                    list.remove(list.get(i + 1));
+                    break;
+                }
+            }
+
+            if (!flag) break;
+        }
+
+
+        return list;
+    }
+
+    private boolean ana(String word1, String word2) {
+
+        if (word1.length() != word2.length()) return false;
+
+        Map<Character, Integer> freq = new HashMap<>();
+        for (int i = 0; i < word1.length(); i++) freq.put(word1.charAt(i), freq.getOrDefault(word1.charAt(i), 0) + 1);
+
+        for (int i = 0; i < word2.length(); i++) {
+            Character key = word2.charAt(i);
+            if (freq.containsKey(key)) {
+                freq.put(key, freq.get(key) - 1);
+                if (freq.get(key) <= 0) {
+                    freq.remove(key);
+                }
+            } else return false;
+        }
+        return true;
+    }
+
+    //Author: Anand
+    public int maxConsecutive(int bottom, int top, int[] special) {
+
+        int ans = 0;
+        Arrays.sort(special);
+        int prev = bottom;
+        boolean first = false;
+        for (int s : special) {
+            if (!first) ans = Math.max(ans, s - prev);
+            else {
+                if (s - prev > 1) {
+                    ans = Math.max(ans, s - prev - 1);
+                }
+            }
+            prev = s;
+            first = true;
+        }
+
+        ans = Math.max(ans, top - prev);
+        return ans;
+    }
+
+    //Author: Anand
+    // The idea is to count numbers that share same bit and maximise them
+    public int largestCombination(int[] candidates) {
+        int max = Integer.MIN_VALUE;
+        for (int c : candidates) max = Math.max(max, c);
+
+        int ans = 0;
+        // check for every bit and count numbers that share same bit
+        for (int b = 1; b <= max; b <<= 1) {
+            int count = 0;
+            for (int c : candidates) {
+                if ((c & b) > 0) count++;
+            }
+            ans = Math.max(ans, count);
+        }
+        return ans;
+    }
+
+
+    // Author: Anand
+    public String largestGoodInteger(String num) {
+
+        Set<String> goodIntegers = new HashSet<>();
+        for (int i = 0; i < num.length() - 2; i++) {
+            if (num.charAt(i) == num.charAt(i + 1) && num.charAt(i + 1) == num.charAt(i + 2))
+                goodIntegers.add(num.substring(i, i + 3));
+        }
+        int max = Integer.MIN_VALUE;
+        for (String ge : goodIntegers) {
+            max = Math.max(max, Integer.parseInt(ge));
+        }
+        return max == Integer.MIN_VALUE ? "" : String.format("%03d", max);
+    }
+
+    // Author: Anand
+    public int firstUniqChar(String s) {
+        Map<Character, List<Integer>> freq = new LinkedHashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            Character key = s.charAt(i);
+            if (freq.containsKey(key)) {
+                List<Integer> exist = freq.get(key);
+                exist.add(i);
+                freq.put(key, exist);
+            } else freq.put(key, new ArrayList<>(Collections.singletonList(i)));
+        }
+
+        for (Map.Entry entry : freq.entrySet()) {
+            if ((int) ((List<Integer>) entry.getValue()).size() == 1)
+                return s.indexOf((Character) entry.getKey());
+        }
+        return -1;
+    }
+
+    // Author: Anand
+    public char findTheDifference(String s, String t) {
+
+        Map<Character, Integer> freq = new HashMap<>();
+
+        for (int i = 0; i < s.length(); i++)
+            freq.put(s.charAt(i), freq.getOrDefault(s.charAt(i), 0) + 1);
+
+        for (int i = 0; i < t.length(); i++) {
+            if (freq.containsKey(t.charAt(i))) {
+                freq.put(t.charAt(i), freq.get(t.charAt(i)) - 1);
+                if (freq.get(t.charAt(i)) <= 0) freq.remove(t.charAt(i));
+            } else return t.charAt(i);
+        }
+
+        return '\n';
+    }
+
+    /*
+    1 <= n <= 10^9
+
+    Input: n = 9
+    Output: 6
+    Explanation:
+    arr = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    arr = [2, 4, 6, 8]
+    arr = [2, 6]
+    arr = [6]
+     */
+    // Author: Anand
+    // TODO: clone list and remove  and mark operations on it
+    public int lastRemaining(int n) {
+        if (n >= 9) {
+            if (n % 2 == 0) return 8;
+            else return 6;
+        } else {
+            List<Integer> nums = new ArrayList<>();
+            for (int i = 1; i <= n; i++) {
+                nums.add(i);
+            }
+
+            boolean left = true;
+            while (nums.size() > 1) {
+                if (left) {
+                    boolean flag = true;
+                    for (int num : nums) {
+                        if (flag) {
+                            nums.remove(num);
+                            flag = false;
+                        } else {
+                            flag = true;
+                        }
+                    }
+                    left = false;
+                } else {
+                    boolean flag = true;
+                    for (int i = nums.size() - 1; i >= 0; i--) {
+                        if (flag) {
+                            nums.remove(nums.get(i));
+                            flag = false;
+                        } else {
+                            flag = true;
+                        }
+                    }
+                    flag = false;
+                }
+            }
+            return nums.get(0);
+        }
+    }
+
+    // Author: Anand
+    public int divisorSubstrings(int num, int k) {
+
+        int ans = 0;
+        String numstr = String.valueOf(num);
+        for (int i = 0; i < numstr.length(); i++) {
+            if (numstr.substring(i, Math.min(i + k, numstr.length())).length() == k) {
+                long divisor = Long.parseLong(numstr.substring(i, Math.min(i + k, numstr.length())));
+                if (num != 0 && divisor != 0 && (num % divisor == 0)) {
+                    ans++;
+                }
+            }
+        }
+        return ans;
+    }
+
+    /*
+    Input: nums = [10,4,-8,7]
+    Output: 2
+    Explanation:
+    There are three ways of splitting nums into two non-empty parts:
+    - Split nums at index 0. Then, the first part is [10], and its sum is 10. The second part is [4,-8,7], and its sum is 3. Since 10 >= 3, i = 0 is a valid split.
+    - Split nums at index 1. Then, the first part is [10,4], and its sum is 14. The second part is [-8,7], and its sum is -1. Since 14 >= -1, i = 1 is a valid split.
+    - Split nums at index 2. Then, the first part is [10,4,-8], and its sum is 6. The second part is [7], and its sum is 7. Since 6 < 7, i = 2 is not a valid split.
+    Thus, the number of valid splits in nums is 2.
+
+     */
+    // Author: Anand
+    public int waysToSplitArray(int[] nums) {
+
+        long[] prefixSum = new long[nums.length];
+        int idx = 0;
+        for (int num : nums) {
+            prefixSum[idx] = idx > 0 ? (prefixSum[idx - 1] + num) : num;
+            idx++;
+        }
+
+        long tt = prefixSum[nums.length - 1];
+
+        int ans = 0;
+        for (int i = 0; i < nums.length - 1; i++) {
+            if (prefixSum[i] >= (tt - prefixSum[i])) ans++;
+        }
+        return ans;
+    }
 }
+
     /*
     // TODO: maxRunTime Binary search solution
     public:
