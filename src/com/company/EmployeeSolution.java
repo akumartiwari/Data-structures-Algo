@@ -1,5 +1,6 @@
 package com.company;
 
+import com.sun.org.apache.bcel.internal.generic.INEG;
 import javafx.util.Pair;
 
 import java.awt.*;
@@ -2047,7 +2048,7 @@ Note that a period with one day is a smooth descent period by the definition.
                 elem.add(nv);
                 freq.put(v, elem);
             } else {
-                freq.put(v, new ArrayList<>(Arrays.asList(nv)));
+                freq.put(v, Collections.singletonList(nv));
             }
         }
 
@@ -2469,7 +2470,7 @@ Note that a period with one day is a smooth descent period by the definition.
     // Author: Anand
     public int halveArray(int[] nums) {
         PriorityQueue<BigDecimal> pq = new PriorityQueue<>(Collections.reverseOrder());
-        for (int num : nums) pq.add(new BigDecimal((double) num).setScale(2, RoundingMode.HALF_UP));
+        for (int num : nums) pq.add(BigDecimal.valueOf((double) num).setScale(2, RoundingMode.HALF_UP));
 
         long ls = 0;
         for (int num : nums) ls += num;
