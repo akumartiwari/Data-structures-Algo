@@ -19,7 +19,7 @@ public class BinarySearch {
         }
         return l;
     }
-    
+
     /*
     Input: candies = [5,8,6], k = 3
     Output: 5
