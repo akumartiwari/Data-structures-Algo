@@ -384,11 +384,6 @@ public class DP {
         return res;
     }
 
-    public int findNumberOfLIS(int[] nums) {
-        int ans = 0;
-        return ans;
-    }
-
     // Author: Anand
     // TC = O(mn)
     public int maxValueOfCoins(List<List<Integer>> piles, int k) {
@@ -444,10 +439,10 @@ public class DP {
         return ans;
     }
 
-        /*
+    /*
     Input: nums1 = [4,0,1,3,2], nums2 = [4,1,0,2,3]
     Output: 4
-    */
+   */
     // Author: Anand
     // TC = O(2n)
     public long goodTriplets(int[] nums1, int[] nums2) {
@@ -465,20 +460,23 @@ public class DP {
             if (valid) return 1;
             return 0;
         }
+
+        if (idx >= nums1.length) return 0;
+
         if (!valid) return 0;
-        String key = idx + "-" + t + "-" + valid;
+        String key = idx + "-" + t;
         if (dp.containsKey(key)) dp.get(key);
 
-        int take = 0, nt = 0;
+        long take = 0, nt = 0;
         // t
         if (choices.size() == 0 || map.get(nums1[idx]) > choices.get(choices.size() - 1)) {
             choices.add(map.get(nums1[idx]));
             take += recurse(nums1, idx + 1, t - 1, valid, map, choices, dp);
             choices.remove(choices.size() - 1); // remove at last index in O(1)
-        } else recurse(nums1, idx + 1, t, false, map, choices, dp);
+        }
 
         // nt
-        nt += recurse(nums1, idx + 1, t - 1, valid, map, choices, dp);
+        nt += recurse(nums1, idx + 1, t, valid, map, choices, dp);
         long ans = take + nt;
         dp.put(key, ans);
         return ans;

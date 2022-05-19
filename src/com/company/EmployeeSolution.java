@@ -1979,11 +1979,6 @@ Note that a period with one day is a smooth descent period by the definition.
         return ans.toString();
     }
 
-    public long goodTriplets(int[] nums1, int[] nums2) {
-        long ans = 0;
-        return ans;
-    }
-
     public long countPairs(int[] nums, int k) {
         Map<Long, Long> gcdMap = new HashMap<>(); // to store gcd factors count seen so far
         long result = 0;
