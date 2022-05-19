@@ -1979,11 +1979,6 @@ Note that a period with one day is a smooth descent period by the definition.
         return ans.toString();
     }
 
-    public long goodTriplets(int[] nums1, int[] nums2) {
-        long ans = 0;
-        return ans;
-    }
-
     public long countPairs(int[] nums, int k) {
         Map<Long, Long> gcdMap = new HashMap<>(); // to store gcd factors count seen so far
         long result = 0;
@@ -2005,6 +2000,64 @@ Note that a period with one day is a smooth descent period by the definition.
             return a;
 
         return __gcd(b, a % b);
+    }
+
+
+    // Author: Anand
+    public List<Long> maximumEvenSplit(long finalSum) {
+        long ind = 2;
+        long sum = 0;
+        LinkedList<Long> ans = new LinkedList<Long>();
+        if (finalSum % 2 != 0) return ans;
+        while (ind <= finalSum) {
+            ans.add(ind);
+            finalSum -= ind;
+            ind += 2;
+        }
+
+        // set the last possible value
+        ans.set(ans.size() - 1, finalSum + ans.peekLast());
+        return ans;
+    }
+
+    // Author: Anand
+    public int prefixCount(String[] words, String pref) {
+        int cnt = 0;
+        for (String word : words) {
+            if (word.startsWith(pref)) cnt++;
+        }
+        return cnt;
+    }
+
+    // Author: Anand
+    public int minSteps(String s, String t) {
+        int cnt = 0;
+        Map<Character, Integer> freq1 = new HashMap<>();
+        Map<Character, Integer> freq2 = new HashMap<>();
+        for (char c : s.toCharArray()) {
+            freq1.put(c, freq1.getOrDefault(c, 0) + 1);
+        }
+
+        for (char c : t.toCharArray()) {
+            freq2.put(c, freq2.getOrDefault(c, 0) + 1);
+        }
+
+        for (int i = 0; i < t.length(); i++) {
+            char c = t.charAt(i);
+            if (freq1.containsKey(c)) {
+                freq1.put(c, freq1.getOrDefault(c, 0) - 1);
+                if (freq1.get(c) <= 0) freq1.remove(c);
+            } else cnt++;
+        }
+
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (freq2.containsKey(c)) {
+                freq2.put(c, freq2.getOrDefault(c, 0) - 1);
+                if (freq2.get(c) <= 0) freq2.remove(c);
+            } else cnt++;
+        }
+        return cnt;
     }
 
     // Author : Anand

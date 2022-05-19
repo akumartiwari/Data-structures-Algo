@@ -41,23 +41,23 @@ public class B {
 
         int test = sc.nextInt();
         while (test-- > 0) {
-            int k = sc.nextInt();
-            String s = sc.nextLine();
-            StringBuilder sb = new StringBuilder(s);
-            if (k > 0) {
-                StringBuilder sbe = new StringBuilder(sb);
-                StringBuilder reve = new StringBuilder(sbe);
-                reve.reverse();
-                if (sbe.toString().equals(reve.toString())) {
-                    System.out.println(1);
-                } else {
-                    System.out.println(2);
-                }
-                return;
+            int n = sc.nextInt();
+            int[] arr = new int[n];
+            for (int i = 0; i < n; i++) {
+                arr[i] = sc.nextInt();
             }
-            System.out.println(1);
+
+            solve(arr);
         }
         out.close();
+    }
+
+    private static void solve(int[] arr) {
+        int ans = 0;
+        for (int j : arr) {
+            ans |= j;
+        }
+        System.out.println(ans);
     }
 
     //Fast input and output
