@@ -659,4 +659,49 @@ public class RecursionPatterns {
             }
         }
     }
+
+    /*
+    Input: s = "3[a]2[bc]"
+    Output: "aaabcbc"
+    Input: s = "3[a2[c]]"
+    Output: "accaccacc"
+
+     */
+    // Author: Anand
+    public String decodeString(String s) {
+        return build(s, 0, s.length());
+    }
+
+    private String build(String s, int i, int j) {
+        StringBuilder sb = new StringBuilder();
+        while (i < j) {
+            if (Character.isDigit(s.charAt(i))) {
+                int nr = 0;
+                while (Character.isDigit(s.charAt(i))) {
+                    nr *= 10;
+                    nr += s.charAt(i) - '0'; // digit value
+                    i++;
+                }
+
+                int endBkt = i + 1, open = 1;
+
+                while (open != 0) {
+                    if (s.charAt(endBkt) == '[') open++;
+                    else if (s.charAt(endBkt) == ']') open--;
+                    endBkt++;
+                }
+
+
+                String encode = build(s, i + 1, endBkt - 1);
+                // Repeat the square bracket string k times
+                for (int m = 0; m < nr; m++) sb.append(encode);
+                i = endBkt;
+            } else {
+                sb.append(s.charAt(i));
+                i++;
+            }
+        }
+
+        return sb.toString();
+    }
 }
