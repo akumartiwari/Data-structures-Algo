@@ -135,5 +135,92 @@ public class BinaryTree {
     }
 
 
+    /*
+    Input: root = [10,3,4,2,1]
+    Output: 2
+    Explanation:
+    For the node with value 10: The sum of its descendants is 3+4+2+1 = 10.
+    For the node with value 3: The sum of its descendants is 2+1 = 3.
+     */
+    // Author: Anand
+    public int equalToDescendants(TreeNode root) {
+        return helper(root).nodes;
+    }
+
+    private Tuple helper(TreeNode root) {
+        // base case
+        if (root == null) return new Tuple(0, 0);
+        Tuple left = helper(root.left);
+        Tuple right = helper(root.right);
+        int cs = left.cs + right.cs;
+        int nodesCount = left.nodes + right.nodes;
+        if (cs == root.val) nodesCount++;
+
+        return new Tuple(cs + root.val, nodesCount);
+    }
+
+    static class Tuple {
+        int cs;
+        int nodes;
+
+        Tuple(int cs, int nodes) {
+            this.cs = cs;
+            this.nodes = nodes;
+        }
+
+        Tuple() {
+            this.cs = 0;
+            this.nodes = 0;
+        }
+    }
+
+    /*
+    Input: root = [4,8,5,0,1,null,6]
+    Output: 5
+    Explanation:
+    For the node with value 4: The average of its subtree is (4 + 8 + 5 + 0 + 1 + 6) / 6 = 24 / 6 = 4.
+    For the node with value 5: The average of its subtree is (5 + 6) / 2 = 11 / 2 = 5.
+    For the node with value 0: The average of its subtree is 0 / 1 = 0.
+    For the node with value 1: The average of its subtree is 1 / 1 = 1.
+    For the node with value 6: The average of its subtree is 6 / 1 = 6.
+     */
+    // Author: Anand
+    public int averageOfSubtree(TreeNode root) {
+        return helperAvg(root).avgCount;
+    }
+
+    private Tuple3 helperAvg(TreeNode root) {
+        // base case
+        if (root == null) return new Tuple3(0, 0, 0);
+        Tuple3 left = helperAvg(root.left);
+        Tuple3 right = helperAvg(root.right);
+        int cs = root.val + left.cs + right.cs;
+        int cc = 1 + left.cc + right.cc;
+
+        int avg = cs / cc;
+
+        int avgCount = left.avgCount + right.avgCount;
+        if (avg == root.val) avgCount++;
+
+        return new Tuple3(cs, cc, avgCount);
+    }
+
+    static class Tuple3 {
+        int cs;
+        int cc;
+        int avgCount;
+
+        Tuple3(int cs, int cc, int avgCount) {
+            this.cs = cs;
+            this.cc = cc;
+            this.avgCount = avgCount;
+        }
+
+        Tuple3() {
+            this.cs = 0;
+            this.cc = 0;
+            this.avgCount = 0;
+        }
+    }
 }
 
