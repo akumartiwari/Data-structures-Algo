@@ -3202,6 +3202,32 @@ Note that a period with one day is a smooth descent period by the definition.
         }
         return ans;
     }
+
+    /*
+    [[83,35],[79,51],[61,48],[54,87],[44,93],[22,5],[87,28],[64,8],[89,78],[62,83],[58,72],[48,7],[97,16],[27,100],[65,48],[11,31],[29,76],[93,29],[72,59],[73,74],[9,90],[66,81],[12,8],[86,80],[84,43],[36,63],[80,45],[81,88],[95,5],[40,59]]
+    Learning: Never use double while calculating slope
+    Use:- y2-y1 * x1-x0 == y1-y0 * x2-x1 to avoid precision error
+     */
+    // Author : Anand
+    public int minimumLines(int[][] stockPrices) {
+        if (stockPrices.length == 1) return 0;
+        int cnt = 1;
+        Arrays.sort(stockPrices, Comparator.comparingLong(a -> a[0]));
+
+        for (int i = 2; i < stockPrices.length; i++) {
+
+            // Check if the slopes of three consecutive points are equal then continue
+            // otherwise add another line to the count.
+            // check (y2 - y1) / (x2 - x1) == (y1 - y0) / (x1 - x0) => (y2 - y1) * (x1 - x0) == (y1 - y0) * (x2 - x1)
+            if ((stockPrices[i][1] - stockPrices[i - 1][1]) * (stockPrices[i - 1][0] - stockPrices[i - 2][0]) ==
+                    (stockPrices[i - 1][1] - stockPrices[i - 2][1]) * (stockPrices[i][0] - stockPrices[i - 1][0]))
+                continue;
+
+            cnt += 1;
+        }
+        return cnt;
+    }
+
 }
 
     /*
