@@ -1,6 +1,5 @@
 package com.company;
 
-import com.sun.org.apache.bcel.internal.generic.INEG;
 import javafx.util.Pair;
 
 import java.awt.*;
@@ -3228,6 +3227,135 @@ Note that a period with one day is a smooth descent period by the definition.
         return cnt;
     }
 
+
+    /*
+    Input: num = "1210"
+    Output: true
+    Explanation:
+    num[0] = '1'. The digit 0 occurs once in num.
+    num[1] = '2'. The digit 1 occurs twice in num.
+    num[2] = '1'. The digit 2 occurs once in num.
+    num[3] = '0'. The digit 3 occurs zero times in num.
+    The condition holds true for every index in "1210", so return true.
+
+     */
+    //Author: Anand
+    public boolean digitCount(String num) {
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int i = 0; i < num.length(); i++) {
+            int key = Integer.parseInt(String.valueOf(num.charAt(i)));
+            freq.put(key, freq.getOrDefault(key, 0) + 1);
+        }
+
+        for (int i = 0; i < num.length(); i++) {
+            int count = Integer.parseInt(String.valueOf(num.charAt(i)));
+            if (!freq.containsKey(i) && count == 0) continue;
+            if (freq.containsKey(i) && freq.get(i) == count) continue;
+            return false;
+        }
+        return true;
+    }
+
+    /*
+    Input: messages = ["Hello userTwooo","Hi userThree","Wonderful day Alice","Nice day userThree"], senders = ["Alice","userTwo","userThree","Alice"]
+    Output: "Alice"
+    Explanation: Alice sends a total of 2 + 3 = 5 words.
+    userTwo sends a total of 2 words.
+    userThree sends a total of 3 words.
+    Since Alice has the largest word count, we return "Alice".
+
+     */
+    //Author: Anand
+    public String largestWordCount(String[] messages, String[] senders) {
+        Map<String, Integer> freq = new HashMap<>();
+        int idx = 0;
+        for (String sender : senders)
+            freq.put(sender, freq.getOrDefault(sender, 0) + messages[idx++].split(" ").length);
+
+        freq = sortByValue(freq);
+        int max = -1;
+        List<String> ans = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : freq.entrySet()) {
+            if (max == -1) {
+                ans.add(entry.getKey());
+                max = (int) entry.getValue();
+            } else if (max == (int) entry.getValue()) {
+                ans.add(entry.getKey());
+            } else break;
+        }
+
+        String result = "";
+        for (String a : ans) {
+            if (Objects.equals(result, "")) result = a;
+            else if (result.compareTo(a) < 0) result = a;
+        }
+        return result;
+    }
+
+
+    // function to sort hashmap by values
+    public static HashMap<String, Integer> sortByValue(Map<String, Integer> hm) {
+        HashMap<String, Integer> temp
+                = hm.entrySet()
+                .stream()
+                .sorted((i1, i2) -> i2.getValue().compareTo(i1.getValue()))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1, LinkedHashMap::new));
+
+        return temp;
+    }
+
+    /*
+    Input: n = 5, roads = [[0,1],[1,2],[2,3],[0,2],[1,3],[2,4]]
+    Output: 43
+    Explanation: The figure above shows the country and the assigned values of [2,4,5,3,1].
+    - The road (0,1) has an importance of 2 + 4 = 6.
+    - The road (1,2) has an importance of 4 + 5 = 9.
+    - The road (2,3) has an importance of 5 + 3 = 8.
+    - The road (0,2) has an importance of 2 + 5 = 7.
+    - The road (1,3) has an importance of 4 + 3 = 7.
+    - The road (2,4) has an importance of 5 + 1 = 6.
+    The total importance of all roads is 6 + 9 + 8 + 7 + 7 + 6 = 43.
+    It can be shown that we cannot obtain a greater total importance than 43.=
+     */
+    //Author: Anand
+    // TC = O(nlogn)
+    public long maximumImportance(int n, int[][] roads) {
+        Map<Integer, Integer> nodesConnectedCount = new HashMap<>();
+        for (int[] r : roads) {
+            nodesConnectedCount.put(r[0], nodesConnectedCount.getOrDefault(r[0], 0) + 1);
+            nodesConnectedCount.put(r[1], nodesConnectedCount.getOrDefault(r[1], 0) + 1);
+        }
+
+
+        nodesConnectedCount = sortByValueInteger(nodesConnectedCount);
+
+        Map<Integer, Integer> assign = new HashMap<>();
+        int max = n;
+        for (Map.Entry<Integer, Integer> entry : nodesConnectedCount.entrySet()) assign.put((int) entry.getKey(), n--);
+
+        long ans = 0L;
+        for (int[] r : roads) ans += assign.get(r[0]) + assign.get(r[1]);
+
+        return ans;
+
+    }
+
+    // function to sort hashmap by values
+    public static HashMap<Integer, Integer> sortByValueInteger(Map<Integer, Integer> hm) {
+        HashMap<Integer, Integer> temp
+                = hm.entrySet()
+                .stream()
+                .sorted((i1, i2) -> i2.getValue().compareTo(i1.getValue()))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1, LinkedHashMap::new));
+
+        return temp;
+    }
 }
 
     /*

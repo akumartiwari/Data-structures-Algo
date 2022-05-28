@@ -11382,3 +11382,63 @@ class combinationSum4BottomUpDP {
         return dp[target];
     }
 }
+
+
+/*
+Input
+["BookMyShow", "gather", "gather", "scatter", "scatter"]
+[[2, 5], [4, 0], [2, 0], [5, 1], [5, 1]]
+Output
+[null, [0, 0], [], true, false]
+
+Explanation
+BookMyShow bms = new BookMyShow(2, 5); // There are 2 rows with 5 seats each
+bms.gather(4, 0); // return [0, 0]
+                  // The group books seats [0, 3] of row 0.
+bms.gather(2, 0); // return []
+                  // There is only 1 seat left in row 0,
+                  // so it is not possible to book 2 consecutive seats.
+bms.scatter(5, 1); // return True
+                   // The group books seat 4 of row 0 and seats [0, 3] of row 1.
+bms.scatter(5, 1); // return False
+                   // There are only 2 seats left in the hall.
+
+ */
+// TODO: Range based query problem
+class BookMyShow {
+
+    int n, m;
+    List<List<int[]>> rowsOccupied;
+
+    public BookMyShow(int n, int m) {
+        this.n = n;
+        this.m = m;
+        rowsOccupied = new ArrayList<>();
+        for (int k = 0; k < m; k++) {
+            rowsOccupied.add(new ArrayList<>());
+        }
+    }
+
+    public int[] gather(int k, int maxRow) {
+        // Find out if such slot is available
+        for (List<int[]> row : rowsOccupied) {
+            for (int[] l : row) {
+
+
+            }
+        }
+        return new int[]{};
+    }
+
+    public boolean scatter(int k, int maxRow) {
+        return false;
+    }
+}
+
+/**
+ * Your BookMyShow object will be instantiated and called as such:
+ * BookMyShow obj = new BookMyShow(n, m);
+ * int[] param_1 = obj.gather(k,maxRow);
+ * boolean param_2 = obj.scatter(k,maxRow);
+ */
+
