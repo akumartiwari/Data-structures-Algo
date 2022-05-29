@@ -3356,6 +3356,73 @@ Note that a period with one day is a smooth descent period by the definition.
 
         return temp;
     }
+
+    /*
+    Input: s = "ilovecodingonleetcode", target = "code"
+    Output: 2
+    Explanation:
+    For the first copy of "code", take the letters at indices 4, 5, 6, and 7.
+    For the second copy of "code", take the letters at indices 17, 18, 19, and 20.
+    The strings that are formed are "ecod" and "code" which can both be rearranged into "code".
+    We can make at most two copies of "code", so we return 2.
+     */
+
+    //Author: Anand
+    public int rearrangeCharacters(String s, String target) {
+        int ans = 0;
+        Map<Character, Integer> om = new HashMap<>(), cm = new HashMap<>();
+
+        for (int i = 0; i < target.length(); i++)
+            om.put(target.charAt(i), om.getOrDefault(target.charAt(i), 0) + 1);
+
+        cm = om;
+
+        Set<Integer> indexTaken = new HashSet<>();
+        for (int i = 0; i < s.length(); i++) {
+            int idx = i;
+            while (idx < s.length()) {
+                char key = s.charAt(idx);
+                if (cm.containsKey(key) && !indexTaken.contains(idx)) {
+                    cm.put(key, cm.get(key) - 1);
+                    if (cm.get(key) <= 0) cm.remove(key);
+                    indexTaken.add(idx);
+                }
+
+                if (cm.size() == 0) {
+                    for (int m = 0; m < target.length(); m++)
+                        cm.put(target.charAt(m), cm.getOrDefault(target.charAt(m), 0) + 1);
+                    ans++;
+                    break;
+                }
+                idx++;
+            }
+        }
+        return ans;
+    }
+
+    //Author: Anand
+    public String discountPrices(String sentence, int discount) {
+        String[] words = sentence.split(" ");
+        List<String> ans = new ArrayList<>();
+
+        for (String word : words) {
+            if (word.startsWith("$") && !word.substring(1).isEmpty() && word.substring(1).chars().allMatch(Character::isDigit)) {
+                long price = Long.parseLong(word.substring(1));
+                double percent = ((100 - discount) * price * 1.00) / 100;
+                String nv = String.format("%.2f", percent);
+                ans.add("$" + nv);
+            } else {
+                ans.add(word);
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        for (String a : ans) {
+            sb.append(a);
+            sb.append(" ");
+        }
+        return sb.toString().trim();
+    }
+
 }
 
     /*
