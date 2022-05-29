@@ -3370,12 +3370,12 @@ Note that a period with one day is a smooth descent period by the definition.
     //Author: Anand
     public int rearrangeCharacters(String s, String target) {
         int ans = 0;
-        Map<Character, Integer> om = new HashMap<>(), cm = new HashMap<>();
+        Map<Character, Integer> om = new HashMap<>(), cm;
 
         for (int i = 0; i < target.length(); i++)
             om.put(target.charAt(i), om.getOrDefault(target.charAt(i), 0) + 1);
 
-        cm = om;
+        cm = new HashMap<>(om);
 
         Set<Integer> indexTaken = new HashSet<>();
         for (int i = 0; i < s.length(); i++) {
@@ -3389,8 +3389,7 @@ Note that a period with one day is a smooth descent period by the definition.
                 }
 
                 if (cm.size() == 0) {
-                    for (int m = 0; m < target.length(); m++)
-                        cm.put(target.charAt(m), cm.getOrDefault(target.charAt(m), 0) + 1);
+                    cm = new HashMap<>(om);
                     ans++;
                     break;
                 }
@@ -3403,22 +3402,18 @@ Note that a period with one day is a smooth descent period by the definition.
     //Author: Anand
     public String discountPrices(String sentence, int discount) {
         String[] words = sentence.split(" ");
-        List<String> ans = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
 
         for (String word : words) {
+            String nw = "";
             if (word.startsWith("$") && !word.substring(1).isEmpty() && word.substring(1).chars().allMatch(Character::isDigit)) {
                 long price = Long.parseLong(word.substring(1));
                 double percent = ((100 - discount) * price * 1.00) / 100;
                 String nv = String.format("%.2f", percent);
-                ans.add("$" + nv);
-            } else {
-                ans.add(word);
-            }
-        }
-        StringBuilder sb = new StringBuilder();
-        for (String a : ans) {
-            sb.append(a);
-            sb.append(" ");
+                nw = "$" + nv + " ";
+            } else nw = word + " ";
+
+            sb.append(nw);
         }
         return sb.toString().trim();
     }
