@@ -1,9 +1,6 @@
 package com.company;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class Dijisktra {
     // Author : Anand
@@ -76,4 +73,54 @@ public class Dijisktra {
         }
     }
 
+
+    /*
+    Input: grid = [[0,1,1],[1,1,0],[1,1,0]]
+    Output: 2
+    Explanation: We can remove the obstacles at (0, 1) and (0, 2) to create a path from (0, 0) to (2, 2).
+    It can be shown that we need to remove at least 2 obstacles, so we return 2.
+    Note that there may be other ways to remove 2 obstacles to create a path.
+     */
+    // TC = O(mn), SC = O(mn)
+    // Dijkstra on graph
+    //  The idea is to find the path with min number of obstacles need to be removed
+    public int minimumObstacles(int[][] grid) {
+
+        int m = grid.length;
+        int n = grid[0].length;
+
+        PriorityQueue<int[]> queue = new PriorityQueue<>(Comparator.comparingLong(a -> a[2]));
+
+        int[][] count = new int[m][n];// tells us the min nr of obstacle need to remove to reach at coordinate {x,y}
+        count[0][0] = 0;
+        queue.offer(new int[]{0, 0, 0});
+        int[][] dirs = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
+
+        // DFS for all guards and marked coordinate as 'P'
+        while (!queue.isEmpty()) {
+            int[] point = queue.poll();
+            int x = point[0];
+            int y = point[1];
+            int cost = point[2];
+
+            if (x == (m - 1) && y == (n - 1)) return cost;
+
+            for (int[] dir : dirs) {
+                int nx = x + dir[0];
+                int ny = y + dir[1];
+
+                if (!(nx >= 0 && nx < grid.length && ny >= 0 && ny < grid[0].length)) continue;
+
+                int ncost = cost;
+                // obstacle
+                if (grid[nx][ny] == 1) ncost++;
+
+                if (count[nx][ny] < ncost) continue;
+                count[nx][ny] = ncost;
+                queue.offer(new int[]{nx, ny, ncost});
+            }
+        }
+
+        return -1;
+    }
 }
