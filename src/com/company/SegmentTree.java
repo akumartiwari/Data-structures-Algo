@@ -223,131 +223,142 @@ public class SegmentTree {
     bms.scatter(5, 1); // return False
                        // There are only 2 seats left in the hall.
  */
-    class BookMyShow {
-        /**
-         * Segment tree class to store sum of a range and maximum available seats in a row
-         **/
-        class SegTree {
-            long sum[]; // store sum of seats in a range
-            long segTree[]; // store maximum seats in a range
-            int m, n;
 
-            public SegTree(int n, int m) {
-                this.m = m;
+    class BookMyShow {
+
+        class SegTree {
+            int n, m; // n = no of rows, m = no of cols
+            long[] segTree; // number of available seats in a range
+            long[] sum; // sunm array to store sum of available seats in a range
+
+            SegTree(int n, int m) {
                 this.n = n;
+                this.m = m;
                 segTree = new long[4 * n];
                 sum = new long[4 * n];
-                build(0, 0, n - 1, m);
+
+                buildSegTree(0, n - 1, 0, m);
+
             }
 
-            private void build(int index, int lo, int hi, long val) {
+            private void buildSegTree(int lo, int hi, int ind, int maxAvalableSeats) {
+                // base case
                 if (lo == hi) {
-                    segTree[index] = val; // initialize segement tree with initial seat capacity
-                    sum[index] = val; // initialize "sum" with initial seat capacity of a row
+                    segTree[ind] = maxAvalableSeats; // initialise with max seats
+                    sum[ind] = maxAvalableSeats; // initialise with max sum of seats
                     return;
                 }
+
                 int mid = (lo + hi) / 2;
-                build(2 * index + 1, lo, mid, val); // build left sub tree
-                build(2 * index + 2, mid + 1, hi, val); // build right sub tree
-                segTree[index] = Math.max(segTree[2 * index + 1], segTree[2 * index + 2]); // maximum seats in a row for subtrees
-                sum[index] = sum[2 * index + 1] + sum[2 * index + 2]; // sum of seats in a range
+
+                buildSegTree(lo, mid, 2 * ind + 1, maxAvalableSeats);
+                buildSegTree(mid + 1, hi, 2 * ind + 2, maxAvalableSeats);
+
+                segTree[ind] = Math.max(segTree[2 * ind + 1], segTree[2 * ind + 2]);
+                sum[ind] = sum[2 * ind + 1] + sum[2 * ind + 2];
             }
 
-            private void update(int index, int lo, int hi, int pos, int val) {
-                /**
-                 Method to update segment tree based on the available seats in a row
-                 **/
-                if (lo == hi) {
-                    segTree[index] = val;
-                    sum[index] = val;
-                    return;
-                }
-                int mid = (lo + hi) / 2;
-                if (pos <= mid) {  // position to update is in left
-                    update(2 * index + 1, lo, mid, pos, val);
-                } else { // position to update is in right
-                    update(2 * index + 2, mid + 1, hi, pos, val);
-                }
-                // update segment tree and "sum" based on the update in "pos" index
-                segTree[index] = Math.max(segTree[2 * index + 1], segTree[2 * index + 2]);
-                sum[index] = sum[2 * index + 1] + sum[2 * index + 2];
-            }
 
-            public void update(int pos, int val) {
-                update(0, 0, n - 1, pos, val);
-            }
-
-            public int gatherQuery(int k, int maxRow) {
-                return gatherQuery(0, 0, n - 1, k, maxRow);
-            }
-
-            private int gatherQuery(int index, int lo, int hi, int k, int maxRow) {
+            public int gather(int lo, int hi, int k, int mR, int ind) {
+                // base case
                 /**
                  Method to check if seats are available in a single row
                  **/
-                if (segTree[index] < k || lo > maxRow)
-                    return -1;
+                if (lo > mR || segTree[ind] < k) return -1;
                 if (lo == hi) return lo;
+
                 int mid = (lo + hi) / 2;
-                int c = gatherQuery(2 * index + 1, lo, mid, k, maxRow);
+
+                int c = gather(lo, mid, k, mR, 2 * ind + 1);
+
                 if (c == -1) {
-                    c = gatherQuery(2 * index + 2, mid + 1, hi, k, maxRow);
+                    c = gather(mid + 1, hi, k, mR, 2 * ind + 2);
                 }
                 return c;
             }
 
-            public long sumQuery(int k, int maxRow) {
-                return sumQuery(0, 0, n - 1, k, maxRow);
+            public int gather(int k, int mR) {
+                return gather(0, n - 1, k, mR, 0);
             }
 
-            private long sumQuery(int index, int lo, int hi, int l, int r) {
-                if (lo > r || hi < l) return 0;  // not in range
-                if (lo >= l && hi <= r) return sum[index]; // in range
+            private void update(int lo, int hi, int pos, int val, int idx) {
+                // base case
+                /**
+                 Method to update available in a single row
+                 **/
+                if (lo == hi) {
+                    segTree[idx] = val;
+                    sum[idx] = val;
+                    return;
+                }
+
                 int mid = (lo + hi) / 2;
-                return sumQuery(2 * index + 1, lo, mid, l, r) + sumQuery(2 * index + 2, mid + 1, hi, l, r);
+                // left seats are available in left half
+                if (pos <= mid) {
+                    update(lo, mid, pos, val, 2 * idx + 1);
+                } else {
+                    update(mid + 1, hi, pos, val, 2 * idx + 2);
+                }
+                segTree[idx] = Math.max(segTree[2 * idx + 1], segTree[2 * idx + 2]);
+                sum[idx] = sum[2 * idx + 1] + sum[2 * idx + 2];
+            }
+
+            public void update(int pos, int val) {
+                update(0, n - 1, pos, val, 0);
+            }
+
+            private long sumQuery(int lo, int hi, int k, int mR, int ind) {
+                // base case '
+                if (lo > mR || hi < k) return 0;
+                if (lo >= k && hi <= mR) return sum[ind];
+                int mid = (lo + hi) / 2;
+                return sumQuery(lo, mid, k, mR, 2 * ind + 1) + sumQuery(mid + 1, hi, k, mR, 2 * ind + 2);
+            }
+
+            public long sumQuery(int k, int mR) {
+                return sumQuery(0, n - 1, k, mR, 0);
             }
         }
 
         SegTree segTree;
-        int[] rowSeats; // stores avaiable seats in a row, helps to find the vacant seat in a row
+        int[] rowSeats;
 
         public BookMyShow(int n, int m) {
             segTree = new SegTree(n, m);
-            rowSeats = new int[n];
-            Arrays.fill(rowSeats, m);  // initialize vacant seats count to "m" for all the rows
+            rowSeats = new int[n]; // rows to evaluate available seats
+            Arrays.fill(rowSeats, m); // max available seats in a row
+            return;
         }
 
-
         public int[] gather(int k, int maxRow) {
-            int row = segTree.gatherQuery(k, maxRow); // find row which has k seats
-            if (row == -1) return new int[]{}; // can't find a row with k seats
-            int col = segTree.m - rowSeats[row]; // find column in the row which has k seats
-            rowSeats[row] -= k; // reduce the seats
-            segTree.update(row, rowSeats[row]); // update the segment tree
+            int row = segTree.gather(k, maxRow);
+            if (row == -1) return new int[]{};
+            int col = segTree.m - rowSeats[row];
+            rowSeats[row] -= k;  // reduce the seats
+            segTree.update(row, rowSeats[row]);
             return new int[]{row, col};
-
         }
 
         public boolean scatter(int k, int maxRow) {
-            long sum = segTree.sumQuery(0, maxRow); // find the sum for the given range [0, maxRow]
-            if (sum < k) return false; // can't find k seats in [0, maxRow]
+            long sum = segTree.sumQuery(k, maxRow);
 
+            if (sum < k) return false;
             for (int i = 0; i <= maxRow && k != 0; i++) {
-                if (rowSeats[i] > 0) {                       // if current row has seats then allocate those seats
+                if (rowSeats[i] > 0) {
                     long t = Math.min(rowSeats[i], k);
                     rowSeats[i] -= t;
                     k -= t;
-                    segTree.update(i, rowSeats[i]);  // update the segment tree
+                    segTree.update(i, rowSeats[i]);
                 }
             }
             return true;
         }
     }
 
-    /**
-     * Your BookMyShow object will be instantiated and called as such:
-     * BookMyShow obj = new BookMyShow(n, m);
-     * int[] param_1 = obj.gather(k,maxRow);
-     * boolean param_2 = obj.scatter(k,maxRow);
-     */
+/**
+ * Your BookMyShow object will be instantiated and called as such:
+ * BookMyShow obj = new BookMyShow(n, m);
+ * int[] param_1 = obj.gather(k,maxRow);
+ * boolean param_2 = obj.scatter(k,maxRow);
+ */
 }
