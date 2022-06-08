@@ -362,3 +362,83 @@ public class SegmentTree {
  * boolean param_2 = obj.scatter(k,maxRow);
  */
 }
+
+class NumArray {
+
+    class SegTree {
+        int n;
+        int[] segTree;
+        int[] sum;
+
+        SegTree(int n) {
+            this.n = n;
+            segTree = new int[4 * n];
+            sum = new int[4 * n];
+            build(0, n - 1, 0, Integer.MAX_VALUE);
+        }
+
+        private void build(int lo, int hi, int idx, int val) {
+            //base case
+            if (lo == hi) {
+                segTree[idx] = val;
+                sum[idx] = val;
+                return;
+            }
+
+            int mid = (lo + hi) / 2;
+            build(lo, mid, 2 * idx + 1, val);
+            build(mid + 1, hi, 2 * idx + 2, val);
+            segTree[idx] = Math.max(segTree[2 * idx + 1], segTree[2 * idx + 2]);
+            sum[idx] = sum[2 * idx + 1] + sum[2 * idx + 2];
+        }
+
+        private void update(int lo, int hi, int pos, int val, int idx) {
+            // base case
+            if (lo == hi) {
+                segTree[idx] = val;
+                sum[idx] = val;
+                return;
+            }
+
+            int mid = (lo + hi) / 2;
+            // left seats are available in left half
+            if (pos <= mid) {
+                update(lo, mid, pos, val, 2 * idx + 1);
+            } else {
+                update(mid + 1, hi, pos, val, 2 * idx + 2);
+            }
+            segTree[idx] = Math.max(segTree[2 * idx + 1], segTree[2 * idx + 2]);
+            sum[idx] = sum[2 * idx + 1] + sum[2 * idx + 2];
+        }
+
+        private int sumQuery(int lo, int hi, int ind) {
+            // base case '
+            if (lo > ind || hi < ind) return 0;
+            if (lo <= ind && hi >= ind) return sum[ind];
+            int mid = (lo + hi) / 2;
+            return sumQuery(lo, mid, 2 * ind + 1) + sumQuery(mid + 1, hi, 2 * ind + 2);
+        }
+    }
+
+    SegTree segT;
+
+    public NumArray(int[] nums) {
+        segT = new SegTree(nums.length); // Initialise segTree with max values
+        Arrays.fill(segT.segTree, Integer.MAX_VALUE);
+    }
+
+    public void update(int index, int val) {
+        segT.update(0, segT.n - 1, index, val, 0);
+    }
+
+    public int sumRange(int left, int right) {
+        return segT.sumQuery(left, right, 0);
+    }
+}
+
+/**
+ * Your NumArray object will be instantiated and called as such:
+ * NumArray obj = new NumArray(nums);
+ * obj.update(index,val);
+ * int param_2 = obj.sumRange(left,right);
+ */

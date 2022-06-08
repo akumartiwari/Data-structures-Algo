@@ -1,5 +1,6 @@
 package com.company;
 
+import javafx.collections.transformation.SortedList;
 import javafx.util.Pair;
 
 import java.awt.*;
@@ -3417,6 +3418,124 @@ Note that a period with one day is a smooth descent period by the definition.
         }
         return sb.toString().trim();
     }
+
+    //Author: Anand
+    public int minMaxGame(int[] nums) {
+        while (nums.length > 1) {
+            int[] nn = new int[nums.length / 2];
+            for (int i = 0; i < nn.length; i++) {
+                if (i % 2 == 0) {
+                    nn[i] = Math.min(nums[2 * i], nums[2 * i + 1]);
+                } else nn[i] = Math.max(nums[2 * i], nums[2 * i + 1]);
+            }
+            nums = nn;
+        }
+        return nums[0];
+    }
+
+    /*
+    Input: nums = [3,6,1,2,5], k = 2
+    Output: 2
+    Explanation:
+    We can partition nums into the two subsequences [3,1,2] and [6,5].
+    The difference between the maximum and minimum value in the first subsequence is 3 - 1 = 2.
+    The difference between the maximum and minimum value in the second subsequence is 6 - 5 = 1.
+    Since two subsequences were created, we return 2. It can be shown that 2 is the minimum number of subsequences needed.=
+     */
+    //Author: Anand
+    public int partitionArray(int[] nums, int k) {
+        int ans = 1;
+        int min = -1;
+        Arrays.sort(nums);
+        for (int num : nums) {
+            if (min == -1) min = num;
+            else if (Math.abs(num - min) > k) {
+                min = num;
+                ans++;
+            }
+        }
+
+        return ans;
+    }
+
+    /*
+        Input: nums = [1,2,4,6], operations = [[1,3],[4,7],[6,1]]
+    Output: [3,2,7,1]
+    Explanation: We perform the following operations on nums:
+    - Replace the number 1 with 3. nums becomes [3,2,4,6].
+    - Replace the number 4 with 7. nums becomes [3,2,7,6].
+    - Replace the number 6 with 1. nums becomes [3,2,7,1].
+    We return the final array [3,2,7,1].
+     */
+    //Author: Anand
+    public int[] arrayChange(int[] nums, int[][] operations) {
+
+        Map<Integer, Integer> map = new HashMap<>();
+
+        int idx = 0;
+        for (int num : nums) map.put(num, idx++);
+
+        for (int[] o : operations) {
+            int n1 = o[0];
+            int n2 = o[1];
+            int nidx = map.get(n1);
+            map.remove(n1);
+            map.put(n2, nidx);
+        }
+
+
+        Map<Integer, Integer> tmap = new TreeMap<>(map.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey)));
+
+        idx = 0;
+        int[] ans = new int[nums.length];
+        for (Map.Entry<Integer, Integer> entry : tmap.entrySet()) ans[idx++] = (int) entry.getValue();
+        return ans;
+    }
+
+
+    //Author: Anand
+    class TextEditor {
+
+        int cursorPos;
+        StringBuilder sb;
+
+        public TextEditor() {
+            cursorPos = 0;
+            sb = new StringBuilder();
+        }
+
+        public void addText(String text) {
+            sb.insert(cursorPos, text);
+            cursorPos += text.length();
+        }
+
+        public int deleteText(int k) {
+            int min = Math.min(k, cursorPos);
+            cursorPos -= min;
+            sb.delete(cursorPos, cursorPos + min);
+            return min;
+        }
+
+        public String cursorLeft(int k) {
+            int min = Math.min(k, cursorPos);
+            cursorPos -= min;
+            return cursorPos < 10 ? sb.substring(0, cursorPos) : sb.substring(cursorPos - 10, cursorPos);
+        }
+
+        public String cursorRight(int k) {
+            cursorPos = Math.min(sb.length(), cursorPos + k);
+            return cursorPos < 10 ? sb.substring(0, cursorPos) : sb.substring(cursorPos - 10, cursorPos);
+        }
+    }
+
+/**
+ * Your TextEditor object will be instantiated and called as such:
+ * TextEditor obj = new TextEditor();
+ * obj.addText(text);
+ * int param_2 = obj.deleteText(k);
+ * String param_3 = obj.cursorLeft(k);
+ * String param_4 = obj.cursorRight(k);
+ */
 
 }
 
