@@ -1,6 +1,5 @@
 package com.company;
 
-import javafx.collections.transformation.SortedList;
 import javafx.util.Pair;
 
 import java.awt.*;
@@ -3528,14 +3527,204 @@ Note that a period with one day is a smooth descent period by the definition.
         }
     }
 
-/**
- * Your TextEditor object will be instantiated and called as such:
- * TextEditor obj = new TextEditor();
- * obj.addText(text);
- * int param_2 = obj.deleteText(k);
- * String param_3 = obj.cursorLeft(k);
- * String param_4 = obj.cursorRight(k);
- */
+    /**
+     * Your TextEditor object will be instantiated and called as such:
+     * TextEditor obj = new TextEditor();
+     * obj.addText(text);
+     * int param_2 = obj.deleteText(k);
+     * String param_3 = obj.cursorLeft(k);
+     * String param_4 = obj.cursorRight(k);
+     */
+
+
+    /*
+    A password is said to be strong if it satisfies all the following criteria:
+
+    It has at least 8 characters.
+    It contains at least one lowercase letter.
+    It contains at least one uppercase letter.
+    It contains at least one digit.
+    It contains at least one special character. The special characters are the characters in the following string: "!@#$%^&*()-+".
+    It does not contain 2 of the same character in adjacent positions (i.e., "aab" violates this condition, but "aba" does not).
+
+    Input: password = "IloveLe3tcode!"
+    Output: true
+    Explanation: The password meets all the requirements. Therefore, we return true.
+
+     */
+    public boolean strongPasswordCheckerII(String password) {
+        if (password.length() < 8) return false;
+        Set<Character> special = new HashSet<>();
+        String s = "!@#$%^&*()-+";
+        for (int i = 0; i < s.length(); i++) special.add(s.charAt(i));
+
+        Map<Character, Boolean> map = new HashMap<>();
+        map.put('u', false);
+        map.put('s', false);
+        map.put('l', false);
+        map.put('d', false);
+
+        char prev = 'a';
+        boolean first = true;
+        for (int i = 0; i < password.length(); i++) {
+            char c = password.charAt(i);
+            if (!first && prev == c) return false;
+            else if (Character.isUpperCase(c)) map.put('u', true);
+            else if (Character.isLowerCase(c)) map.put('l', true);
+            else if (Character.isDigit(c)) map.put('d', true);
+            else if (special.contains(c)) map.put('s', true);
+            prev = c;
+            first = false;
+        }
+
+        for (Map.Entry<Character, Boolean> entry : map.entrySet()) {
+            if (!(boolean) entry.getValue()) return false;
+        }
+        return true;
+
+    }
+
+    /*
+    Input: spells = [5,1,3], potions = [1,2,3,4,5], success = 7
+    Output: [4,0,3]
+    Explanation:
+    - 0th spell: 5 * [1,2,3,4,5] = [5,10,15,20,25]. 4 pairs are successful.
+    - 1st spell: 1 * [1,2,3,4,5] = [1,2,3,4,5]. 0 pairs are successful.
+    - 2nd spell: 3 * [1,2,3,4,5] = [3,6,9,12,15]. 3 pairs are successful.
+    Thus, [4,0,3] is returned.
+     */
+    class Solution {
+        //Author: Anand
+        Map<Integer, int[]> duplicates;
+
+        public int[] successfulPairs(int[] spells, int[] potions, long success) {
+            int[] pairs = new int[spells.length];
+            Arrays.sort(potions);
+            int ind = 0;
+            duplicates = new HashMap<>();
+            for (int i = 0; i < potions.length; i++) {
+                if (duplicates.containsKey(potions[i])) {
+                    int[] idx = duplicates.get(potions[i]);
+                    duplicates.put(potions[i], new int[]{idx[0], i});
+                } else duplicates.put(potions[i], new int[]{i});
+            }
+
+            for (int s : spells) {
+                int idx = bs(potions, (long) Math.ceil((double) success / s));
+                if (idx >= 0) {
+                    pairs[ind++] = potions.length - idx;
+                } else {
+                    pairs[ind++] = 0;
+                }
+            }
+            return pairs;
+        }
+
+        private int bs(int[] potions, long value) {
+            int l = 0, h = potions.length - 1;
+            while (l < h) {
+                int mid = l + (h - l) / 2;
+                if (value < potions[mid]) {
+                    h = mid;
+                } else if (value > potions[mid]) {
+                    l = mid + 1;
+                } else if (value == potions[mid]) {
+                    return duplicates.get(potions[mid])[0];
+                }
+            }
+
+            return potions[l] < value ? -1 : l;
+        }
+    }
+
+
+    /*
+    Input: s = "fool3e7bar", sub = "leet", mappings = [["e","3"],["t","7"],["t","8"]]
+    Output: true
+    Explanation: Replace the first 'e' in sub with '3' and 't' in sub with '7'.
+    TC = O(n2)
+     "fool3e7bar"
+    "leet"
+    [["e","3"],["t","7"],["t","8"]]
+     */
+    public boolean matchReplacement(String s, String sub, char[][] mappings) {
+        Map<Character, Set<Character>> mappingc = new HashMap<>();
+        for (char[] map : mappings) {
+            if (mappingc.containsKey(map[0])) {
+                Set<Character> exist = mappingc.get(map[0]);
+                exist.add(map[1]);
+                mappingc.put(map[0], exist);
+            } else {
+                Set<Character> set = new HashSet<>();
+                set.add(map[1]);
+                mappingc.put(map[0], set);
+            }
+        }
+
+        List<String> substrings = new ArrayList<>();
+
+        int len = sub.length();
+        for (int i = 0; i < s.length(); i++) {
+            if (i + len <= s.length()) substrings.add(s.substring(i, i + len));
+        }
+
+        for (String gs : substrings) {
+            boolean done = true;
+            for (int i = 0; i < sub.length(); i++) {
+                if (gs.charAt(i) != sub.charAt(i)) {
+                    if (mappingc.containsKey(sub.charAt(i)) && mappingc.get(sub.charAt(i)).contains(gs.charAt(i)))
+                        continue;
+                    done = false;
+                    break;
+                }
+            }
+
+            if (done) return true;
+        }
+        return false;
+    }
+
+
+    /*
+    Input: nums = [2,1,4,3,5], k = 10
+    Output: 6
+    Explanation:
+    The 6 subarrays having scores less than 10 are:
+    - [2] with score 2 * 1 = 2.
+    - [1] with score 1 * 1 = 1.
+    - [4] with score 4 * 1 = 4.
+    - [3] with score 3 * 1 = 3.
+    - [5] with score 5 * 1 = 5.
+    - [2,1] with score (2 + 1) * 2 = 6.
+    Note that subarrays such as [1,4] and [4,3,5] are not considered because their scores are 10 and 36 respectively, while we need scores strictly less than 10.
+    TODO: Complete it
+     */
+    public long countSubarrays(int[] nums, long k) {
+        int i = 0, j = 0;
+        long sum = 0;
+        long cnt = 0L;
+
+        for (int num : nums) if (num < k) cnt++;
+
+
+        while (i <= j && i < nums.length && j < nums.length) {
+            if (i != j) {
+                sum += nums[j];
+                while (i != j && sum * (j - i + 1) < k) {
+                    cnt++;
+                    j++;
+                    sum += nums[j];
+                }
+                sum -= nums[i];
+                i++;
+            } else {
+                sum += nums[j];
+                j++;
+            }
+        }
+
+        return cnt;
+    }
 
 }
 
