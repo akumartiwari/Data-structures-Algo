@@ -11,7 +11,7 @@ public class GraphProblems {
     If ii, i, j,jj has no duplicate, then that's a valid sequence.
 
     Ad the intuition mentioned,
-    we don't have to enumearte all neignbours,
+    we don't have to enumerate all neighbours,
     but only some nodes with big value.
 
     But how many is enough?
