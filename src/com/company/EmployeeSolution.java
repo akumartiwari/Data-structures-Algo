@@ -3758,8 +3758,42 @@ Note that a period with one day is a smooth descent period by the definition.
         return tt;
     }
 
-}
+    /*
+    Any idea = first letter + postfix string.
+    We can group all ideas by their first letter.
 
+    If two ideas ideas[i] and ideas[j] share a common postfix string,
+    then ideas[i] can not pair with any idea starts with ideas[j][0]
+    and ideas[j] can not pair with any idea starts with ideas[i][0].
+     */
+    public long distinctNames(String[] ideas) {
+        HashSet<Integer>[] count = new HashSet[26];
+
+        for (int i = 0; i < count.length; i++) count[i] = new HashSet<>();
+
+        for (String s : ideas) {
+            count[s.charAt(0) - 'a'].add(s.substring(1).hashCode());
+        }
+
+        long res = 0L;
+        for (int i = 0; i < 26; i++) {
+            for (int j = i + 1; j < 26; j++) {
+                int c1 = 0, c2 = 0;
+                for (int c : count[i]) {
+                    if (!count[j].contains(c)) c1++;
+                }
+
+                for (int c : count[j]) {
+                    if (!count[i].contains(c)) c2++;
+                }
+
+                res += (long) c1 * c2;
+            }
+        }
+        return res * 2;
+    }
+
+}
 
 
     /*
