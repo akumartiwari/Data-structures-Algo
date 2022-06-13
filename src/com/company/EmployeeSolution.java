@@ -3726,7 +3726,41 @@ Note that a period with one day is a smooth descent period by the definition.
         return cnt;
     }
 
+
+    /*
+    Input: brackets = [[3,50],[7,10],[12,25]], income = 10
+    Output: 2.65000
+    Explanation:
+    The first 3 dollars you earn are taxed at 50%. You have to pay $3 * 50% = $1.50 dollars in taxes.
+    The next 7 - 3 = 4 dollars you earn are taxed at 10%. You have to pay $4 * 10% = $0.40 dollars in taxes.
+    The final 10 - 7 = 3 dollars you earn are taxed at 25%. You have to pay $3 * 25% = $0.75 dollars in taxes.
+    You have to pay a total of $1.50 + $0.40 + $0.75 = $2.65 dollars in taxes.
+     */
+    public double calculateTax(int[][] brackets, int income) {
+        int idx = 0;
+        double tt = 0.0000;
+        while (income > 0) {
+            int ai = -1;
+            if (idx == 0) {
+                ai = income - brackets[idx][0] > 0 ? brackets[idx][0] : income;
+            } else {
+                ai = brackets[idx][0] - brackets[idx - 1][0] > 0 ? brackets[idx][0] - brackets[idx - 1][0] : income;
+            }
+
+            ai = Math.min(income, ai);
+            int precent = brackets[idx][1];
+            double nptax = Double.parseDouble(String.format("%.4f", (double) precent * ai / 100));
+            tt += nptax;
+            income -= ai;
+            idx++;
+        }
+
+        return tt;
+    }
+
 }
+
+
 
     /*
     // TODO: maxRunTime Binary search solution

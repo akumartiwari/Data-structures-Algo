@@ -508,4 +508,89 @@ public class DP {
         return Math.max(max, sum + (long) mini * partial);
     }
 
+    /*
+    Input: grid = [[5,3],[4,0],[2,1]], moveCost = [[9,8],[1,5],[10,12],[18,6],[2,4],[14,3]]
+    `    Output: 17
+    Explanation: The path with the minimum possible cost is the path 5 -> 0 -> 1.
+    - The sum of the values of cells visited is 5 + 0 + 1 = 6.
+    - The cost of moving from 5 to 0 is 3.
+    - The cost of moving from 0 to 1 is 8.
+    So the total cost of the path is 6 + 3 + 8 = 17.
+`     */
+    //Author: Anand
+    public int minPathCost(int[][] grid, int[][] moveCost) {
+        int row = grid.length;
+        int col = grid[0].length;
+        int[][] dp = new int[row][col]; // minimum cost to reach at r,c cell
+
+        // For every cell in 1st row fill the cost
+        for (int c = 0; c < col; c++) {
+            dp[0][c] = grid[0][c];
+        }
+        // For remaining rows fill this
+        for (int r = 1; r < row; r++) {
+            for (int c = 0; c < col; c++) {
+                dp[r][c] = getMin(grid, moveCost, dp, r, c);
+            }
+        }
+
+        // For the last row just check the minimum to reach at any cell
+        int result = Integer.MAX_VALUE;
+        for (int r : dp[row - 1]) {
+            result = Math.min(result, r);
+        }
+        return result;
+    }
+
+    private int getMin(int[][] grid, int[][] moveCost, int[][] dp, int row, int col) {
+        // base case
+        int min = Integer.MAX_VALUE, prevRow = row - 1;
+        // traverse through prev row and evaluate from which cell you are getting min cost
+        // jump from prev row to current cell
+        for (int c = 0; c < grid[0].length; c++) {
+            min = Math.min(min, dp[prevRow][c] + moveCost[grid[prevRow][c]][col] + grid[row][col]);
+        }
+        return min;
+    }
+
+
+    /*
+    Input: cookies = [8,15,10,20,8], k = 2
+    Output: 31
+    Explanation: One optimal distribution is [8,15,8] and [10,20]
+    - The 1st child receives [8,15,8] which has a total of 8 + 15 + 8 = 31 cookies.
+    - The 2nd child receives [10,20] which has a total of 10 + 20 = 30 cookies.
+    The unfairness of the distribution is max(31,30) = 31.
+    It can be shown that there is no distribution with an unfairness less than 31.
+
+    TC = O(n2)
+    */
+    public int distributeCookies(int[] cookies, int k) {
+        int[] cc = new int[k];
+        return helper(cookies, k, cc, 0);
+    }
+
+    private int helper(int[] cookies, int k, int[] cc, int ind) {
+        // base case
+        if (ind == cookies.length) // all cookies are distributed
+        {
+            // which child is having max cookie
+            int max = Integer.MIN_VALUE;
+            for (int c : cc) {
+                max = Math.max(max, c);
+            }
+            return max;
+        }
+
+        int ans = Integer.MAX_VALUE;
+        for (int child = 0; child < k; child++) {
+            cc[child] += cookies[ind];
+            ans = Math.min(ans, helper(cookies, k, cc, ind + 1));
+            cc[child] -= cookies[ind];// backtrack
+        }
+
+        return ans;
+    }
+
+
 }
