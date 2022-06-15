@@ -3686,48 +3686,6 @@ Note that a period with one day is a smooth descent period by the definition.
 
 
     /*
-    Input: nums = [2,1,4,3,5], k = 10
-    Output: 6
-    Explanation:
-    The 6 subarrays having scores less than 10 are:
-    - [2] with score 2 * 1 = 2.
-    - [1] with score 1 * 1 = 1.
-    - [4] with score 4 * 1 = 4.
-    - [3] with score 3 * 1 = 3.
-    - [5] with score 5 * 1 = 5.
-    - [2,1] with score (2 + 1) * 2 = 6.
-    Note that subarrays such as [1,4] and [4,3,5] are not considered because their scores are 10 and 36 respectively, while we need scores strictly less than 10.
-    TODO: Complete it
-     */
-    public long countSubarrays(int[] nums, long k) {
-        int i = 0, j = 0;
-        long sum = 0;
-        long cnt = 0L;
-
-        for (int num : nums) if (num < k) cnt++;
-
-
-        while (i <= j && i < nums.length && j < nums.length) {
-            if (i != j) {
-                sum += nums[j];
-                while (i != j && sum * (j - i + 1) < k) {
-                    cnt++;
-                    j++;
-                    sum += nums[j];
-                }
-                sum -= nums[i];
-                i++;
-            } else {
-                sum += nums[j];
-                j++;
-            }
-        }
-
-        return cnt;
-    }
-
-
-    /*
     Input: brackets = [[3,50],[7,10],[12,25]], income = 10
     Output: 2.65000
     Explanation:
