@@ -3751,6 +3751,63 @@ Note that a period with one day is a smooth descent period by the definition.
         return res * 2;
     }
 
+
+    /*
+    Input: s = "arRAzFif"
+    Output: "R"
+    Explanation:
+    The letter 'R' is the greatest letter to appear in both lower and upper case.
+    Note that 'A' and 'F' also appear in both lower and upper case, but 'R' is greater than 'F' or 'A'.
+     */
+    //Author: Anand
+    public String greatestLetter(String s) {
+        String ans = "";
+        Set<Character> lowercase = new HashSet<>();
+
+        for (int i = 0; i < s.length(); i++) {
+            char key = s.charAt(i);
+            if (Character.isLowerCase(key)) lowercase.add(key);
+        }
+
+        for (int i = 0; i < s.length(); i++) {
+            char key = s.charAt(i);
+            if (lowercase.contains(Character.toLowerCase(key))
+                    && Character.isUpperCase(key)
+                    && (ans.isEmpty() || (int) key > (int) ans.charAt(0))) {
+                ans = String.valueOf(key);
+            }
+        }
+        return ans;
+    }
+
+    /*
+    Input: num = 58, k = 9
+    Output: 2
+    Explanation:
+    One valid set is [9,49], as the sum is 58 and each integer has a units digit of 9.
+    Another valid set is [19,39].
+    It can be shown that 2 is the minimum possible size of a valid set.
+     */
+
+    //Author: Anand
+    public int minimumNumbers(int num, int k) {
+        if (num == 0) return 0;
+        int ans = -1;
+        int c = (num - k) / 10;
+
+        while (c >= 0) {
+            int elem = k + 10 * c;
+            int i = 1;
+            if (elem == 0) return -1;
+            while ((num - (elem * i)) >= 0) {
+                if (((num - elem * i) % 10) == 0) return 1;
+                if (((num - elem * i) % 10) == k) return i + 1;
+                i++;
+            }
+            c--;
+        }
+        return ans;
+    }
 }
 
 

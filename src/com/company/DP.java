@@ -592,5 +592,44 @@ public class DP {
         return ans;
     }
 
+    /*
+    Input: s = "1001010", k = 5
+    Output: 5
+    Explanation: The longest subsequence of s that makes up a binary number less than or equal to 5 is "00010", as this number is equal to 2 in decimal.
+    Note that "00100" and "00101" are also possible, which are equal to 4 and 5 in decimal, respectively.
+    The length of this subsequence is 5, so 5 is returned.
+    */
+    //Author: Anand
+    public int longestSubsequence(String s, int k) {
+        int[] dp = new int[s.length()];
+        Arrays.fill(dp, -1);
+        return ls(s.length() - 1, (int[]) s.chars().map(x -> x - '0').toArray(), 0, k, 0, dp);
+    }
+
+    private static int ls(int ind, int[] arr, int num, int k, int len, int[] dp) {
+        if (ind < 0) {
+            if (num <= k) {
+                return len;
+            }
+            return 0;
+        }
+
+
+        if (num > k) return -1;
+        if (dp[ind] != -1) return dp[ind];
+
+        int nt = Integer.MIN_VALUE, t = Integer.MIN_VALUE;
+
+        if (!(arr[ind] == 1 && num >= k)) {
+            // take
+            num += arr[ind] == 1 ? Math.pow(2, len) : 0;
+            t = ls(ind - 1, arr, num, k, len + 1, dp);
+            num -= arr[ind] == 1 ? Math.pow(2, len) : 0; // backtrack
+        }
+
+        // not-take
+        nt = ls(ind - 1, arr, num, k, len, dp);
+        return dp[ind] = Math.max(t, nt);
+    }
 
 }
