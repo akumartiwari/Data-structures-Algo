@@ -1,8 +1,8 @@
 package com.company;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class Greedy {
     /*
@@ -228,5 +228,26 @@ public class Greedy {
         }
 
         return temp;
+    }
+
+    /*
+    Traverse from right to left of string and take all possible zeros
+    by updating the count of 1 in the process
+    return the longest Subsequence ie, less than k
+     */
+
+    public int longestSubsequenceGreedy(String s, int k) {
+
+        int val = 0, cnt = 0, pow = 1;
+
+        for (int i = s.length() - 1; i >= 0 && val + pow <= k; i--) {
+            if (s.charAt(i) - '0' == 1) {
+                val += pow;
+                cnt++;
+            }
+            pow <<= 1;
+        }
+
+        return (int) s.chars().filter(x -> x - '0' == 0).count() + cnt;
     }
 }

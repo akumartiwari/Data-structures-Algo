@@ -511,7 +511,7 @@ Output: [1,2,2,3,5,6]
 
 
     // TC = O(2n) + O(2n)
-    // Sliding windopw approach
+    // Sliding window approach
     // We have found the  count of vowels <= k and then substracted vowels <= k to get vowels == k
     public int countVowelSubstrings(String word) {
         return cntVowelKMaxSubstrings(word, 5) - cntVowelKMaxSubstrings(word, 4);
@@ -623,14 +623,14 @@ Output: [1,2,2,3,5,6]
         vis[node]--;
     }
 
-    /*
-     arr = [3,4,3,3]
-     k = 2
+     /*
+         arr = [3,4,3,3]
+         k = 2
 
-    pq = {4, 3, 3, 3}
-    map = { (3, (0, 2,3), (4,1))}
-    ans = {1,0,2,3}
-    result = [4, 3]
+        pq = {4, 3, 3, 3}
+        map = { (3, (0, 2,3), (4,1))}
+        ans = {1,0,2,3}
+        result = [4, 3]
      */
 
     //    TC = O(nlogn), sc = O(n)
@@ -762,20 +762,20 @@ Output: [1,2,2,3,5,6]
 
        Constraints:
 
-1 <= prices.length <= 105
-1 <= prices[i] <= 105
+    1 <= prices.length <= 105
+    1 <= prices[i] <= 105
 
 
-Input: prices = [3,2,1,4]
-Output: 7
-Explanation: There are 7 smooth descent periods:
-[3], [2], [1], [4], [3,2], [2,1], and [3,2,1]
-Note that a period with one day is a smooth descent period by the definition.
+    Input: prices = [3,2,1,4]
+    Output: 7
+    Explanation: There are 7 smooth descent periods:
+    [3], [2], [1], [4], [3,2], [2,1], and [3,2,1]
+    Note that a period with one day is a smooth descent period by the definition.
 
-// 12,11,10,9,8,7,6,5,4,3 = 10 * 11 / 2 = 55
+    // 12,11,10,9,8,7,6,5,4,3 = 10 * 11 / 2 = 55
 
-[12,11,10,9,8,7,6,5,4,3,4,3,10,9,8,7]
-   TC = O(2n), SC=O(1)
+    [12,11,10,9,8,7,6,5,4,3,4,3,10,9,8,7]
+    TC = O(2n), SC=O(1)
      */
     // TODO: Not solved with all edge cases
     public long getDescentPeriods(int[] prices) {
@@ -2162,54 +2162,6 @@ Note that a period with one day is a smooth descent period by the definition.
     }
 
 
-    /**
-     * Definition for a binary tree node.
-     * public class TreeNode {
-     * int val;
-     * TreeNode left;
-     * TreeNode right;
-     * TreeNode() {}
-     * TreeNode(int val) { this.val = val; }
-     * TreeNode(int val, TreeNode left, TreeNode right) {
-     * this.val = val;
-     * this.left = left;
-     * this.right = right;
-     * }
-     * }
-     */
-    public TreeNode createBinaryTree(int[][] descriptions) {
-        Map<Integer, TreeNode> map = new HashMap<>();
-        Set<Integer> children = new HashSet<>();
-
-        for (int[] desc : descriptions) {
-            int p = desc[0];
-            int c = desc[1];
-            int isLeft = desc[2];
-
-            children.add(c);
-            TreeNode node = map.getOrDefault(p, new TreeNode(p));
-            if (isLeft == 1) {
-                node.left = map.getOrDefault(c, new TreeNode(c));
-                map.put(c, node.left);
-            } else {
-                node.right = map.getOrDefault(c, new TreeNode(c));
-                map.put(c, node.right);
-            }
-            map.put(p, node);
-        }
-
-        int root = -1;
-
-        for (int[] desc : descriptions) {
-            // Root parent is a node which is not a child of any node
-            if (!children.contains(desc[0])) {
-                root = desc[0];
-                break;
-            }
-        }
-        return map.getOrDefault(root, null);
-    }
-
     // Author: Anand
     // TODO :- Use factor based approach
     public List<Integer> replaceNonCoprimes(int[] nums) {
@@ -2452,125 +2404,6 @@ Note that a period with one day is a smooth descent period by the definition.
         return ans;
     }
 
-    //Author: Anand
-    public boolean divideArray(int[] nums) {
-
-        Map<Integer, Integer> freq = new HashMap<>();
-        for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
-
-        for (Map.Entry entry : freq.entrySet()) {
-            if ((int) entry.getValue() % 2 != 0) return false;
-        }
-        return true;
-    }
-
-    //Author: Anand
-    public long maximumSubsequenceCount(String text, String pattern) {
-        int n = text.length();
-        char f = pattern.charAt(0);
-        char l = pattern.charAt(1);
-        long ans = 0;
-
-        if (f == l) {
-            int cnt = 0;
-            for (int i = 0; i < n; i++) {
-                if (text.charAt(i) == f) cnt++;
-            }
-            return (long) cnt * (cnt + 1) / 2;
-        }
-        // Adding f at start
-        Map<Integer, Integer> map = new LinkedHashMap<>(); // cnt of f before lth index
-        int cntf = 1;
-        for (int i = 0; i < n; i++) {
-            if (text.charAt(i) == f) cntf++;
-            else if (text.charAt(i) == l) {
-                map.put(i, cntf);
-                cntf = 0;
-            }
-        }
-
-        int size = map.size();
-        int curr = 0;
-        for (Map.Entry entry : map.entrySet()) {
-            ans += (long) (size - curr) * (int) entry.getValue();
-            curr++;
-        }
-
-        // Adding l at last
-        Map<Integer, Integer> mapl = new LinkedHashMap<>();// cnt of f before lth index
-        int cntl = 0;
-        String nt = text.concat(String.valueOf(l));
-        for (int i = 0; i < nt.length(); i++) {
-            if (nt.charAt(i) == f) cntl++;
-            else if (nt.charAt(i) == l) {
-                mapl.put(i, cntl);
-                cntl = 0;
-            }
-        }
-
-        long ansl = 0;
-        int szl = mapl.size();
-        int currl = 0;
-        for (Map.Entry entry : mapl.entrySet()) {
-            ansl += (long) (szl - currl) * (int) entry.getValue();
-            currl++;
-        }
-
-        return Math.max(ansl, ans);
-    }
-
-    // Author: Anand
-    public int halveArray(int[] nums) {
-        PriorityQueue<BigDecimal> pq = new PriorityQueue<>(Collections.reverseOrder());
-        for (int num : nums) pq.add(BigDecimal.valueOf((double) num).setScale(2, RoundingMode.HALF_UP));
-
-        long ls = 0;
-        for (int num : nums) ls += num;
-        BigDecimal sum = BigDecimal.valueOf(ls);
-        BigDecimal ns = sum;
-        int cnt = 0;
-        while (!pq.isEmpty()) {
-            if (ns.compareTo(sum.divide(BigDecimal.valueOf(2))) <= 0) {
-                return cnt;
-            }
-
-            BigDecimal greatest = pq.poll();
-            ns = ns.subtract(greatest.divide(BigDecimal.valueOf(2)));
-            pq.offer(greatest.divide(BigDecimal.valueOf(2)));
-            cnt++;
-        }
-        return cnt;
-    }
-
-    // Author: Anand
-    public int minBitFlips(int start, int goal) {
-        String bstart = Integer.toBinaryString(start);
-        String bgoal = Integer.toBinaryString(goal);
-        int len = Math.max(bstart.length(), bgoal.length());
-
-        if (bstart.length() < len) {
-            int cnt = len - bstart.length();
-            StringBuilder newbstart = new StringBuilder(bstart);
-            while (cnt-- > 0) {
-                newbstart.insert(0, '0');
-            }
-            bstart = newbstart.toString();
-        } else if (bgoal.length() < len) {
-            int cnt = len - bgoal.length();
-            StringBuilder newbgoal = new StringBuilder(bgoal);
-            while (cnt-- > 0) {
-                newbgoal.insert(0, '0');
-            }
-            bgoal = newbgoal.toString();
-        }
-
-        int ans = 0;
-        for (int i = bgoal.length() - 1; i >= 0; i--) {
-            if (bgoal.charAt(i) != bstart.charAt(i)) ans++;
-        }
-        return ans;
-    }
-
     // Author: Anand
     public int triangularSum(int[] nums) {
         List<Integer> ans = Arrays.stream(nums).boxed().collect(Collectors.toList());
@@ -2584,110 +2417,6 @@ Note that a period with one day is a smooth descent period by the definition.
         return ans.get(0);
     }
 
-    // Author: Anand
-    public long numberOfWays(String s) {
-        long ans = 0;
-
-        int t0 = 0, t1 = 0;
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '0') t0++;
-            else t1++;
-        }
-
-        int c0 = 0, c1 = 0;
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '0') {
-                ans += (long) c1 * (t1 - c1);
-                c0++;
-            } else {
-                ans += (long) c0 * (t1 - c0);
-                c1++;
-            }
-        }
-
-        return ans;
-    }
-
-
-    /*
-    Input: current = "02:30", correct = "04:35"
-    Output: 3
-    Explanation:
-    We can convert current to correct in 3 operations as follows:
-    - Add 60 minutes to current. current becomes "03:30".
-    - Add 60 minutes to current. current becomes "04:30".
-    - Add 5 minutes to current. current becomes "04:35".
-    It can be proven that it is not possible to convert current to correct in fewer than 3 operations.
-     */
-    // Author: Anand
-    public int convertTime(String current, String correct) {
-        long curMin = Integer.parseInt(current.split(":")[0]) * 60L + Integer.parseInt(current.split(":")[1]);
-
-        long correctMin = Integer.parseInt(correct.split(":")[0]) * 60 + Integer.parseInt(correct.split(":")[1]);
-
-        long diff = correctMin - curMin;
-
-        int op = 0;
-        while (diff != 0) {
-            if (curMin + 60 <= correctMin) {
-                curMin += 60;
-            } else if (curMin + 15 <= correctMin) {
-                curMin += 15;
-            } else if (curMin + 5 <= correctMin) {
-                curMin += 5;
-            } else if (curMin + 1 <= correctMin) {
-                curMin += 1;
-            } else break;
-            op++;
-            diff = correctMin - curMin;
-        }
-
-        return op;
-
-    }
-
-    /*
-    Input: matches = [[1,3],[2,3],[3,6],[5,6],[5,7],[4,5],[4,8],[4,9],[10,4],[10,9]]
-    Output: [[1,2,10],[4,5,7,8]]
-    Explanation:
-    Players 1, 2, and 10 have not lost any matches.
-    Players 4, 5, 7, and 8 each have lost one match.
-    Players 3, 6, and 9 each have lost two matches.
-    Thus, answer[0] = [1,2,10] and answer[1] = [4,5,7,8].
-     */
-    // Author: Anand
-
-    public List<List<Integer>> findWinners(int[][] matches) {
-        Map<Integer, Integer> playerWinsMap = new HashMap<>();
-
-        Map<Integer, Integer> playerLoseMap = new HashMap<>();
-
-        for (int[] match : matches) {
-            int w = match[0];
-            int l = match[1];
-            playerWinsMap.put(w, playerWinsMap.getOrDefault(w, 0) + 1);
-            playerLoseMap.put(l, playerLoseMap.getOrDefault(l, 0) + 1);
-        }
-
-        List<List<Integer>> ans = new ArrayList<>();
-
-        List<Integer> win = new ArrayList<>();
-        List<Integer> loseOne = new ArrayList<>();
-
-        for (Map.Entry entry : playerWinsMap.entrySet()) {
-            if (!playerLoseMap.containsKey(entry.getKey())) win.add((int) entry.getKey());
-        }
-
-        for (Map.Entry entry : playerLoseMap.entrySet()) {
-            if ((int) entry.getValue() == 1) loseOne.add((int) entry.getKey());
-        }
-
-        Collections.sort(win);
-        Collections.sort(loseOne);
-        ans.add(win);
-        ans.add(loseOne);
-        return ans;
-    }
 
     // Author: Anand
     public int largestInteger(int num) {
@@ -2719,60 +2448,6 @@ Note that a period with one day is a smooth descent period by the definition.
         }
 
         return Integer.parseInt(ans.toString());
-    }
-
-    // Author: Anand
-    public String minimizeResult(String expression) {
-        int n = expression.length();
-        int idx = expression.indexOf('+');
-        int mini = Integer.MAX_VALUE;
-        String ans = "";
-        for (int i = idx + 1; i < n; i++) {
-            int e1 = Integer.parseInt(expression.substring(idx + 1, i + 1));
-            for (int j = idx - 1; j >= 0; j--) {
-                int e2 = Integer.parseInt(expression.substring(j, idx));
-                int addition = e1 + e2;
-                int left = 1, right = 1;
-                if (!expression.substring(0, j).equals("")) left = Integer.parseInt(expression.substring(0, j));
-                if (!expression.substring(i + 1).equals("")) right = Integer.parseInt(expression.substring(i + 1));
-
-                int res = left * right * addition;
-                if (res < mini) {
-                    StringBuilder sb = new StringBuilder(expression);
-                    mini = res;
-                    sb.insert(j, '(');
-                    sb.insert(i + 2, ')');
-                    ans = sb.toString();
-                }
-            }
-        }
-        return ans;
-    }
-
-    // Author: Anand
-    public int maximumProduct(int[] nums, int k) {
-        int MOD = 1_000_000_000 + 7;
-
-        PriorityQueue<Integer> pq = new PriorityQueue<>();
-        for (int num : nums) pq.offer(num);
-        while (k > 0) {
-            int num = pq.poll();
-            num += 1;
-            k--;
-            pq.offer(num);
-        }
-
-        long prod = 1;
-        while (!pq.isEmpty()) {
-            prod = mod_mul(prod, pq.poll(), MOD);
-        }
-        return (int) prod;
-    }
-
-    public long mod_mul(long a, long b, long m) {
-        a = a % m;
-        b = b % m;
-        return (((a * b) % m) + m) % m;
     }
 
     /*
@@ -2901,115 +2576,6 @@ Note that a period with one day is a smooth descent period by the definition.
         return idx;
     }
 
-
-    //Author: Anand
-    public String removeDigit(String number, char digit) {
-        String maxi = "";
-
-        for (int i = 0; i < number.length(); i++) {
-            if (number.charAt(i) == digit) {
-                String newNum = number.substring(0, i) + number.substring(i + 1);
-                if (maxi.equals("")) {
-                    maxi = newNum;
-                    continue;
-                }
-                for (int j = 0; j < newNum.length(); j++) {
-                    if (Integer.parseInt(String.valueOf(newNum.charAt(j))) > Integer.parseInt(String.valueOf(maxi.charAt(j)))) {
-                        maxi = newNum;
-                    } else if (Integer.parseInt(String.valueOf(newNum.charAt(j))) < Integer.parseInt(String.valueOf(maxi.charAt(j)))) {
-                        break;
-                    }
-                }
-            }
-        }
-        return maxi;
-    }
-
-
-    //Author: Anand
-    public int minimumCardPickup(int[] cards) {
-        int ans = Integer.MAX_VALUE;
-        Map<Integer, Integer> map = new HashMap<>();
-        for (int i = 0; i < cards.length; i++) {
-            if (map.containsKey(cards[i])) {
-                ans = Math.min(Math.abs((i - map.get(cards[i]) + 1)), ans);
-            }
-            map.put(cards[i], i);
-        }
-        return ans == Integer.MAX_VALUE ? -1 : ans;
-    }
-
-    //Author: Anand
-    public int countDistinct(int[] nums, int k, int p) {
-
-        Set<List<Integer>> lists = new HashSet<>();
-        int ans = 0;
-        for (int i = 0; i < nums.length; i++) {
-            for (int j = i + 1; j <= nums.length; j++) {
-                List<Integer> subArray = new ArrayList<>();
-                int cnt = 0;
-
-                for (int m = i; m < j; m++) {
-                    if (nums[m] % p == 0) cnt++;
-                    subArray.add(nums[m]);
-                }
-
-                if (cnt <= k && !subArray.isEmpty() && !lists.contains(subArray)) {
-                    ans++;
-                    lists.add(subArray);
-                }
-            }
-        }
-        return ans;
-    }
-
-    /*
-    list = ["abba","cd","cd"]
-    Input: words = ["abba","cd"]
-    Output: ["abba","cd"]
-
-     */
-    //Author: Anand
-    public List<String> removeAnagrams(String[] words) {
-
-        List<String> list = Arrays.stream(words).collect(Collectors.toList());
-        while (list.size() > 1) {
-
-            boolean flag = false;
-            for (int i = 0; i < list.size() - 1; i++) {
-                if (ana(list.get(i), list.get(i + 1))) {
-                    flag = true;
-                    list.remove(list.get(i + 1));
-                    break;
-                }
-            }
-
-            if (!flag) break;
-        }
-
-
-        return list;
-    }
-
-    private boolean ana(String word1, String word2) {
-
-        if (word1.length() != word2.length()) return false;
-
-        Map<Character, Integer> freq = new HashMap<>();
-        for (int i = 0; i < word1.length(); i++) freq.put(word1.charAt(i), freq.getOrDefault(word1.charAt(i), 0) + 1);
-
-        for (int i = 0; i < word2.length(); i++) {
-            Character key = word2.charAt(i);
-            if (freq.containsKey(key)) {
-                freq.put(key, freq.get(key) - 1);
-                if (freq.get(key) <= 0) {
-                    freq.remove(key);
-                }
-            } else return false;
-        }
-        return true;
-    }
-
     //Author: Anand
     public int maxConsecutive(int bottom, int top, int[] special) {
 
@@ -3032,25 +2598,6 @@ Note that a period with one day is a smooth descent period by the definition.
         return ans;
     }
 
-    //Author: Anand
-    // The idea is to count numbers that share same bit and maximise them
-    public int largestCombination(int[] candidates) {
-        int max = Integer.MIN_VALUE;
-        for (int c : candidates) max = Math.max(max, c);
-
-        int ans = 0;
-        // check for every bit and count numbers that share same bit
-        for (int b = 1; b <= max; b <<= 1) {
-            int count = 0;
-            for (int c : candidates) {
-                if ((c & b) > 0) count++;
-            }
-            ans = Math.max(ans, count);
-        }
-        return ans;
-    }
-
-
     // Author: Anand
     public String largestGoodInteger(String num) {
 
@@ -3064,96 +2611,6 @@ Note that a period with one day is a smooth descent period by the definition.
             max = Math.max(max, Integer.parseInt(ge));
         }
         return max == Integer.MIN_VALUE ? "" : String.format("%03d", max);
-    }
-
-    // Author: Anand
-    public int firstUniqChar(String s) {
-        Map<Character, List<Integer>> freq = new LinkedHashMap<>();
-        for (int i = 0; i < s.length(); i++) {
-            Character key = s.charAt(i);
-            if (freq.containsKey(key)) {
-                List<Integer> exist = freq.get(key);
-                exist.add(i);
-                freq.put(key, exist);
-            } else freq.put(key, new ArrayList<>(Collections.singletonList(i)));
-        }
-
-        for (Map.Entry entry : freq.entrySet()) {
-            if ((int) ((List<Integer>) entry.getValue()).size() == 1)
-                return s.indexOf((Character) entry.getKey());
-        }
-        return -1;
-    }
-
-    // Author: Anand
-    public char findTheDifference(String s, String t) {
-
-        Map<Character, Integer> freq = new HashMap<>();
-
-        for (int i = 0; i < s.length(); i++)
-            freq.put(s.charAt(i), freq.getOrDefault(s.charAt(i), 0) + 1);
-
-        for (int i = 0; i < t.length(); i++) {
-            if (freq.containsKey(t.charAt(i))) {
-                freq.put(t.charAt(i), freq.get(t.charAt(i)) - 1);
-                if (freq.get(t.charAt(i)) <= 0) freq.remove(t.charAt(i));
-            } else return t.charAt(i);
-        }
-
-        return '\n';
-    }
-
-    /*
-    1 <= n <= 10^9
-
-    Input: n = 9
-    Output: 6
-    Explanation:
-    arr = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    arr = [2, 4, 6, 8]
-    arr = [2, 6]
-    arr = [6]
-     */
-    // Author: Anand
-    // TODO: clone list and remove  and mark operations on it
-    public int lastRemaining(int n) {
-        if (n >= 9) {
-            if (n % 2 == 0) return 8;
-            else return 6;
-        } else {
-            List<Integer> nums = new ArrayList<>();
-            for (int i = 1; i <= n; i++) {
-                nums.add(i);
-            }
-
-            boolean left = true;
-            while (nums.size() > 1) {
-                if (left) {
-                    boolean flag = true;
-                    for (int num : nums) {
-                        if (flag) {
-                            nums.remove(num);
-                            flag = false;
-                        } else {
-                            flag = true;
-                        }
-                    }
-                    left = false;
-                } else {
-                    boolean flag = true;
-                    for (int i = nums.size() - 1; i >= 0; i--) {
-                        if (flag) {
-                            nums.remove(nums.get(i));
-                            flag = false;
-                        } else {
-                            flag = true;
-                        }
-                    }
-                    flag = false;
-                }
-            }
-            return nums.get(0);
-        }
     }
 
     // Author: Anand
@@ -3307,98 +2764,6 @@ Note that a period with one day is a smooth descent period by the definition.
         return temp;
     }
 
-    /*
-    Input: n = 5, roads = [[0,1],[1,2],[2,3],[0,2],[1,3],[2,4]]
-    Output: 43
-    Explanation: The figure above shows the country and the assigned values of [2,4,5,3,1].
-    - The road (0,1) has an importance of 2 + 4 = 6.
-    - The road (1,2) has an importance of 4 + 5 = 9.
-    - The road (2,3) has an importance of 5 + 3 = 8.
-    - The road (0,2) has an importance of 2 + 5 = 7.
-    - The road (1,3) has an importance of 4 + 3 = 7.
-    - The road (2,4) has an importance of 5 + 1 = 6.
-    The total importance of all roads is 6 + 9 + 8 + 7 + 7 + 6 = 43.
-    It can be shown that we cannot obtain a greater total importance than 43.=
-     */
-    //Author: Anand
-    // TC = O(nlogn)
-    public long maximumImportance(int n, int[][] roads) {
-        Map<Integer, Integer> nodesConnectedCount = new HashMap<>();
-        for (int[] r : roads) {
-            nodesConnectedCount.put(r[0], nodesConnectedCount.getOrDefault(r[0], 0) + 1);
-            nodesConnectedCount.put(r[1], nodesConnectedCount.getOrDefault(r[1], 0) + 1);
-        }
-
-
-        nodesConnectedCount = sortByValueInteger(nodesConnectedCount);
-
-        Map<Integer, Integer> assign = new HashMap<>();
-        int max = n;
-        for (Map.Entry<Integer, Integer> entry : nodesConnectedCount.entrySet()) assign.put((int) entry.getKey(), n--);
-
-        long ans = 0L;
-        for (int[] r : roads) ans += assign.get(r[0]) + assign.get(r[1]);
-
-        return ans;
-
-    }
-
-    // function to sort hashmap by values
-    public static HashMap<Integer, Integer> sortByValueInteger(Map<Integer, Integer> hm) {
-        HashMap<Integer, Integer> temp
-                = hm.entrySet()
-                .stream()
-                .sorted((i1, i2) -> i2.getValue().compareTo(i1.getValue()))
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (e1, e2) -> e1, LinkedHashMap::new));
-
-        return temp;
-    }
-
-    /*
-    Input: s = "ilovecodingonleetcode", target = "code"
-    Output: 2
-    Explanation:
-    For the first copy of "code", take the letters at indices 4, 5, 6, and 7.
-    For the second copy of "code", take the letters at indices 17, 18, 19, and 20.
-    The strings that are formed are "ecod" and "code" which can both be rearranged into "code".
-    We can make at most two copies of "code", so we return 2.
-     */
-
-    //Author: Anand
-    public int rearrangeCharacters(String s, String target) {
-        int ans = 0;
-        Map<Character, Integer> om = new HashMap<>(), cm;
-
-        for (int i = 0; i < target.length(); i++)
-            om.put(target.charAt(i), om.getOrDefault(target.charAt(i), 0) + 1);
-
-        cm = new HashMap<>(om);
-
-        Set<Integer> indexTaken = new HashSet<>();
-        for (int i = 0; i < s.length(); i++) {
-            int idx = i;
-            while (idx < s.length()) {
-                char key = s.charAt(idx);
-                if (cm.containsKey(key) && !indexTaken.contains(idx)) {
-                    cm.put(key, cm.get(key) - 1);
-                    if (cm.get(key) <= 0) cm.remove(key);
-                    indexTaken.add(idx);
-                }
-
-                if (cm.size() == 0) {
-                    cm = new HashMap<>(om);
-                    ans++;
-                    break;
-                }
-                idx++;
-            }
-        }
-        return ans;
-    }
-
     //Author: Anand
     public String discountPrices(String sentence, int discount) {
         String[] words = sentence.split(" ");
@@ -3458,86 +2823,6 @@ Note that a period with one day is a smooth descent period by the definition.
     }
 
     /*
-        Input: nums = [1,2,4,6], operations = [[1,3],[4,7],[6,1]]
-    Output: [3,2,7,1]
-    Explanation: We perform the following operations on nums:
-    - Replace the number 1 with 3. nums becomes [3,2,4,6].
-    - Replace the number 4 with 7. nums becomes [3,2,7,6].
-    - Replace the number 6 with 1. nums becomes [3,2,7,1].
-    We return the final array [3,2,7,1].
-     */
-    //Author: Anand
-    public int[] arrayChange(int[] nums, int[][] operations) {
-
-        Map<Integer, Integer> map = new HashMap<>();
-
-        int idx = 0;
-        for (int num : nums) map.put(num, idx++);
-
-        for (int[] o : operations) {
-            int n1 = o[0];
-            int n2 = o[1];
-            int nidx = map.get(n1);
-            map.remove(n1);
-            map.put(n2, nidx);
-        }
-
-
-        Map<Integer, Integer> tmap = new TreeMap<>(map.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey)));
-
-        idx = 0;
-        int[] ans = new int[nums.length];
-        for (Map.Entry<Integer, Integer> entry : tmap.entrySet()) ans[idx++] = (int) entry.getValue();
-        return ans;
-    }
-
-
-    //Author: Anand
-    class TextEditor {
-
-        int cursorPos;
-        StringBuilder sb;
-
-        public TextEditor() {
-            cursorPos = 0;
-            sb = new StringBuilder();
-        }
-
-        public void addText(String text) {
-            sb.insert(cursorPos, text);
-            cursorPos += text.length();
-        }
-
-        public int deleteText(int k) {
-            int min = Math.min(k, cursorPos);
-            cursorPos -= min;
-            sb.delete(cursorPos, cursorPos + min);
-            return min;
-        }
-
-        public String cursorLeft(int k) {
-            int min = Math.min(k, cursorPos);
-            cursorPos -= min;
-            return cursorPos < 10 ? sb.substring(0, cursorPos) : sb.substring(cursorPos - 10, cursorPos);
-        }
-
-        public String cursorRight(int k) {
-            cursorPos = Math.min(sb.length(), cursorPos + k);
-            return cursorPos < 10 ? sb.substring(0, cursorPos) : sb.substring(cursorPos - 10, cursorPos);
-        }
-    }
-
-    /**
-     * Your TextEditor object will be instantiated and called as such:
-     * TextEditor obj = new TextEditor();
-     * obj.addText(text);
-     * int param_2 = obj.deleteText(k);
-     * String param_3 = obj.cursorLeft(k);
-     * String param_4 = obj.cursorRight(k);
-     */
-
-
-    /*
     A password is said to be strong if it satisfies all the following criteria:
 
     It has at least 8 characters.
@@ -3582,59 +2867,6 @@ Note that a period with one day is a smooth descent period by the definition.
         }
         return true;
 
-    }
-
-    /*
-    Input: spells = [5,1,3], potions = [1,2,3,4,5], success = 7
-    Output: [4,0,3]
-    Explanation:
-    - 0th spell: 5 * [1,2,3,4,5] = [5,10,15,20,25]. 4 pairs are successful.
-    - 1st spell: 1 * [1,2,3,4,5] = [1,2,3,4,5]. 0 pairs are successful.
-    - 2nd spell: 3 * [1,2,3,4,5] = [3,6,9,12,15]. 3 pairs are successful.
-    Thus, [4,0,3] is returned.
-     */
-    class Solution {
-        //Author: Anand
-        Map<Integer, int[]> duplicates;
-
-        public int[] successfulPairs(int[] spells, int[] potions, long success) {
-            int[] pairs = new int[spells.length];
-            Arrays.sort(potions);
-            int ind = 0;
-            duplicates = new HashMap<>();
-            for (int i = 0; i < potions.length; i++) {
-                if (duplicates.containsKey(potions[i])) {
-                    int[] idx = duplicates.get(potions[i]);
-                    duplicates.put(potions[i], new int[]{idx[0], i});
-                } else duplicates.put(potions[i], new int[]{i});
-            }
-
-            for (int s : spells) {
-                int idx = bs(potions, (long) Math.ceil((double) success / s));
-                if (idx >= 0) {
-                    pairs[ind++] = potions.length - idx;
-                } else {
-                    pairs[ind++] = 0;
-                }
-            }
-            return pairs;
-        }
-
-        private int bs(int[] potions, long value) {
-            int l = 0, h = potions.length - 1;
-            while (l < h) {
-                int mid = l + (h - l) / 2;
-                if (value < potions[mid]) {
-                    h = mid;
-                } else if (value > potions[mid]) {
-                    l = mid + 1;
-                } else if (value == potions[mid]) {
-                    return duplicates.get(potions[mid])[0];
-                }
-            }
-
-            return potions[l] < value ? -1 : l;
-        }
     }
 
 
@@ -3684,73 +2916,62 @@ Note that a period with one day is a smooth descent period by the definition.
         return false;
     }
 
-
     /*
-    Input: brackets = [[3,50],[7,10],[12,25]], income = 10
-    Output: 2.65000
+    Input: s = "arRAzFif"
+    Output: "R"
     Explanation:
-    The first 3 dollars you earn are taxed at 50%. You have to pay $3 * 50% = $1.50 dollars in taxes.
-    The next 7 - 3 = 4 dollars you earn are taxed at 10%. You have to pay $4 * 10% = $0.40 dollars in taxes.
-    The final 10 - 7 = 3 dollars you earn are taxed at 25%. You have to pay $3 * 25% = $0.75 dollars in taxes.
-    You have to pay a total of $1.50 + $0.40 + $0.75 = $2.65 dollars in taxes.
+    The letter 'R' is the greatest letter to appear in both lower and upper case.
+    Note that 'A' and 'F' also appear in both lower and upper case, but 'R' is greater than 'F' or 'A'.
      */
-    public double calculateTax(int[][] brackets, int income) {
-        int idx = 0;
-        double tt = 0.0000;
-        while (income > 0) {
-            int ai = -1;
-            if (idx == 0) {
-                ai = income - brackets[idx][0] > 0 ? brackets[idx][0] : income;
-            } else {
-                ai = brackets[idx][0] - brackets[idx - 1][0] > 0 ? brackets[idx][0] - brackets[idx - 1][0] : income;
-            }
+    //Author: Anand
+    public String greatestLetter(String s) {
+        String ans = "";
+        Set<Character> lowercase = new HashSet<>();
 
-            ai = Math.min(income, ai);
-            int precent = brackets[idx][1];
-            double nptax = Double.parseDouble(String.format("%.4f", (double) precent * ai / 100));
-            tt += nptax;
-            income -= ai;
-            idx++;
+        for (int i = 0; i < s.length(); i++) {
+            char key = s.charAt(i);
+            if (Character.isLowerCase(key)) lowercase.add(key);
         }
 
-        return tt;
+        for (int i = 0; i < s.length(); i++) {
+            char key = s.charAt(i);
+            if (lowercase.contains(Character.toLowerCase(key))
+                    && Character.isUpperCase(key)
+                    && (ans.isEmpty() || (int) key > (int) ans.charAt(0))) {
+                ans = String.valueOf(key);
+            }
+        }
+        return ans;
     }
 
+    // Author: Anand
+    // Similar to Div-2 codeforces
     /*
-    Any idea = first letter + postfix string.
-    We can group all ideas by their first letter.
-
-    If two ideas ideas[i] and ideas[j] share a common postfix string,
-    then ideas[i] can not pair with any idea starts with ideas[j][0]
-    and ideas[j] can not pair with any idea starts with ideas[i][0].
-     */
-    public long distinctNames(String[] ideas) {
-        HashSet<Integer>[] count = new HashSet[26];
-
-        for (int i = 0; i < count.length; i++) count[i] = new HashSet<>();
-
-        for (String s : ideas) {
-            count[s.charAt(0) - 'a'].add(s.substring(1).hashCode());
-        }
-
-        long res = 0L;
-        for (int i = 0; i < 26; i++) {
-            for (int j = i + 1; j < 26; j++) {
-                int c1 = 0, c2 = 0;
-                for (int c : count[i]) {
-                    if (!count[j].contains(c)) c1++;
-                }
-
-                for (int c : count[j]) {
-                    if (!count[i].contains(c)) c2++;
-                }
-
-                res += (long) c1 * c2;
+    Observe a pattern that you can always group all zeros to left
+    and then shrink to single zero via 00 -> 10 operation
+    Now generate the final result use fx,z
+      */
+    public String maximumBinaryString(String binary) {
+        int fz = Integer.MAX_VALUE, z = 0;
+        for (int i = 0; i < binary.length(); i++) {
+            if (binary.charAt(i) == '0') {
+                z++;
+                fz = Math.min(fz, i);
             }
         }
-        return res * 2;
-    }
 
+        if (!(binary.length() < 2 || fz == Integer.MAX_VALUE)) {
+            StringBuilder l = new StringBuilder(), r = new StringBuilder();
+            int li = fz + z - 1;
+            while (li-- > 0) l.append("1");
+
+            int ri = binary.length() - z - fz;
+            while (ri-- > 0) r.append("1");
+
+            return l + "0" + r;
+        }
+        return binary;
+    }
 }
 
 
