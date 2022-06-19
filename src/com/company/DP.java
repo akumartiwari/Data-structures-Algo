@@ -603,7 +603,7 @@ public class DP {
     public int longestSubsequence(String s, int k) {
         int[] dp = new int[s.length()];
         Arrays.fill(dp, -1);
-        return ls(s.length() - 1, (int[]) s.chars().map(x -> x - '0').toArray(), 0, k, 0, dp);
+        return ls(s.length() - 1, s.chars().map(x -> x - '0').toArray(), 0, k, 0, dp);
     }
 
     private static int ls(int ind, int[] arr, int num, int k, int len, int[] dp) {

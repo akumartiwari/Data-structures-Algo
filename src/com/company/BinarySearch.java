@@ -130,6 +130,57 @@ public class BinarySearch {
     }
 
     /*
+Input: spells = [5,1,3], potions = [1,2,3,4,5], success = 7
+Output: [4,0,3]
+Explanation:
+- 0th spell: 5 * [1,2,3,4,5] = [5,10,15,20,25]. 4 pairs are successful.
+- 1st spell: 1 * [1,2,3,4,5] = [1,2,3,4,5]. 0 pairs are successful.
+- 2nd spell: 3 * [1,2,3,4,5] = [3,6,9,12,15]. 3 pairs are successful.
+Thus, [4,0,3] is returned.
+*/
+    //Author: Anand
+    Map<Integer, int[]> duplicates;
+
+    public int[] successfulPairs(int[] spells, int[] potions, long success) {
+        int[] pairs = new int[spells.length];
+        Arrays.sort(potions);
+        int ind = 0;
+        duplicates = new HashMap<>();
+        for (int i = 0; i < potions.length; i++) {
+            if (duplicates.containsKey(potions[i])) {
+                int[] idx = duplicates.get(potions[i]);
+                duplicates.put(potions[i], new int[]{idx[0], i});
+            } else duplicates.put(potions[i], new int[]{i});
+        }
+
+        for (int s : spells) {
+            int idx = bs(potions, (long) Math.ceil((double) success / s));
+            if (idx >= 0) {
+                pairs[ind++] = potions.length - idx;
+            } else {
+                pairs[ind++] = 0;
+            }
+        }
+        return pairs;
+    }
+
+    private int bs(int[] potions, long value) {
+        int l = 0, h = potions.length - 1;
+        while (l < h) {
+            int mid = l + (h - l) / 2;
+            if (value < potions[mid]) {
+                h = mid;
+            } else if (value > potions[mid]) {
+                l = mid + 1;
+            } else if (value == potions[mid]) {
+                return duplicates.get(potions[mid])[0];
+            }
+        }
+
+        return potions[l] < value ? -1 : l;
+    }
+
+    /*
       Intution
     - Sort the array ,
     - choose every pivot from end to begin where element is less than target and make this = target

@@ -1,9 +1,6 @@
 package com.company;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class BinaryTree {
     /**
@@ -221,6 +218,54 @@ public class BinaryTree {
             this.cc = 0;
             this.avgCount = 0;
         }
+    }
+
+    /**
+     * Definition for a binary tree node.
+     * public class TreeNode {
+     * int val;
+     * TreeNode left;
+     * TreeNode right;
+     * TreeNode() {}
+     * TreeNode(int val) { this.val = val; }
+     * TreeNode(int val, TreeNode left, TreeNode right) {
+     * this.val = val;
+     * this.left = left;
+     * this.right = right;
+     * }
+     * }
+     */
+    public TreeNode createBinaryTree(int[][] descriptions) {
+        Map<Integer, TreeNode> map = new HashMap<>();
+        Set<Integer> children = new HashSet<>();
+
+        for (int[] desc : descriptions) {
+            int p = desc[0];
+            int c = desc[1];
+            int isLeft = desc[2];
+
+            children.add(c);
+            TreeNode node = map.getOrDefault(p, new TreeNode(p));
+            if (isLeft == 1) {
+                node.left = map.getOrDefault(c, new TreeNode(c));
+                map.put(c, node.left);
+            } else {
+                node.right = map.getOrDefault(c, new TreeNode(c));
+                map.put(c, node.right);
+            }
+            map.put(p, node);
+        }
+
+        int root = -1;
+
+        for (int[] desc : descriptions) {
+            // Root parent is a node which is not a child of any node
+            if (!children.contains(desc[0])) {
+                root = desc[0];
+                break;
+            }
+        }
+        return map.getOrDefault(root, null);
     }
 }
 
