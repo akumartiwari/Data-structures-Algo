@@ -1,14 +1,10 @@
 package com.company;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.*;
-import java.io.*;
-import java.math.*;
-import java.util.Scanner;
-import java.util.stream.Collectors;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class Main {
     /*These are one of the fast methods of reading input and writing output*/
@@ -54,7 +50,7 @@ public class Main {
         List<Integer> arrlist = new ArrayList<Integer>();
 
         Collections.addAll(arrlist, arr);
-        while (arrlist.size() > 0 && k -- > 0) {
+        while (arrlist.size() > 0 && k-- > 0) {
             int num = arrlist.get(0);
             int den = arrlist.get(arrlist.size() - 1);
             score += Math.floorDiv(num, den);
@@ -62,7 +58,7 @@ public class Main {
             arrlist.remove(arrlist.size() - 1);
         }
         // Add remaining elements of array as it is:-
-        for (Integer elem: arrlist){
+        for (Integer elem : arrlist) {
             score += elem;
         }
 
