@@ -704,4 +704,25 @@ public class RecursionPatterns {
 
         return sb.toString();
     }
+
+    // MCM Recursive approach
+    public static int matrixMultiplication(int[] arr, int N) {
+        int[][] dp = new int[N][N];
+        for (int[] d : dp) Arrays.fill(d, -1);
+        return helper(arr, 1, N - 1, dp);
+    }
+
+    private static int helper(int[] arr, int i, int j, int[][] dp) {
+        // base case
+        if (i == j) return 0;
+
+        if (dp[i][j] != -1) return dp[i][j];
+        // Try out all possible cases
+        int ans = Integer.MAX_VALUE;
+        for (int k = i; k < j; k++)
+            ans = Math.min(ans, arr[i - 1] * arr[k] * arr[j] + helper(arr, i, k, dp) + helper(arr, k + 1, j, dp));
+        //return mininum
+        return dp[i][j] = ans;
+    }
+
 }

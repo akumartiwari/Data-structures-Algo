@@ -633,8 +633,8 @@ public class DP {
     }
 
 
-        //Author: Anand
-        //TC = O(mn), SC = O(mn)
+    //Author: Anand
+    //TC = O(mn), SC = O(mn)
        /*
         The idea is to make horizontal cuts ie, if i make a cut of {i,j} I can further convert it into pieces of (ii, j) and (i-ii, j) and get the max ans
         Repeat above steps for vertical cut
@@ -664,5 +664,28 @@ public class DP {
             ans = Math.max(ans, dp(i, jj, p, memo) + dp(i, j - jj, p, memo));
         }
         return memo[i][j] = ans;
+    }
+
+
+    // MCM Pattern
+    public static int matrixMultiplicationTD(int[] arr, int N) {
+
+        int[][] dp = new int[N][N];
+        for (int i = 1; i < N; i++) dp[i][i] = 0;
+
+        for (int i = N - 1; i >= 1; i--) {
+            for (int j = i + 1; j < N; j++) {
+                int ans = Integer.MAX_VALUE;
+                for (int k = i; k < j; k++) {
+
+                    ans = Math.min(ans, arr[i - 1] * arr[k] * arr[j] + dp[i][k] + dp[k + 1][j]);
+
+                }
+                dp[i][j] = ans;
+            }
+        }
+        
+        return dp[1][N - 1];
+
     }
 }
