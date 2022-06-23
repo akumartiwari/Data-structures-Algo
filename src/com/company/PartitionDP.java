@@ -126,7 +126,72 @@ public class PartitionDP {
     }
 
 
-    
+    //Author: Anand
+    /*
+    The idea is to  go from last remaining ballon bursted to the first one
+    In this wasy we will be able to make sub-problems non-overlapping
+    and solve them recursively
+    for eg:-
+     [b1 b2 b3 b4]
+    Lets say :-
+    Last ballon busted can be any one of them --> Hence loop iteration is done
+    Assume b3 was bursted we are left with [b1 b2] [b4] as sub-problems
+    Now in the 2nd last step possiblity can be any 1 of them {b1 b3 } {b2 b3} {b3 b4}
+    and Hence we can say that b1 b2 is nowhere depeendene on  each other and
+    non-overllaping sub-problems observed.
+    Cost = arr[b3]*arr[b1]*arr[b4] =~ nl.get(i - 1) * nl.get(ind) * nl.get(j + 1)
+    Solve sub-problems recursively
+    Return max cost
+    TC =~ O(n3), SC = O(n2) + auxillary Stack space
+     */
+    public int maxCoins(int[] nums) {
+        List<Integer> nl = new ArrayList<>();
+        nl.add(1);
+        nl.addAll(Arrays.stream(nums).boxed().collect(Collectors.toList()));
+        nl.add(1);
+        int[][] dp = new int[nums.length + 1][nums.length + 1];
+        for (int[] d : dp) Arrays.fill(d, -1);
+        return f(nl, 1, nums.length, dp);
+    }
+
+    private int f(List<Integer> nl, int i, int j, int[][] dp) {
+        // base case
+        if (i > j) return 0;
+
+        if (dp[i][j] != -1) return dp[i][j];
+        int cost = Integer.MIN_VALUE;
+        for (int ind = i; ind <= j; ind++) {
+            cost = Math.max(cost, nl.get(i - 1) * nl.get(ind) * nl.get(j + 1)
+                    + f(nl, i, ind - 1, dp) + f(nl, ind + 1, j, dp));
+        }
+        return dp[i][j] = cost;
+    }
+
+    // TC =~ O(n3), SC = O(n2)
+    public int maxCoinsTD(int[] nums) {
+        List<Integer> nl = new ArrayList<>();
+        nl.add(1);
+        nl.addAll(Arrays.stream(nums).boxed().collect(Collectors.toList()));
+        nl.add(1);
+
+        int[][] dp = new int[nums.length + 2][nums.length + 2];
+
+        for (int i = nums.length; i >= 1; i--) {
+            for (int j = 1; j <= nums.length; j++) {
+                // base case
+                if (i > j) continue;
+
+                int cost = Integer.MIN_VALUE;
+                for (int ind = i; ind <= j; ind++) {
+                    cost = Math.max(cost, nl.get(i - 1) * nl.get(ind) * nl.get(j + 1)
+                            + dp[i][ind - 1] + dp[ind + 1][j]);
+                }
+                dp[i][j] = cost;
+            }
+        }
+
+        return dp[1][nums.length];
+    }
 
     //Author: Anand
     //TC = O(mn), SC = O(mn)
