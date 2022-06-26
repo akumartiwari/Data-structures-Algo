@@ -632,4 +632,26 @@ public class DP {
         nt = ls(ind - 1, arr, num, k, len, dp);
         return dp[ind] = Math.max(t, nt);
     }
+
+    //Author: Anand
+    public int countHousePlacements(int n) {
+        Map<String, Integer> dp = new HashMap<>();
+        long ways = (count_ways_on_one_side(n, false, dp) + count_ways_on_one_side(n, true, dp)) % MOD;
+        return (int) ((ways * ways) % MOD);
+    }
+
+    private int count_ways_on_one_side(int ind, boolean filled, Map<String, Integer> dp) {
+        // base case
+        if (ind <= 1) return 1;
+        String key = ind + "-" + filled;
+        if (dp.containsKey(key)) return dp.get(key);
+
+        int ans = -1;
+        if (filled) ans = count_ways_on_one_side(ind - 1, false, dp) % MOD;
+        else ans = (count_ways_on_one_side(ind - 1, true, dp) + count_ways_on_one_side(ind - 1, filled, dp)) % MOD;
+
+        dp.put(key, ans);
+        return ans;
+    }
+
 }

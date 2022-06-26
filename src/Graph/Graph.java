@@ -269,6 +269,65 @@ public class Graph {
             id[i] = j;
         }
     }
+
+        /*
+    Input: n = 7, edges = [[0,2],[0,5],[2,4],[1,6],[5,4]]
+    Output: 14
+    Explanation: There are 14 pairs of nodes that are unreachable from each other:
+    [[0,1],[0,3],[0,6],[1,2],[1,3],[1,4],[1,5],[2,3],[2,6],[3,4],[3,5],[3,6],[4,6],[5,6]].
+    Therefore, we return 14.
+     */
+
+    //Author: Anand
+    private int count;
+
+    public long countPairs(int n, int[][] edges) {
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+
+        for (int[] edge : edges) {
+            if (graph.containsKey(edge[0])) {
+                List<Integer> exist = graph.get(edge[0]);
+                exist.add(edge[1]);
+                graph.put(edge[0], exist);
+            } else graph.put(edge[0], new ArrayList<>(Arrays.asList(edge[1])));
+
+            if (graph.containsKey(edge[1])) {
+                List<Integer> exist = graph.get(edge[1]);
+                exist.add(edge[0]);
+                graph.put(edge[1], exist);
+            } else graph.put(edge[1], new ArrayList<>(Arrays.asList(edge[0])));
+        }
+
+        List<Integer> components = new ArrayList<>();
+
+        int[] visited = new int[n];
+        for (int i = 0; i < n; ++i) {
+            if (visited[i] == 0) {
+                count = 0;
+                DFS(i, graph, visited);
+                components.add(count);
+            }
+        }
+
+        long ans = 0;
+        long sum = 0;
+
+        for (int c : components) {
+            sum += c;
+            ans += (long) c * (n - sum);
+        }
+
+        return ans;
+    }
+
+    private void DFS(int start, Map<Integer, List<Integer>> graph, int[] visited) {
+        visited[start] = 1;
+        count++;
+        for (int i = 0; i < (graph.containsKey(start) ? graph.get(start).size() : 0); ++i) {
+            if (visited[(graph.get(start).get(i))] == 0)
+                DFS(graph.get(start).get(i), graph, visited);
+        }
+    }
 }
 
 
