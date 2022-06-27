@@ -1,7 +1,6 @@
 package com.company;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class DP {
 
@@ -652,6 +651,65 @@ public class DP {
 
         dp.put(key, ans);
         return ans;
+    }
+
+    /*
+    The idea is to use DP :-
+    Consider both arrays 1 by 1 that will yield max result
+    I has used Map<String, Integer> in place of 3d DP array but it was giving TLE
+    as sometimes key check in map is more than O(1) (Be careful while using Map)
+    Return Maximum of ans1, ans2
+    */
+    //Author: Anand
+    public int maximumsSplicedArray(int[] nums1, int[] nums2) {
+        int[][][] dp = new int[nums1.length][2][2];
+        for (int[][] d : dp) {
+            for (int[] e : d) {
+                Arrays.fill(e, -1);
+            }
+        }
+
+
+        int[] suff_sum1 = new int[nums1.length], suff_sum2 = new int[nums2.length];
+
+        for (int i = nums1.length - 1; i >= 0; i--)
+            suff_sum1[i] = (i == nums1.length - 1 ? nums1[i] : (suff_sum1[i + 1] + nums1[i]));
+        for (int i = nums1.length - 1; i >= 0; i--)
+            suff_sum2[i] = (i == nums2.length - 1 ? nums2[i] : (suff_sum2[i + 1] + nums2[i]));
+
+
+        int ans1 = DP(nums1, nums2, 0, 0, false, false, suff_sum1, suff_sum2, dp);
+
+        dp = new int[nums1.length][2][2];
+        for (int[][] d : dp) {
+            for (int[] e : d) {
+                Arrays.fill(e, -1);
+            }
+        }
+
+        int ans2 = DP(nums1, nums2, 0, 1, false, false, suff_sum1, suff_sum2, dp);
+        return Math.max(ans1, ans2);
+    }
+
+    private int DP(int[] nums1, int[] nums2, int pos, int state, boolean prev_swap, boolean swapped, int[] suff_sum1, int[] suff_sum2, int[][][] dp) {
+        // base case
+        if (pos == nums1.length) return 0;
+
+        if (dp[pos][prev_swap ? 1 : 0][swapped ? 1 : 0] != -1) return dp[pos][prev_swap ? 1 : 0][swapped ? 1 : 0];
+
+        int ans = (prev_swap ? (state == 0 ? Math.max(nums2[pos] + DP(nums1, nums2, pos + 1, state, prev_swap, true, suff_sum1, suff_sum2, dp),
+                nums1[pos] + DP(nums1, nums2, pos + 1, state, false, true, suff_sum1, suff_sum2, dp))
+                : Math.max(nums1[pos] + DP(nums1, nums2, pos + 1, state, prev_swap, true, suff_sum1, suff_sum2, dp),
+                nums2[pos] + DP(nums1, nums2, pos + 1, state, false, true, suff_sum1, suff_sum2, dp)))
+
+                : (swapped ? ((state == 0 ? nums1[pos] + (pos == (nums1.length - 1) ? 0 : suff_sum1[pos + 1]) : nums2[pos] + (pos == (nums2.length - 1) ? 0 : suff_sum2[pos + 1])))
+                : Math.max(
+                (state == 0 ? nums1[pos] : nums2[pos]) + DP(nums1, nums2, pos + 1, state, prev_swap, swapped, suff_sum1, suff_sum2, dp),
+                (state == 0 ? nums2[pos] : nums1[pos]) + DP(nums1, nums2, pos + 1, state, true, true, suff_sum1, suff_sum2, dp)
+        )
+        ));
+
+        return dp[pos][prev_swap ? 1 : 0][swapped ? 1 : 0] = ans;
     }
 
 }
