@@ -403,6 +403,114 @@ public class Graph {
             ) DFSXOR(graph.get(start).get(i), graph, visited, nums, edge1, edge2, false);
         }
     }
+
+
+    // This solution is highly intutive in nature
+    // TC = O(n2)
+    /*
+    Property ->  a^a=0, 0^a=a
+
+    The idea is to use this property via below algorithm
+    - Do dfs from root and strore xor for each node's subtree
+    - Store ancestors for each node
+    - Now for each pair of edges there are couple of ways to select them
+        1. both edges can be part of same side
+            like :-   / -> edge1
+                     /  -> edge2
+
+        2. edges are part of diffent side
+              like :-    |
+                (edge1) / \ (edge2)
+
+    - For the above 2 cases calculate XOR of each of 3 segmemnt via XOR property
+    and minimise ans.
+
+    - Return minimum ans.
+     */
+    class Solution {
+        int[] nums;
+        Map<Integer, List<Integer>> adj;
+        int[] xor;
+        Set<Integer>[] ancestors;
+
+        public int minimumScore(int[] nums, int[][] edges) {
+
+            this.nums = nums;
+            adj = new HashMap<>();
+            xor = new int[nums.length];
+            ancestors = new Set[nums.length];
+
+
+            int ans = Integer.MAX_VALUE;
+            for (int[] edge : edges) {
+                if (adj.containsKey(edge[0])) {
+                    List<Integer> exist = adj.get(edge[0]);
+                    exist.add(edge[1]);
+                    adj.put(edge[0], exist);
+                } else adj.put(edge[0], new ArrayList<>(Arrays.asList(edge[1])));
+
+                if (adj.containsKey(edge[1])) {
+                    List<Integer> exist = adj.get(edge[1]);
+                    exist.add(edge[0]);
+                    adj.put(edge[1], exist);
+                } else adj.put(edge[1], new ArrayList<>(Arrays.asList(edge[0])));
+            }
+
+
+            dfs(0, -1, new ArrayList<>());
+
+
+            for (int i = 0; i < edges.length; i++) {
+                for (int j = i + 1; j < edges.length; j++) {
+                    int subNode1 = getSubRoot(edges[i]), subNode2 = getSubRoot(edges[j]);
+                    int xc = xor[0], xa = xor[subNode1], xb = xor[subNode2];
+                    // if both child subTree lies under same side
+                    if (ancestors[subNode2].contains(subNode1)) {
+                        xc ^= xa;
+                        xa ^= xb;
+                    } else if (ancestors[subNode1].contains(subNode2)) {
+                        xc ^= xb;
+                        xb ^= xa;
+                    }
+                    // They lies under different subtree
+                    else {
+                        xc ^= xa;
+                        xc ^= xb;
+                    }
+
+                    int min = Math.min(xc, Math.min(xa, xb));
+                    int max = Math.max(xc, Math.max(xa, xb));
+                    ans = Math.min(ans, max - min);
+                }
+            }
+
+            return ans;
+        }
+
+        private int dfs(int i, int parent, List<Integer> path) {
+            int ans = nums[i];
+            ancestors[i] = new HashSet<>();
+            ancestors[i].addAll(path);
+            path.add(i);
+
+            for (int child : adj.get(i)) {
+                if (child != parent) {
+                    ans ^= dfs(child, i, path);
+                }
+            }
+
+            path.remove(path.size() - 1);
+            return xor[i] = ans;
+
+        }
+
+        private int getSubRoot(int[] edge) {
+            int i = edge[0];
+            int j = edge[1];
+            if (ancestors[i].contains(j)) return i;
+            return j;
+        }
+    }
 }
 
 
