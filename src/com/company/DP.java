@@ -712,4 +712,48 @@ public class DP {
         return dp[pos][prev_swap ? 1 : 0][swapped ? 1 : 0] = ans;
     }
 
+    private int gcd(int a, int b) {
+        if (b == 0)
+            return a;
+        return gcd(b, a % b);
+    }
+
+
+    /*
+    The idea behind solving this DP problem was to analyse whether backtracking is needed OR not.
+    Whenever we iterate from all possible states (For eg. dice number = {1,2,3,4,5,6}) we will get
+    all possible paths from  recursion tree starting from root (n-1) under given constraint.
+    Hence total number of ways.
+    TC = O(n*6*6*6); n*6*6 based on states of  recursive call and one more 6 is for loop inside recursive function
+    */
+    //
+    int mod = (int) (Math.pow(10, 9) + 7);
+    public int distinctSequences(int n) {
+        int[][][] dp = new int[10007][7][7];
+        for (int[][] d : dp) {
+            for (int[] x : d) {
+                Arrays.fill(x, -1);
+            }
+        }
+        return ds(0, 0, 0, n, dp);
+    }
+    private int ds(int ind, int l1, int l2, int n, int[][][] dp) {
+        // base case
+        if (ind >= n) {
+            return 1;
+        }
+
+        if (dp[ind][l1][l2] != -1) return dp[ind][l1][l2];
+
+        int take = 0;
+
+        for (int i = 1; i <= 6; i++) {
+            // take
+            if ((l1 != i && l2 != i) && (l1 == 0 || (gcd(l1, i) == 1))) {
+                take = (take + ds(ind + 1, i, l1, n, dp)) % mod;
+            }
+        }
+
+        return dp[ind][l1][l2] = take;
+    }
 }
