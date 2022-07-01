@@ -90,7 +90,11 @@ public class KadaneAlgo {
     Output: 220
     Explanation: Choosing left = 3, right = 4, we have nums1 = [20,40,20,40,20] and nums2 = [50,20,50,70,30].
     The score is max(sum(nums1), sum(nums2)) = max(140, 220) = 220.
-
+------------------------------------------------------------------------------------------------------------
+    Solution :-
+     - The main lies in the fact that we need to maximise the difference subarray in order to get
+     the maximum sum after subarray replacement.
+     - Hence to achieve it we need to use kadane to find maxSumSubArray.
      */
     //Author: Anand
     public int maximumsSplicedArray(int[] nums1, int[] nums2) {
@@ -105,6 +109,5 @@ public class KadaneAlgo {
 
         return Math.max(s1 + maxSubArray(v2), s2 + maxSubArray(v1));
     }
-
 
 }

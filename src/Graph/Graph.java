@@ -341,73 +341,8 @@ public class Graph {
     The score is the difference between the largest and smallest XOR value which is 10 - 1 = 9.
     It can be shown that no other pair of removals will obtain a smaller score than 9.
     Author: Anand
-    */
 
-    //Author: Anand
-    private int xorAns;
-
-    public int minimumScore(int[] nums, int[][] edges) {
-        int ans = Integer.MAX_VALUE;
-        Map<Integer, List<Integer>> graph = new HashMap<>();
-
-        for (int[] edge : edges) {
-            if (graph.containsKey(edge[0])) {
-                List<Integer> exist = graph.get(edge[0]);
-                exist.add(edge[1]);
-                graph.put(edge[0], exist);
-            } else graph.put(edge[0], new ArrayList<>(Arrays.asList(edge[1])));
-
-            if (graph.containsKey(edge[1])) {
-                List<Integer> exist = graph.get(edge[1]);
-                exist.add(edge[0]);
-                graph.put(edge[1], exist);
-            } else graph.put(edge[1], new ArrayList<>(Arrays.asList(edge[0])));
-        }
-
-        for (int i = 0; i < edges.length; i++) {
-            for (int j = i + 1; j < edges.length; j++) {
-                int n = nums.length;
-                int[] visited = new int[n];
-
-                Set<Integer> cutEdges = new HashSet<>();
-                Set<Integer> he1 = Arrays.stream(edges[i]).boxed().collect(Collectors.toSet());
-                Set<Integer> he2 = Arrays.stream(edges[j]).boxed().collect(Collectors.toSet());
-
-                cutEdges.addAll(he1);
-                cutEdges.addAll(he2);
-
-                int max = Integer.MIN_VALUE, min = Integer.MAX_VALUE;
-                for (int node : cutEdges) {
-                    if (visited[node] == 0) {
-                        xorAns = nums[node];
-                        DFSXOR(node, graph, visited, nums, he1, he2, true);
-                        min = Math.min(min, xorAns);
-                        max = Math.max(max, xorAns);
-                    }
-                }
-
-                ans = Math.min(ans, max - min);
-            }
-        }
-        return ans;
-    }
-
-    private void DFSXOR(int start, Map<Integer, List<Integer>> graph, int[] visited, int[] nums, Set<Integer> edge1, Set<Integer> edge2, boolean first) {
-        visited[start] = 1;
-        if (!first) xorAns ^= nums[start];
-        for (int i = 0; i < (graph.containsKey(start) ? graph.get(start).size() : 0); ++i) {
-            int node = graph.get(start).get(i);
-            if (visited[node] == 0
-                    && (!(edge1.contains(start) && edge1.contains(node)))
-                    && (!(edge2.contains(start) && edge2.contains(node)))
-            ) DFSXOR(graph.get(start).get(i), graph, visited, nums, edge1, edge2, false);
-        }
-    }
-
-
-    // This solution is highly intutive in nature
-    // TC = O(n2)
-    /*
+    ### Solution:-
     Property ->  a^a=0, 0^a=a
 
     The idea is to use this property via below algorithm
