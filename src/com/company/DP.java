@@ -641,8 +641,8 @@ public class DP {
     /*
     The idea behind solving this DP problem was to analyse whether backtracking is needed OR not.
     Whenever we iterate from all possible states (For eg. dice number = {1,2,3,4,5,6}) we will get
-    all possible paths from  recursion tree starting from root (n-1) under given constraint.
-    Hence total number of ways.
+    all possible paths from  recursion tree starting from root (n-1) under given constraint. Hence
+    backtracking is not needed to count total number of ways.
     TC = O(n*6*6*6); n*6*6 based on states of  recursive call and one more 6 is for loop inside recursive function
     */
     //
