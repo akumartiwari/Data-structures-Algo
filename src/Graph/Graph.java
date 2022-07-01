@@ -1,6 +1,7 @@
 package Graph;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 // Adjacency list representation of graph
@@ -267,6 +268,182 @@ public class Graph {
             int i = root(p);
             int j = root(q);
             id[i] = j;
+        }
+    }
+
+        /*
+    Input: n = 7, edges = [[0,2],[0,5],[2,4],[1,6],[5,4]]
+    Output: 14
+    Explanation: There are 14 pairs of nodes that are unreachable from each other:
+    [[0,1],[0,3],[0,6],[1,2],[1,3],[1,4],[1,5],[2,3],[2,6],[3,4],[3,5],[3,6],[4,6],[5,6]].
+    Therefore, we return 14.
+     */
+
+    //Author: Anand
+    private int count;
+
+    public long countPairs(int n, int[][] edges) {
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+
+        for (int[] edge : edges) {
+            if (graph.containsKey(edge[0])) {
+                List<Integer> exist = graph.get(edge[0]);
+                exist.add(edge[1]);
+                graph.put(edge[0], exist);
+            } else graph.put(edge[0], new ArrayList<>(Arrays.asList(edge[1])));
+
+            if (graph.containsKey(edge[1])) {
+                List<Integer> exist = graph.get(edge[1]);
+                exist.add(edge[0]);
+                graph.put(edge[1], exist);
+            } else graph.put(edge[1], new ArrayList<>(Arrays.asList(edge[0])));
+        }
+
+        List<Integer> components = new ArrayList<>();
+
+        int[] visited = new int[n];
+        for (int i = 0; i < n; ++i) {
+            if (visited[i] == 0) {
+                count = 0;
+                DFS(i, graph, visited);
+                components.add(count);
+            }
+        }
+
+        long ans = 0;
+        long sum = 0;
+
+        for (int c : components) {
+            sum += c;
+            ans += (long) c * (n - sum);
+        }
+
+        return ans;
+    }
+
+    private void DFS(int start, Map<Integer, List<Integer>> graph, int[] visited) {
+        visited[start] = 1;
+        count++;
+        for (int i = 0; i < (graph.containsKey(start) ? graph.get(start).size() : 0); ++i) {
+            if (visited[(graph.get(start).get(i))] == 0)
+                DFS(graph.get(start).get(i), graph, visited);
+        }
+    }
+
+
+    /*
+    Input: nums = [1,5,5,4,11], edges = [[0,1],[1,2],[1,3],[3,4]]
+    Output: 9
+    Explanation: The diagram above shows a way to make a pair of removals.
+    - The 1st component has nodes [1,3,4] with values [5,4,11]. Its XOR value is 5 ^ 4 ^ 11 = 10.
+    - The 2nd component has node [0] with value [1]. Its XOR value is 1 = 1.
+    - The 3rd component has node [2] with value [5]. Its XOR value is 5 = 5.
+    The score is the difference between the largest and smallest XOR value which is 10 - 1 = 9.
+    It can be shown that no other pair of removals will obtain a smaller score than 9.
+    Author: Anand
+
+    ### Solution:-
+    Property ->  a^a=0, 0^a=a
+
+    The idea is to use this property via below algorithm
+    - Do dfs from root and strore xor for each node's subtree
+    - Store ancestors for each node
+    - Now for each pair of edges there are couple of ways to select them
+        1. both edges can be part of same side
+            like :-   / -> edge1
+                     /  -> edge2
+
+        2. edges are part of diffent side
+              like :-    |
+                (edge1) / \ (edge2)
+
+    - For the above 2 cases calculate XOR of each of 3 segmemnt via XOR property
+    and minimise ans.
+
+    - Return minimum ans.
+     */
+    class Solution {
+        int[] nums;
+        Map<Integer, List<Integer>> adj;
+        int[] xor;
+        Set<Integer>[] ancestors;
+
+        public int minimumScore(int[] nums, int[][] edges) {
+
+            this.nums = nums;
+            adj = new HashMap<>();
+            xor = new int[nums.length];
+            ancestors = new Set[nums.length];
+
+
+            int ans = Integer.MAX_VALUE;
+            for (int[] edge : edges) {
+                if (adj.containsKey(edge[0])) {
+                    List<Integer> exist = adj.get(edge[0]);
+                    exist.add(edge[1]);
+                    adj.put(edge[0], exist);
+                } else adj.put(edge[0], new ArrayList<>(Arrays.asList(edge[1])));
+
+                if (adj.containsKey(edge[1])) {
+                    List<Integer> exist = adj.get(edge[1]);
+                    exist.add(edge[0]);
+                    adj.put(edge[1], exist);
+                } else adj.put(edge[1], new ArrayList<>(Arrays.asList(edge[0])));
+            }
+
+
+            dfs(0, -1, new ArrayList<>());
+
+
+            for (int i = 0; i < edges.length; i++) {
+                for (int j = i + 1; j < edges.length; j++) {
+                    int subNode1 = getSubRoot(edges[i]), subNode2 = getSubRoot(edges[j]);
+                    int xc = xor[0], xa = xor[subNode1], xb = xor[subNode2];
+                    // if both child subTree lies under same side
+                    if (ancestors[subNode2].contains(subNode1)) {
+                        xc ^= xa;
+                        xa ^= xb;
+                    } else if (ancestors[subNode1].contains(subNode2)) {
+                        xc ^= xb;
+                        xb ^= xa;
+                    }
+                    // They lies under different subtree
+                    else {
+                        xc ^= xa;
+                        xc ^= xb;
+                    }
+
+                    int min = Math.min(xc, Math.min(xa, xb));
+                    int max = Math.max(xc, Math.max(xa, xb));
+                    ans = Math.min(ans, max - min);
+                }
+            }
+
+            return ans;
+        }
+
+        private int dfs(int i, int parent, List<Integer> path) {
+            int ans = nums[i];
+            ancestors[i] = new HashSet<>();
+            ancestors[i].addAll(path);
+            path.add(i);
+
+            for (int child : adj.get(i)) {
+                if (child != parent) {
+                    ans ^= dfs(child, i, path);
+                }
+            }
+
+            path.remove(path.size() - 1);
+            return xor[i] = ans;
+
+        }
+
+        private int getSubRoot(int[] edge) {
+            int i = edge[0];
+            int j = edge[1];
+            if (ancestors[i].contains(j)) return i;
+            return j;
         }
     }
 }

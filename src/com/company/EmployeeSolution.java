@@ -3,8 +3,6 @@ package com.company;
 import javafx.util.Pair;
 
 import java.awt.*;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 import java.util.Queue;
 import java.util.*;
@@ -2971,6 +2969,22 @@ Output: [1,2,2,3,5,6]
             return l + "0" + r;
         }
         return binary;
+    }
+
+
+    //Author: Anand
+    /*
+    Input: s = "yo|uar|e**|b|e***au|tifu|l"
+    Output: 5
+    Explanation: The considered characters are underlined: "yo|uar|e**|b|e***au|tifu|l". There are 5 asterisks considered. Therefore, we return 5.
+     [0,0,2,3,0,0]
+     5
+     */
+    public int countAsterisks(String s) {
+        int ans = 0;
+        List<Long> cntStar = Arrays.stream(s.split("\\|")).map(e -> e.chars().filter(x -> x == '*').count()).collect(Collectors.toList());
+        for (int i = 0; i < cntStar.size(); i += 2) ans += cntStar.get(i);
+        return ans;
     }
 }
 

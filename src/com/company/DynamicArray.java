@@ -8828,23 +8828,6 @@ class SolutionHasPath {
         return new ArrayList<>(visited);
     }
 
-    // kadan's algorithm
-    public int maxSubArray(int[] arr) {
-        int n = arr.length;
-        if (n == 0) return 0;
-
-        int maxSoFar = Integer.MIN_VALUE;
-        int maxEndingHere = 0;
-
-        for (int i = 0; i < n; i++) {
-            maxEndingHere += arr[i];
-            maxSoFar = Math.max(maxEndingHere, maxSoFar);
-            if (maxEndingHere < 0) maxEndingHere = 0;
-        }
-
-        return maxSoFar;
-    }
-
     public int[] twoSum(int[] nums, int target) {
         HashMap<Integer, Integer> map = new HashMap<>();
         int[] ans = new int[2];
