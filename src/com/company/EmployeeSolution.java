@@ -2986,8 +2986,98 @@ Output: [1,2,2,3,5,6]
         for (int i = 0; i < cntStar.size(); i += 2) ans += cntStar.get(i);
         return ans;
     }
-}
 
+    //Author: Anand
+    public String decodeMessage(String key, String message) {
+        if (message.trim().isEmpty()) return message;
+        Map<Character, Character> map = new HashMap<>();
+
+        int idx = 0;
+        for (char c : key.toCharArray()) {
+            if (Character.isWhitespace(c) || map.containsKey(c)) continue;
+            if (map.size() < 26) {
+                map.put(c, (char) (idx + 'a'));
+                idx++;
+            } else break;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (String word : message.split(" ")) {
+            for (char c : word.toCharArray()) {
+                if (map.containsKey(c)) {
+                    sb.append(map.get(c));
+                }
+            }
+            sb.append(" ");
+        }
+
+        sb = new StringBuilder(sb.substring(0, sb.length() - 1));
+
+        for (int i = message.length() - 1; i >= 0; i--) {
+            char c = message.charAt(i);
+            if (Character.isWhitespace(c)) sb.append(" ");
+            else break;
+        }
+
+        return sb.toString();
+    }
+
+    /*
+    Input: n = 6, delay = 2, forget = 4
+    Output: 5
+    Explanation:
+    Day 1: Suppose the first person is named A. (1 person)
+    Day 2: A is the only person who knows the secret. (1 person)
+    Day 3: A shares the secret with a new person, B. (2 people)
+    Day 4: A shares the secret with a new person, C. (3 people)
+    Day 5: A forgets the secret, and B shares the secret with a new person, D. (3 people)
+    Day 6: B shares the secret with E, and C shares the secret with F. (5 people)
+     */
+
+    class Solution {
+        //Author: Anand
+        public int peopleAwareOfSecret(int n, int delay, int forget) {
+            final int mod = 1_000_000_007;
+
+            int i = 1;
+            int discovery = 1;
+            Map<Integer, String> store = new HashMap<>();
+
+            String key = discovery + "-" + (discovery + delay) + "-" + (discovery + forget);
+            store.put(i, key);
+
+            int day = 1;
+            while (day <= n) {
+                List<Pair<Integer, String>> list = new ArrayList<>();
+                for (Map.Entry<Integer, String> entry : store.entrySet()) {
+                    list.add(new Pair<>(entry.getKey(), entry.getValue()));
+                }
+
+                for (Pair<Integer, String> pair : list) {
+                    int person = pair.getKey();
+
+                    int[] arr = Arrays.stream(store.get(person).split("-"))
+                            .mapToInt(Integer::parseInt).toArray();
+                    String nk = day + "-" + (day + delay) + "-" + (day + forget);
+
+                    if (day >= arr[1] && day < arr[2]) {
+                        store.put(((i + 1) % mod), nk);
+                    }
+                    // if  days passed then this person will never able to generate new people
+                    if (day >= arr[2]) store.remove(person);
+                }
+                day++;
+            }
+
+            int max = -1;
+            for (Map.Entry<Integer, String> entry : store.entrySet()) {
+                max = Math.max(max, (int) entry.getKey());
+                System.out.println(entry.getValue());
+            }
+            return max;
+        }
+    }
+}
 
     /*
     // TODO: maxRunTime Binary search solution
