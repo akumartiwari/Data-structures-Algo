@@ -2990,6 +2990,151 @@ Output: [1,2,2,3,5,6]
 
 
     /*
+
+    Input: root = [2,1,3,null,null,0,1]
+    Output: true
+    Explanation: The above diagram illustrates the evaluation process.
+    The AND node evaluates to False AND True = False.
+    The OR node evaluates to True OR False = True.
+    The root node evaluates to True, so we return true.
+     */
+
+    //Author: Anand
+    public boolean evaluateTree(TreeNode root) {
+        return helper(root);
+    }
+
+    // L-> R -> root
+    private boolean helper(TreeNode root) {
+        // base case '
+        if (root == null) return true;
+
+        // if leaf node
+        if (root.left == null || root.right == null) {
+            if (root.val == 0) return false;
+            return true;
+        }
+
+        boolean left = helper(root.left);
+        boolean right = helper(root.right);
+
+
+        if (root.val == 2) {
+            return left || right;
+        }
+
+        if (root.val == 3) return left && right;
+        return true;
+    }
+
+/*
+Input: buses = [10,20], passengers = [2,17,18,19], capacity = 2
+Output: 16
+Explanation:
+The 1st bus departs with the 1st passenger.
+The 2nd bus departs with you and the 2nd passenger.
+Note that you must not arrive at the same time as the passengers, which is why you must arrive before the 2nd passenger to catch the bus.
+
+
+ buses = [10,20], pass = [2,17,18,19]
+//Author: Anand
+*/
+class Solution {
+    // TC = O(nlogn)
+    public int latestTimeCatchTheBus(int[] buses, int[] passengers, int capacity) {
+        Arrays.sort(buses);
+        Arrays.sort(passengers);
+
+        int prev = -1;
+        int pcb = 0;
+        for (int bus : buses) {
+            int ind = bs(passengers, bus);
+            if (prev == -1) {
+                prev = Math.min(ind, capacity);
+                pcb = prev;
+            } else {
+                pcb = (ind > (prev + capacity)) ? capacity : ind;
+                prev += pcb;
+            }
+        }
+
+        int value = 0;
+        if (pcb >= capacity) {
+            prev--;
+            value = passengers[prev];
+            for (int i = prev - 1; i >= 0; i--) {
+                if ((value - passengers[i]) != 1) return value - 1;
+                value = passengers[i];
+            }
+        } else {
+            value = buses[buses.length - 1];
+            for (int i = passengers.length - 1; i >= 0; i--) {
+                if (value > passengers[i]) return value;
+                value = passengers[i];
+            }
+        }
+
+        return value - 1;
+    }
+
+    private int bs(int[] passengers, int bus) {
+        int l = 0, h = passengers.length - 1;
+        while (l < h) {
+            int mid = l + (h - l) / 2;
+            if (passengers[mid] <= bus) {
+                l = mid + 1;
+            } else h = mid;
+        }
+        return l;
+    }
+}
+
+/*
+Input: nums1 = [1,2,3,4], nums2 = [2,10,20,19], k1 = 0, k2 = 0
+Output: 579
+Explanation: The elements in nums1 and nums2 cannot be modified because k1 = 0 and k2 = 0.
+The sum of square difference will be: (1 - 2)2 + (2 - 10)2 + (3 - 20)2 + (4 - 19)2 = 579.
+
+ */
+// Author: Anand
+class Solution {
+    // Author: Anand
+    public long minSumSquareDiff(int[] nums1, int[] nums2, int k1, int k2) {
+        int[] diff = new int[nums1.length];
+        for (int i = 0; i < nums1.length; i++) {
+            diff[i] = Math.abs(nums1[i] - nums2[i]);
+        }
+
+        long sum = 0L;
+        for (int d : diff) sum += (long) d * d;
+        // diff need to be minimised in total operations
+        int total = k1 + k2;
+        long ans = Long.MAX_VALUE;
+        ans = Math.min(ans, md(diff, 0, total, sum));
+        return ans;
+    }
+
+    private long md(int[] diff, int ind, int total, long sum) {
+        // base case
+        if (ind >= diff.length || total <= 0) return sum;
+
+        long take = Long.MAX_VALUE, nottake = Long.MAX_VALUE;
+        // take
+        if (diff[ind] >= 1) {
+            int prev = diff[ind];
+            diff[ind]--;
+            take = md(diff, ind, total - 1, sum + 1 - 2L * prev);
+            // backtrack
+            diff[ind]++;
+        }
+
+        // not-take
+        nottake = md(diff, ind + 1, total, sum);
+        return Math.min(take, nottake);
+    }
+}
+
+    /*
     // TODO: maxRunTime Binary search solution
     public:
     bool fun(vector<int>& a, long long x, long long k){
