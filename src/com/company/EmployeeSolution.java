@@ -2986,8 +2986,223 @@ Output: [1,2,2,3,5,6]
         for (int i = 0; i < cntStar.size(); i += 2) ans += cntStar.get(i);
         return ans;
     }
-}
 
+    //Author: Anand
+    /*
+    Input: nums = [18,43,36,13,7]
+    Output: 54
+    Explanation: The pairs (i, j) that satisfy the conditions are:
+    - (0, 2), both numbers have a sum of digits equal to 9, and their sum is 18 + 36 = 54.
+    - (1, 4), both numbers have a sum of digits equal to 7, and their sum is 43 + 7 = 50.
+    So the maximum sum that we can obtain is 54.
+     */
+    //Author: Anand
+    //TC = O(nlogn)
+    public int maximumSum(int[] nums) {
+        Arrays.sort(nums);
+        Map<Long, List<Integer>> map = new HashMap<>(); // store sum of digits, indexes
+        int ind = 0;
+        for (int num : nums) {
+            long key = sod(num);
+            if (map.containsKey(key)) {
+                List<Integer> exist = map.get(key);
+                exist.add(ind++);
+                map.put(key, exist);
+            } else map.put(key, new ArrayList<>(Arrays.asList(ind++)));
+        }
+
+        int max = Integer.MIN_VALUE;
+        boolean flag = false;
+        for (Map.Entry<Long, List<Integer>> entry : map.entrySet()) {
+            List<Integer> indexes = entry.getValue();
+            if (indexes.size() > 1) {
+                flag = true;
+                int value = (nums[indexes.get(indexes.size() - 1)] + nums[indexes.get(indexes.size() - 2)]);
+                max = Math.max(max, value);
+            }
+        }
+
+        return flag ? max : -1;
+    }
+
+    private long sod(int num) {
+        long cnt = 0L;
+        while (num > 0) {
+            cnt += (num % 10);
+            num /= 10;
+        }
+        return cnt;
+    }
+
+    //Author: Anand
+    public int[] smallestTrimmedNumbers(String[] nums, int[][] queries) {
+        int[] ans = new int[queries.length];
+        int idx = 0;
+        for (int[] query : queries) {
+            int smallest = query[0];
+            int ld = query[1];
+
+            Map<Integer, String> map = new HashMap<>(); // ind, string
+            int ind = 0;
+            for (String num : nums) map.put(ind++, num.substring(num.length() - ld));
+
+            Map<String, List<Integer>> tm = new TreeMap<>(); // String, List<ind>
+
+            for (Map.Entry<Integer, String> entry : map.entrySet()) {
+
+                String key = entry.getValue();
+                if (tm.containsKey(key)) {
+                    List<Integer> exist = tm.get(key);
+                    exist.add(entry.getKey());
+                    tm.put(key, exist);
+                } else tm.put(key, new ArrayList<>(Arrays.asList(entry.getKey())));
+            }
+
+            int sn = 0;
+            for (Map.Entry<String, List<Integer>> entry : tm.entrySet()) {
+                List<Integer> numbers = entry.getValue();
+                if (smallest <= 0) break;
+                int ptr = 0;
+                while (ptr < numbers.size()) {
+                    if (smallest-- == 0) break;
+                    sn = numbers.get(ptr++);
+                }
+            }
+            ans[idx++] = sn;
+        }
+        return ans;
+    }
+
+    /*
+    Input: root = [2,1,3,null,null,0,1]
+    Output: true
+    Explanation: The above diagram illustrates the evaluation process.
+    The AND node evaluates to False AND True = False.
+    The OR node evaluates to True OR False = True.
+    The root node evaluates to True, so we return true.
+     */
+
+    //Author: Anand
+    public boolean evaluateTree(TreeNode root) {
+        return helper(root);
+    }
+
+    // L-> R -> root
+    private boolean helper(TreeNode root) {
+        // base case '
+        if (root == null) return true;
+
+        // if leaf node
+        if (root.left == null || root.right == null) {
+            if (root.val == 0) return false;
+            return true;
+        }
+
+        boolean left = helper(root.left);
+        boolean right = helper(root.right);
+
+
+        if (root.val == 2) {
+            return left || right;
+        }
+
+        if (root.val == 3) return left && right;
+        return true;
+    }
+
+    /*
+      Input: buses = [10,20], passengers = [2,17,18,19], capacity = 2
+      Output: 16
+      Explanation:
+      The 1st bus departs with the 1st passenger.
+      The 2nd bus departs with you and the 2nd passenger.
+      Note that you must not arrive at the same time as the passengers, which is why you must arrive before the 2nd passenger to catch the bus.
+
+
+       buses = [10,20], pass = [2,17,18,19]
+      //Author: Anand
+     */
+    // TC = O(nlogn)
+    public int latestTimeCatchTheBus(int[] buses, int[] passengers, int capacity) {
+        Arrays.sort(buses);
+        Arrays.sort(passengers);
+
+        int prev = -1;
+        int pcb = 0;
+        for (int bus : buses) {
+            int ind = bs(passengers, bus);
+            if (prev == -1) {
+                prev = Math.min(ind, capacity);
+                pcb = prev;
+            } else {
+                pcb = (ind > (prev + capacity)) ? capacity : ind;
+                prev += pcb;
+            }
+        }
+
+        int value = 0;
+        if (pcb >= capacity) {
+            prev--;
+            value = passengers[prev];
+            for (int i = prev - 1; i >= 0; i--) {
+                if ((value - passengers[i]) != 1) return value - 1;
+                value = passengers[i];
+            }
+        } else {
+            value = buses[buses.length - 1];
+            for (int i = passengers.length - 1; i >= 0; i--) {
+                if (value > passengers[i]) return value;
+                value = passengers[i];
+            }
+        }
+
+        return value - 1;
+    }
+
+    private int bs(int[] passengers, int bus) {
+        int l = 0, h = passengers.length - 1;
+        while (l < h) {
+            int mid = l + (h - l) / 2;
+            if (passengers[mid] <= bus) {
+                l = mid + 1;
+            } else h = mid;
+        }
+        return l;
+    }
+
+
+    /*
+    Input: nums = [2,3,2,4,3], numsDivide = [9,6,9,3,15]
+    Output: 2
+    Explanation:
+    The smallest element in [2,3,2,4,3] is 2, which does not divide all the elements of numsDivide.
+    We use 2 deletions to delete the elements in nums that are equal to 2 which makes nums = [3,4,3].
+    The smallest element in [3,4,3] is 3, which divides all the elements of numsDivide.
+    It can be shown that 2 is the minimum number of deletions needed.
+     */
+    //Author: Anand
+    //TC = O(nlogn)
+    public int minOperations(int[] nums, int[] numsDivide) {
+        long gcd = numsDivide[0];
+        for (int i = 1; i < numsDivide.length; i++) gcd = _gcd(gcd, numsDivide[i]);
+        Arrays.sort(nums);
+        int cnt = 0;
+        for (int num : nums) {
+            if (gcd % num == 0) return cnt;
+            cnt++;
+        }
+
+        return -1;
+    }
+
+    //long version for gcd
+    public static long _gcd(long a, long b) {
+        if (b == 0)
+            return a;
+
+        return _gcd(b, a % b);
+    }
+}
 
     /*
     // TODO: maxRunTime Binary search solution
