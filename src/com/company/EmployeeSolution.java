@@ -3170,47 +3170,6 @@ Output: [1,2,2,3,5,6]
         return l;
     }
 
-    /*
-    Input: nums1 = [1,2,3,4], nums2 = [2,10,20,19], k1 = 0, k2 = 0
-    Output: 579
-    Explanation: The elements in nums1 and nums2 cannot be modified because k1 = 0 and k2 = 0.
-    The sum of square difference will be: (1 - 2)2 + (2 - 10)2 + (3 - 20)2 + (4 - 19)2 = 579.
-     */
-    // Author: Anand
-    public long minSumSquareDiff(int[] nums1, int[] nums2, int k1, int k2) {
-        int[] diff = new int[nums1.length];
-        for (int i = 0; i < nums1.length; i++) {
-            diff[i] = Math.abs(nums1[i] - nums2[i]);
-        }
-
-        long sum = 0L;
-        for (int d : diff) sum += (long) d * d;
-        // diff need to be minimised in total operations
-        int total = k1 + k2;
-        long ans = Long.MAX_VALUE;
-        ans = Math.min(ans, md(diff, 0, total, sum));
-        return ans;
-    }
-
-    private long md(int[] diff, int ind, int total, long sum) {
-        // base case
-        if (ind >= diff.length || total <= 0) return sum;
-
-        long take = Long.MAX_VALUE, nottake = Long.MAX_VALUE;
-        // take
-        if (diff[ind] >= 1) {
-            int prev = diff[ind];
-            diff[ind]--;
-            take = md(diff, ind, total - 1, sum + 1 - 2L * prev);
-            // backtrack
-            diff[ind]++;
-        }
-
-        // not-take
-        nottake = md(diff, ind + 1, total, sum);
-        return Math.min(take, nottake);
-    }
-
 
     /*
     Input: nums = [2,3,2,4,3], numsDivide = [9,6,9,3,15]
