@@ -1,6 +1,5 @@
 package com.company;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
@@ -38,30 +37,18 @@ public class TreeSetExample {
 
         public void change(int index, int number) {
             if (iN.containsKey(index)) {
-                int prev = iN.get(index);
-                iN.put(index, number);
-
-                TreeSet<Integer> indexes = map.get(prev);
-                indexes.remove(index);
-                if (indexes.size() == 0) {
-                    map.remove(prev);
-                } else {
-                    map.put(prev, indexes);
-                }
-            } else iN.put(index, number);
-
-            if (map.containsKey(number)) {
-                TreeSet<Integer> ni = map.get(number);
-                ni.add(index);
-                map.put(number, ni);
-            } else {
-                map.put(number, new TreeSet<>(Collections.singleton(index)));
+                map.get(iN.get(index)).remove(index);
             }
+
+            iN.put(index, number);
+
+            if (map.containsKey(number)) map.put(number, new TreeSet<>());
+            map.get(number).add(index);
         }
 
         //O(1)
         public int find(int number) {
-            return map.containsKey(number) ? map.get(number).first() : -1;
+            return map.containsKey(number) && map.get(number).size() > 0 ? map.get(number).first() : -1;
         }
     }
 

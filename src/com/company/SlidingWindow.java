@@ -1,8 +1,7 @@
 package com.company;
 
-import javafx.util.Pair;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SlidingWindow {
     // Sliding window
@@ -127,18 +126,10 @@ public class SlidingWindow {
     //Author: Anand
     public long zeroFilledSubarray(int[] nums) {
         long cnt = 0L;
-        int i = 0, j = 0;
-        while (i < nums.length) {
-            if (nums[i] != 0) {
-                if (i != j) {
-                    cnt += Math.abs((long) ((long) (i - j) * (i - j + 1)) / 2);
-                }
-                i++;
-                j = i;
-            } else i++;
+        for (int i = 0, j = 0; i < nums.length; ++i) {
+            if (nums[i] != 0) j = i + 1;
+            cnt += i - j + 1;
         }
-
-        cnt += Math.abs(((long) (i - j) * (i - j + 1)) / 2);
         return cnt;
     }
 }
