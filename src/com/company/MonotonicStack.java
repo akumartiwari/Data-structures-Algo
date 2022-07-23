@@ -32,6 +32,7 @@ public class MonotonicStack {
         return subArraySize;
     }
 
+
     //Author: Anand
     /*
      Input: nums = [5,3,4,4,7,3,6,11,8,5,11]
@@ -120,5 +121,33 @@ public class MonotonicStack {
         for (int i = 0; i < n; i++)
             sum = sum % mod + (a[i] * (left[i] + 1) * (right[i] + 1)) % mod;
         return sum % mod;
+    }
+
+
+    //TODO: Complete this
+    class Solution {
+        private static final int mod = 1000000007;
+
+        public int maxSumMinProduct(int[] nums) {
+            int ind = 0;
+            int[] pref_sum = new int[nums.length];
+            for (int num : nums) {
+                pref_sum[ind] = ind == 0 ? num : pref_sum[ind - 1] + num;
+                ind++;
+            }
+
+
+            Stack<Integer> stack = new Stack<>();
+            int subArraySize = Integer.MIN_VALUE;
+            for (int i = 0; i <= nums.length; i++) {
+                while (!stack.isEmpty() && (i == nums.length || nums[stack.peek()] < nums[i])) {
+                    int height = nums[stack.pop()];
+                    int width = stack.isEmpty() ? i : pref_sum[i] - pref_sum[stack.peek()];
+                    subArraySize = Math.max(subArraySize, (height * width) % mod);
+                }
+                stack.push(i);
+            }
+            return subArraySize;
+        }
     }
 }

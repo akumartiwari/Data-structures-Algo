@@ -1,7 +1,8 @@
 package com.company;
 
-import java.util.ArrayList;
-import java.util.List;
+import javafx.util.Pair;
+
+import java.util.*;
 
 public class SlidingWindow {
     // Sliding window
@@ -114,4 +115,30 @@ public class SlidingWindow {
         return cnt;
     }
 
+
+    /*
+    Input: nums = [1,3,0,0,2,0,0,4]
+    Output: 6
+    Explanation:
+    There are 4 occurrences of [0] as a subarray.
+    There are 2 occurrences of [0,0] as a subarray.
+    There is no occurrence of a subarray with a size more than 2 filled with 0. Therefore, we return 6.
+     */
+    //Author: Anand
+    public long zeroFilledSubarray(int[] nums) {
+        long cnt = 0L;
+        int i = 0, j = 0;
+        while (i < nums.length) {
+            if (nums[i] != 0) {
+                if (i != j) {
+                    cnt += Math.abs((long) ((long) (i - j) * (i - j + 1)) / 2);
+                }
+                i++;
+                j = i;
+            } else i++;
+        }
+
+        cnt += Math.abs(((long) (i - j) * (i - j + 1)) / 2);
+        return cnt;
+    }
 }
