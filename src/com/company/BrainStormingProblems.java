@@ -1,5 +1,8 @@
 package com.company;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class BrainStormingProblems {
     /*
     Input: nums1 = [1,2,3,4], nums2 = [2,10,20,19], k1 = 0, k2 = 0
@@ -39,4 +42,34 @@ public class BrainStormingProblems {
 
         return res;
     }
+
+
+    /*
+    Input: rolls = [4,2,1,2,3,3,2,4,1], k = 4
+    Output: 3
+    Explanation: Every sequence of rolls of length 1, [1], [2], [3], [4], can be taken from rolls.
+    Every sequence of rolls of length 2, [1, 1], [1, 2], ..., [4, 4], can be taken from rolls.
+    The sequence [1, 4, 2] cannot be taken from rolls, so we return 3.
+    Note that there are other sequences that cannot be taken from rolls.
+     */
+    //    The idea is to think how can you form  a all sequences of len=len starting
+    //    form 1 ie. find the index, Now repeat the above process for len=2
+    //    and so on.
+
+    // TC = O(n)
+    //Author: Anand
+    public int shortestSequence(int[] rolls, int k) {
+        int len = 1;
+        Set<Integer> set = new HashSet<>();
+
+        for (int i = 0; i < rolls.length; i++) {
+            set.add(rolls[i]);
+            if (set.size() == k) {
+                set.clear();
+                len++;
+            }
+        }
+
+        return len;
+    }   
 }

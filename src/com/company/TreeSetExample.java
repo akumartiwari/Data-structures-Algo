@@ -105,6 +105,15 @@ public class TreeSetExample {
      */
 
 
+    /*
+    Input: nums = [1,2,3,1], k = 3
+    Output: 5
+    Explanation: The excellent pairs are the following:
+    - (3, 3). (3 AND 3) and (3 OR 3) are both equal to (11) in binary. The total number of set bits is 2 + 2 = 4, which is greater than or equal to k = 3.
+    - (2, 3) and (3, 2). (2 AND 3) is equal to (10) in binary, and (2 OR 3) is equal to (11) in binary. The total number of set bits is 1 + 2 = 3.
+    - (1, 3) and (3, 1). (1 AND 3) is equal to (01) in binary, and (1 OR 3) is equal to (11) in binary. The total number of set bits is 1 + 2 = 3.
+    So the number of excellent pairs is 5.
+     */
     // TC = O(32*n)
     // The idea is to avoid solving the problem in O(n2) by using map
     // We have used map to store nr of set bits of all numbers grouped together
