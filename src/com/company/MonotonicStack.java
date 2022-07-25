@@ -3,6 +3,36 @@ package com.company;
 import java.util.Stack;
 
 public class MonotonicStack {
+
+
+    /*
+    Input: nums = [1,3,4,3,1], threshold = 6
+    Output: 3
+    Explanation: The subarray [3,4,3] has a size of 3, and every element is greater than 6 / 3 = 2.
+    Note that this is the only valid subarray.
+
+    Algorithm :-
+    - ArrayDeque is used a stack.
+    - Iterate through all elements of array
+    - check if stack top consist of greater element OR Last element it means all element to left  are also greater
+     It means it can be a valid subArray
+    - To check if its valid we need get smallest element *  size of subArray > threshold --> return Valid Subarray
+    */
+    public int validSubarraySize(int[] nums, int threshold) {
+        Stack<Integer> stack = new Stack<>();
+        int subArraySize = -1;
+        for (int i = 0; i <= nums.length; i++) {
+            while (!stack.isEmpty() && (i == nums.length || nums[stack.peek()] > nums[i])) {
+                int height = nums[stack.pop()];
+                int width = stack.isEmpty() ? i : i - stack.peek() - 1;
+                if (height * width > threshold) return width;
+            }
+            stack.push(i);
+        }
+        return subArraySize;
+    }
+
+
     //Author: Anand
     /*
      Input: nums = [5,3,4,4,7,3,6,11,8,5,11]
@@ -91,5 +121,33 @@ public class MonotonicStack {
         for (int i = 0; i < n; i++)
             sum = sum % mod + (a[i] * (left[i] + 1) * (right[i] + 1)) % mod;
         return sum % mod;
+    }
+
+
+    //TODO: Complete this
+    class Solution {
+        private static final int mod = 1000000007;
+
+        public int maxSumMinProduct(int[] nums) {
+            int ind = 0;
+            int[] pref_sum = new int[nums.length];
+            for (int num : nums) {
+                pref_sum[ind] = ind == 0 ? num : pref_sum[ind - 1] + num;
+                ind++;
+            }
+
+
+            Stack<Integer> stack = new Stack<>();
+            int subArraySize = Integer.MIN_VALUE;
+            for (int i = 0; i <= nums.length; i++) {
+                while (!stack.isEmpty() && (i == nums.length || nums[stack.peek()] < nums[i])) {
+                    int height = nums[stack.pop()];
+                    int width = stack.isEmpty() ? i : pref_sum[i] - pref_sum[stack.peek()];
+                    subArraySize = Math.max(subArraySize, (height * width) % mod);
+                }
+                stack.push(i);
+            }
+            return subArraySize;
+        }
     }
 }

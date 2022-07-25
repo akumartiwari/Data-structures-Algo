@@ -131,10 +131,10 @@ public class DynamicArray {
 
     /*
     Input: arr = [1,2,3,5], k = 3
-Output: [2,5]
+    Output: [2,5]
 
-l =0 , h = 3;
-l=1 , h=3 counter = 2
+    l =0 , h = 3;
+    l=1 , h=3 counter = 2
      */
 
     private int[] getMapValueAt(LinkedHashMap<Integer, Integer> hashMap, int index) {
@@ -252,19 +252,18 @@ l=1 , h=3 counter = 2
 
     /*
     Input: s = "abc", t = "ahbgdc"
-Output: true
+    Output: true
 
-Input: s = "abcde", words = ["a","bb","acd","ace"]
-Output: 3
+    Input: s = "abcde", words = ["a","bb","acd","ace"]
+    Output: 3
 
-"abcde"
-["a","bb","acd","ace"]
+    "abcde"
+    ["a","bb","acd","ace"]
 
-     */
+         */
 
 
-//    O(words*s*log(t))
-
+    //O(words*s*log(t))
     // O(words*s))
 
     HashMap<Character, Integer> map = new HashMap<>();
@@ -285,7 +284,7 @@ Output: 3
     map ()
 
     "kguhsugfxvwxakdcovjeczhqvbevkhlixsrhumxykbkihjdfxxxwragzcbhngbzgasxysxdtwntvbpdihtvkffacmxhbxxqniyqm"
-["ykbkihjdfxxxwragzcbhngbzgasxysxdtwn","wxakdcovjeczhqvbevkhlixsrhumxykbkihj","diht","covjeczhqvbevkhlixsrhumxykbkihjdfxxxwragzcbhngbz","ovjeczhqvbevkhlixsrhumxykbkihjdfxxxwragzcbhng","qhzucvqxalfrtlrdjverseuldzymzbunhugekoyyghmkpkfqmd","eydmbsorvjnnifqxsyuypsrijzrosukrhtbneprpyyoawbvoki","uanfzlfmmtvhzzebrazyuslbapsfzwtlvqbhqxsfmqagwxetro","fffaawedchlcyqvzzxbzczbwyfjkllpsjhoozyresqemmawban","astrknwzefcmuswdxalooatmiduspjuofthtomoqilgdojwhon"]
+    ["ykbkihjdfxxxwragzcbhngbzgasxysxdtwn","wxakdcovjeczhqvbevkhlixsrhumxykbkihj","diht","covjeczhqvbevkhlixsrhumxykbkihjdfxxxwragzcbhngbz","ovjeczhqvbevkhlixsrhumxykbkihjdfxxxwragzcbhng","qhzucvqxalfrtlrdjverseuldzymzbunhugekoyyghmkpkfqmd","eydmbsorvjnnifqxsyuypsrijzrosukrhtbneprpyyoawbvoki","uanfzlfmmtvhzzebrazyuslbapsfzwtlvqbhqxsfmqagwxetro","fffaawedchlcyqvzzxbzczbwyfjkllpsjhoozyresqemmawban","astrknwzefcmuswdxalooatmiduspjuofthtomoqilgdojwhon"]
 
      */
     public boolean isSubsequence(String s, String t) {
