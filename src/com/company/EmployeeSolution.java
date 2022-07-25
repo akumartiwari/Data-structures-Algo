@@ -3202,6 +3202,85 @@ Output: [1,2,2,3,5,6]
 
         return _gcd(b, a % b);
     }
+
+//23/07/2022    -----------------------------------------------------------------------------------------
+
+
+    /*
+    "Flush": Five cards of the same suit.
+    "Three of a Kind": Three cards of the same rank.
+    "Pair": Two cards of the same rank.
+    "High Card": Any single card.
+
+    Input: ranks = [4,4,2,4,4], suits = ["d","a","a","b","c"]
+    Output: "Three of a Kind"
+    Explanation: The hand with the first, second, and fourth card consists of 3 cards with the same rank, so we have a "Three of a Kind".
+    Note that we could also make a "Pair" hand but "Three of a Kind" is a better hand.
+    Also note that other cards could be used to make the "Three of a Kind" hand.
+
+     */
+    //Author: Anand
+    public String bestHand(int[] ranks, char[] suits) {
+        char c = '#';
+        boolean sameSuite = true;
+        for (char s : suits) {
+            if (c == '#') c = s;
+            else if (c != s) {
+                sameSuite = false;
+                break;
+            }
+        }
+
+        if (sameSuite) return "Flush";
+
+        Map<Integer, Integer> freq = new HashMap<>();// Rank,Count
+
+        for (int rank : ranks) {
+            freq.put(rank, freq.getOrDefault(rank, 0) + 1);
+            if (freq.get(rank) == 3) return "Three of a Kind";
+        }
+
+        for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {
+            if (entry.getValue() == 2) return "Pair";
+        }
+
+        return "High Card";
+    }
+
+    /*
+    Input: grid = [[3,2,1],[1,7,6],[2,7,7]]
+    Output: 1
+    Explanation: There is 1 equal row and column pair:
+    - (Row 2, Column 1): [2,7,7]
+
+
+     */
+    //Author: Anand
+    public int equalPairs(int[][] grid) {
+        int ans = 0;
+
+        List<String> allColumns = new ArrayList<>();
+        for (int i = 0; i < grid.length; i++) {
+            StringBuilder sb = new StringBuilder();
+            for (int j = 0; j < grid[0].length; j++) {
+                sb.append(grid[j][i]).append(",");
+            }
+            allColumns.add(sb.toString());
+        }
+
+
+        for (int[] r : grid) {
+            StringBuilder row = new StringBuilder();
+            for (int c : r) {
+                row.append(c).append(",");
+            }
+
+            ans += allColumns.stream().filter(x -> x.equals(row.toString())).count();
+        }
+
+        return ans;
+    }
+
 }
 
     /*
