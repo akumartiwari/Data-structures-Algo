@@ -1,8 +1,6 @@
 package com.company;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeSet;
+import java.util.*;
 
 public class TreeSetExample {
 
@@ -42,7 +40,7 @@ public class TreeSetExample {
 
             iN.put(index, number);
 
-            if (map.containsKey(number)) map.put(number, new TreeSet<>());
+            if (!map.containsKey(number)) map.put(number, new TreeSet<>());
             map.get(number).add(index);
         }
 
@@ -52,10 +50,57 @@ public class TreeSetExample {
         }
     }
 
-    /**
-     * Your NumberContainers object will be instantiated and called as such:
-     * NumberContainers obj = new NumberContainers();
-     * obj.change(index,number);
-     * int param_2 = obj.find(number);
-     */
+    //Author: Anand
+    class FoodRatings {
+
+        Map<String, TreeMap<Integer, TreeSet<String>>> CRF = new HashMap<>();  // {c, (r,f)}
+        Map<String, Integer> FR = new HashMap<>(); // {f,r}
+        Map<String, String> FC = new HashMap<>(); // {f,c}
+
+        public FoodRatings(String[] foods, String[] cuisines, int[] ratings) {
+            for (String cuisine : cuisines) {
+                CRF.put(cuisine, new TreeMap<>());
+            }
+
+            for (int i = 0; i < foods.length; i++) FR.put(foods[i], ratings[i]);
+
+            for (int i = 0; i < cuisines.length; i++) {
+                if (CRF.containsKey(cuisines[i])) {
+                    if (CRF.get(cuisines[i]).get(ratings[i]) != null)
+                        CRF.get(cuisines[i]).get(ratings[i]).add(foods[i]);
+                    else CRF.get(cuisines[i]).put(ratings[i], new TreeSet<>(Collections.singleton(foods[i])));
+                } else {
+                    TreeMap<Integer, TreeSet<String>> tm = new TreeMap<>();
+                    tm.put(ratings[i], new TreeSet<>(Collections.singleton(foods[i])));
+                    CRF.put(cuisines[i], tm);
+                }
+            }
+            for (int i = 0; i < foods.length; i++) FC.put(foods[i], cuisines[i]);
+
+        }
+
+        public void changeRating(String food, int newRating) {
+            if (FR.containsKey(food) && CRF.get(FC.get(food)).get(FR.get(food)) != null)
+                CRF.get(FC.get(food)).get(FR.get(food)).remove(food);
+
+            if (CRF.get(FC.get(food)).get(FR.get(food)).size() == 0) CRF.get(FC.get(food)).remove(FR.get(food));
+
+            FR.put(food, newRating);
+            if (!CRF.containsKey(FC.get(food))) CRF.put(FC.get(food), new TreeMap<>());
+
+            if (CRF.get(FC.get(food)).get(newRating) != null) CRF.get(FC.get(food)).put(newRating, new TreeSet<>());
+            CRF.get(FC.get(food)).get(newRating).add(food);
+        }
+
+        public String highestRated(String cuisine) {
+            return CRF.containsKey(cuisine) && CRF.get(cuisine).size() > 0 && CRF.get(cuisine).lastEntry().getValue().size() > 0 ? CRF.get(cuisine).lastEntry().getValue().first() : null;
+        }
+    }
+
+/**
+ * Your FoodRatings object will be instantiated and called as such:
+ * FoodRatings obj = new FoodRatings(foods, cuisines, ratings);
+ * obj.changeRating(food,newRating);
+ * String param_2 = obj.highestRated(cuisine);
+ */
 }

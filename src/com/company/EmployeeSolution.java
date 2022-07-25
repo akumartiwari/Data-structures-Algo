@@ -3247,6 +3247,40 @@ Output: [1,2,2,3,5,6]
         return "High Card";
     }
 
+    /*
+    Input: grid = [[3,2,1],[1,7,6],[2,7,7]]
+    Output: 1
+    Explanation: There is 1 equal row and column pair:
+    - (Row 2, Column 1): [2,7,7]
+
+
+     */
+    //Author: Anand
+    public int equalPairs(int[][] grid) {
+        int ans = 0;
+
+        List<String> allColumns = new ArrayList<>();
+        for (int i = 0; i < grid.length; i++) {
+            StringBuilder sb = new StringBuilder();
+            for (int j = 0; j < grid[0].length; j++) {
+                sb.append(grid[j][i]).append(",");
+            }
+            allColumns.add(sb.toString());
+        }
+
+
+        for (int[] r : grid) {
+            StringBuilder row = new StringBuilder();
+            for (int c : r) {
+                row.append(c).append(",");
+            }
+
+            ans += allColumns.stream().filter(x -> x.equals(row.toString())).count();
+        }
+
+        return ans;
+    }
+
 }
 
     /*
