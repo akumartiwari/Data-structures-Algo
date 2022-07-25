@@ -97,10 +97,41 @@ public class TreeSetExample {
         }
     }
 
-/**
- * Your FoodRatings object will be instantiated and called as such:
- * FoodRatings obj = new FoodRatings(foods, cuisines, ratings);
- * obj.changeRating(food,newRating);
- * String param_2 = obj.highestRated(cuisine);
- */
+    /**
+     * Your FoodRatings object will be instantiated and called as such:
+     * FoodRatings obj = new FoodRatings(foods, cuisines, ratings);
+     * obj.changeRating(food,newRating);
+     * String param_2 = obj.highestRated(cuisine);
+     */
+
+
+    // TC = O(32*n)
+    // The idea is to avoid solving the problem in O(n2) by using map
+    // We have used map to store nr of set bits of all numbers grouped together
+    // then used vis Set to avoid duplication of them.
+    public long countExcellentPairs(int[] nums, int k) {
+        long ans = 0L;
+
+        TreeMap<Integer, TreeSet<Integer>> map = new TreeMap<>(); // {nr. of set  bits, nr}
+
+        for (int num : nums) {
+            if (!map.containsKey(Integer.bitCount(num))) map.put(Integer.bitCount(num), new TreeSet<>());
+            map.get(Integer.bitCount(num)).add(num);
+        }
+
+        Set<Integer> vis = new HashSet<>();
+
+        for (int num : nums) {
+            if (vis.contains(num)) continue;
+
+            int need = k - Integer.bitCount(num);
+
+            // O(32) as largest num,ber can be of 32 bits
+            for (Map.Entry<Integer, TreeSet<Integer>> entry : map.entrySet())
+                if (entry.getKey() >= need) ans += entry.getValue().size();
+
+            vis.add(num);
+        }
+        return ans;
+    }
 }
