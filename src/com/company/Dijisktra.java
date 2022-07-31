@@ -182,4 +182,91 @@ public class Dijisktra {
         for (int e : edges) graph.add(new ArrayList<>());
         for (int i = 0; i < edges.length; i++) if (edges[i] != -1) graph.get(i).add(edges[i]);
     }
+
+    /*
+    Input: edges = [2,2,3,-1], node1 = 0, node2 = 1
+    Output: 2
+    Explanation: The distance from node 0 to node 2 is 1, and the distance from node 1 to node 2 is 1.
+    The maximum of those two distances is 1. It can be proven that we cannot get a node with a smaller maximum distance than 1, so we return node 2.
+     */
+    class Solution {
+        // ALGO:- find cycle + DFS
+        //Author:Anand
+        //Directed acyclic graph based problem
+        // TC = O(n)
+        public int longestCycle(int[] edges) {
+            int n = edges.length;
+            Set<Integer> visited = new HashSet<>();
+            // initiate dependencies
+            Map<Integer, Set<Integer>> childToParents = new HashMap<>();
+            for (int i = 0; i < edges.length; i++) {
+                childToParents.computeIfAbsent(edges[i], k -> new HashSet<>());
+                childToParents.get(edges[i]).add(i);
+            }
+
+            int max = -1;
+            // all the cycles with size 2, along with its connected chain, can fit into a table
+            int size2Together = 0;
+            for (int i = 0; i < n; i++) {
+                if (visited.contains(i))
+                    continue;
+
+                // cycleSize & cycleEntryPoint
+                int[] tableMeta = findCycle(i, edges, visited);
+                if (tableMeta[0] == 2) {
+                    childToParents.get(tableMeta[1]).remove(edges[tableMeta[1]]);
+                    childToParents.get(edges[tableMeta[1]]).remove(tableMeta[1]);
+
+                    int dist = dfs(tableMeta[1], childToParents, visited);
+                    if (dist > 2) tableMeta[0] += dist + dfs(edges[tableMeta[1]], childToParents, visited);
+                    size2Together += tableMeta[0];
+                }
+                max = Math.max(max, tableMeta[0]);
+            }
+
+            return (max > 0 || size2Together != 0) ? Math.max(max, size2Together) : -1;
+        }
+
+        // return : new int[] {cycleSize, entryPoint}
+        private int[] findCycle(int startPoint, int[] edges, Set<Integer> visited) {
+            int next = startPoint;
+            int entryPoint = -1;
+            int cycleSize = 0;
+
+            // find entry point of cycle
+            while (entryPoint == -1) {
+                visited.add(next);
+                cycleSize++;
+                if (next != -1) next = edges[next];
+                else return new int[]{Integer.MIN_VALUE, entryPoint};
+
+                if (visited.contains(next))
+                    entryPoint = next;
+            }
+
+            // remove the segment from startPoint to entryPoint
+            next = startPoint;
+            while (next != entryPoint) {
+                cycleSize--;
+                next = edges[next];
+            }
+
+            return new int[]{cycleSize, entryPoint};
+        }
+
+        private int dfs(int child, Map<Integer, Set<Integer>> childToParents, Set<Integer> visited) {
+            visited.add(child);
+
+            if (!childToParents.containsKey(child) || childToParents.get(child).isEmpty())
+                return 1;
+
+            int max = 0;
+            for (int parent : childToParents.get(child)) {
+                max = Math.max(max, dfs(parent, childToParents, visited) + 1);
+            }
+
+            return max;
+        }
+
+    }
 }
