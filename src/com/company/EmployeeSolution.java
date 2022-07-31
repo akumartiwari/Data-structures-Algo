@@ -3367,6 +3367,72 @@ Output: [1,2,2,3,5,6]
 
         return ans;
     }
+
+    /*
+    Input: grades = [10,6,12,7,3,5]
+    Output: 3
+    Explanation: The following is a possible way to form 3 groups of students:
+    - 1st group has the students with grades = [12]. Sum of grades: 12. Student count: 1
+    - 2nd group has the students with grades = [6,7]. Sum of grades: 6 + 7 = 13. Student count: 2
+    - 3rd group has the students with grades = [10,3,5]. Sum of grades: 10 + 3 + 5 = 18. Student count: 3
+    It can be shown that it is not possible to form more than 3 groups.
+     */
+    // Author: Anand
+    public int maximumGroups(int[] grades) {
+        Arrays.sort(grades);
+        int ind = 0, cnt = 0;
+        while (ind < grades.length) {
+            if (ind + cnt < grades.length) cnt++;
+            ind += cnt;
+        }
+        return cnt;
+    }
+
+    class Solution {
+        // ALGO:- find cycle + DFS
+        //Author:Anand
+        //Directed acyclic graph based problem
+        // TC = O(n)
+        public int longestCycle(int[] edges) {
+            int n = edges.length;
+            Set<Integer> visited = new HashSet<>();
+            // initiate dependencies
+            Map<Integer, Set<Integer>> childToParents = new HashMap<>();
+            for (int i = 0; i < edges.length; i++) {
+                childToParents.computeIfAbsent(edges[i], k -> new HashSet<>());
+                childToParents.get(edges[i]).add(i);
+            }
+
+            int max = 0;
+            // all the cycles with size 2, along with its connected chain, can fit into a table
+            int size2Together = 0;
+            for (int i = 0; i < n; i++) {
+                visited.clear();
+                // cycleSize & cycleEntryPoint
+                int[] tableMeta = findCycle(i, edges, visited);
+                max = Math.max(max, tableMeta[1]);
+            }
+
+            return max;
+
+        }
+
+        // return : new int[] {cycleSize, entryPoint}
+        private int[] findCycle(int startPoint, int[] edges, Set<Integer> visited) {
+            int cycleSize = 0;
+
+            int currNode  = startPoint;
+            // find entry point of cycle
+            while (!visited.contains(currNode)) {
+                visited.add(currNode);
+                cycleSize++;
+                currNode = edges[currNode];
+            }
+
+            return new int[]{cycleSize, startPoint};
+        }
+    }
+
 }
 
     /*
