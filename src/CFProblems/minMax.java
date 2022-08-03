@@ -1,5 +1,6 @@
+package CFProblems;
+
 import java.io.*;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
