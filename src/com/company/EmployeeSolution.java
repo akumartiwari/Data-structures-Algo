@@ -2988,6 +2988,41 @@ Output: [1,2,2,3,5,6]
     }
 
     //Author: Anand
+    public String decodeMessage(String key, String message) {
+        if (message.trim().isEmpty()) return message;
+        Map<Character, Character> map = new HashMap<>();
+
+        int idx = 0;
+        for (char c : key.toCharArray()) {
+            if (Character.isWhitespace(c) || map.containsKey(c)) continue;
+            if (map.size() < 26) {
+                map.put(c, (char) (idx + 'a'));
+                idx++;
+            } else break;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (String word : message.split(" ")) {
+            for (char c : word.toCharArray()) {
+                if (map.containsKey(c)) {
+                    sb.append(map.get(c));
+                }
+            }
+            sb.append(" ");
+        }
+
+        sb = new StringBuilder(sb.substring(0, sb.length() - 1));
+
+        for (int i = message.length() - 1; i >= 0; i--) {
+            char c = message.charAt(i);
+            if (Character.isWhitespace(c)) sb.append(" ");
+            else break;
+        }
+
+        return sb.toString();
+    }
+
+    //Author: Anand
     /*
     Input: nums = [18,43,36,13,7]
     Output: 54
@@ -3203,6 +3238,60 @@ Output: [1,2,2,3,5,6]
         return _gcd(b, a % b);
     }
 
+        /*
+    Input: n = 6, delay = 2, forget = 4
+    Output: 5
+    Explanation:
+    Day 1: Suppose the first person is named A. (1 person)
+    Day 2: A is the only person who knows the secret. (1 person)
+    Day 3: A shares the secret with a new person, B. (2 people)
+    Day 4: A shares the secret with a new person, C. (3 people)
+    Day 5: A forgets the secret, and B shares the secret with a new person, D. (3 people)
+    Day 6: B shares the secret with E, and C shares the secret with F. (5 people)
+     */
+
+    //Author: Anand
+    public int peopleAwareOfSecret(int n, int delay, int forget) {
+        final int mod = 1_000_000_007;
+
+        int i = 1;
+        int discovery = 1;
+        Map<Integer, String> store = new HashMap<>();
+
+        String key = discovery + "-" + (discovery + delay) + "-" + (discovery + forget);
+        store.put(i, key);
+
+        int day = 1;
+        while (day <= n) {
+            List<Pair<Integer, String>> list = new ArrayList<>();
+            for (Map.Entry<Integer, String> entry : store.entrySet()) {
+                list.add(new Pair<>(entry.getKey(), entry.getValue()));
+            }
+
+            for (Pair<Integer, String> pair : list) {
+                int person = pair.getKey();
+
+                int[] arr = Arrays.stream(store.get(person).split("-"))
+                        .mapToInt(Integer::parseInt).toArray();
+                String nk = day + "-" + (day + delay) + "-" + (day + forget);
+
+                if (day >= arr[1] && day < arr[2]) {
+                    store.put(((i + 1) % mod), nk);
+                }
+                // if  days passed then this person will never able to generate new people
+                if (day >= arr[2]) store.remove(person);
+            }
+            day++;
+        }
+
+        int max = -1;
+        for (Map.Entry<Integer, String> entry : store.entrySet()) {
+            max = Math.max(max, (int) entry.getKey());
+            System.out.println(entry.getValue());
+        }
+        return max;
+    }
+
 //23/07/2022    -----------------------------------------------------------------------------------------
 
 
@@ -3252,8 +3341,6 @@ Output: [1,2,2,3,5,6]
     Output: 1
     Explanation: There is 1 equal row and column pair:
     - (Row 2, Column 1): [2,7,7]
-
-
      */
     //Author: Anand
     public int equalPairs(int[][] grid) {
@@ -3281,6 +3368,25 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+    Input: grades = [10,6,12,7,3,5]
+    Output: 3
+    Explanation: The following is a possible way to form 3 groups of students:
+    - 1st group has the students with grades = [12]. Sum of grades: 12. Student count: 1
+    - 2nd group has the students with grades = [6,7]. Sum of grades: 6 + 7 = 13. Student count: 2
+    - 3rd group has the students with grades = [10,3,5]. Sum of grades: 10 + 3 + 5 = 18. Student count: 3
+    It can be shown that it is not possible to form more than 3 groups.
+     */
+    // Author: Anand
+    public int maximumGroups(int[] grades) {
+        Arrays.sort(grades);
+        int ind = 0, cnt = 0;
+        while (ind < grades.length) {
+            if (ind + cnt < grades.length) cnt++;
+            ind += cnt;
+        }
+        return cnt;
+    }
 }
 
     /*
