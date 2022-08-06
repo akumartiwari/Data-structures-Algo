@@ -64,7 +64,7 @@ public class ShortestPathAlgo {
             int u = queue.poll();
             for (int i = 0; i < adj.get(u).size(); i++) {
                 if (visited[adj.get(u).get(i)]) continue;
-                // if not visited then mark it visted and process it in queue
+                // if not visited then mark it visited and process it in queue
                 visited[adj.get(u).get(i)] = true;
                 queue.offer(adj.get(u).get(i));
                 dist[adj.get(u).get(i)] = 1 + dist[u];
@@ -117,15 +117,13 @@ public class ShortestPathAlgo {
 
     // function to sort hashmap by values
     public static HashMap<Integer, Integer> sortByValueInteger(Map<Integer, Integer> hm) {
-        HashMap<Integer, Integer> temp
-                = hm.entrySet()
-                .stream()
-                .sorted((i1, i2) -> i2.getValue().compareTo(i1.getValue()))
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (e1, e2) -> e1, LinkedHashMap::new));
 
-        return temp;
+        return hm.entrySet()
+        .stream()
+        .sorted((i1, i2) -> i2.getValue().compareTo(i1.getValue()))
+        .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                Map.Entry::getValue,
+                (e1, e2) -> e1, LinkedHashMap::new));
     }
 }
