@@ -3476,6 +3476,74 @@ Output: [1,2,2,3,5,6]
         return days;
     }
 
+
+    /*
+    Input: nums = [0,1,4,6,7,10], diff = 3
+    Output: 2
+    Explanation:
+    (1, 2, 4) is an arithmetic triplet because both 7 - 4 == 3 and 4 - 1 == 3.
+    (2, 4, 5) is an arithmetic triplet because both 10 - 7 == 3 and 7 - 4 == 3. 
+     */
+    //Author: Anand
+    public int arithmeticTriplets(int[] nums, int diff) {
+
+        int cnt = 0;
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                for (int k = j + 1; k < nums.length; k++)
+                    if (nums[j] - nums[i] == diff && nums[k] - nums[j] == diff) cnt++;
+            }
+        }
+        return cnt;
+
+    }
+
+    /*
+    Input: n = 7, edges = [[0,1],[1,2],[3,1],[4,0],[0,5],[5,6]], restricted = [4,5]
+    Output: 4
+    Explanation: The diagram above shows the tree.
+    We have that [0,1,2,3] are the only nodes that can be reached from node 0 without visiting a restricted node.
+     */
+    //Author: Anand
+    public int reachableNodes(int n, int[][] edges, int[] restricted) {
+
+        int cnt = 0;
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+
+        for (int[] edge : edges) {
+            if (!graph.containsKey(edge[0])) graph.put(edge[0], new ArrayList<>());
+            graph.get(edge[0]).add(edge[1]);
+
+            if (!graph.containsKey(edge[1])) graph.put(edge[1], new ArrayList<>());
+            graph.get(edge[1]).add(edge[0]);
+
+        }
+
+        Set<Integer> restricteds = new HashSet<>();
+        for (int r : restricted) restricteds.add(r);
+
+        Queue<Integer> queue = new LinkedList<>();
+        boolean[] visited = new boolean[n];
+        Arrays.fill(visited, false);
+        queue.add(0);
+        visited[0] = true;
+        cnt++;
+        while (!queue.isEmpty()) {
+            int elem = queue.poll();
+            for (int e : graph.get(elem)) {
+
+                if (visited[e]) continue;
+
+                if (!restricteds.contains(e)) {
+                    visited[e] = true;
+                    queue.offer(e);
+                    cnt++;
+                }
+            }
+        }
+        return cnt;
+    }
+
 }
 
     /*

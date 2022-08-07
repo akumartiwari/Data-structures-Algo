@@ -225,4 +225,41 @@ public class PartitionDP {
         }
         return memo[i][j] = ans;
     }
+
+    /*
+    Input: nums = [4,4,4,5,6]
+    Output: true
+    Explanation: The array can be partitioned into the subarrays [4,4] and [4,5,6].
+    This partition is valid, so we return true.
+     */
+    //Author: Anand
+    public boolean validPartition(int[] nums) {
+
+        int n = nums.length;
+        int[] dp = new int[nums.length];
+        Arrays.fill(dp, -1);
+        return ((nums[0] == nums[1] && partition(2, nums, dp)) ||
+                ((n > 2 && nums[0] == nums[1] && nums[1] == nums[2]) && partition(3, nums, dp)) ||
+                ((n > 2 && nums[0] + 1 == nums[1] && nums[1] + 1 == nums[2]) && partition(3, nums, dp)));
+    }
+
+    private boolean partition(int ind, int[] nums, int[] dp) {
+
+        if (ind >= nums.length) return true;
+
+        if (dp[ind] != -1) return dp[ind] == 1;
+
+        if ((ind + 1 < nums.length && (nums[ind] == nums[ind + 1]) && partition(ind + 2, nums, dp))
+                ||
+                (ind + 2 < nums.length && (nums[ind] == nums[ind + 1] && nums[ind + 1] == nums[ind + 2]) && partition(ind + 3, nums, dp))
+                ||
+                (ind + 2 < nums.length && (nums[ind] + 1 == nums[ind + 1] && nums[ind + 1] + 1 == nums[ind + 2]) && partition(ind + 3, nums, dp))) {
+            dp[ind] = 1;
+            return true;
+        }
+        dp[ind] = 0;
+        return false;
+    }
+
+
 }
