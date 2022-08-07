@@ -756,4 +756,83 @@ public class DP {
         return dp[pos][prev_swap ? 1 : 0][swapped ? 1 : 0] = ans;
     }
 
+    /*
+     Input: s = "acfgbd", k = 2
+     Output: 4
+     Explanation: The longest ideal string is "acbd". The length of this string is 4, so 4 is returned.
+     Note that "acfgbd" is not ideal because 'c' and 'f' have a difference of 3 in alphabet order.
+    */
+    //Author: Anand
+    public int longestIdealString(String s, int k) {
+
+        int[][] dp = new int[s.length()][64];
+        for (int[] d : dp) Arrays.fill(d, -1);
+        return Math.max(1 + ls(s, k, 1, s.charAt(0), dp), ls(s, k, 1, '#', dp));
+    }
+
+    private int ls(String s, int k, int ind, char prev, int[][] dp) {
+        // base case
+        if (ind >= s.length()) return 0;
+
+        if (prev != '#' && dp[ind][(int) prev - 'a'] != -1) return dp[ind][(int) prev - 'a'];
+        int take = 0, nt = 0;
+        //take
+        if (prev == '#' || (int) Math.abs(prev - s.charAt(ind)) <= k) {
+            take = 1 + ls(s, k, ind + 1, s.charAt(ind), dp);
+        }
+        // not take
+        nt = ls(s, k, ind + 1, prev, dp);
+        return dp[ind][Math.abs((int) prev - 'a')] = Math.max(take, nt);
+    }
+
+    // TODO: TBD
+    class Solution {
+        //Author: Anand
+        long op = 0L;
+
+        public long minimumReplacement(int[] nums) {
+            int min = Integer.MAX_VALUE;
+            int[] smallest = new int[nums.length];
+            for (int i = nums.length - 1; i >= 0; i--) {
+                min = Math.min(min, nums[i]);
+                smallest[i] = min;
+            }
+            for (int i = 0; i < nums.length; i++) {
+                f(nums, smallest, i);
+            }
+
+            return op;
+        }
+
+        private void f(int[] nums, int[] smallest, int ind) {
+
+            if (ind >= nums.length) return;
+
+            System.out.println("smallest=" + Arrays.toString(smallest));
+            System.out.println("nums=" + Arrays.toString(nums));
+            System.out.println("ind=" + ind + ",op=" + op);
+
+
+            if (nums[ind] > smallest[ind]) {
+                boolean broken = false;
+
+                while ((nums[ind] % smallest[ind]) != 0) {
+                    int nsp = nums[ind] % smallest[ind];
+
+                    broken = true;
+                    long ntp = (long) Math.ceil(smallest[ind] / nsp);
+                    op += ntp - 1;
+                    nums[ind] = smallest[ind];
+                    if (nsp != 0) smallest[ind] = nsp;
+                }
+
+                if (!broken) {
+                    op += (long) Math.ceil(nums[ind] / smallest[ind]) - 1;
+                    nums[ind] = smallest[ind];
+                }
+            }
+            f(nums, smallest, ind + 1);
+
+        }
+    }
 }
