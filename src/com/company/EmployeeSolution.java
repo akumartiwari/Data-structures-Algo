@@ -3136,11 +3136,7 @@ Output: [1,2,2,3,5,6]
         boolean left = helper(root.left);
         boolean right = helper(root.right);
 
-
-        if (root.val == 2) {
-            return left || right;
-        }
-
+        if (root.val == 2) return left || right;
         if (root.val == 3) return left && right;
         return true;
     }
@@ -3387,6 +3383,165 @@ Output: [1,2,2,3,5,6]
         }
         return cnt;
     }
+
+
+    /*
+    Input: items1 = [[1,1],[3,2],[2,3]], items2 = [[2,1],[3,2],[1,3]]
+    Output: [[1,4],[2,4],[3,4]]
+    Explanation: 
+    The item with value = 1 occurs in items1 with weight = 1 and in items2 with weight = 3, total weight = 1 + 3 = 4.
+    The item with value = 2 occurs in items1 with weight = 3 and in items2 with weight = 1, total weight = 3 + 1 = 4.
+    The item with value = 3 occurs in items1 with weight = 2 and in items2 with weight = 2, total weight = 2 + 2 = 4.
+    Therefore, we return [[1,4],[2,4],[3,4]].
+
+     //Author: Anand
+     */
+    public List<List<Integer>> mergeSimilarItems(int[][] items1, int[][] items2) {
+        Map<Integer, Integer> tm = new TreeMap<>();// v->tw
+
+        for (int[] item : items1) tm.put(item[0], tm.getOrDefault(item[0], 0) + item[1]);
+        for (int[] item : items2) tm.put(item[0], tm.getOrDefault(item[0], 0) + item[1]);
+        List<List<Integer>> ans = new ArrayList<>();
+
+        for (Map.Entry<Integer, Integer> entry : tm.entrySet())
+            ans.add(new ArrayList<>(Arrays.asList(entry.getKey(), entry.getValue())));
+
+        return ans;
+    }
+
+    /*
+    Input: nums = [4,1,3,3]
+    Output: 5
+    Explanation: The pair (0, 1) is a bad pair since 1 - 0 != 1 - 4.
+    The pair (0, 2) is a bad pair since 2 - 0 != 3 - 4, 2 != -1.
+    The pair (0, 3) is a bad pair since 3 - 0 != 3 - 4, 3 != -1.
+    The pair (1, 2) is a bad pair since 2 - 1 != 3 - 1, 1 != 2.
+    The pair (2, 3) is a bad pair since 3 - 2 != 3 - 3, 1 != 0.
+    There are a total of 5 bad pairs, so we return 5.
+     */
+
+    public long countBadPairs(int[] nums) {
+        long cnt = 0L;
+        TreeMap<Integer, Integer> diffMap = new TreeMap<>();
+        for (int i = 0; i < nums.length; i++) diffMap.put(i, nums[i] - i);
+
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (Map.Entry<Integer, Integer> entry : diffMap.entrySet())
+            freq.put(entry.getValue(), freq.getOrDefault(entry.getValue(), 0) + 1);
+
+
+        int idx = 0;
+        for (Map.Entry<Integer, Integer> entry : diffMap.entrySet()) {
+            freq.put(entry.getValue(), freq.getOrDefault(entry.getValue(), 0) - 1);
+            if (freq.containsKey(entry.getValue()) && freq.get(entry.getValue()) < 0) freq.remove(entry.getValue());
+
+            long ans = nums.length - 1 - idx++ - (freq.getOrDefault(entry.getValue(), 0));
+            cnt += ans;
+        }
+
+        return cnt;
+    }
+
+    /*
+    Input: tasks = [1,2,1,2,3,1], space = 3
+    Output: 9
+    Explanation:
+    One way to complete all tasks in 9 days is as follows:
+    Day 1: Complete the 0th task.
+    Day 2: Complete the 1st task.
+    Day 3: Take a break.
+    Day 4: Take a break.
+    Day 5: Complete the 2nd task.
+    Day 6: Complete the 3rd task.
+    Day 7: Take a break.
+    Day 8: Complete the 4th task.
+    Day 9: Complete the 5th task.
+    It can be shown that the tasks cannot be completed in less than 9 days.
+     */
+    public long taskSchedulerII(int[] tasks, int space) {
+        long days = 1;
+        Map<Integer, Long> map = new HashMap<>();// task -> last index
+        int ind = 0;
+        while (ind < tasks.length) {
+            if (map.containsKey(tasks[ind])) {
+                if (days - map.get(tasks[ind]) > space) {
+                    map.put(tasks[ind], days);
+                } else days = map.get(tasks[ind]) + space;
+            } else {
+                map.put(tasks[ind], days);
+            }
+            days++;
+        }
+
+        return days;
+    }
+
+
+    /*
+    Input: nums = [0,1,4,6,7,10], diff = 3
+    Output: 2
+    Explanation:
+    (1, 2, 4) is an arithmetic triplet because both 7 - 4 == 3 and 4 - 1 == 3.
+    (2, 4, 5) is an arithmetic triplet because both 10 - 7 == 3 and 7 - 4 == 3. 
+     */
+    //Author: Anand
+    public int arithmeticTriplets(int[] nums, int diff) {
+
+        int cnt = 0;
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                for (int k = j + 1; k < nums.length; k++)
+                    if (nums[j] - nums[i] == diff && nums[k] - nums[j] == diff) cnt++;
+            }
+        }
+        return cnt;
+
+    }
+
+    /*
+    Input: n = 7, edges = [[0,1],[1,2],[3,1],[4,0],[0,5],[5,6]], restricted = [4,5]
+    Output: 4
+    Explanation: The diagram above shows the tree.
+    We have that [0,1,2,3] are the only nodes that can be reached from node 0 without visiting a restricted node.
+     */
+    //Author: Anand
+    public int reachableNodes(int n, int[][] edges, int[] restricted) {
+
+        int cnt = 0;
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+
+        for (int[] edge : edges) {
+            if (!graph.containsKey(edge[0])) graph.put(edge[0], new ArrayList<>());
+            graph.get(edge[0]).add(edge[1]);
+
+            if (!graph.containsKey(edge[1])) graph.put(edge[1], new ArrayList<>());
+            graph.get(edge[1]).add(edge[0]);
+
+        }
+
+        Set<Integer> restricteds = Arrays.stream(restricted).boxed().collect(Collectors.toSet());
+
+        Queue<Integer> queue = new LinkedList<>();
+        boolean[] visited = new boolean[n];
+        queue.add(0);
+        visited[0] = true;
+        cnt++;
+        while (!queue.isEmpty()) {
+            int elem = queue.poll();
+            for (int e : graph.get(elem)) {
+
+                if (visited[e]) continue;
+
+                if (!restricteds.contains(e)) {
+                    visited[e] = true;
+                    queue.offer(e);
+                    cnt++;
+                }
+            }
+        }
+        return cnt;
+    }
+
 }
 
     /*

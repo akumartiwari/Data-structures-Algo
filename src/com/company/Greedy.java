@@ -5,6 +5,41 @@ import java.util.List;
 import java.util.*;
 
 public class Greedy {
+
+    /*
+    Input: nums = [3,9,3]
+    Output: 2
+    Explanation: Here are the steps to sort the array in non-decreasing order:
+    - From [3,9,3], replace the 9 with 3 and 6 so the array becomes [3,3,6,3]
+    - From [3,3,6,3], replace the 6 with 3 and 3 so the array becomes [3,3,3,3,3]
+    There are 2 steps to sort the array in non-decreasing order. Therefore, we return 2.
+
+    Greedy Approach :-
+    - Reversely traverse the input nums, for each element,
+       if it is greater than the previous one, then try to break into parts such that each part is no greater than the previous and as large as possible.
+    - Initialize the prev to the largest int value as dummy value;
+    - Reversely traverse nums, for each element, if it is greater than the previous one,
+      compute how many parts we can break it into,
+       then calculate the value of smallest part as prev,
+        increase the number of operations by the number of parts - 1;
+         if it is not greater than the previous, assign current element value to prev.
+    */
+    //Author: Anand
+    public long minimumReplacement(int[] nums) {
+        int prev = Integer.MAX_VALUE;
+        long op = 0L;
+        for (int i = nums.length - 1; i >= 0; i--) {
+            int curr = nums[i];
+            if (curr > prev) {
+                int times = (curr + prev - 1) / prev;
+                prev = curr / times;
+                op += times - 1;
+            } else prev = curr;
+        }
+        return op;
+    }
+
+
     /*
     Input: plantTime = [1,4,3], growTime = [2,3,1]
     Output: 9

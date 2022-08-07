@@ -756,4 +756,32 @@ public class DP {
         return dp[pos][prev_swap ? 1 : 0][swapped ? 1 : 0] = ans;
     }
 
+    /*
+     Input: s = "acfgbd", k = 2
+     Output: 4
+     Explanation: The longest ideal string is "acbd". The length of this string is 4, so 4 is returned.
+     Note that "acfgbd" is not ideal because 'c' and 'f' have a difference of 3 in alphabet order.
+    */
+    //Author: Anand
+    public int longestIdealString(String s, int k) {
+
+        int[][] dp = new int[s.length()][64];
+        for (int[] d : dp) Arrays.fill(d, -1);
+        return Math.max(1 + ls(s, k, 1, s.charAt(0), dp), ls(s, k, 1, '#', dp));
+    }
+
+    private int ls(String s, int k, int ind, char prev, int[][] dp) {
+        // base case
+        if (ind >= s.length()) return 0;
+
+        if (prev != '#' && dp[ind][(int) prev - 'a'] != -1) return dp[ind][(int) prev - 'a'];
+        int take = 0, nt = 0;
+        //take
+        if (prev == '#' || (int) Math.abs(prev - s.charAt(ind)) <= k) {
+            take = 1 + ls(s, k, ind + 1, s.charAt(ind), dp);
+        }
+        // not take
+        nt = ls(s, k, ind + 1, prev, dp);
+        return dp[ind][Math.abs((int) prev - 'a')] = Math.max(take, nt);
+    }
 }
