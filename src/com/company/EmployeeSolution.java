@@ -3519,12 +3519,10 @@ Output: [1,2,2,3,5,6]
 
         }
 
-        Set<Integer> restricteds = new HashSet<>();
-        for (int r : restricted) restricteds.add(r);
+        Set<Integer> restricteds = Arrays.stream(restricted).boxed().collect(Collectors.toSet());
 
         Queue<Integer> queue = new LinkedList<>();
         boolean[] visited = new boolean[n];
-        Arrays.fill(visited, false);
         queue.add(0);
         visited[0] = true;
         cnt++;
