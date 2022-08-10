@@ -3076,21 +3076,17 @@ Output: [1,2,2,3,5,6]
         for (int[] query : queries) {
             int smallest = query[0];
             int ld = query[1];
+            int ind = 0;
 
             Map<Integer, String> map = new HashMap<>(); // ind, string
-            int ind = 0;
             for (String num : nums) map.put(ind++, num.substring(num.length() - ld));
 
             Map<String, List<Integer>> tm = new TreeMap<>(); // String, List<ind>
 
             for (Map.Entry<Integer, String> entry : map.entrySet()) {
-
                 String key = entry.getValue();
-                if (tm.containsKey(key)) {
-                    List<Integer> exist = tm.get(key);
-                    exist.add(entry.getKey());
-                    tm.put(key, exist);
-                } else tm.put(key, new ArrayList<>(Arrays.asList(entry.getKey())));
+                if (!tm.containsKey(key)) tm.put(key, new ArrayList<>());
+                tm.get(key).add(entry.getKey());
             }
 
             int sn = 0;
@@ -3541,6 +3537,18 @@ Output: [1,2,2,3,5,6]
         }
         return cnt;
     }
+
+
+    public int numUniqueEmails(String[] emails) {
+        Set<String> uniqueEmails = new HashSet<>();
+        for (String email : emails) {
+            String[] parts = email.split("[@]");
+            uniqueEmails.add(parts[0].replaceAll("[.]", "").split("[/+/]")[0] + "@" + parts[1]);
+        }
+        return uniqueEmails.size();
+    }
+
+
 
 }
 
