@@ -3548,8 +3548,89 @@ Output: [1,2,2,3,5,6]
         return uniqueEmails.size();
     }
 
+    public String licenseKeyFormatting(String s, int k) {
+        int n = s.length();
+        StringBuilder ans = new StringBuilder();
+        int ind = n - 1;
+        while (ind >= 0) {
+            char ch = s.charAt(ind);
+            if (ch == '-') {
+                ind--;
+                continue;
+            }
+
+            int cnt = k;
+            StringBuilder sb = new StringBuilder();
+            sb.append(Character.toUpperCase(ch));
+            ind--;
+            cnt--;
+
+            while (cnt > 0 && ind >= 0) {
+                if (s.charAt(ind) == '-') {
+                    ind--;
+                    continue;
+                }
+
+                sb.insert(0, Character.toUpperCase(s.charAt(ind--)));
+                cnt--;
+            }
+
+            if (ind >= 0 && sb.length() > 0) ans.insert(0, "-" + sb);
+
+            else if (ind < 0 && sb.length() > 0) {
+                ans.insert(0, sb);
+                break;
+            } else if (ind < 0 && sb.length() == 0) {
+                ans.deleteCharAt(0);
+                break;
+            }
+        }
+
+        if (ans.length() > 0 && ans.charAt(0) == '-') ans.deleteCharAt(0);
+        return ans.toString();
+    }
 
 
+    //Author: Anand
+    public int totalFruit(int[] fruits) {
+        Map<Integer, Integer> map = new HashMap<>();
+        int maxi = Integer.MIN_VALUE;
+        int cnt = 0;
+
+        int continous = -1;
+        int lastKey = -1;
+        int firstKey = -1;
+        for (int fruit : fruits) {
+
+            if (lastKey == -1) lastKey = fruit;
+            if (firstKey == -1) firstKey = fruit;
+            if (continous == -1) continous = 1;
+
+            if (!map.containsKey(fruit)) {
+                if (map.size() >= 2) {
+                    maxi = Math.max(maxi, cnt);
+                    cnt = continous;
+                    map.remove(firstKey);
+                    map.put(lastKey, continous);
+                }
+                continous = 1;
+            } else if (fruit == lastKey) continous++;
+            else continous = 1;
+
+            if (lastKey != fruit) {
+                firstKey = lastKey;
+                lastKey = fruit;
+            }
+            map.put(fruit, map.getOrDefault(fruit, 0) + 1);
+            cnt++;
+        }
+
+
+        cnt = 0;
+        for (int key : map.keySet()) cnt += map.get(key);
+        maxi = Math.max(maxi, cnt);
+        return maxi;
+    }
 }
 
     /*
