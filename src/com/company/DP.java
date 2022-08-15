@@ -836,4 +836,58 @@ public class DP {
         return cnt;
 
     }
+
+    /*
+    Input: n = 20
+    Output: 19
+    Explanation: All the integers from 1 to 20, except 11, are special. Thus, there are 19 special integers.
+     */
+    //Author: Anand
+    //TLE
+    public int countSpecialNumbers(int n) {
+        int cnt = 0;
+        int d = 0;
+        int number = n;
+
+        while (number > 0) {
+            d++;
+            number /= 10;
+        }
+
+        Map<String, Integer> dp = new HashMap<>();
+        for (int i = 1; i <= d; i++) {
+            cnt += f(i, n, new HashSet<>(), new StringBuilder(), dp);
+        }
+        return cnt;
+    }
+
+    private int f(int digits, int n, Set<Integer> taken, StringBuilder number, Map<String, Integer> dp) {
+
+        // base case
+        if (digits <= 0) return 1;
+
+        String key = digits + "-" + String.join("", (CharSequence) taken) + "-" + number;
+        if (dp.containsKey(key)) return dp.get(key);
+        int cnt = 0;
+        for (int i = 0; i <= 9; i++) {
+            int ind = i;
+            if (digits != 1) ind = i;
+            else {
+                if (i == 9) continue;
+                ind = i + 1;
+            }
+
+            number.insert(0, ind);
+            if (number.toString().equals("") || ((Long.parseLong(number.toString()) <= n) && (!taken.contains(ind)))) {
+                taken.add(ind);
+                cnt += f(digits - 1, n, taken, number, dp);
+                taken.remove(ind);
+            }
+            // backtrack
+            number.deleteCharAt(0);
+        }
+
+        dp.put(key, cnt);
+        return cnt;
+    }
 }
