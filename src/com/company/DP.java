@@ -866,7 +866,7 @@ public class DP {
         // base case
         if (digits <= 0) return 1;
 
-        String key = digits + "-" + String.join("", (CharSequence) taken) + "-" + number;
+        String key = digits + "-" + number;
         if (dp.containsKey(key)) return dp.get(key);
         int cnt = 0;
         for (int i = 0; i <= 9; i++) {
