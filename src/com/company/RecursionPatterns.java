@@ -741,7 +741,7 @@ public class RecursionPatterns {
             for (int k = 1; k <= 9; k++) set.add(k);
         }
 
-        return String.valueOf(ans);
+        return String.valueOf(result);
     }
 
     private void dfs(int ind, String pattern, Set<Integer> set, StringBuilder take, Set<Integer> taken) {

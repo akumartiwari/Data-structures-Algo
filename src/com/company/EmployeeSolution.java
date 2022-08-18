@@ -3659,6 +3659,7 @@ Output: [1,2,2,3,5,6]
     public int[] nextGreaterElements(int[] nums) {
 
         Map<Integer, List<Integer>> map = new HashMap<>();
+
         Stack<Integer> stk = new Stack<>();
 
         for (int i = nums.length - 1; i >= 0; i--) {
@@ -3695,12 +3696,6 @@ Output: [1,2,2,3,5,6]
             stk.push(i);
         }
 
-
-        for (Map.Entry<Integer, List<Integer>> entry : map.entrySet())
-            System.out.println("k= " + entry.getKey() + ",v =" + Arrays.toString(entry.getValue().stream().toArray()));
-
-
-        System.out.println(Arrays.toString(ans));
         for (int i = 0; i < nums.length; i++) {
             if (ans[i] != Integer.MIN_VALUE) continue;
 
@@ -3714,7 +3709,6 @@ Output: [1,2,2,3,5,6]
 
     //Author: Anand
     public int edgeScore(int[] edges) {
-        int cnt = 0;
         Map<Integer, List<Integer>> graph = new TreeMap<>();
 
         for (int i = 0; i < edges.length; i++) {
@@ -3735,10 +3729,7 @@ Output: [1,2,2,3,5,6]
         return maxNode;
     }
 
-
-
 }
-
 
     /*
     // TODO: maxRunTime Binary search solution
