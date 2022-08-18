@@ -3076,21 +3076,17 @@ Output: [1,2,2,3,5,6]
         for (int[] query : queries) {
             int smallest = query[0];
             int ld = query[1];
+            int ind = 0;
 
             Map<Integer, String> map = new HashMap<>(); // ind, string
-            int ind = 0;
             for (String num : nums) map.put(ind++, num.substring(num.length() - ld));
 
             Map<String, List<Integer>> tm = new TreeMap<>(); // String, List<ind>
 
             for (Map.Entry<Integer, String> entry : map.entrySet()) {
-
                 String key = entry.getValue();
-                if (tm.containsKey(key)) {
-                    List<Integer> exist = tm.get(key);
-                    exist.add(entry.getKey());
-                    tm.put(key, exist);
-                } else tm.put(key, new ArrayList<>(Arrays.asList(entry.getKey())));
+                if (!tm.containsKey(key)) tm.put(key, new ArrayList<>());
+                tm.get(key).add(entry.getKey());
             }
 
             int sn = 0;
@@ -3540,6 +3536,197 @@ Output: [1,2,2,3,5,6]
             }
         }
         return cnt;
+    }
+
+
+    public int numUniqueEmails(String[] emails) {
+        Set<String> uniqueEmails = new HashSet<>();
+        for (String email : emails) {
+            String[] parts = email.split("[@]");
+            uniqueEmails.add(parts[0].replaceAll("[.]", "").split("[/+/]")[0] + "@" + parts[1]);
+        }
+        return uniqueEmails.size();
+    }
+
+    public String licenseKeyFormatting(String s, int k) {
+        int n = s.length();
+        StringBuilder ans = new StringBuilder();
+        int ind = n - 1;
+        while (ind >= 0) {
+            char ch = s.charAt(ind);
+            if (ch == '-') {
+                ind--;
+                continue;
+            }
+
+            int cnt = k;
+            StringBuilder sb = new StringBuilder();
+            sb.append(Character.toUpperCase(ch));
+            ind--;
+            cnt--;
+
+            while (cnt > 0 && ind >= 0) {
+                if (s.charAt(ind) == '-') {
+                    ind--;
+                    continue;
+                }
+
+                sb.insert(0, Character.toUpperCase(s.charAt(ind--)));
+                cnt--;
+            }
+
+            if (ind >= 0 && sb.length() > 0) ans.insert(0, "-" + sb);
+
+            else if (ind < 0 && sb.length() > 0) {
+                ans.insert(0, sb);
+                break;
+            } else if (ind < 0 && sb.length() == 0) {
+                ans.deleteCharAt(0);
+                break;
+            }
+        }
+
+        if (ans.length() > 0 && ans.charAt(0) == '-') ans.deleteCharAt(0);
+        return ans.toString();
+    }
+
+
+    //Author: Anand
+    public int totalFruit(int[] fruits) {
+        Map<Integer, Integer> map = new HashMap<>();
+        int maxi = Integer.MIN_VALUE;
+        int cnt = 0;
+
+        int continous = -1;
+        int lastKey = -1;
+        int firstKey = -1;
+        for (int fruit : fruits) {
+
+            if (lastKey == -1) lastKey = fruit;
+            if (firstKey == -1) firstKey = fruit;
+            if (continous == -1) continous = 1;
+
+            if (!map.containsKey(fruit)) {
+                if (map.size() >= 2) {
+                    maxi = Math.max(maxi, cnt);
+                    cnt = continous;
+                    map.remove(firstKey);
+                    map.put(lastKey, continous);
+                }
+                continous = 1;
+            } else if (fruit == lastKey) continous++;
+            else continous = 1;
+
+            if (lastKey != fruit) {
+                firstKey = lastKey;
+                lastKey = fruit;
+            }
+            map.put(fruit, map.getOrDefault(fruit, 0) + 1);
+            cnt++;
+        }
+
+
+        cnt = 0;
+        for (int key : map.keySet()) cnt += map.get(key);
+        maxi = Math.max(maxi, cnt);
+        return maxi;
+    }
+
+    //Author: Anand
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+
+        Map<Integer, Integer> map = new HashMap<>();
+        Stack<Integer> stk = new Stack<>();
+
+        for (int i = nums2.length - 1; i >= 0; i--) {
+            while (!stk.isEmpty() && nums2[stk.peek()] <= nums2[i]) stk.pop();
+
+            if (!stk.isEmpty()) map.put(nums2[i], nums2[stk.peek()]);
+            else map.put(nums2[i], -1);
+
+            stk.push(i);
+        }
+
+
+        int[] ans = new int[nums1.length];
+        for (int i = 0; i < nums1.length; i++) ans[i] = map.getOrDefault(nums1[i], -1);
+
+        return ans;
+    }
+
+
+    //Author: Anand
+    public int[] nextGreaterElements(int[] nums) {
+
+        Map<Integer, List<Integer>> map = new HashMap<>();
+
+        Stack<Integer> stk = new Stack<>();
+
+        for (int i = nums.length - 1; i >= 0; i--) {
+            while (!stk.isEmpty() && nums[stk.peek()] <= nums[i]) stk.pop();
+
+            if (!map.containsKey(nums[i])) map.put(nums[i], new ArrayList<>());
+
+            if (!stk.isEmpty()) map.get(nums[i]).add(nums[stk.peek()]);
+
+            stk.push(i);
+        }
+
+        int[] ans = new int[nums.length];
+        for (int i = 0; i < nums.length; i++) {
+            if (map.containsKey(nums[i]) && map.get(nums[i]).size() > 0) {
+                ans[i] = map.get(nums[i]).get(map.get(nums[i]).size() - 1);
+                map.get(nums[i]).remove(map.get(nums[i]).size() - 1);
+            } else ans[i] = Integer.MIN_VALUE;
+        }
+
+
+        Map<Integer, Boolean> cm = new HashMap<>();
+
+        for (int i = nums.length - 1; i >= 0; i--) {
+            while (!stk.isEmpty() && nums[stk.peek()] <= nums[i]) stk.pop();
+
+            if (!map.containsKey(nums[i])) map.put(nums[i], new ArrayList<>());
+
+            if (!stk.isEmpty() && !cm.containsKey(nums[i])) {
+                map.get(nums[i]).add(nums[stk.peek()]);
+                cm.put(nums[i], true);
+            }
+
+            stk.push(i);
+        }
+
+        for (int i = 0; i < nums.length; i++) {
+            if (ans[i] != Integer.MIN_VALUE) continue;
+
+            if (map.containsKey(nums[i]) && map.get(nums[i]).size() > 0)
+                ans[i] = map.get(nums[i]).get(map.get(nums[i]).size() - 1);
+            else ans[i] = -1;
+        }
+
+        return ans;
+    }
+
+    //Author: Anand
+    public int edgeScore(int[] edges) {
+        Map<Integer, List<Integer>> graph = new TreeMap<>();
+
+        for (int i = 0; i < edges.length; i++) {
+            if (!graph.containsKey(edges[i])) graph.put(edges[i], new ArrayList<>());
+            graph.get(edges[i]).add(i);
+        }
+
+        int maxNode = -1;
+        long sum = Long.MIN_VALUE;
+
+        for (Map.Entry<Integer, List<Integer>> entry : graph.entrySet()) {
+            long cs = entry.getValue().stream().mapToLong(x -> x).sum();
+            if (cs > sum) {
+                sum = cs;
+                maxNode = entry.getKey();
+            }
+        }
+        return maxNode;
     }
 
 }

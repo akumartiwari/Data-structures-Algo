@@ -1,5 +1,6 @@
 package com.company;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -58,6 +59,26 @@ public class Bitmask {
         return bits;
 
         //return Integer.bitCount(n);
+    }
+
+    //Author: Anand
+    public String smallestNumber(String pattern) {
+        return String.valueOf(sn(pattern, 0, 0, 0));
+    }
+
+    private int sn(String pattern, int pos, int mask, int num) {
+        // base case
+        if (pos > pattern.length()) return num;
+
+        int res = Integer.MAX_VALUE, last = num % 10;
+        boolean increment = pos == 0 || pattern.charAt(pos - 1) == 'I';
+
+        for (int d = 1; d <= 9; ++d)
+            // if curr digit is not taken
+            if ((mask & 1 << d) == 0 && d > last == increment)
+                res = Math.min(res, sn(pattern, pos + 1, mask | 1 << d, num * 10 + d));
+
+        return res;
     }
 }
 

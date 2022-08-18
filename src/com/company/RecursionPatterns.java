@@ -704,4 +704,67 @@ public class RecursionPatterns {
 
         return sb.toString();
     }
+
+
+    /*
+    Input: pattern = "IIIDIDDD"
+    Output: "123549876"
+    Explanation:
+    At indices 0, 1, 2, and 4 we must have that num[i] < num[i+1].
+    At indices 3, 5, 6, and 7 we must have that num[i] > num[i+1].
+    Some possible values of num are "245639871", "135749862", and "123849765".
+    It can be proven that "123549876" is the smallest possible num that meets the conditions.
+    Note that "123414321" is not possible because the digit '1' is used more than once.
+
+     */
+    long result = Long.MAX_VALUE;
+
+    //Author: Anand
+    public String smallestNumber(String pattern) {
+
+        Map<Character, Integer> map = new HashMap<>();
+
+        Set<Integer> set = new HashSet<>();
+        for (int i = 1; i <= 9; i++) set.add(i);
+
+        for (int i = 1; i <= 9; i++) {
+            set.remove(i);
+            StringBuilder take = new StringBuilder();
+            take.append(i);
+
+            Set<Integer> taken = new HashSet<>();
+            String sb = pattern + pattern.charAt(pattern.length() - 1);
+            taken.add(i);
+            dfs(1, sb, set, take, taken);
+            set.clear();
+
+            for (int k = 1; k <= 9; k++) set.add(k);
+        }
+
+        return String.valueOf(result);
+    }
+
+    private void dfs(int ind, String pattern, Set<Integer> set, StringBuilder take, Set<Integer> taken) {
+        if (ind >= pattern.length()) {
+            result = Math.min(!take.toString().equals("") ? Long.parseLong(take.toString()) : 0, result);
+            return;
+        }
+
+        if (String.valueOf(take).length() >= 9) return;
+
+        for (int s : set) {
+            if (taken.contains(s)) continue;
+            taken.add(s);
+            if (take.toString().equals("")
+                    || (pattern.charAt(ind - 1) == 'I' && s > Integer.parseInt(String.valueOf(take.charAt(ind - 1))))
+                    || (pattern.charAt(ind - 1) == 'D' && s < Integer.parseInt(String.valueOf(take.charAt(ind - 1))))
+
+            ) {
+                take.append(s);
+                dfs(ind + 1, pattern, set, take, taken);
+                take.deleteCharAt(take.length() - 1);
+            }
+            taken.remove(s);
+        }
+    }
 }

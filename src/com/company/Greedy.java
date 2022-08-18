@@ -285,4 +285,40 @@ public class Greedy {
 
         return (int) s.chars().filter(x -> x - '0' == 0).count() + cnt;
     }
+
+    /*
+    Input: pattern = "IIIDIDDD"
+    Output: "123549876"
+    Explanation:
+    At indices 0, 1, 2, and 4 we must have that num[i] < num[i+1].
+    At indices 3, 5, 6, and 7 we must have that num[i] > num[i+1].
+    Some possible values of num are "245639871", "135749862", and "123849765".
+    It can be proven that "123549876" is the smallest possible num that meets the conditions.
+    Note that "123414321" is not possible because the digit '1' is used more than once.
+
+    Algorithm :-
+    The idea is to use sliding window based technique, Keep 2 ptrs {i, j}
+    Start with smallest possible string ie. 123456789
+      then reverse the substring starts from j to the end of curr ans eg. ans = IIIID && i= 5, j=1 --> ans = ans.substring(0,j) + ans.substring(j).reverse();
+      and place j to next starting point ie, j = i+1
+    Return ans
+     */
+    // Author: Anand
+    // Greedy approach
+    public String smallestNumber(String pattern) {
+        StringBuilder ans = new StringBuilder();
+        for (int i = 0, j = 0; i <= pattern.length(); ++i) {
+            ans.append((1 + i));
+
+            // Reverse the prev substring starts from j
+            if (i == pattern.length() || pattern.charAt(i) == 'I') {
+                StringBuilder sb = new StringBuilder();
+                sb.append(ans.substring(0, j)).append(new StringBuilder(ans.substring(j)).reverse());
+                ans = sb;
+                j = i + 1;
+            }
+        }
+
+        return ans.toString();
+    }
 }

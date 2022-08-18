@@ -784,4 +784,56 @@ public class DP {
         nt = ls(s, k, ind + 1, prev, dp);
         return dp[ind][Math.abs((int) prev - 'a')] = Math.max(take, nt);
     }
+
+    /*
+    Input: arr = [10,13,12,14,15]
+    Output: 2
+    Explanation:
+    From starting index i = 0, we can make our 1st jump to i = 2 (since arr[2] is the smallest among arr[1], arr[2], arr[3], arr[4] that is greater or equal to arr[0]), then we cannot jump any more.
+    From starting index i = 1 and i = 2, we can make our 1st jump to i = 3, then we cannot jump any more.
+    From starting index i = 3, we can make our 1st jump to i = 4, so we have reached the end.
+    From starting index i = 4, we have reached the end already.
+    In total, there are 2 different starting indices i = 3 and i = 4, where we can reach the end with some number of
+    jumps.
+     */
+
+    /*
+    1. int[][] dp[n][2], to save if from "i" can jump to final (1 for true, 0 for false). [2] dimension for "odd" or "even" jumps.
+    2. TreeMap, is to find the location to jump, because TreeMap provides ceilingKey() and floorKey() to find the index to jump
+    3. The recursion is: dp[n-1][:] = 1 (last element must be true).
+       The position "i" will jump to is TreeMap.ceilingKey(A[i]) if odd jump, or TreeMap.floorKey(A[i]) if even jump.
+       So dp[i][0] = dp[TreeMap.ceilingKey(A[i])][1], and dp[i][1] = dp[TreeMap.floorKey(A[i])][0].
+       (That is, if i will oddly jump to k, and if we know k can evenly jump to final, then i can oddly jump to final. Similarly, if i will evenly jump to k, and if k can evenly jump to final, then i can evenly jump to final)
+   4. Remember to add (key = A[i], value=i) in TreeMap,
+       so that we can get A[i]'s position (smallest index if duplicated values)
+     */
+    public int oddEvenJumps(int[] arr) {
+        int n = arr.length;
+        int cnt = 0;
+        TreeMap<Integer, Integer> tm = new TreeMap<>(); // jump from arr[ind]->ind
+        tm.put(arr[n - 1], n - 1);
+        int[][] dp = new int[n][2]; // 0 -> odd jump, 1-> even jump
+        dp[n - 1][0] = 1;
+        dp[n - 1][1] = 1;
+        cnt++; //n-1
+
+        for (int i = n - 2; i >= 0; i--) {
+            // odd jump starting from index i
+            Integer next = tm.ceilingKey(arr[i]);
+            if (next == null) dp[i][0] = 0;
+            else if (dp[tm.get(next)][1] > 0) dp[i][0] = 1;
+
+            // even jump starting from index i
+            next = tm.floorKey(arr[i]);
+            if (next == null) dp[i][1] = 0;
+            else if (dp[tm.get(next)][0] > 0) dp[i][1] = 1;
+
+
+            if (dp[i][0] == 1) cnt++;
+            tm.put(arr[i], i);
+        }
+
+        return cnt;
+
+    }
 }
