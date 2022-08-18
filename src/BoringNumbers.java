@@ -1,6 +1,5 @@
-package CFProblems;
-
 import java.io.*;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class BoringNumbers {
@@ -51,66 +50,72 @@ public class BoringNumbers {
     }
 
     public static void main(String[] args) {
-        BoringNumbers.MyScanner sc = new BoringNumbers.MyScanner();
+        MyScanner sc = new MyScanner();
         out = new PrintWriter(new BufferedOutputStream(System.out));
 
         int test = sc.nextInt();
         int cnt = 1;
         while (test-- > 0) {
-            int n = sc.nextInt();
-            int[] arr = new int[n];
-            for (int i = 0; i < n; i++) {
-                arr[i] = sc.nextInt();
+            String elements = sc.nextLine();
+            String[] arr = elements.split(" ");
+            String L = arr[0];
+            String R = arr[1];
+
+
+            int[][] dp = new int[18][2]; // index, greater
+            for (int[] d : dp) Arrays.fill(d, -1);
+
+            int ansL = 1;
+            for (int d = 1; d < L.length(); ++d) ansL *= 5;
+
+            ansL = ansL == 1 ? countBoring(L, 0, 1, dp) : ansL + countBoring(L, 0, 1, dp);
+
+            boolean lastTaken = true;
+            for (int i = 0; i < L.length(); i++) {
+                int place = i + 1;
+                if (Integer.parseInt(String.valueOf(L.charAt(i))) % 2 == 0 && place % 2 == 0) continue;
+                if (Integer.parseInt(String.valueOf(L.charAt(i))) % 2 != 0 && place % 2 != 0) continue;
+                lastTaken = false;
+                break;
             }
 
-            int L = arr[0];
-            int R = arr[1];
+            if (lastTaken) --ansL;
 
-            int nL = L;
-            int ld = 0;
-            while (nL > 0) {
-                ld++;
-                nL /= 10;
-            }
+            for (int[] d : dp) Arrays.fill(d, -1);
 
-            int nR = R;
-            int rd = 0;
-            while (nR > 0) {
-                rd++;
-                nR /= 10;
-            }
+            int ansR = 1;
+            for (int d = 1; d < R.length(); ++d) ansR *= 5;
 
-            int ansL = 0;
-            for (int d = 1; d < ld; ++d) ansL *= 5;
-            ansL += countBoring(L, 1,1);
+            ansR = ansR == 1 ? countBoring(R, 0, 1, dp) : ansR + countBoring(R, 0, 1, dp);
 
-            int ansR = 0;
-            for (int d = 1; d < ld; ++d) ansR *= 5;
-            ansR += countBoring(R, 1,1);
-
-            System.out.println("Case #" + cnt++ + ": " + (ansR-ansL));
+            System.out.println("Case #" + cnt++ + ": " + (ansR - ansL));
         }
         out.close();
     }
 
-    private static int countBoring(int L, int ind, int greater) {
+    private static int countBoring(String num, int ind, int greater, int[][] dp) {
 
         // base case
-        if (ind == String.valueOf(L).length()) return 1;
+        if (ind == String.valueOf(num).length()) return 1;
+
+        if (ind > String.valueOf(num).length()) return 0;
+
+        if (dp[ind][greater] != -1) return dp[ind][greater];
 
         int ans = 0;
-        for (int d=0;d<9;++d){
+        for (int d = 0; d < 9; ++d) {
 
-            if ((ind % 2 == 0 && d % 2 == 0) || (ind % 2 != 0 && d % 2 != 0)) {
+            int place = ind + 1;
+            if ((place % 2 == 0 && d % 2 == 0) || (place % 2 != 0 && d % 2 != 0)) {
+                if (d < String.valueOf(num).charAt(ind) - '0') ans += countBoring(num, ind + 1, 0, dp);
 
-                if (d < String.valueOf(L).charAt(ind))  ans += countBoring(L, ind+1, 0);
+                else if (d == String.valueOf(num).charAt(ind) - '0') ans += countBoring(num, ind + 1, greater, dp);
 
-                else if (d == String.valueOf(L).charAt(ind)) ans += countBoring(L, ind+1, greater);
-
-                else if (d > String.valueOf(L).charAt(ind) && greater == 0) ans += countBoring(L, ind+1, greater);
+                else if (d > String.valueOf(num).charAt(ind) - '0' && greater == 0)
+                    ans += countBoring(num, ind + 1, greater, dp);
             }
         }
 
-        return ans;
+        return dp[ind][greater] = ans;
     }
 }
