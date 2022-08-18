@@ -9,6 +9,11 @@ public class DPWithBitmask {
     //greater -> represents whether the current formed number is smaller or not
     long[][][] dp = new long[10][1 << 10][2];//
 
+    /*
+    Input: n = 20
+    Output: 19
+    Explanation: All the integers from 1 to 20, except 11, are special. Thus, there are 19 special integers.
+     */
     //Author: Anand
     public int countSpecialNumbers(int n) {
         int d = 0;
