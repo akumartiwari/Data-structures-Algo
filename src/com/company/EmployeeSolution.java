@@ -3765,6 +3765,40 @@ Output: [1,2,2,3,5,6]
         }
         return true;
     }
+
+
+    public String decodeCiphertext(String encodedText, int rows) {
+
+        int col = encodedText.length() / rows;
+        char[][] mat = new char[rows][col];
+        for (char[] c : mat) Arrays.fill(c, ' ');
+
+        int r = 0, c = 0;
+        for (int i = 0; i < encodedText.length(); i++) {
+            if (c >= col) {
+                c = 0;
+                ++r;
+            }
+
+            mat[r][c++] = encodedText.charAt(i);
+        }
+
+
+        StringBuilder sb = new StringBuilder();
+        int p, q;
+        int ind = 0;
+        while (ind < col) {
+            p = 0;
+            q = ind;
+
+            // keep mv diagonally down
+            while (p < rows && q < col) sb.append(mat[p++][q++]);
+            ind++;
+        }
+
+        return sb.toString().replaceFirst("\\s++$", "");
+
+    }
 }
 
     /*

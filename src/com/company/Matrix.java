@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.Arrays;
+
 public class Matrix {
     //Author: Anand
     /*
@@ -17,5 +19,53 @@ public class Matrix {
             }
         }
         return true;
+    }
+
+    /*
+    Input: mat = [[1,2,3],[4,5,6],[7,8,9]]
+    Output: [1,2,4,7,5,3,6,8,9]
+
+    The idea is to change directions when touching the extreme rows and cols
+     */
+    public int[] findDiagonalOrder(int[][] matrix) {
+        int m = matrix.length, n = matrix[0].length;
+        int[] ans = new int[m * n];
+
+        int row = 0, col = -1; // As ++col before actually using it
+        int ind = 0;
+        while (ind < m * n) {
+            // Last row: move right and keep mv to upper right
+            if (row == m - 1) {
+                ans[ind++] = matrix[row][++col];
+                while (row > 0 && col < n - 1) {
+                    ans[ind++] = matrix[--row][++col];
+                }
+            }
+
+            // Last col: move down and and keep moving lower left
+            else if (col == n - 1) {
+                ans[ind++] = matrix[++row][col];
+                while (col > 0 && row < m - 1) {
+                    ans[ind++] = matrix[++row][--col];
+                }
+            }
+
+            // First row:  move right and keep moving lower left
+            else if (row == 0) {
+                ans[ind++] = matrix[row][++col];
+                while (col > 0 && row < m - 1) {
+                    ans[ind++] = matrix[++row][--col];
+                }
+            }
+            // First col: move down and keep mv to upper right
+            else if (col == 0) {
+                ans[ind++] = matrix[++row][col];
+                while (row > 0 && col < n - 1) {
+                    ans[ind++] = matrix[--row][++col];
+                }
+            }
+        }
+
+        return ans;
     }
 }
