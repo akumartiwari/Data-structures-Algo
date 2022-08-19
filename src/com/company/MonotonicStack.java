@@ -84,8 +84,8 @@ public class MonotonicStack {
         }
         return count;
     }
-
-    private static final int mod = 1000000007;
+    
+    private static final int mod = 1_000_000_000 + 7;
 
     // TODO :- Need to solved again
     public int sumSubarrayMins(int[] a) {

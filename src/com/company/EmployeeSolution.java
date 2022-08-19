@@ -3799,6 +3799,32 @@ Output: [1,2,2,3,5,6]
         return sb.toString().replaceFirst("\\s++$", "");
 
     }
+
+    class Solution {
+        //Author: Anand
+        public int[][] reconstructQueue(int[][] people) {
+            int[][] ans = new int[people.length][2];
+            Arrays.sort(people, Comparator.comparingInt(a -> a[0]));
+            Map<Integer, Integer> lhm = new LinkedHashMap<>();
+            for (int i = people.length - 1; i >= 0; i--) lhm.put(i, -1);
+
+            int prev = -1;
+            for (int[] p : people) {
+                int htG = p[1];
+                int idx = lhm.keySet().size() > htG ? new ArrayList<>(lhm.keySet()).get(htG) : new ArrayList<>(lhm.keySet()).get(0);
+                if (p[0] == prev && htG > 1) idx++;
+                ans[idx] = p;
+                lhm.remove(idx);
+                prev = p[0];
+            }
+
+            int idx = 0;
+            int[][] res = new int[people.length][2];
+            for (int[] a : ans) res[people.length - 1 - idx++] = a;
+
+            return res;
+        }
+    }
 }
 
     /*
