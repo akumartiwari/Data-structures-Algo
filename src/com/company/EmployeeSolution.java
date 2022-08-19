@@ -3729,6 +3729,76 @@ Output: [1,2,2,3,5,6]
         return maxNode;
     }
 
+
+    public boolean canChange(String start, String target) {
+        // order of insertion is maintained
+        Map<Character, List<Integer>> maps = new LinkedHashMap<>(), mapt = new LinkedHashMap<>();
+        List<Character> lists = new ArrayList<>(), listt = new ArrayList<>();
+
+
+        for (int i = 0; i < start.length(); i++) {
+            char ch = start.charAt(i);
+            if (maps.containsKey(ch)) maps.get(ch).add(i);
+            else maps.put(ch, new ArrayList<>(Arrays.asList(i)));
+            if (ch != '_') lists.add(ch);
+        }
+
+        for (int i = 0; i < target.length(); i++) {
+            char ch = target.charAt(i);
+            if (mapt.containsKey(ch)) mapt.get(ch).add(i);
+            else mapt.put(ch, new ArrayList<>(Arrays.asList(i)));
+            if (ch != '_') listt.add(ch);
+        }
+
+        // To check order of insertion for L && R
+        if (!lists.equals(listt)) return false;
+
+        for (Map.Entry<Character, List<Integer>> entry : maps.entrySet()) {
+            if (entry.getValue().size() != mapt.getOrDefault(entry.getKey(), new ArrayList<>()).size())
+                return false;
+
+            int idx = 0;
+            List<Integer> values = entry.getValue();
+            for (int e : values)
+                if ((entry.getKey() == 'L' && e < mapt.get(entry.getKey()).get(idx++)) || (entry.getKey() == 'R' && e > mapt.get(entry.getKey()).get(idx++)))
+                    return false;
+        }
+        return true;
+    }
+
+
+    public String decodeCiphertext(String encodedText, int rows) {
+
+        int col = encodedText.length() / rows;
+        char[][] mat = new char[rows][col];
+        for (char[] c : mat) Arrays.fill(c, ' ');
+
+        int r = 0, c = 0;
+        for (int i = 0; i < encodedText.length(); i++) {
+            if (c >= col) {
+                c = 0;
+                ++r;
+            }
+
+            mat[r][c++] = encodedText.charAt(i);
+        }
+
+
+        StringBuilder sb = new StringBuilder();
+        int p, q;
+        int ind = 0;
+        while (ind < col) {
+            p = 0;
+            q = ind;
+
+            // keep mv diagonally down
+            while (p < rows && q < col) sb.append(mat[p++][q++]);
+            ind++;
+        }
+
+        return sb.toString().replaceFirst("\\s++$", "");
+
+    }
 }
 
     /*
