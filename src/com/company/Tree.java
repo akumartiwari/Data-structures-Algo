@@ -65,4 +65,42 @@ public class Tree {
         }
     }
 
+    public int sumOfLeftLeaves(TreeNode root) {
+        //Base cases
+        if (root == null) return 0;
+
+        int res = 0;
+        // traverse till leaf node of tree
+        if (isLeafNode(root.left)) {
+            res += root.left.val;
+        } else {
+            //Recursively traverse the left child
+            res += sumOfLeftLeaves(root.left);
+        }
+        //Traverse right subtree iof root node
+        res += sumOfLeftLeaves(root.right);
+        return res;
+    }
+
+    public boolean isLeafNode(TreeNode node) {
+        if (node == null) return false;
+        return node.left == null && node.right == null;
+    }
+
+    /**
+     * Definition for a binary tree node.
+     * public class TreeNode {
+     *     int val;
+     *     TreeNode left;
+     *     TreeNode right;
+     *     TreeNode() {}
+     *     TreeNode(int val) { this.val = val; }
+     *     TreeNode(int val, TreeNode left, TreeNode right) {
+     *         this.val = val;
+     *         this.left = left;
+     *         this.right = right;
+     *     }
+     * }
+     */
 }
+
