@@ -3825,6 +3825,189 @@ Output: [1,2,2,3,5,6]
             return res;
         }
     }
+
+    /*
+    Input: blocks = "WBBWWBBWBW", k = 7
+    Output: 3
+    Explanation:
+    One way to achieve 7 consecutive black blocks is to recolor the 0th, 3rd, and 4th blocks
+    so that blocks = "BBBBBBBWBW".
+    It can be shown that there is no way to achieve 7 consecutive black blocks in less than 3 operations.
+    Therefore, we return 3.
+     */
+
+    //Author: Anand
+    public int minimumRecolors(String blocks, int k) {
+
+        if (k > blocks.length()) return 0;
+
+        int i = 0, j = 0;
+        int ans = Integer.MAX_VALUE;
+        int cnt = 0;
+        while (i < blocks.length() && j < blocks.length()) {
+
+            if (j >= k) {
+                if (blocks.charAt(i) == 'W') cnt--;
+                if (blocks.charAt(j) == 'W') cnt++;
+                j++;
+                i++;
+                ans = Math.min(cnt, ans);
+                continue;
+            }
+            while (j < k) {
+                if (blocks.charAt(j++) == 'W') cnt++;
+            }
+            ans = Math.min(cnt, ans);
+        }
+
+        return ans;
+    }
+
+    /*
+    Input: s = "0110101"
+    Output: 4
+    Explanation:
+    After one second, s becomes "1011010".
+    After another second, s becomes "1101100".
+    After the third second, s becomes "1110100".
+    After the fourth second, s becomes "1111000".
+    No occurrence of "01" exists any longer, and the process needed 4 seconds to complete,
+    so we return 4.
+     */
+    //Author: Anand
+    public int secondsToRemoveOccurrences(String s) {
+        List<Integer> idx = new ArrayList<>();
+        for (int i = 0; i < s.length(); i++) if (s.charAt(i) == '1') idx.add(i);
+
+        System.out.println(idx);
+        int op = 0;
+        while (true) {
+            List<Integer> nl = new ArrayList<>();
+            nl.add(Math.max(idx.get(0) - 1, 0));
+            op++;
+
+            boolean changed = false;
+            for (int i = 1; i < idx.size(); i++) {
+                if (idx.get(i) != i) {
+                    if (idx.get(i - 1) + 1 != idx.get(i)) {
+                        changed = true;
+                        nl.add(idx.get(i) - 1);
+                    } else nl.add(idx.get(i));
+                } else nl.add(idx.get(i));
+            }
+
+            if (!changed) return op;
+            idx.clear();
+            idx.addAll(nl);
+        }
+    }
+
+
+    //Author: Anand
+    public String shiftingLetters(String s, int[][] shifts) {
+        Arrays.sort(shifts, Comparator.comparingInt(x -> x[0]));
+        Map<List<Integer>, Integer> map = new LinkedHashMap<>();
+
+        for (int i = 0; i < shifts.length; i++) {
+            // overlap
+            if (shifts[i][1] < shifts[i + 1][1]) {
+                List<Integer> nk = new ArrayList<>(Arrays.asList(shifts[i][1], shifts[i + 1][0], shifts[i][2]));
+                map.put(nk, map.getOrDefault(nk, 0) + 1);
+
+                // same priority
+                if (shifts[i][1] == shifts[i + 1][1]) {
+                    List<Integer> key = new ArrayList<>(Arrays.asList(shifts[i][0], shifts[i][1], shifts[i][2]));
+                    map.put(key, map.getOrDefault(key, 0) + 1);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /*
+    Input: initialEnergy = 5, initialExperience = 3, energy = [1,4,3,2], experience = [2,6,3,1]
+    Output: 8
+    Explanation: You can increase your energy to 11 after 6 hours of training, and your experience to 5 after 2 hours of training.
+    You face the opponents in the following order:
+    - You have more energy and experience than the 0th opponent so you win.
+      Your energy becomes 11 - 1 = 10, and your experience becomes 5 + 2 = 7.
+    - You have more energy and experience than the 1st opponent so you win.
+      Your energy becomes 10 - 4 = 6, and your experience becomes 7 + 6 = 13.
+    - You have more energy and experience than the 2nd opponent so you win.
+      Your energy becomes 6 - 3 = 3, and your experience becomes 13 + 3 = 16.
+    - You have more energy and experience than the 3rd opponent so you win.
+      Your energy becomes 3 - 2 = 1, and your experience becomes 16 + 1 = 17.
+    You did a total of 6 + 2 = 8 hours of training before the competition, so we return 8.
+    It can be proven that no smaller answer exists.
+
+     */
+    //Author: Anand
+    public int minNumberOfHours(int initialEnergy, int initialExperience, int[] energy, int[] experience) {
+        long es = Arrays.stream(energy).sum();
+        long total = Math.max(es + 1 - initialEnergy, 0);
+        long expn;
+        for (int e : experience) {
+            expn = Math.max(e - initialExperience + 1, 0);
+            total += expn;
+            initialExperience += e + expn;
+        }
+        return (int) total;
+    }
+
+    /*
+    Input: num = "444947137"
+    Output: "7449447"
+    Explanation:
+    Use the digits "4449477" from "444947137" to form the palindromic integer "7449447".
+    It can be shown that "7449447" is the largest palindromic integer that can be formed.
+
+     */
+    //Author: Anand
+    public String largestPalindromic(String num) {
+
+        Map<Integer, Integer> freq = new HashMap<>();
+
+        for (int i = 0; i < num.length(); i++) {
+            int key = num.charAt(i) - '0';
+            freq.put(key, freq.getOrDefault(key, 0) + 1);
+        }
+
+        TreeMap<Integer, Integer> taken = new TreeMap<>(Collections.reverseOrder());
+        for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {
+            if (entry.getValue() >= 2) {
+                if (entry.getValue() % 2 == 0) taken.put(entry.getKey(), entry.getValue());
+                else taken.put(entry.getKey(), entry.getValue() - 1);
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<Integer, Integer> entry : taken.entrySet()) {
+            int times = entry.getValue() / 2;
+            while (times-- > 0) {
+                if (sb.length() == 0 && entry.getKey() == 0) break;
+                int offset = Math.max(sb.length() / 2, 0);
+                sb.insert(offset, entry.getKey());
+                sb.insert(offset + 1, entry.getKey());
+            }
+        }
+
+        int[] arr = num.chars().boxed().mapToInt(x -> x - '0').toArray();
+        Arrays.sort(arr);
+        int largest = -1;
+
+        for (int i = arr.length - 1; i >= 0; i--) {
+            if (freq.get(arr[i]) % 2 != 0) {
+                largest = arr[i];
+                break;
+            }
+        }
+
+
+        if (largest != -1) sb.insert(sb.length() / 2, largest);
+        if (sb.length() == 0) return String.valueOf(num.charAt(0));
+        return sb.toString();
+    }
 }
 
     /*
