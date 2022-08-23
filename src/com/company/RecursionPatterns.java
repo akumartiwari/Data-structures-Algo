@@ -1,5 +1,7 @@
 package com.company;
 
+import javafx.util.Pair;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -765,64 +767,6 @@ public class RecursionPatterns {
                 take.deleteCharAt(take.length() - 1);
             }
             taken.remove(s);
-        }
-    }
-
-    class Solution {
-        //TODO: Test it
-        // TC = O(nlogn), SC =  O(n)
-        List<String> ans;
-
-        public long kSum(int[] nums, int k) {
-            Arrays.sort(nums);
-            long sum = 0L;
-
-            ans = new ArrayList<>();
-            for (int num : nums) sum += Math.max(num, 0);
-            StringBuilder curr = new StringBuilder();
-            for (int num : nums) if (num > 0) curr.append(num);
-            return f(sum, Arrays.stream(nums).boxed().collect(Collectors.toList()), k, curr);
-        }
-
-        private int f(long sum, List<Integer> nums, int k, StringBuilder curr) {
-            // base case
-            if (k == 0) {
-                ans.add(curr.toString());
-                return (int) sum;
-            }
-            int idx = bs(nums); // binary search for number closest to 0
-            if (idx > 0) {
-                sum -= Math.abs(nums.get(idx));
-                int index = -1;
-                if (nums.get(idx) >= 0) {
-                    index = curr.indexOf(String.valueOf(nums.get(idx)));
-                    curr.deleteCharAt(index);
-                } else {
-                    curr.append(nums.get(idx));
-                }
-                nums.remove(nums.get(idx));
-
-                if (!ans.contains(curr.toString())) f(sum, nums, k - 1, curr);
-                // backtrack
-                sum += Math.abs(nums.get(idx));
-                if (index != -1) {
-                    curr.insert(index, nums.get(idx));
-                } else curr.deleteCharAt(curr.length() - 1);
-                nums.add(nums.get(idx));
-            }
-            return -1;
-        }
-
-
-        private int bs(List<Integer> nums) {
-            int l = 0, h = nums.size() - 1;
-            while (l < h) {
-                int mid = l + (h - l) / 2;
-                if (nums.get(mid) <= 0) {
-                    l = mid + 1;
-                } else h = mid;
-            }
-            return l;
         }
     }
 }
