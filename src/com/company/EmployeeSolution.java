@@ -3186,17 +3186,6 @@ Output: [1,2,2,3,5,6]
         return value - 1;
     }
 
-    private int bs(int[] passengers, int bus) {
-        int l = 0, h = passengers.length - 1;
-        while (l < h) {
-            int mid = l + (h - l) / 2;
-            if (passengers[mid] <= bus) {
-                l = mid + 1;
-            } else h = mid;
-        }
-        return l;
-    }
-
 
     /*
     Input: nums = [2,3,2,4,3], numsDivide = [9,6,9,3,15]
@@ -4008,6 +3997,65 @@ Output: [1,2,2,3,5,6]
         if (sb.length() == 0) return String.valueOf(num.charAt(0));
         return sb.toString();
     }
+
+    /*
+    Input: nums = [4,5,2,1], queries = [3,10,21]
+    Output: [2,3,4]
+    Explanation: We answer the queries as follows:
+    - The subsequence [2,1] has a sum less than or equal to 3. It can be proven that 2 is the maximum size of such a subsequence, so answer[0] = 2.
+    - The subsequence [4,5,1] has a sum less than or equal to 10. It can be proven that 3 is the maximum size of such a subsequence, so answer[1] = 3.
+    - The subsequence [4,5,2,1] has a sum less than or equal to 21. It can be proven that 4 is the maximum size of such a subsequence, so answer[2] = 4.
+     */
+    //Author:Anand
+    public int[] answerQueries(int[] nums, int[] queries) {
+        Arrays.sort(nums);
+        int[] ps = new int[nums.length];
+
+        for (int i = 0; i < nums.length; i++) {
+            if (i == 0) ps[i] = nums[i];
+            else ps[i] = ps[i - 1] + nums[i];
+        }
+
+        int idx = 0;
+        int[] ans = new int[queries.length];
+        for (int query : queries)
+            ans[idx++] = Math.max(bs(ps, query), 0);
+
+        return ans;
+    }
+
+    private int bs(int[] ps, int bus) {
+        int l = 0, h = ps.length - 1;
+        while (l <= h) {
+            int mid = l + (h - l) / 2;
+
+            if (ps[mid] <= bus) {
+                l = mid + 1;
+            } else h = mid;
+
+            if (l > h) return l;
+            if (l == h && l == mid) return l;
+        }
+        return l;
+    }
+
+    //Author: Anand
+    public int garbageCollection(String[] garbage, int[] travel) {
+        Map<Character, Integer> map = new HashMap<>();
+        int ans = 0;
+        for (int i = 0; i < garbage.length; i++)
+            for (char c : garbage[i].toCharArray()) map.put(c, i);
+        for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+            char t = entry.getKey();
+            for (int i = 0; i < garbage.length; i++) {
+                if (entry.getValue() < i) break;
+                ans += (i > 0 ? travel[i - 1] : 0) + garbage[i].length() - garbage[i].replace(String.valueOf(t), "").length();
+            }
+        }
+        return ans;
+    }
+
+
 }
 
     /*
