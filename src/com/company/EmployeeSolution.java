@@ -437,62 +437,6 @@ Output: [1,2,2,3,5,6]
         }
     }
 
-    // TOPOLOGICAL SORT
-    // Use toplogical sort for indegree and pq to minisnmise the time taken to complete the course
-    // TC = O(V+E) // As Simple DFS, SC = O(V) {Stack space}
-
-    public int minimumTime(int n, int[][] relations, int[] time) {
-        // create adjancy list of graph
-        List<List<Integer>> graph = new ArrayList<>();
-
-        for (int i = 0; i < n; i++) {
-            graph.add(new ArrayList<>());
-        }
-        // create an indegree array for each node
-        int[] indegree = new int[n];
-        for (int[] e : relations) {
-            // create the graph
-            graph.get(e[0] - 1).add(e[1] - 1);
-            indegree[e[1] - 1] += 1;
-        }
-
-        int maxTime = 0;
-        // create a MIN-PQ to minimise time taken to complete all courses
-
-        PriorityQueue<int[]> pq = new PriorityQueue<>(10, (t1, t2) -> t1[1] - t2[1]);
-
-        //Insert all dead end nodes ie. nodes with 0 indegree
-        for (int i = 0; i < n; i++) {
-            if (indegree[i] == 0) pq.offer(new int[]{
-                    i, time[i]
-            });
-        }
-
-        while (!pq.isEmpty()) {
-            int[] curr = pq.poll();
-            int currCourse = curr[0];
-            int currTime = curr[1];
-
-            maxTime = Math.max(maxTime, currTime);
-
-            // Visit all adjance vertex of curr node and update the time taken to complete the courses
-            for (int next : graph.get(currCourse)) {
-                // reduce indegreee by 1 as node as visited
-                indegree[next] -= 1;
-
-                // if indegree=0 means all its adajancent node has been visisted , Now move on to next  parent node
-                if (indegree[next] == 0) {
-                    pq.offer(new int[]{
-                            next, currTime + time[next]
-                    });
-                }
-            }
-        }
-
-        // return minTime Taken to  complete all courses
-        return maxTime;
-    }
-
     // TC = O(n)
     private boolean isVowel(char ch) {
         return ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u';
