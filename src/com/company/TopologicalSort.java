@@ -71,53 +71,54 @@ public class TopologicalSort {
         Find topological sorting order for this graph
         fill the matrix using the sorting order given by topological sort.
      */
-    // TODO: Do it again
-    private boolean buildGraph(int[][] conditions, int n, List<Integer> data) {
-        List<Integer>[] adj = new ArrayList[n + 1];
-        Arrays.fill(adj, new ArrayList<>());
-        int[] indeg = new int[n + 1];
 
-        for (int[] condition : conditions) {
-            adj[condition[0]].add(condition[1]);
-            indeg[condition[1]]++;
+    class Solution {
+        public int[][] buildMatrix(int k, int[][] rowConditions, int[][] colConditions) {
+
+            List<Integer> order1 = generateTopoSort(rowConditions, k);
+            List<Integer> order2 = generateTopoSort(colConditions, k);
+
+            if (order1.size() < k || order2.size() < k) return new int[][]{};
+
+            Map<Integer, Integer> map = new HashMap();
+            for (int i = 0; i < k; i++) map.put(order2.get(i), i);
+
+
+            int[][] ans = new int[k][k];
+
+            for (int i = 0; i < k; i++) {
+                ans[i][map.get(order1.get(i))] = order1.get(i);
+            }
+            return ans;
         }
 
-        Queue<Integer> queue = new LinkedList<>();
+        private List<Integer> generateTopoSort(int[][] conditions, int k) {
 
-        for (int i = 1; i <= n; i++) if (indeg[i] == 0) queue.offer(i);
+            List<List<Integer>> graph = new ArrayList<>();
+            for (int i = 0; i < k; i++) graph.add(new ArrayList<>());
 
-        while (!queue.isEmpty()) {
-            int node = queue.poll();
-            data.add(node);
-            for (int e : adj[node]) if (--indeg[e] == 0) queue.offer(e);
+            int[] inDegree = new int[k];
+
+            for (int[] c : conditions) {
+                graph.get(c[0] - 1).add(c[1] - 1);
+                inDegree[c[1] - 1]++;
+            }
+
+
+            Queue<Integer> queue = new LinkedList<>();
+            for (int i = 0; i < k; i++) if (inDegree[i] == 0) queue.offer(i);
+
+            List<Integer> ans = new ArrayList<>();
+            while (!queue.isEmpty()) {
+                int element = queue.poll();
+                ans.add(element + 1);
+
+                for (int e : graph.get(element))
+                    if (--inDegree[e] == 0) queue.offer(e);
+            }
+
+            return ans;
         }
-
-        return data.size() == n;
-    }
-
-    public int[][] buildMatrix(int k, int[][] rowConditions, int[][] colConditions) {
-
-        List<Integer> topRow = new ArrayList<>(), topCol = new ArrayList<>();
-
-        if (!buildGraph(rowConditions, k, topRow) || !buildGraph(colConditions, k, topCol)) return new int[][]{};
-
-
-        int[] row = new int[k + 1], col = new int[k + 1];
-
-        for (int i = 0; i < k; i++) {
-            row[topRow.get(i)] = i;
-            col[topCol.get(i)] = i;
-        }
-
-
-        System.out.println(topRow);
-        System.out.println(topCol);
-
-
-        int[][] arr = new int[k][k];
-
-        for (int i = 1; i <= k; i++) arr[row[i]][col[i]] = i;
-
-        return arr;
     }
 }
+
