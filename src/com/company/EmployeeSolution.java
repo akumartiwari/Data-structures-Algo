@@ -3,6 +3,7 @@ package com.company;
 import javafx.util.Pair;
 
 import java.awt.*;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Queue;
 import java.util.*;
@@ -3999,8 +4000,86 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    //Author: Anand
+    public boolean findSubarrays(int[] nums) {
+        Set<Integer> ts = new HashSet<>();
+        for (int i = 0; i < nums.length - 1; i++) {
+            int sum = nums[i] + nums[i + 1];
+            if (ts.contains(sum)) return true;
+            ts.add(sum);
+        }
+        return false;
+    }
 
+
+    //Author: Anand
+    int max = Integer.MIN_VALUE;
+    List<List<Integer>> onePos = new ArrayList<>();
+    Set<String> colP = new HashSet<>();
+
+    public int maximumRows(int[][] mat, int cols) {
+
+        int m = mat.length;
+        int n = mat[0].length;
+
+        for (int i = 0; i < m; i++) {
+            onePos.add(new ArrayList<>());
+        }
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (mat[i][j] == 1) onePos.get(i).add(j);
+            }
+        }
+
+        chooseCol(m, n, cols, mat, new HashSet<>(), 0);
+        return max;
+    }
+
+    private void chooseCol(int m, int n, int cols, int[][] mat, HashSet<Integer> colTaken, int x) {
+
+        if (cols == 0) {
+            if (!colP.contains(colTaken.toString())) {
+                max = Math.max(max, selectRows(colTaken, mat));
+                colP.add(colTaken.toString());
+            }
+            return;
+        }
+
+
+        for (int i = x; i < n; i++) {
+            if (colTaken.contains(i)) continue;
+            // take
+            colTaken.add(i);
+            chooseCol(m, n, cols - 1, mat, colTaken, x + 1);
+            // not take
+            colTaken.remove(i);
+        }
+    }
+
+
+    private int selectRows(HashSet<Integer> colTaken, int[][] mat) {
+
+        int cnt = 0;
+        for (List<Integer> rows : onePos) {
+
+            boolean present = true;
+            for (int pos : rows) {
+                if (!colTaken.contains(pos)) {
+                    present = false;
+                    break;
+                }
+            }
+
+            if (present) cnt++;
+        }
+
+        return cnt;
+    }
 }
+
+
+
 
     /*
     // TODO: maxRunTime Binary search solution
