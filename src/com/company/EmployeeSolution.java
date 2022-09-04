@@ -3081,55 +3081,6 @@ Output: [1,2,2,3,5,6]
         return true;
     }
 
-    /*
-      Input: buses = [10,20], passengers = [2,17,18,19], capacity = 2
-      Output: 16
-      Explanation:
-      The 1st bus departs with the 1st passenger.
-      The 2nd bus departs with you and the 2nd passenger.
-      Note that you must not arrive at the same time as the passengers, which is why you must arrive before the 2nd passenger to catch the bus.
-
-
-       buses = [10,20], pass = [2,17,18,19]
-      //Author: Anand
-     */
-    // TC = O(nlogn)
-    public int latestTimeCatchTheBus(int[] buses, int[] passengers, int capacity) {
-        Arrays.sort(buses);
-        Arrays.sort(passengers);
-
-        int prev = -1;
-        int pcb = 0;
-        for (int bus : buses) {
-            int ind = bs(passengers, bus);
-            if (prev == -1) {
-                prev = Math.min(ind, capacity);
-                pcb = prev;
-            } else {
-                pcb = (ind > (prev + capacity)) ? capacity : ind;
-                prev += pcb;
-            }
-        }
-
-        int value = 0;
-        if (pcb >= capacity) {
-            prev--;
-            value = passengers[prev];
-            for (int i = prev - 1; i >= 0; i--) {
-                if ((value - passengers[i]) != 1) return value - 1;
-                value = passengers[i];
-            }
-        } else {
-            value = buses[buses.length - 1];
-            for (int i = passengers.length - 1; i >= 0; i--) {
-                if (value > passengers[i]) return value;
-                value = passengers[i];
-            }
-        }
-
-        return value - 1;
-    }
-
 
     /*
     Input: nums = [2,3,2,4,3], numsDivide = [9,6,9,3,15]
@@ -3566,81 +3517,6 @@ Output: [1,2,2,3,5,6]
     }
 
     //Author: Anand
-    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
-
-        Map<Integer, Integer> map = new HashMap<>();
-        Stack<Integer> stk = new Stack<>();
-
-        for (int i = nums2.length - 1; i >= 0; i--) {
-            while (!stk.isEmpty() && nums2[stk.peek()] <= nums2[i]) stk.pop();
-
-            if (!stk.isEmpty()) map.put(nums2[i], nums2[stk.peek()]);
-            else map.put(nums2[i], -1);
-
-            stk.push(i);
-        }
-
-
-        int[] ans = new int[nums1.length];
-        for (int i = 0; i < nums1.length; i++) ans[i] = map.getOrDefault(nums1[i], -1);
-
-        return ans;
-    }
-
-
-    //Author: Anand
-    public int[] nextGreaterElements(int[] nums) {
-
-        Map<Integer, List<Integer>> map = new HashMap<>();
-
-        Stack<Integer> stk = new Stack<>();
-
-        for (int i = nums.length - 1; i >= 0; i--) {
-            while (!stk.isEmpty() && nums[stk.peek()] <= nums[i]) stk.pop();
-
-            if (!map.containsKey(nums[i])) map.put(nums[i], new ArrayList<>());
-
-            if (!stk.isEmpty()) map.get(nums[i]).add(nums[stk.peek()]);
-
-            stk.push(i);
-        }
-
-        int[] ans = new int[nums.length];
-        for (int i = 0; i < nums.length; i++) {
-            if (map.containsKey(nums[i]) && map.get(nums[i]).size() > 0) {
-                ans[i] = map.get(nums[i]).get(map.get(nums[i]).size() - 1);
-                map.get(nums[i]).remove(map.get(nums[i]).size() - 1);
-            } else ans[i] = Integer.MIN_VALUE;
-        }
-
-
-        Map<Integer, Boolean> cm = new HashMap<>();
-
-        for (int i = nums.length - 1; i >= 0; i--) {
-            while (!stk.isEmpty() && nums[stk.peek()] <= nums[i]) stk.pop();
-
-            if (!map.containsKey(nums[i])) map.put(nums[i], new ArrayList<>());
-
-            if (!stk.isEmpty() && !cm.containsKey(nums[i])) {
-                map.get(nums[i]).add(nums[stk.peek()]);
-                cm.put(nums[i], true);
-            }
-
-            stk.push(i);
-        }
-
-        for (int i = 0; i < nums.length; i++) {
-            if (ans[i] != Integer.MIN_VALUE) continue;
-
-            if (map.containsKey(nums[i]) && map.get(nums[i]).size() > 0)
-                ans[i] = map.get(nums[i]).get(map.get(nums[i]).size() - 1);
-            else ans[i] = -1;
-        }
-
-        return ans;
-    }
-
-    //Author: Anand
     public int edgeScore(int[] edges) {
         Map<Integer, List<Integer>> graph = new TreeMap<>();
 
@@ -3942,47 +3818,6 @@ Output: [1,2,2,3,5,6]
         return sb.toString();
     }
 
-    /*
-    Input: nums = [4,5,2,1], queries = [3,10,21]
-    Output: [2,3,4]
-    Explanation: We answer the queries as follows:
-    - The subsequence [2,1] has a sum less than or equal to 3. It can be proven that 2 is the maximum size of such a subsequence, so answer[0] = 2.
-    - The subsequence [4,5,1] has a sum less than or equal to 10. It can be proven that 3 is the maximum size of such a subsequence, so answer[1] = 3.
-    - The subsequence [4,5,2,1] has a sum less than or equal to 21. It can be proven that 4 is the maximum size of such a subsequence, so answer[2] = 4.
-     */
-    //Author:Anand
-    public int[] answerQueries(int[] nums, int[] queries) {
-        Arrays.sort(nums);
-        int[] ps = new int[nums.length];
-
-        for (int i = 0; i < nums.length; i++) {
-            if (i == 0) ps[i] = nums[i];
-            else ps[i] = ps[i - 1] + nums[i];
-        }
-
-        int idx = 0;
-        int[] ans = new int[queries.length];
-        for (int query : queries)
-            ans[idx++] = Math.max(bs(ps, query), 0);
-
-        return ans;
-    }
-
-    private int bs(int[] ps, int bus) {
-        int l = 0, h = ps.length - 1;
-        while (l <= h) {
-            int mid = l + (h - l) / 2;
-
-            if (ps[mid] <= bus) {
-                l = mid + 1;
-            } else h = mid;
-
-            if (l > h) return l;
-            if (l == h && l == mid) return l;
-        }
-        return l;
-    }
-
     //Author: Anand
     public int garbageCollection(String[] garbage, int[] travel) {
         Map<Character, Integer> map = new HashMap<>();
@@ -4056,7 +3891,6 @@ Output: [1,2,2,3,5,6]
         }
     }
 
-
     private int selectRows(HashSet<Integer> colTaken, int[][] mat) {
 
         int cnt = 0;
@@ -4076,115 +3910,74 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+    public boolean checkDistances(String s, int[] distance) {
 
-        public boolean checkDistances(String s, int[] distance) {
+        Map<Character, Integer> map = new HashMap();
+        for (int i = 0; i < s.length(); i++) {
+            if (map.containsKey(s.charAt(i))) {
+                map.put(s.charAt(i), i - map.get(s.charAt(i)) - 1);
+            } else map.put(s.charAt(i), i);
+        }
 
-            Map<Character, Integer> map = new HashMap();
-            for (int i = 0; i < s.length(); i++) {
-                if (map.containsKey(s.charAt(i))) {
-                    map.put(s.charAt(i), i - map.get(s.charAt(i)) - 1);
-                } else map.put(s.charAt(i), i);
+        for (int i = 0; i < distance.length; i++) {
+            char c = (char) ('a' + i);
+            if (map.containsKey(c)) {
+                if (map.get(c) != distance[i]) return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    //TODO: Complete this
+        public int mostBooked(int n, int[][] meetings) {
+            Arrays.sort(meetings, Comparator.comparingInt(m -> m[0]));
+            Map<Integer, Integer> map = new TreeMap<>();
+            for (int i = 0; i < n; i++) map.put(i, 0);
+
+            TreeMap<Long, Queue<Integer>> tm = new TreeMap<>();
+            for (int i = 0; i < n; i++) {
+                if (!tm.containsKey(0L)) tm.put(0L, new PriorityQueue<>());
+                tm.get(0L).add(i);
             }
 
-            for (int i = 0; i < distance.length; i++) {
-                char c = (char) ('a' + i);
-                if (map.containsKey(c)) {
-                    if (map.get(c) != distance[i]) return false;
-                }
-            }
+            long t = 0L;
+            for (int[] meeting : meetings) {
+                int start = meeting[0];
+                int end = meeting[1];
 
-            return true;
-        }
+                long key = tm.floorKey((long) start);
 
-        final int mod = 1_000_000_007;
-
-        int sp;
-        int op;
-
-        public int numberOfWays(int startPos, int endPos, int k) {
-            sp = startPos;
-            op = k;
-            int[][] dp = new int[(startPos + 2 * k) + 1][k + 1];
-            for (int[] d : dp) Arrays.fill(d, -1);
-            return helper(startPos, endPos, k, dp);
-        }
-
-        private int helper(int currPos, int endPos, int k, int[][] dp) {
-            // base case
-            if (currPos == endPos && k == 0) return 1;
-
-            if (k <= 0) return 0;
-
-            int newPos;
-            if (currPos < 0) newPos = (sp + 2 * op) - Math.abs(currPos);
-            else newPos = currPos + k;
-
-            // System.out.println(currPos + ":" + newPos);
-            if (dp[newPos][k] != -1) return dp[newPos][k];
-            int left = 0, right = 0;
-            // left
-            left += helper(currPos - 1, endPos, k - 1, dp);
-
-            // right
-            right += helper(currPos + 1, endPos, k - 1, dp);
-
-            return dp[newPos][k] = (left + right) % mod;
-        }
-
-        //Author:Anand
-        List<Integer> setBits = new ArrayList<>();
-
-        public int longestNiceSubarray(int[] nums) {
-
-            int max = 1;
-            int i = 0, j = 1;
-
-            while (i < j && i < nums.length && j < nums.length) {
-                if ((nums[i] & nums[j]) == 0) {
-                    int x = nums[i];
-                    int y = nums[j];
-
-                    if (setBits.size() == 0) {
-                        fillList(x);
-                    }
-
-                    List<Integer> news = new ArrayList<>();
-                    for (int e : setBits) {
-                        if ((y << e & 1) == 1) {
-                            news.add(e);
-                        }
-                    }
-
-                    max = Math.max(max, j - i + 1);
-                    j++;
-                    setBits.clear();
-                    setBits.addAll(news);
-
+                int room;
+                if (tm.get(key) != null && tm.get(key).size() != 0) {
+                    room = tm.get(key).poll();
+                } else if (tm.get(tm.ceilingKey((long) start)) != null && tm.get(tm.ceilingKey((long) start)).size() != 0) {
+                    room = tm.get(tm.ceilingKey((long) start)).poll();
+                    t = tm.ceilingKey((long) start);
                 } else {
-                    setBits.clear();
-                    i++;
-                    j++;
+                    room = Integer.MAX_VALUE;
+                }
+
+                long nextEndTime = Math.abs(t + end - start);
+                if (!tm.containsKey(nextEndTime)) tm.put(nextEndTime, new PriorityQueue<>());
+                tm.get(nextEndTime).add(room);
+                map.put(room, map.getOrDefault(room, 0) + 1);
+            }
+
+
+            int max = Integer.MIN_VALUE;
+            int roomNo = 0;
+            for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+
+                if (entry.getValue() > max) {
+                    roomNo = entry.getKey();
+                    max = entry.getValue();
                 }
             }
 
-            return max;
+            return roomNo;
         }
-
-        private void fillList(int x) {
-
-            List<Integer> currBits = new ArrayList<>();
-            while (x > 0) {
-                currBits.add(x % 2);
-                x >>= 2;
-            }
-            Collections.reverse(currBits);
-            int ind = 0;
-            for (int num : currBits) {
-                if (num == 1) setBits.add(ind);
-                ind++;
-            }
-        }
-
 }
 
 

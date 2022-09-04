@@ -1,10 +1,33 @@
 package com.company;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 public class Bitmask {
+
+
+    //Author:Anand
+      /*
+        We use the sliding window approach, tracking used bits. We can use OR to combine bits, XOR to remove bits
+        If the next number has a conflicting bit (used & nums[i] != 0),
+        we shrink the window until there are no conflicts.
+
+        Why xor is working is because xor will only make those bits 1 which are different.
+        So suppose we have 11001 and we want to remove 9 - 1001 so . 11001^1001 will give 10000 ,
+        and we can see that only those bits are off which we wanted to remove.
+       */
+
+    public int longestNiceSubarray(int[] nums) {
+        int res = 0, j = 0, used = 0;
+        for (int i = 0; i < nums.length; i++) {
+            while ((used & nums[i]) != 0)
+                used ^= nums[j++];
+
+            used |= nums[i];
+            res = Math.max(res, i - j + 1);
+        }
+        return res;
+    }
 
     //Author: Anand
     // The idea is to count numbers that share same bit and maximise them
@@ -80,5 +103,7 @@ public class Bitmask {
 
         return res;
     }
+
+
 }
 
