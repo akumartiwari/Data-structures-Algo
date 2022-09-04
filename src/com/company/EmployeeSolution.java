@@ -3931,53 +3931,53 @@ Output: [1,2,2,3,5,6]
 
 
     //TODO: Complete this
-        public int mostBooked(int n, int[][] meetings) {
-            Arrays.sort(meetings, Comparator.comparingInt(m -> m[0]));
-            Map<Integer, Integer> map = new TreeMap<>();
-            for (int i = 0; i < n; i++) map.put(i, 0);
+    public int mostBooked(int n, int[][] meetings) {
+        Arrays.sort(meetings, Comparator.comparingInt(m -> m[0]));
+        Map<Integer, Integer> map = new TreeMap<>();
+        for (int i = 0; i < n; i++) map.put(i, 0);
 
-            TreeMap<Long, Queue<Integer>> tm = new TreeMap<>();
-            for (int i = 0; i < n; i++) {
-                if (!tm.containsKey(0L)) tm.put(0L, new PriorityQueue<>());
-                tm.get(0L).add(i);
-            }
-
-            long t = 0L;
-            for (int[] meeting : meetings) {
-                int start = meeting[0];
-                int end = meeting[1];
-
-                long key = tm.floorKey((long) start);
-
-                int room;
-                if (tm.get(key) != null && tm.get(key).size() != 0) {
-                    room = tm.get(key).poll();
-                } else if (tm.get(tm.ceilingKey((long) start)) != null && tm.get(tm.ceilingKey((long) start)).size() != 0) {
-                    room = tm.get(tm.ceilingKey((long) start)).poll();
-                    t = tm.ceilingKey((long) start);
-                } else {
-                    room = Integer.MAX_VALUE;
-                }
-
-                long nextEndTime = Math.abs(t + end - start);
-                if (!tm.containsKey(nextEndTime)) tm.put(nextEndTime, new PriorityQueue<>());
-                tm.get(nextEndTime).add(room);
-                map.put(room, map.getOrDefault(room, 0) + 1);
-            }
-
-
-            int max = Integer.MIN_VALUE;
-            int roomNo = 0;
-            for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-
-                if (entry.getValue() > max) {
-                    roomNo = entry.getKey();
-                    max = entry.getValue();
-                }
-            }
-
-            return roomNo;
+        TreeMap<Long, Queue<Integer>> tm = new TreeMap<>();
+        for (int i = 0; i < n; i++) {
+            if (!tm.containsKey(0L)) tm.put(0L, new PriorityQueue<>());
+            tm.get(0L).add(i);
         }
+
+        long t = 0L;
+        for (int[] meeting : meetings) {
+            int start = meeting[0];
+            int end = meeting[1];
+
+            long key = tm.floorKey((long) start);
+
+            int room;
+            if (tm.get(key) != null && tm.get(key).size() != 0) {
+                room = tm.get(key).poll();
+            } else if (tm.get(tm.ceilingKey((long) start)) != null && tm.get(tm.ceilingKey((long) start)).size() != 0) {
+                room = tm.get(tm.ceilingKey((long) start)).poll();
+                t = tm.ceilingKey((long) start);
+            } else {
+                room = Integer.MAX_VALUE;
+            }
+
+            long nextEndTime = Math.abs(t + end - start);
+            if (!tm.containsKey(nextEndTime)) tm.put(nextEndTime, new PriorityQueue<>());
+            tm.get(nextEndTime).add(room);
+            map.put(room, map.getOrDefault(room, 0) + 1);
+        }
+
+
+        int max = Integer.MIN_VALUE;
+        int roomNo = 0;
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+
+            if (entry.getValue() > max) {
+                roomNo = entry.getKey();
+                max = entry.getValue();
+            }
+        }
+
+        return roomNo;
+    }
 }
 
 
