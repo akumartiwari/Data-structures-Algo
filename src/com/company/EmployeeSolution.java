@@ -3,7 +3,6 @@ package com.company;
 import javafx.util.Pair;
 
 import java.awt.*;
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Queue;
 import java.util.*;
@@ -4076,6 +4075,116 @@ Output: [1,2,2,3,5,6]
 
         return cnt;
     }
+
+
+        public boolean checkDistances(String s, int[] distance) {
+
+            Map<Character, Integer> map = new HashMap();
+            for (int i = 0; i < s.length(); i++) {
+                if (map.containsKey(s.charAt(i))) {
+                    map.put(s.charAt(i), i - map.get(s.charAt(i)) - 1);
+                } else map.put(s.charAt(i), i);
+            }
+
+            for (int i = 0; i < distance.length; i++) {
+                char c = (char) ('a' + i);
+                if (map.containsKey(c)) {
+                    if (map.get(c) != distance[i]) return false;
+                }
+            }
+
+            return true;
+        }
+
+        final int mod = 1_000_000_007;
+
+        int sp;
+        int op;
+
+        public int numberOfWays(int startPos, int endPos, int k) {
+            sp = startPos;
+            op = k;
+            int[][] dp = new int[(startPos + 2 * k) + 1][k + 1];
+            for (int[] d : dp) Arrays.fill(d, -1);
+            return helper(startPos, endPos, k, dp);
+        }
+
+        private int helper(int currPos, int endPos, int k, int[][] dp) {
+            // base case
+            if (currPos == endPos && k == 0) return 1;
+
+            if (k <= 0) return 0;
+
+            int newPos;
+            if (currPos < 0) newPos = (sp + 2 * op) - Math.abs(currPos);
+            else newPos = currPos + k;
+
+            // System.out.println(currPos + ":" + newPos);
+            if (dp[newPos][k] != -1) return dp[newPos][k];
+            int left = 0, right = 0;
+            // left
+            left += helper(currPos - 1, endPos, k - 1, dp);
+
+            // right
+            right += helper(currPos + 1, endPos, k - 1, dp);
+
+            return dp[newPos][k] = (left + right) % mod;
+        }
+
+        //Author:Anand
+        List<Integer> setBits = new ArrayList<>();
+
+        public int longestNiceSubarray(int[] nums) {
+
+            int max = 1;
+            int i = 0, j = 1;
+
+            while (i < j && i < nums.length && j < nums.length) {
+                if ((nums[i] & nums[j]) == 0) {
+                    int x = nums[i];
+                    int y = nums[j];
+
+                    if (setBits.size() == 0) {
+                        fillList(x);
+                    }
+
+                    List<Integer> news = new ArrayList<>();
+                    for (int e : setBits) {
+                        if ((y << e & 1) == 1) {
+                            news.add(e);
+                        }
+                    }
+
+                    max = Math.max(max, j - i + 1);
+                    j++;
+                    setBits.clear();
+                    setBits.addAll(news);
+
+                } else {
+                    setBits.clear();
+                    i++;
+                    j++;
+                }
+            }
+
+            return max;
+        }
+
+        private void fillList(int x) {
+
+            List<Integer> currBits = new ArrayList<>();
+            while (x > 0) {
+                currBits.add(x % 2);
+                x >>= 2;
+            }
+            Collections.reverse(currBits);
+            int ind = 0;
+            for (int num : currBits) {
+                if (num == 1) setBits.add(ind);
+                ind++;
+            }
+        }
+
 }
 
 
