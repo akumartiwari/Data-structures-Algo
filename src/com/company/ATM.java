@@ -34,7 +34,7 @@ public class ATM {
                 int key = (int) entry.getKey();
                 long value = (long) entry.getValue();
                 long cnt = Math.min(amount / key, value);
-                amount -= (int) key * cnt;
+                amount -= key * cnt;
                 ans[idx--] = (int) cnt;
             } else break;
         }

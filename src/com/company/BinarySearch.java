@@ -352,7 +352,6 @@ Thus, [4,0,3] is returned.
                 l = mid + 1;
             } else h = mid;
 
-            if (l > h) return l;
             if (l == h && l == mid) return l;
         }
         return l;
