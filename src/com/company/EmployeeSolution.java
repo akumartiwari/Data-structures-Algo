@@ -3930,41 +3930,68 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-
     Input: n = 2, meetings = [[0,10],[1,5],[2,7],[3,4]]
     Output: 0
-
-
-
+    Explanation:
+    - At time 0, both rooms are not being used. The first meeting starts in room 0.
+    - At time 1, only room 1 is not being used. The second meeting starts in room 1.
+    - At time 2, both rooms are being used. The third meeting is delayed.
+    - At time 3, both rooms are being used. The fourth meeting is delayed.
+    - At time 5, the meeting in room 1 finishes. The third meeting starts in room 1 for the time period [5,10).
+    - At time 10, the meetings in both rooms finish. The fourth meeting starts in room 0 for the time period [10,11).
+    Both rooms 0 and 1 held 2 meetings, so we return 0.
      */
 
-    class Solution {
-        //Author: Anand
-        public int mostBooked(int n, int[][] meetings) {
-            long t = Long.MIN_VALUE;
+    //Author: Anand
+    public int mostBooked(int n, int[][] meetings) {
+        long t = Long.MIN_VALUE;
 
-            TreeMap<Integer, Integer> fm = new TreeMap<>();
-            for (int i = 0; i < n; i++) fm.put(i, Integer.MAX_VALUE);
+        TreeMap<Integer, Integer> fm = new TreeMap<>();
+        for (int i = 0; i < n; i++) fm.put(i, Integer.MAX_VALUE);
 
-            TreeMap<Long, PriorityQueue<Integer>> um = new TreeMap<>();
-            Arrays.sort(meetings, Comparator.comparingInt(m -> m[0]));
+        TreeMap<Long, PriorityQueue<Integer>> um = new TreeMap<>();
+        Arrays.sort(meetings, Comparator.comparingInt(m -> m[0]));
 
-            Map<Integer, Integer> freq = new HashMap<>();
+        Map<Integer, Integer> freq = new HashMap<>();
 
-            for (int[] meeting : meetings) {
-                int start = meeting[0];
-                int end = meeting[1];
-                int room;
-                long net;
+        for (int[] meeting : meetings) {
+            int start = meeting[0];
+            int end = meeting[1];
+            int room;
+            long net;
 
-                if (t == Long.MIN_VALUE) t = start;
+            if (t == Long.MIN_VALUE) t = start;
 
-                t = Math.max(start, t);
+            t = Math.max(start, t);
 
-                int lowestRoom = Integer.MAX_VALUE;
-                long key = Long.MIN_VALUE;
+            int lowestRoom = Integer.MAX_VALUE;
+            long key = Long.MIN_VALUE;
 
-                if (fm.size() > 0) {
+            if (fm.size() > 0) {
+                for (Map.Entry<Long, PriorityQueue<Integer>> en : um.entrySet()) {
+                    if (en.getKey() <= t) {
+                        if (en.getValue().size() > 0 && en.getValue().peek() < lowestRoom) {
+                            key = en.getKey();
+                            lowestRoom = en.getValue().peek();
+                        }
+                    } else break;
+                }
+
+
+                if (lowestRoom < fm.firstEntry().getKey()) {
+                    room = lowestRoom;
+                    um.get(key).poll();
+                    if (um.get(key).size() <= 0) um.remove(key);
+
+                } else room = fm.firstEntry().getKey();
+
+                fm.remove(room);
+                net = end - start + t;
+            } else {
+
+                Map.Entry<Long, PriorityQueue<Integer>> entry = um.firstEntry();
+
+                if (t > entry.getKey()) {
                     for (Map.Entry<Long, PriorityQueue<Integer>> en : um.entrySet()) {
                         if (en.getKey() <= t) {
                             if (en.getValue().size() > 0 && en.getValue().peek() < lowestRoom) {
@@ -3973,61 +4000,39 @@ Output: [1,2,2,3,5,6]
                             }
                         } else break;
                     }
+                } else lowestRoom = entry.getValue().size() > 0 ? entry.getValue().poll() : lowestRoom;
 
 
-                    if (lowestRoom < fm.firstEntry().getKey()) {
-                        room = lowestRoom;
-                        um.get(key).poll();
-                        if (um.get(key).size() <= 0) um.remove(key);
-
-                    } else room = fm.firstEntry().getKey();
-
-                    fm.remove(room);
-                    net = end - start + t;
-                } else {
-
-                    Map.Entry<Long, PriorityQueue<Integer>> entry = um.firstEntry();
-
-                    if (t > entry.getKey()) {
-                        for (Map.Entry<Long, PriorityQueue<Integer>> en : um.entrySet()) {
-                            if (en.getKey() <= t) {
-                                if (en.getValue().size() > 0 && en.getValue().peek() < lowestRoom) {
-                                    key = en.getKey();
-                                    lowestRoom = en.getValue().peek();
-                                }
-                            } else break;
-                        }
-                    } else lowestRoom = entry.getValue().size() > 0 ? entry.getValue().poll() : lowestRoom;
-
-
-                    if (key != Long.MIN_VALUE) um.get(key).poll();
-                    t = Math.max(t, entry.getKey());
-                    room = lowestRoom;
-                    net = end - start + t;
-                    if (entry.getValue().size() <= 0) um.remove(entry.getKey());
-                }
-
-                t++;
-                if (!um.containsKey(net)) um.put(net, new PriorityQueue<>());
-                um.get(net).add(room);
-
-
-                if (room != Integer.MIN_VALUE) freq.put(room, freq.getOrDefault(room, 0) + 1);
+                if (key != Long.MIN_VALUE) um.get(key).poll();
+                t = Math.max(t, entry.getKey());
+                room = lowestRoom;
+                net = end - start + t;
+                if (entry.getValue().size() <= 0) um.remove(entry.getKey());
             }
 
-            int max = Integer.MIN_VALUE;
-            int roomNo = Integer.MIN_VALUE;
-            for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {
+            t++;
+            if (!um.containsKey(net)) um.put(net, new PriorityQueue<>());
+            um.get(net).add(room);
 
-                if (entry.getValue() > max) {
-                    roomNo = entry.getKey();
-                    max = entry.getValue();
-                }
-            }
 
-            return roomNo;
+            if (room != Integer.MIN_VALUE) freq.put(room, freq.getOrDefault(room, 0) + 1);
         }
+
+        int max = Integer.MIN_VALUE;
+        int roomNo = Integer.MIN_VALUE;
+        for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {
+
+            if (entry.getValue() > max) {
+                roomNo = entry.getKey();
+                max = entry.getValue();
+            }
+        }
+
+        return roomNo;
     }
+
+
+
 }
 
 
