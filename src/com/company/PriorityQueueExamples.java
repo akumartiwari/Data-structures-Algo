@@ -4,10 +4,7 @@ import javafx.util.Pair;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.*;
 
 public class PriorityQueueExamples {
 
@@ -92,4 +89,132 @@ public class PriorityQueueExamples {
         b = b % m;
         return (((a * b) % m) + m) % m;
     }
+
+    //***********
+
+    Map<Integer, Long> map = new TreeMap<>(); // {roomId, count}
+
+
+    /*
+    Input: n = 2, meetings = [[0,10],[1,5],[2,7],[3,4]]
+    Output: 0
+    Explanation:
+    - At time 0, both rooms are not being used. The first meeting starts in room 0.
+    - At time 1, only room 1 is not being used. The second meeting starts in room 1.
+    - At time 2, both rooms are being used. The third meeting is delayed.
+    - At time 3, both rooms are being used. The fourth meeting is delayed.
+    - At time 5, the meeting in room 1 finishes. The third meeting starts in room 1 for the time period [5,10).
+    - At time 10, the meetings in both rooms finish. The fourth meeting starts in room 0 for the time period [10,11).
+    Both rooms 0 and 1 held 2 meetings, so we return 0.
+     */
+    public int mostBooked(int n, int[][] meetings) {
+
+        // Sort rooms based on endTime of the meeting and roomId
+        PriorityQueue<Node> pq = new PriorityQueue<Node>(
+                (a, b) -> {
+                    if (a.endTime != b.endTime)
+                        return a.endTime - b.endTime;
+                    return a.roomId - b.roomId;
+                }
+        );
+
+        TreeSet<Integer> ar = new TreeSet<>();
+        for (int i = 0; i < n; ++i) ar.add(i);
+
+        Arrays.sort(meetings, Comparator.comparingInt(a -> a[0]));
+        for (int[] meeting : meetings) {
+
+            int start = meeting[0];
+            int end = meeting[1];
+            int room;
+            // freeup the rooms which are available now
+            while (!pq.isEmpty() && start >= pq.peek().endTime) ar.add(pq.poll().roomId);
+
+            //Delay the meeting (as now rooms available)
+            if (ar.size() == 0) {
+                Node choice = pq.poll();
+                end += choice.endTime - start;
+                room = choice.roomId;
+                pq.offer(new Node(room, end));
+            } else {
+                room = ar.pollFirst();
+                pq.offer(new Node(room, end));
+            }
+
+            map.put(room, map.getOrDefault(room, 0L) + 1);
+        }
+
+        return maxCount();
+    }
+
+
+    private int maxCount() {
+        int room = -1;
+        long count = Long.MIN_VALUE;
+        for (Map.Entry<Integer, Long> entry : map.entrySet()) {
+            if (count < entry.getValue()) {
+                room = entry.getKey();
+                count = entry.getValue();
+            }
+        }
+        return room;
+    }
+
+    class Node {
+        int roomId;
+        int endTime;
+
+
+        Node(int roomId, int endTime) {
+            this.roomId = roomId;
+            this.endTime = endTime;
+        }
+    }
+
+    /*
+    Input: intervals = [[5,10],[6,8],[1,5],[2,3],[1,10]]
+    Output: 3
+    Explanation: We can divide the intervals into the following groups:
+    - Group 1: [1, 5], [6, 8].
+    - Group 2: [2, 3], [5, 10].
+    - Group 3: [1, 10].
+    It can be proven that it is not possible to divide the intervals into fewer than 3 groups.
+     */
+    //Author: Anand
+    class TimeInterval {
+        int start;
+        int end;
+
+
+        TimeInterval(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+    }
+
+    public int minGroups(int[][] intervals) {
+
+        Arrays.sort(intervals, (a, b) -> {
+            if (a[0] != b[0])
+                return a[0] - b[0];
+            return Math.min(a[1], b[1]);
+        });
+
+        PriorityQueue<TimeInterval> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a.end));
+
+        for (int[] interval : intervals) {
+
+            int start = interval[0];
+            int end = interval[1];
+            if (!pq.isEmpty() && pq.peek().end < start) {
+                TimeInterval ti = pq.poll();
+                pq.offer(new TimeInterval(ti.start, end));
+            } else {
+                pq.offer(new TimeInterval(start, end));
+            }
+        }
+
+        return pq.size();
+    }
+
 }

@@ -130,14 +130,14 @@ public class BinarySearch {
     }
 
     /*
-Input: spells = [5,1,3], potions = [1,2,3,4,5], success = 7
-Output: [4,0,3]
-Explanation:
-- 0th spell: 5 * [1,2,3,4,5] = [5,10,15,20,25]. 4 pairs are successful.
-- 1st spell: 1 * [1,2,3,4,5] = [1,2,3,4,5]. 0 pairs are successful.
-- 2nd spell: 3 * [1,2,3,4,5] = [3,6,9,12,15]. 3 pairs are successful.
-Thus, [4,0,3] is returned.
-*/
+    Input: spells = [5,1,3], potions = [1,2,3,4,5], success = 7
+    Output: [4,0,3]
+    Explanation:
+    - 0th spell: 5 * [1,2,3,4,5] = [5,10,15,20,25]. 4 pairs are successful.
+    - 1st spell: 1 * [1,2,3,4,5] = [1,2,3,4,5]. 0 pairs are successful.
+    - 2nd spell: 3 * [1,2,3,4,5] = [3,6,9,12,15]. 3 pairs are successful.
+    Thus, [4,0,3] is returned.
+    */
     //Author: Anand
     Map<Integer, int[]> duplicates;
 
@@ -315,5 +315,93 @@ Thus, [4,0,3] is returned.
         }
 
         return idx < 0 ? 0 : xc.size() - idx;
+    }
+
+    /*
+    Input: nums = [4,5,2,1], queries = [3,10,21]
+    Output: [2,3,4]
+    Explanation: We answer the queries as follows:
+    - The subsequence [2,1] has a sum less than or equal to 3. It can be proven that 2 is the maximum size of such a subsequence, so answer[0] = 2.
+    - The subsequence [4,5,1] has a sum less than or equal to 10. It can be proven that 3 is the maximum size of such a subsequence, so answer[1] = 3.
+    - The subsequence [4,5,2,1] has a sum less than or equal to 21. It can be proven that 4 is the maximum size of such a subsequence, so answer[2] = 4.
+     */
+    //Author:Anand
+    public int[] answerQueries(int[] nums, int[] queries) {
+        Arrays.sort(nums);
+        int[] ps = new int[nums.length];
+
+        for (int i = 0; i < nums.length; i++) {
+            if (i == 0) ps[i] = nums[i];
+            else ps[i] = ps[i - 1] + nums[i];
+        }
+
+        int idx = 0;
+        int[] ans = new int[queries.length];
+        for (int query : queries)
+            ans[idx++] = Math.max(bs(ps, query), 0);
+
+        return ans;
+    }
+
+    private int bs(int[] ps, int bus) {
+        int l = 0, h = ps.length - 1;
+        while (l <= h) {
+            int mid = l + (h - l) / 2;
+
+            if (ps[mid] <= bus) {
+                l = mid + 1;
+            } else h = mid;
+
+            if (l == h && l == mid) return l;
+        }
+        return l;
+    }
+
+    /*
+      Input: buses = [10,20], passengers = [2,17,18,19], capacity = 2
+      Output: 16
+      Explanation:
+      The 1st bus departs with the 1st passenger.
+      The 2nd bus departs with you and the 2nd passenger.
+      Note that you must not arrive at the same time as the passengers, which is why you must arrive before the 2nd passenger to catch the bus.
+
+
+       buses = [10,20], pass = [2,17,18,19]
+   */
+    // TC = O(nlogn)
+    public int latestTimeCatchTheBus(int[] buses, int[] passengers, int capacity) {
+        Arrays.sort(buses);
+        Arrays.sort(passengers);
+
+        int prev = -1;
+        int pcb = 0;
+        for (int bus : buses) {
+            int ind = bs(passengers, bus);
+            if (prev == -1) {
+                prev = Math.min(ind, capacity);
+                pcb = prev;
+            } else {
+                pcb = (ind > (prev + capacity)) ? capacity : ind;
+                prev += pcb;
+            }
+        }
+
+        int value = 0;
+        if (pcb >= capacity) {
+            prev--;
+            value = passengers[prev];
+            for (int i = prev - 1; i >= 0; i--) {
+                if ((value - passengers[i]) != 1) return value - 1;
+                value = passengers[i];
+            }
+        } else {
+            value = buses[buses.length - 1];
+            for (int i = passengers.length - 1; i >= 0; i--) {
+                if (value > passengers[i]) return value;
+                value = passengers[i];
+            }
+        }
+
+        return value - 1;
     }
 }

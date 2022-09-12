@@ -3,6 +3,7 @@ package com.company;
 import javafx.util.Pair;
 
 import java.awt.*;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 import java.util.*;
@@ -3081,55 +3082,6 @@ Output: [1,2,2,3,5,6]
         return true;
     }
 
-    /*
-      Input: buses = [10,20], passengers = [2,17,18,19], capacity = 2
-      Output: 16
-      Explanation:
-      The 1st bus departs with the 1st passenger.
-      The 2nd bus departs with you and the 2nd passenger.
-      Note that you must not arrive at the same time as the passengers, which is why you must arrive before the 2nd passenger to catch the bus.
-
-
-       buses = [10,20], pass = [2,17,18,19]
-      //Author: Anand
-     */
-    // TC = O(nlogn)
-    public int latestTimeCatchTheBus(int[] buses, int[] passengers, int capacity) {
-        Arrays.sort(buses);
-        Arrays.sort(passengers);
-
-        int prev = -1;
-        int pcb = 0;
-        for (int bus : buses) {
-            int ind = bs(passengers, bus);
-            if (prev == -1) {
-                prev = Math.min(ind, capacity);
-                pcb = prev;
-            } else {
-                pcb = (ind > (prev + capacity)) ? capacity : ind;
-                prev += pcb;
-            }
-        }
-
-        int value = 0;
-        if (pcb >= capacity) {
-            prev--;
-            value = passengers[prev];
-            for (int i = prev - 1; i >= 0; i--) {
-                if ((value - passengers[i]) != 1) return value - 1;
-                value = passengers[i];
-            }
-        } else {
-            value = buses[buses.length - 1];
-            for (int i = passengers.length - 1; i >= 0; i--) {
-                if (value > passengers[i]) return value;
-                value = passengers[i];
-            }
-        }
-
-        return value - 1;
-    }
-
 
     /*
     Input: nums = [2,3,2,4,3], numsDivide = [9,6,9,3,15]
@@ -3566,81 +3518,6 @@ Output: [1,2,2,3,5,6]
     }
 
     //Author: Anand
-    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
-
-        Map<Integer, Integer> map = new HashMap<>();
-        Stack<Integer> stk = new Stack<>();
-
-        for (int i = nums2.length - 1; i >= 0; i--) {
-            while (!stk.isEmpty() && nums2[stk.peek()] <= nums2[i]) stk.pop();
-
-            if (!stk.isEmpty()) map.put(nums2[i], nums2[stk.peek()]);
-            else map.put(nums2[i], -1);
-
-            stk.push(i);
-        }
-
-
-        int[] ans = new int[nums1.length];
-        for (int i = 0; i < nums1.length; i++) ans[i] = map.getOrDefault(nums1[i], -1);
-
-        return ans;
-    }
-
-
-    //Author: Anand
-    public int[] nextGreaterElements(int[] nums) {
-
-        Map<Integer, List<Integer>> map = new HashMap<>();
-
-        Stack<Integer> stk = new Stack<>();
-
-        for (int i = nums.length - 1; i >= 0; i--) {
-            while (!stk.isEmpty() && nums[stk.peek()] <= nums[i]) stk.pop();
-
-            if (!map.containsKey(nums[i])) map.put(nums[i], new ArrayList<>());
-
-            if (!stk.isEmpty()) map.get(nums[i]).add(nums[stk.peek()]);
-
-            stk.push(i);
-        }
-
-        int[] ans = new int[nums.length];
-        for (int i = 0; i < nums.length; i++) {
-            if (map.containsKey(nums[i]) && map.get(nums[i]).size() > 0) {
-                ans[i] = map.get(nums[i]).get(map.get(nums[i]).size() - 1);
-                map.get(nums[i]).remove(map.get(nums[i]).size() - 1);
-            } else ans[i] = Integer.MIN_VALUE;
-        }
-
-
-        Map<Integer, Boolean> cm = new HashMap<>();
-
-        for (int i = nums.length - 1; i >= 0; i--) {
-            while (!stk.isEmpty() && nums[stk.peek()] <= nums[i]) stk.pop();
-
-            if (!map.containsKey(nums[i])) map.put(nums[i], new ArrayList<>());
-
-            if (!stk.isEmpty() && !cm.containsKey(nums[i])) {
-                map.get(nums[i]).add(nums[stk.peek()]);
-                cm.put(nums[i], true);
-            }
-
-            stk.push(i);
-        }
-
-        for (int i = 0; i < nums.length; i++) {
-            if (ans[i] != Integer.MIN_VALUE) continue;
-
-            if (map.containsKey(nums[i]) && map.get(nums[i]).size() > 0)
-                ans[i] = map.get(nums[i]).get(map.get(nums[i]).size() - 1);
-            else ans[i] = -1;
-        }
-
-        return ans;
-    }
-
-    //Author: Anand
     public int edgeScore(int[] edges) {
         Map<Integer, List<Integer>> graph = new TreeMap<>();
 
@@ -3942,47 +3819,6 @@ Output: [1,2,2,3,5,6]
         return sb.toString();
     }
 
-    /*
-    Input: nums = [4,5,2,1], queries = [3,10,21]
-    Output: [2,3,4]
-    Explanation: We answer the queries as follows:
-    - The subsequence [2,1] has a sum less than or equal to 3. It can be proven that 2 is the maximum size of such a subsequence, so answer[0] = 2.
-    - The subsequence [4,5,1] has a sum less than or equal to 10. It can be proven that 3 is the maximum size of such a subsequence, so answer[1] = 3.
-    - The subsequence [4,5,2,1] has a sum less than or equal to 21. It can be proven that 4 is the maximum size of such a subsequence, so answer[2] = 4.
-     */
-    //Author:Anand
-    public int[] answerQueries(int[] nums, int[] queries) {
-        Arrays.sort(nums);
-        int[] ps = new int[nums.length];
-
-        for (int i = 0; i < nums.length; i++) {
-            if (i == 0) ps[i] = nums[i];
-            else ps[i] = ps[i - 1] + nums[i];
-        }
-
-        int idx = 0;
-        int[] ans = new int[queries.length];
-        for (int query : queries)
-            ans[idx++] = Math.max(bs(ps, query), 0);
-
-        return ans;
-    }
-
-    private int bs(int[] ps, int bus) {
-        int l = 0, h = ps.length - 1;
-        while (l <= h) {
-            int mid = l + (h - l) / 2;
-
-            if (ps[mid] <= bus) {
-                l = mid + 1;
-            } else h = mid;
-
-            if (l > h) return l;
-            if (l == h && l == mid) return l;
-        }
-        return l;
-    }
-
     //Author: Anand
     public int garbageCollection(String[] garbage, int[] travel) {
         Map<Character, Integer> map = new HashMap<>();
@@ -3999,8 +3835,244 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    //Author: Anand
+    public boolean findSubarrays(int[] nums) {
+        Set<Integer> ts = new HashSet<>();
+        for (int i = 0; i < nums.length - 1; i++) {
+            int sum = nums[i] + nums[i + 1];
+            if (ts.contains(sum)) return true;
+            ts.add(sum);
+        }
+        return false;
+    }
 
+
+    //Author: Anand
+    int max = Integer.MIN_VALUE;
+    List<List<Integer>> onePos = new ArrayList<>();
+    Set<String> colP = new HashSet<>();
+
+    public int maximumRows(int[][] mat, int cols) {
+
+        int m = mat.length;
+        int n = mat[0].length;
+
+        for (int i = 0; i < m; i++) {
+            onePos.add(new ArrayList<>());
+        }
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (mat[i][j] == 1) onePos.get(i).add(j);
+            }
+        }
+
+        chooseCol(m, n, cols, mat, new HashSet<>(), 0);
+        return max;
+    }
+
+    private void chooseCol(int m, int n, int cols, int[][] mat, HashSet<Integer> colTaken, int x) {
+
+        if (cols == 0) {
+            if (!colP.contains(colTaken.toString())) {
+                max = Math.max(max, selectRows(colTaken, mat));
+                colP.add(colTaken.toString());
+            }
+            return;
+        }
+
+
+        for (int i = x; i < n; i++) {
+            if (colTaken.contains(i)) continue;
+            // take
+            colTaken.add(i);
+            chooseCol(m, n, cols - 1, mat, colTaken, x + 1);
+            // not take
+            colTaken.remove(i);
+        }
+    }
+
+    private int selectRows(HashSet<Integer> colTaken, int[][] mat) {
+
+        int cnt = 0;
+        for (List<Integer> rows : onePos) {
+
+            boolean present = true;
+            for (int pos : rows) {
+                if (!colTaken.contains(pos)) {
+                    present = false;
+                    break;
+                }
+            }
+
+            if (present) cnt++;
+        }
+
+        return cnt;
+    }
+
+    public boolean checkDistances(String s, int[] distance) {
+
+        Map<Character, Integer> map = new HashMap();
+        for (int i = 0; i < s.length(); i++) {
+            if (map.containsKey(s.charAt(i))) {
+                map.put(s.charAt(i), i - map.get(s.charAt(i)) - 1);
+            } else map.put(s.charAt(i), i);
+        }
+
+        for (int i = 0; i < distance.length; i++) {
+            char c = (char) ('a' + i);
+            if (map.containsKey(c)) {
+                if (map.get(c) != distance[i]) return false;
+            }
+        }
+
+        return true;
+    }
+
+    /*
+    Input: n = 2, meetings = [[0,10],[1,5],[2,7],[3,4]]
+    Output: 0
+    Explanation:
+    - At time 0, both rooms are not being used. The first meeting starts in room 0.
+    - At time 1, only room 1 is not being used. The second meeting starts in room 1.
+    - At time 2, both rooms are being used. The third meeting is delayed.
+    - At time 3, both rooms are being used. The fourth meeting is delayed.
+    - At time 5, the meeting in room 1 finishes. The third meeting starts in room 1 for the time period [5,10).
+    - At time 10, the meetings in both rooms finish. The fourth meeting starts in room 0 for the time period [10,11).
+    Both rooms 0 and 1 held 2 meetings, so we return 0.
+     */
+
+    //Author: Anand
+    public int mostBooked(int n, int[][] meetings) {
+        long t = Long.MIN_VALUE;
+
+        TreeMap<Integer, Integer> fm = new TreeMap<>();
+        for (int i = 0; i < n; i++) fm.put(i, Integer.MAX_VALUE);
+
+        TreeMap<Long, PriorityQueue<Integer>> um = new TreeMap<>();
+        Arrays.sort(meetings, Comparator.comparingInt(m -> m[0]));
+
+        Map<Integer, Integer> freq = new HashMap<>();
+
+        for (int[] meeting : meetings) {
+            int start = meeting[0];
+            int end = meeting[1];
+            int room;
+            long net;
+
+            if (t == Long.MIN_VALUE) t = start;
+
+            t = Math.max(start, t);
+
+            int lowestRoom = Integer.MAX_VALUE;
+            long key = Long.MIN_VALUE;
+
+            if (fm.size() > 0) {
+                for (Map.Entry<Long, PriorityQueue<Integer>> en : um.entrySet()) {
+                    if (en.getKey() <= t) {
+                        if (en.getValue().size() > 0 && en.getValue().peek() < lowestRoom) {
+                            key = en.getKey();
+                            lowestRoom = en.getValue().peek();
+                        }
+                    } else break;
+                }
+
+
+                if (lowestRoom < fm.firstEntry().getKey()) {
+                    room = lowestRoom;
+                    um.get(key).poll();
+                    if (um.get(key).size() <= 0) um.remove(key);
+
+                } else room = fm.firstEntry().getKey();
+
+                fm.remove(room);
+                net = end - start + t;
+            } else {
+
+                Map.Entry<Long, PriorityQueue<Integer>> entry = um.firstEntry();
+
+                if (t > entry.getKey()) {
+                    for (Map.Entry<Long, PriorityQueue<Integer>> en : um.entrySet()) {
+                        if (en.getKey() <= t) {
+                            if (en.getValue().size() > 0 && en.getValue().peek() < lowestRoom) {
+                                key = en.getKey();
+                                lowestRoom = en.getValue().peek();
+                            }
+                        } else break;
+                    }
+                } else lowestRoom = entry.getValue().size() > 0 ? entry.getValue().poll() : lowestRoom;
+
+
+                if (key != Long.MIN_VALUE) um.get(key).poll();
+                t = Math.max(t, entry.getKey());
+                room = lowestRoom;
+                net = end - start + t;
+                if (entry.getValue().size() <= 0) um.remove(entry.getKey());
+            }
+
+            t++;
+            if (!um.containsKey(net)) um.put(net, new PriorityQueue<>());
+            um.get(net).add(room);
+
+
+            if (room != Integer.MIN_VALUE) freq.put(room, freq.getOrDefault(room, 0) + 1);
+        }
+
+        int max = Integer.MIN_VALUE;
+        int roomNo = Integer.MIN_VALUE;
+        for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {
+
+            if (entry.getValue() > max) {
+                roomNo = entry.getKey();
+                max = entry.getValue();
+            }
+        }
+
+        return roomNo;
+    }
+
+    //Author: Anand
+    public int mostFrequentEven(int[] nums) {
+
+        Map<Integer, Integer> tm = new TreeMap<>();
+
+        for (int num : nums) if (num % 2 == 0) tm.put(num, tm.getOrDefault(num, 0) + 1);
+
+        int elem = -1;
+        int count = Integer.MIN_VALUE;
+        for (Map.Entry<Integer, Integer> entry : tm.entrySet()) {
+
+            if (entry.getValue() > count) {
+                count = entry.getValue();
+                elem = entry.getKey();
+            }
+        }
+        return elem;
+    }
+
+    //Author: Anand
+    public int partitionString(String s) {
+        int cnt = 0;
+        Set<Character> set = new HashSet<>();
+        for (int i = 0; i < s.length(); i++) {
+
+            if (set.contains(s.charAt(i))) {
+                cnt++;
+                set.clear();
+            }
+            set.add(s.charAt(i));
+        }
+
+
+        if (set.size() > 0) cnt++;
+        return cnt;
+    }
+    
 }
+
+
+
 
     /*
     // TODO: maxRunTime Binary search solution

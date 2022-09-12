@@ -836,4 +836,36 @@ public class DP {
         return cnt;
 
     }
+
+    final int mod = 1_000_000_007;
+    int sp;
+    int op;
+    public int numberOfWays(int startPos, int endPos, int k) {
+        sp = startPos;
+        op = k;
+        int[][] dp = new int[(startPos + 2 * k) + 1][k + 1];
+        for (int[] d : dp) Arrays.fill(d, -1);
+        return helper(startPos, endPos, k, dp);
+    }
+    private int helper(int currPos, int endPos, int k, int[][] dp) {
+        // base case
+        if (currPos == endPos && k == 0) return 1;
+
+        if (k <= 0) return 0;
+
+        int newPos;
+        if (currPos < 0) newPos = (sp + 2 * op) - Math.abs(currPos);
+        else newPos = currPos + k;
+
+        // System.out.println(currPos + ":" + newPos);
+        if (dp[newPos][k] != -1) return dp[newPos][k];
+        int left = 0, right = 0;
+        // left
+        left += helper(currPos - 1, endPos, k - 1, dp);
+
+        // right
+        right += helper(currPos + 1, endPos, k - 1, dp);
+
+        return dp[newPos][k] = (left + right) % mod;
+    }
 }
