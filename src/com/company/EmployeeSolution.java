@@ -3,6 +3,7 @@ package com.company;
 import javafx.util.Pair;
 
 import java.awt.*;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 import java.util.*;
@@ -4031,8 +4032,43 @@ Output: [1,2,2,3,5,6]
         return roomNo;
     }
 
+    //Author: Anand
+    public int mostFrequentEven(int[] nums) {
+
+        Map<Integer, Integer> tm = new TreeMap<>();
+
+        for (int num : nums) if (num % 2 == 0) tm.put(num, tm.getOrDefault(num, 0) + 1);
+
+        int elem = -1;
+        int count = Integer.MIN_VALUE;
+        for (Map.Entry<Integer, Integer> entry : tm.entrySet()) {
+
+            if (entry.getValue() > count) {
+                count = entry.getValue();
+                elem = entry.getKey();
+            }
+        }
+        return elem;
+    }
+
+    //Author: Anand
+    public int partitionString(String s) {
+        int cnt = 0;
+        Set<Character> set = new HashSet<>();
+        for (int i = 0; i < s.length(); i++) {
+
+            if (set.contains(s.charAt(i))) {
+                cnt++;
+                set.clear();
+            }
+            set.add(s.charAt(i));
+        }
 
 
+        if (set.size() > 0) cnt++;
+        return cnt;
+    }
+    
 }
 
 

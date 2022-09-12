@@ -171,4 +171,50 @@ public class PriorityQueueExamples {
         }
     }
 
+    /*
+    Input: intervals = [[5,10],[6,8],[1,5],[2,3],[1,10]]
+    Output: 3
+    Explanation: We can divide the intervals into the following groups:
+    - Group 1: [1, 5], [6, 8].
+    - Group 2: [2, 3], [5, 10].
+    - Group 3: [1, 10].
+    It can be proven that it is not possible to divide the intervals into fewer than 3 groups.
+     */
+    //Author: Anand
+    class TimeInterval {
+        int start;
+        int end;
+
+
+        TimeInterval(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+    }
+
+    public int minGroups(int[][] intervals) {
+
+        Arrays.sort(intervals, (a, b) -> {
+            if (a[0] != b[0])
+                return a[0] - b[0];
+            return Math.min(a[1], b[1]);
+        });
+
+        PriorityQueue<TimeInterval> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a.end));
+
+        for (int[] interval : intervals) {
+
+            int start = interval[0];
+            int end = interval[1];
+            if (!pq.isEmpty() && pq.peek().end < start) {
+                TimeInterval ti = pq.poll();
+                pq.offer(new TimeInterval(ti.start, end));
+            } else {
+                pq.offer(new TimeInterval(start, end));
+            }
+        }
+
+        return pq.size();
+    }
+
 }
