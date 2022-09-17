@@ -3,7 +3,8 @@ package com.company;
 import javafx.util.Pair;
 
 import java.awt.*;
-import java.util.Iterator;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Queue;
 import java.util.*;
@@ -4068,7 +4069,60 @@ Output: [1,2,2,3,5,6]
         if (set.size() > 0) cnt++;
         return cnt;
     }
-    
+
+
+    //Author : Anand
+    public int countDaysTogether(String arriveAlice, String leaveAlice, String arriveBob, String leaveBob) {
+        int[] aa = Arrays.stream(arriveAlice.split("-")).mapToInt(Integer::parseInt).toArray();
+        int[] la = Arrays.stream(leaveAlice.split("-")).mapToInt(Integer::parseInt).toArray();
+
+        int[] ab = Arrays.stream(arriveBob.split("-")).mapToInt(Integer::parseInt).toArray();
+        int[] lb = Arrays.stream(leaveBob.split("-")).mapToInt(Integer::parseInt).toArray();
+
+        try {
+            Calendar c = Calendar.getInstance();
+            DateFormat sourceFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+            c.setTime(sourceFormat.parse(aa[1] + "/" + aa[0] + "/2010"));
+            int aad = c.get(Calendar.DAY_OF_YEAR);
+
+            c.setTime(sourceFormat.parse(la[1] + "/" + la[0] + "/2010"));
+            int ald = c.get(Calendar.DAY_OF_YEAR);
+
+            c.setTime(sourceFormat.parse(ab[1] + "/" + ab[0] + "/2010"));
+            int bad = c.get(Calendar.DAY_OF_YEAR);
+
+            c.setTime(sourceFormat.parse(lb[1] + "/" + lb[0] + "/2010"));
+            int bld = c.get(Calendar.DAY_OF_YEAR);
+
+            int x = Math.max(aad, bad), y = Math.min(ald, bld);
+            if (x <= y) return 1 + Math.abs(x - y);
+            return 0;
+        } catch (Exception ex) {
+            return 0;
+        }
+
+    }
+
+    //Author: Anand
+    public int matchPlayersAndTrainers(int[] players, int[] trainers) {
+
+        int cnt = 0;
+        TreeMap<Integer, Integer> tm = new TreeMap<>();
+        for (int trainer : trainers) tm.put(trainer, tm.getOrDefault(trainer, 0) + 1);
+
+
+        for (int player : players) {
+
+            if (tm.ceilingKey(player) != null) {
+                tm.put(tm.ceilingKey(player), tm.get(tm.ceilingKey(player)) - 1);
+                if (tm.get(tm.ceilingKey(player)) <= 0) tm.remove(tm.get(tm.ceilingKey(player)));
+                cnt++;
+            }
+        }
+
+        return cnt;
+    }
 }
 
 

@@ -1,7 +1,6 @@
 package com.company;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Bitmask {
 
@@ -28,6 +27,61 @@ public class Bitmask {
         }
         return res;
     }
+
+
+    //Author: Anand
+    // TODO: Debug for wrong test cases
+    public int[] smallestSubarrays(int[] nums) {
+        List<Integer> res = new ArrayList<>();
+
+        int maxOR = 0;
+        for (int num : nums) maxOR |= num;
+
+
+        TreeMap<Integer, Integer> map = new TreeMap<>();
+        for (int num : nums) {
+            String binary = Integer.toBinaryString(num);
+            int ind = 0;
+            for (int i = binary.length() - 1; i >= 0; i--) {
+                if (Integer.parseInt(String.valueOf(binary.charAt(i))) == 1)
+                    map.put(ind, map.getOrDefault(ind, 0) + 1);
+
+                ind++;
+            }
+        }
+
+
+        int i = 0, j = 0;
+        int curr = 0;
+        while (i <= j && i < nums.length && j < nums.length) {
+            if (curr <= (curr | nums[j]) && curr < maxOR) {
+                curr |= nums[j++];
+            } else {
+                res.add(curr);
+                String binary = Integer.toBinaryString(nums[i++]);
+                int ind = 0;
+                for (int pos = binary.length() - 1; pos >= 0; pos--) {
+                    if (Integer.parseInt(String.valueOf(binary.charAt(pos))) == 1
+                            && map.containsKey(ind) && map.get(ind) > 0) {
+                        map.put(ind, map.get(ind) - 1);
+
+                        if (map.get(ind) <= 0) {
+                            map.remove(ind);
+                            curr -= Math.pow(2, ind);
+                        }
+                    }
+
+                    ind++;
+                }
+
+                maxOR = curr;
+                System.out.println(curr + ":" + maxOR);
+            }
+        }
+
+        return res.stream().mapToInt(x -> x).toArray();
+    }
+
 
     //Author: Anand
     // The idea is to count numbers that share same bit and maximise them
