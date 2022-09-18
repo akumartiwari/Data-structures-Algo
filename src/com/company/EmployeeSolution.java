@@ -4164,85 +4164,84 @@ Output: [1,2,2,3,5,6]
     /**
      * Definition for a binary tree node.
      * public class TreeNode {
-     *     int val;
-     *     TreeNode left;
-     *     TreeNode right;
-     *     TreeNode() {}
-     *     TreeNode(int val) { this.val = val; }
-     *     TreeNode(int val, TreeNode left, TreeNode right) {
-     *         this.val = val;
-     *         this.left = left;
-     *         this.right = right;
-     *     }
+     * int val;
+     * TreeNode left;
+     * TreeNode right;
+     * TreeNode() {}
+     * TreeNode(int val) { this.val = val; }
+     * TreeNode(int val, TreeNode left, TreeNode right) {
+     * this.val = val;
+     * this.left = left;
+     * this.right = right;
+     * }
      * }
      */
-    class Solution {
 
-        // Fn to get height of tree
-        private int height(TreeNode root) {
-            if (root == null) return 0;
-            int lh = height(root.left);
-            int rh = height(root.right);
-            return 1 + Math.max(lh, rh);
-        }
+    // Fn to get height of tree
+    private int height(TreeNode root) {
+        if (root == null) return 0;
+        int lh = height(root.left);
+        int rh = height(root.right);
+        return 1 + Math.max(lh, rh);
+    }
 
-        //Author: Anand
-        public TreeNode reverseOddLevels(TreeNode root) {
-            if (root == null)
-                return root;
+    //Author: Anand
+    public TreeNode reverseOddLevels(TreeNode root) {
+        if (root == null)
+            return root;
 
-            // Standard level order traversal code
-            // using queue
-            Queue<TreeNode> q = new LinkedList<>(); // Create a queue
-            q.add(root); // Enqueue root
+        // Standard level order traversal code
+        // using queue
+        Queue<TreeNode> q = new LinkedList<>(); // Create a queue
+        q.add(root); // Enqueue root
 
-            int levels = height(root);
-            List<List<Integer>> ans = new ArrayList<>();
-            for (int i=0;i<levels;i++) ans.add(new ArrayList<>());
+        int levels = height(root);
+        List<List<Integer>> ans = new ArrayList<>();
+        for (int i = 0; i < levels; i++) ans.add(new ArrayList<>());
 
 
-            int level = 0;
-            ans.get(level).add(root.val);
+        int level = 0;
+        ans.get(level).add(root.val);
 
-            while (!q.isEmpty()) {
+        while (!q.isEmpty()) {
 
-                List<Integer> result = new ArrayList<>();
-                List<TreeNode> nodes = new ArrayList<>();
+            List<Integer> result = new ArrayList<>();
+            List<TreeNode> nodes = new ArrayList<>();
 
-                int n = q.size();
+            int n = q.size();
 
-                // If this node has children
-                while (n > 0) {
-                    // Dequeue an item from queue
-                    TreeNode p = q.poll();
-                    nodes.add(p);
-                    // Enqueue all children of
-                    // the dequeued item
+            // If this node has children
+            while (n > 0) {
+                // Dequeue an item from queue
+                TreeNode p = q.poll();
+                nodes.add(p);
+                // Enqueue all children of
+                // the dequeued item
 
-                    if (p.left != null) {
-                        result.add(p.left.val);
-                        q.add(p.left);
-                    }
-                    if (p.right != null) {
-                        result.add(p.right.val);
-                        q.add(p.right);
-                    }
-                    n--;
+                if (p.left != null) {
+                    result.add(p.left.val);
+                    q.add(p.left);
                 }
-
-                if (level % 2 == 0) Collections.reverse(result);
-
-                ans.get(level).addAll(result);
-                level++;
+                if (p.right != null) {
+                    result.add(p.right.val);
+                    q.add(p.right);
+                }
+                n--;
             }
 
+            if (level % 2 == 0) Collections.reverse(result);
 
-            TreeNode temp = root;
-            ans.forEach(x-> System.out.println(Arrays.toString(x.toArray())));
-            return temp;
+            ans.get(level).addAll(result);
+            level++;
         }
+
+
+        TreeNode temp = root;
+        ans.forEach(x -> System.out.println(Arrays.toString(x.toArray())));
+        return temp;
     }
 }
+
 
 
 
