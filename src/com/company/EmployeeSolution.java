@@ -4106,21 +4106,17 @@ Output: [1,2,2,3,5,6]
 
     //Author: Anand
     public int matchPlayersAndTrainers(int[] players, int[] trainers) {
-
         int cnt = 0;
         TreeMap<Integer, Integer> tm = new TreeMap<>();
         for (int trainer : trainers) tm.put(trainer, tm.getOrDefault(trainer, 0) + 1);
-
-
         for (int player : players) {
-
             if (tm.ceilingKey(player) != null) {
-                tm.put(tm.ceilingKey(player), tm.get(tm.ceilingKey(player)) - 1);
-                if (tm.get(tm.ceilingKey(player)) <= 0) tm.remove(tm.get(tm.ceilingKey(player)));
+                int key = tm.ceilingKey(player);
+                tm.put(key, tm.get(key) - 1);
+                if (tm.get(key) <= 0) tm.remove(key);
                 cnt++;
             }
         }
-
         return cnt;
     }
 
