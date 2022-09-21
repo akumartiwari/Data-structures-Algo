@@ -87,6 +87,34 @@ public class Tree {
         return node.left == null && node.right == null;
     }
 
+    /*
+    Input: root = [2,3,5,8,13,21,34]
+    Output: [2,5,3,8,13,21,34]
+    Explanation:
+    The tree has only one odd level.
+    The nodes at level 1 are 3, 5 respectively, which are reversed and become 5, 3.
+     */
+    public TreeNode reverseOddLevels(TreeNode root) {
+        rol(root.left, root.right, 1);
+        return root;
+    }
+
+    private void rol(TreeNode left, TreeNode right, int level) {
+
+        // base case
+        if (left == null || right == null) return;
+
+        // Odd level ie. reverse nodes
+        if (level % 2 == 1) {
+            // swap children
+            int temp = left.val;
+            left.val = right.val;
+            right.val = temp;
+        }
+        rol(left.left, right.right, level + 1);
+        rol(left.right, right.left, level + 1);
+    }
+
     /**
      * Definition for a binary tree node.
      * public class TreeNode {
@@ -102,5 +130,7 @@ public class Tree {
      *     }
      * }
      */
+
+
 }
 
