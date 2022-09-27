@@ -4156,6 +4156,113 @@ Output: [1,2,2,3,5,6]
         max = Math.max(max, j - i);
         return max;
     }
+
+    public String[] sortPeople(String[] names, int[] heights) {
+        Map<Integer, String> map = new TreeMap<>(Collections.reverseOrder());
+        for (int i = 0; i < heights.length; i++) map.put(heights[i], names[i]);
+
+        String[] ans = new String[names.length];
+        int ind = 0;
+        for (String s : map.values()) ans[ind++] = s;
+        return ans;
+    }
+
+    public int longestSubarray(int[] nums) {
+        int max = Integer.MIN_VALUE;
+        for (int num : nums) max = Math.max(max, num);
+
+        List<Integer> pos = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++)
+            if (nums[i] == max) pos.add(i);
+
+        int ml = 0;
+        int l = 0;
+        int prev = Integer.MIN_VALUE;
+        for (int p : pos) {
+            if (p != (prev + 1)) {
+                ml = Math.max(ml, l);
+                l = 0;
+            }
+            prev = p;
+            l++;
+        }
+
+        ml = Math.max(ml, l);
+        return ml;
+
+    }
+
+    public List<Integer> goodIndices(int[] nums, int k) {
+
+        Set<Integer> inc = new HashSet<>();
+        List<Integer> choices = new ArrayList<>();
+        List<Integer> ans = new ArrayList<>();
+
+        for (int i = 1; i < nums.length; i++) {
+            choices.add(nums[i - 1]);
+            if (choices.size() >= k) inc.add(i);
+            if (choices.get(choices.size() - 1) < nums[i]) choices.clear();
+        }
+        choices.clear();
+
+        for (int i = nums.length - 2; i >= 0; i--) {
+            choices.add(nums[i + 1]);
+            if (choices.size() >= k && inc.contains(i)) ans.add(i);
+            if (nums[i] > choices.get(choices.size() - 1)) choices.clear();
+        }
+
+        Collections.sort(ans);
+        return ans;
+    }
+
+
+    //TODO : Complete this
+    public int numberOfGoodPaths(int[] vals, int[][] edges) {
+        int n = vals.length;
+        List<Integer>[] graph = new ArrayList[n];
+        for (int i = 0; i < n; i++) graph[i] = new ArrayList<>();
+        for (int[] edge : edges) {
+            graph[edge[0]].add(edge[1]);
+            graph[edge[1]].add(edge[0]);
+        }
+
+        return multiBfs(n, graph, vals);
+    }
+
+    private static int multiBfs(int n, List<Integer>[] graph, int[] vals) {
+
+        boolean[] vis = new boolean[n];
+        int cnt = 0;
+        Arrays.fill(vis, false); // marked visited array as false
+        // For each vertex apply BFS
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(vis, false); // marked visited array as false
+            int ans = bfsUtil(graph, vis, i, vals);
+            System.out.println("Node=" + i + ", pathCnt=" + ans);
+            cnt += ans;
+
+        }
+        return cnt;
+    }
+
+    private static int bfsUtil(List<Integer>[] graph, boolean[] visited, int src, int[] vals) {
+        int path = 0;
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(src);
+        visited[src] = true;
+        while (!queue.isEmpty()) {
+            int elem = queue.poll();
+            for (int i = 0; i < graph[elem].size(); i++) {
+                //  Not visited and path open
+                if (!visited[graph[elem].get(i)] && vals[graph[elem].get(i)] <= vals[src]) {
+                    visited[graph[elem].get(i)] = true;
+                    queue.add(graph[elem].get(i));
+                } else if (graph[elem].get(i) == src)
+                    path++;
+            }
+        }
+        return path + 1; // First node need to added as well
+    }
 }
 
 
