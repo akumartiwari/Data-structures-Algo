@@ -78,9 +78,9 @@ public class GraphDSU {
         Set<Integer> set = new HashSet<>();
         int max = 1;
         for (int i = 0; i < n; i++) {
-            int fx = uf.find(i);
+            int fx = uf.findPar(i);
             set.add(fx);
-            max = Math.max(max, uf.size[i]);
+            max = Math.max(max, uf.rank[i]);
         }
 
         return new int[]{set.size(), max};
@@ -89,44 +89,40 @@ public class GraphDSU {
 }
 
 
+// UF by Rank and  path compression
 class UnionFind {
 
     int[] father;
-    int[] size;
+    int[] rank;
 
     public UnionFind(int n) {
         father = new int[n];
         for (int i = 0; i < n; i++) {
             father[i] = i;
         }
-        size = new int[n];
-        Arrays.fill(size, 1);
+        rank = new int[n];
+        Arrays.fill(rank, 0);
     }
 
     public void join(int x, int y) {
-        int fx = find(x);
-        int fy = find(y);
-        if (fx != fy) {
-            father[fx] = fy;
-            size[fy] += size[fx];
+        x = findPar(x);
+        y = findPar(y);
+        if (rank[x] < rank[x]) father[x] = y;
+        else if (rank[y] < rank[x]) father[y] = x;
+        else {
+            father[y] = x;
+            rank[x]++;
         }
     }
 
-    public int find(int x) {
-        int root = x;
-        while (father[root] != root) {
-            root = father[root];
-        }
-        while (x != root) {
-            int fx = father[x];
-            father[x] = root;
-            x = fx;
-        }
-        return root;
+    public int findPar(int x) {
+        if (father[x] == x) return x;
+        // Path compression technique
+        return father[x] = findPar(father[x]);
     }
 
     public boolean isConnected(int x, int y) {
-        return find(x) == find(y);
+        return findPar(x) == findPar(y);
     }
 }
 
