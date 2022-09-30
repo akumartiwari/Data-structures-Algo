@@ -4216,52 +4216,86 @@ Output: [1,2,2,3,5,6]
     }
 
 
-    //TODO : Complete this
-    public int numberOfGoodPaths(int[] vals, int[][] edges) {
-        int n = vals.length;
-        List<Integer>[] graph = new ArrayList[n];
-        for (int i = 0; i < n; i++) graph[i] = new ArrayList<>();
-        for (int[] edge : edges) {
-            graph[edge[0]].add(edge[1]);
-            graph[edge[1]].add(edge[0]);
-        }
+    class Solution {
 
-        return multiBfs(n, graph, vals);
-    }
+        // UF by Rank and  path compression
+        class UnionFind {
 
-    private static int multiBfs(int n, List<Integer>[] graph, int[] vals) {
+            int[] father;
+            int[] rank;
+            int[] vals;
 
-        boolean[] vis = new boolean[n];
-        int cnt = 0;
-        Arrays.fill(vis, false); // marked visited array as false
-        // For each vertex apply BFS
-        for (int i = 0; i < n; i++) {
-            Arrays.fill(vis, false); // marked visited array as false
-            int ans = bfsUtil(graph, vis, i, vals);
-            System.out.println("Node=" + i + ", pathCnt=" + ans);
-            cnt += ans;
+            public UnionFind(int n) {
+                father = new int[n];
+                for (int i = 0; i < n; i++) {
+                    father[i] = i;
+                }
+                rank = new int[n];
+                Arrays.fill(rank, 0);
+            }
 
-        }
-        return cnt;
-    }
+            public int joinFP(int x) {
+                if (father[x] == x) return x;
+                // Path compression technique
+                return father[x] = joinFP(father[x]);
+            }
 
-    private static int bfsUtil(List<Integer>[] graph, boolean[] visited, int src, int[] vals) {
-        int path = 0;
-        Queue<Integer> queue = new LinkedList<>();
-        queue.add(src);
-        visited[src] = true;
-        while (!queue.isEmpty()) {
-            int elem = queue.poll();
-            for (int i = 0; i < graph[elem].size(); i++) {
-                //  Not visited and path open
-                if (!visited[graph[elem].get(i)] && vals[graph[elem].get(i)] <= vals[src]) {
-                    visited[graph[elem].get(i)] = true;
-                    queue.add(graph[elem].get(i));
-                } else if (graph[elem].get(i) == src)
-                    path++;
+            public void join(int x, int y, int cnt) {
+                x = joinFP(x);
+                y = joinFP(y);
+                if (rank[x] < rank[y]) father[x] = y;
+                else if (rank[y] < rank[x]) father[y] = x;
+                else {
+                    father[y] = x;
+                    rank[x]++;
+                }
+            }
+
+            public int findPar(int x, int cnt) {
+                if (vals[father[x]] <= vals[x] && father[x] == x && cnt > 0) return x;
+
+                if (father[x] == x) return -1;
+                // Path compression technique
+                return findPar(father[x], cnt+1);
+            }
+
+            public boolean isConnected(int x, int y, int cnt) {
+                // root node
+                if (father[x] == x) return x == findPar(y, 0);
+                if (father[y] == y) return y == findPar(x, 0);
+                return findPar(x, cnt) == findPar(y, cnt);
             }
         }
-        return path + 1; // First node need to added as well
+
+        public int numberOfGoodPaths(int[] vals, int[][] edges) {
+            int n = vals.length;
+            UnionFind uf = new UnionFind(n);
+            uf.vals = vals;
+            int cnt = 0;
+
+            for (int[] edge : edges) uf.join(edge[0], edge[1], 0);
+
+
+            Map<Integer, List<Integer>> freq = new HashMap<>();
+            for (int i = 0; i < n; i++) {
+                if (!freq.containsKey(vals[i])) freq.put(vals[i], new ArrayList<>());
+                freq.get(vals[i]).add(i);
+            }
+
+            for (Map.Entry<Integer, List<Integer>> entry : freq.entrySet()) {
+                List<Integer> value = entry.getValue();
+
+                // System.out.println(Arrays.toString(value.toArray()));
+
+                for (int j = 0; j < value.size(); j++) {
+                    for (int k = j + 1; k < value.size(); k++) {
+                        if (uf.isConnected(j, k, 0)) cnt++;
+                    }
+                }
+            }
+
+            return n + cnt;
+        }
     }
 }
 
