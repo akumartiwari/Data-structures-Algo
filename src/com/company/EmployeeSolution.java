@@ -4216,87 +4216,183 @@ Output: [1,2,2,3,5,6]
     }
 
 
-    class Solution {
+    // UF by Rank and  path compression
+    class UnionFind {
 
-        // UF by Rank and  path compression
-        class UnionFind {
+        int[] father;
+        int[] rank;
+        int[] vals;
 
-            int[] father;
-            int[] rank;
-            int[] vals;
-
-            public UnionFind(int n) {
-                father = new int[n];
-                for (int i = 0; i < n; i++) {
-                    father[i] = i;
-                }
-                rank = new int[n];
-                Arrays.fill(rank, 0);
+        public UnionFind(int n) {
+            father = new int[n];
+            for (int i = 0; i < n; i++) {
+                father[i] = i;
             }
+            rank = new int[n];
+            Arrays.fill(rank, 0);
+        }
 
-            public int joinFP(int x) {
-                if (father[x] == x) return x;
-                // Path compression technique
-                return father[x] = joinFP(father[x]);
-            }
+        public int joinFP(int x) {
+            if (father[x] == x) return x;
+            // Path compression technique
+            return father[x] = joinFP(father[x]);
+        }
 
-            public void join(int x, int y, int cnt) {
-                x = joinFP(x);
-                y = joinFP(y);
-                if (rank[x] < rank[y]) father[x] = y;
-                else if (rank[y] < rank[x]) father[y] = x;
-                else {
-                    father[y] = x;
-                    rank[x]++;
-                }
-            }
-
-            public int findPar(int x, int cnt) {
-                if (vals[father[x]] <= vals[x] && father[x] == x && cnt > 0) return x;
-
-                if (father[x] == x) return -1;
-                // Path compression technique
-                return findPar(father[x], cnt+1);
-            }
-
-            public boolean isConnected(int x, int y, int cnt) {
-                // root node
-                if (father[x] == x) return x == findPar(y, 0);
-                if (father[y] == y) return y == findPar(x, 0);
-                return findPar(x, cnt) == findPar(y, cnt);
+        public void join(int x, int y, int cnt) {
+            x = joinFP(x);
+            y = joinFP(y);
+            if (rank[x] < rank[y]) father[x] = y;
+            else if (rank[y] < rank[x]) father[y] = x;
+            else {
+                father[y] = x;
+                rank[x]++;
             }
         }
 
-        public int numberOfGoodPaths(int[] vals, int[][] edges) {
-            int n = vals.length;
-            UnionFind uf = new UnionFind(n);
-            uf.vals = vals;
-            int cnt = 0;
+        public int findPar(int x, int cnt) {
+            if (vals[father[x]] <= vals[x] && father[x] == x && cnt > 0) return x;
 
-            for (int[] edge : edges) uf.join(edge[0], edge[1], 0);
+            if (father[x] == x) return -1;
+            // Path compression technique
+            return findPar(father[x], cnt + 1);
+        }
 
-
-            Map<Integer, List<Integer>> freq = new HashMap<>();
-            for (int i = 0; i < n; i++) {
-                if (!freq.containsKey(vals[i])) freq.put(vals[i], new ArrayList<>());
-                freq.get(vals[i]).add(i);
-            }
-
-            for (Map.Entry<Integer, List<Integer>> entry : freq.entrySet()) {
-                List<Integer> value = entry.getValue();
-
-                // System.out.println(Arrays.toString(value.toArray()));
-
-                for (int j = 0; j < value.size(); j++) {
-                    for (int k = j + 1; k < value.size(); k++) {
-                        if (uf.isConnected(j, k, 0)) cnt++;
-                    }
-                }
-            }
-
-            return n + cnt;
+        public boolean isConnected(int x, int y, int cnt) {
+            // root node
+            if (father[x] == x) return x == findPar(y, 0);
+            if (father[y] == y) return y == findPar(x, 0);
+            return findPar(x, cnt) == findPar(y, cnt);
         }
     }
+
+    public int numberOfGoodPaths(int[] vals, int[][] edges) {
+        int n = vals.length;
+        UnionFind uf = new UnionFind(n);
+        uf.vals = vals;
+        int cnt = 0;
+
+        for (int[] edge : edges) uf.join(edge[0], edge[1], 0);
+
+
+        Map<Integer, List<Integer>> freq = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            if (!freq.containsKey(vals[i])) freq.put(vals[i], new ArrayList<>());
+            freq.get(vals[i]).add(i);
+        }
+
+        for (Map.Entry<Integer, List<Integer>> entry : freq.entrySet()) {
+            List<Integer> value = entry.getValue();
+
+            // System.out.println(Arrays.toString(value.toArray()));
+
+            for (int j = 0; j < value.size(); j++) {
+                for (int k = j + 1; k < value.size(); k++) {
+                    if (uf.isConnected(j, k, 0)) cnt++;
+                }
+            }
+        }
+
+        return n + cnt;
+    }
+
+
+    /*
+    ddaccb
+    abcc
+    aazz
+   "ddaccb"
+     */
+
+    //Author: Anand
+    public boolean equalFrequency(String word) {
+        Map<Character, Integer> freq = new HashMap<>();
+        for (int i = 0; i < word.length(); i++) {
+            char c = word.charAt(i);
+            freq.put(c, freq.getOrDefault(c, 0) + 1);
+        }
+
+        Map<Integer, Integer> cntMap = new HashMap<>();
+
+        for (int key : freq.values())
+            cntMap.put(key, cntMap.getOrDefault(key, 0) + 1);
+
+        if (cntMap.size() == 1 && cntMap.entrySet().stream().findFirst().get().getKey() == 1) return true;
+
+        if (cntMap.size() == 2) {
+
+            if (new HashSet<>(cntMap.values()).size() == 1 && cntMap.values().stream().findFirst().get() == 1) {
+                return cntMap.keySet().stream().sorted().reduce((a, b) -> Math.abs(a - b)).get() == 1;
+            }
+
+            if (cntMap.values().stream().filter(x -> x == 1).collect(Collectors.toSet()).size() == 1) return true;
+            return cntMap.values().stream().sorted().reduce((a, b) -> Math.abs(a - b)).get() == 1;
+        }
+
+
+        return false;
+    }
+
+    public int maxSum(int[][] grid) {
+
+        return findMaxSum(grid);
+    }
+
+    private int findMaxSum(int[][] mat) {
+
+        int R = mat.length, C = mat[0].length;
+        if (R < 3 || C < 3) {
+            System.out.println("Not possible");
+            System.exit(0);
+        }
+
+        // Here loop runs (R-2)*(C-2)
+        // times considering different
+        // top left cells of hour glasses.
+        int max_sum = Integer.MIN_VALUE;
+        for (int i = 0; i < R - 2; i++) {
+            for (int j = 0; j < C - 2; j++) {
+                // Considering mat[i][j] as top
+                // left cell of hour glass.
+                int sum = (mat[i][j] + mat[i][j + 1] +
+                        mat[i][j + 2]) + (mat[i + 1][j + 1]) +
+                        (mat[i + 2][j] + mat[i + 2][j + 1] +
+                                mat[i + 2][j + 2]);
+
+                // If previous sum is less than
+                // current sum then update
+                // new sum in max_sum
+                max_sum = Math.max(max_sum, sum);
+            }
+        }
+        return max_sum;
+    }
+
+    public int minimizeXor(int num1, int num2) {
+        int cnt = Integer.bitCount(num2);
+        System.out.println(cnt);
+
+        StringBuilder sb = new StringBuilder();
+        StringBuilder binary = new StringBuilder();
+        binary.append(Integer.toBinaryString(num1));
+
+        if (cnt > binary.length()) {
+            int diff = cnt - binary.length();
+            while (diff-- > 0) binary.insert(0, "0");
+            for (int i = 0; i < binary.length(); i++) {
+                sb.append("1");
+            }
+            return Integer.parseInt(sb.toString(), 2);
+        }
+
+        for (int i = 0; i < binary.length(); i++) {
+            if (binary.charAt(i) == '1' && cnt > 0) {
+                sb.append("1");
+                cnt -= 1;
+            } else sb.append("0");
+        }
+        return Integer.parseInt(sb.toString(), 2);
+    }
+    
 }
 
 
