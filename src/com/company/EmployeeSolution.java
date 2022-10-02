@@ -4317,17 +4317,19 @@ Output: [1,2,2,3,5,6]
             cntMap.put(key, cntMap.getOrDefault(key, 0) + 1);
 
         if (cntMap.size() == 1 && cntMap.entrySet().stream().findFirst().get().getKey() == 1) return true;
+        if (cntMap.size() == 1 && cntMap.entrySet().stream().findFirst().get().getValue() == 2) return true;
 
         if (cntMap.size() == 2) {
-
-            if (new HashSet<>(cntMap.values()).size() == 1 && cntMap.values().stream().findFirst().get() == 1) {
-                return cntMap.keySet().stream().sorted().reduce((a, b) -> Math.abs(a - b)).get() == 1;
+            int k = Integer.MAX_VALUE, v = Integer.MAX_VALUE;
+            for (Map.Entry<Integer, Integer> entry : cntMap.entrySet()) {
+                if (entry.getValue() < v) {
+                    v = entry.getValue();
+                    k = entry.getKey();
+                }
             }
-
-            if (cntMap.values().stream().filter(x -> x == 1).collect(Collectors.toSet()).size() == 1) return true;
-            return cntMap.values().stream().sorted().reduce((a, b) -> Math.abs(a - b)).get() == 1;
+            cntMap.remove(k);
+            if (v == 1 && Math.abs(k - cntMap.entrySet().stream().findFirst().get().getKey()) == 1) return true;
         }
-
 
         return false;
     }
@@ -4369,8 +4371,6 @@ Output: [1,2,2,3,5,6]
 
     public int minimizeXor(int num1, int num2) {
         int cnt = Integer.bitCount(num2);
-        System.out.println(cnt);
-
         StringBuilder sb = new StringBuilder();
         StringBuilder binary = new StringBuilder();
         binary.append(Integer.toBinaryString(num1));
@@ -4390,9 +4390,44 @@ Output: [1,2,2,3,5,6]
                 cnt -= 1;
             } else sb.append("0");
         }
+
+
+        if (cnt > 0) {
+            for (int i = sb.length() - 1; i >= 0; i--) {
+                if (binary.charAt(i) == '0' && cnt > 0) {
+                    sb.setCharAt(i, '1');
+                    cnt -= 1;
+                }
+
+                if (cnt == 0) break;
+            }
+        }
         return Integer.parseInt(sb.toString(), 2);
     }
-    
+
+    /*
+    Input: s = "abcabcdabc"
+    Output: 2
+    Explanation:
+    - Delete the first 3 letters ("abc") since the next 3 letters are equal. Now, s = "abcdabc".
+    - Delete all the letters.
+    We used 2 operations so return 2. It can be proven that 2 is the maximum number of operations needed.
+    Note that in the second operation we cannot delete "abc" again because the next occurrence of "abc" does not happen in the next 3 letters.
+
+
+    Input: s = "aaabaab"
+    Output: 4
+    Explanation:
+    - Delete the first letter ("a") since the next letter is equal. Now, s = "aabaab".
+    - Delete the first 3 letters ("aab") since the next 3 letters are equal. Now, s = "aab".
+    - Delete the first letter ("a") since the next letter is equal. Now, s = "ab".
+    - Delete all the letters.
+    We used 4 operations so return 4. It can be proven that 4 is the maximum number of operations needed.
+     */
+
+    public int deleteString(String s) {
+        return 0;
+    }
 }
 
 
