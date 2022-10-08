@@ -1,5 +1,6 @@
 package com.company;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,8 +21,7 @@ public class Bitmask {
     public int longestNiceSubarray(int[] nums) {
         int res = 0, j = 0, used = 0;
         for (int i = 0; i < nums.length; i++) {
-            while ((used & nums[i]) != 0)
-                used ^= nums[j++];
+            while ((used & nums[i]) != 0) used ^= nums[j++];
 
             used |= nums[i];
             res = Math.max(res, i - j + 1);
@@ -103,7 +103,5 @@ public class Bitmask {
 
         return res;
     }
-
-
 }
 

@@ -3307,49 +3307,6 @@ public class EmployeeSolution {
         return uniqueEmails.size();
     }
 
-    public String licenseKeyFormatting(String s, int k) {
-        int n = s.length();
-        StringBuilder ans = new StringBuilder();
-        int ind = n - 1;
-        while (ind >= 0) {
-            char ch = s.charAt(ind);
-            if (ch == '-') {
-                ind--;
-                continue;
-            }
-
-            int cnt = k;
-            StringBuilder sb = new StringBuilder();
-            sb.append(Character.toUpperCase(ch));
-            ind--;
-            cnt--;
-
-            while (cnt > 0 && ind >= 0) {
-                if (s.charAt(ind) == '-') {
-                    ind--;
-                    continue;
-                }
-
-                sb.insert(0, Character.toUpperCase(s.charAt(ind--)));
-                cnt--;
-            }
-
-            if (ind >= 0 && sb.length() > 0) ans.insert(0, "-" + sb);
-
-            else if (ind < 0 && sb.length() > 0) {
-                ans.insert(0, sb);
-                break;
-            } else if (ind < 0 && sb.length() == 0) {
-                ans.deleteCharAt(0);
-                break;
-            }
-        }
-
-        if (ans.length() > 0 && ans.charAt(0) == '-') ans.deleteCharAt(0);
-        return ans.toString();
-    }
-
-
     //Author: Anand
     public int totalFruit(int[] fruits) {
         Map<Integer, Integer> map = new HashMap<>();
@@ -3942,7 +3899,67 @@ public class EmployeeSolution {
         if (set.size() > 0) cnt++;
         return cnt;
     }
-    
+
+
+    public int findComplement(int num) {
+        String nums = Integer.toBinaryString(num);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < nums.length(); i++) sb.append(nums.charAt(i) == '1' ? '0' : '1');
+        return Integer.parseInt(sb.toString(), 2);
+    }
+
+    public int magicalString(int n) {
+        int cnt = 0;
+        StringBuilder sb = new StringBuilder();
+        sb.append('1');
+
+        int li = 0;
+
+        while (sb.length() < n) {
+            if (sb.charAt(li) == '1' && sb.length() == 1) {
+                sb.append("22");
+                li += 2;
+            } else if (sb.charAt(li) == '2') {
+                if (sb.charAt(sb.length() - 1) == '1') sb.append("22");
+                else sb.append("11");
+                li++;
+            } else if (sb.charAt(li) == '1') {
+                if (sb.charAt(sb.length() - 1) == '2') sb.append("1");
+                else sb.append("2");
+                li++;
+            }
+        }
+
+
+        int ind = 0;
+        while (ind < n) if (sb.charAt(ind++) == '1') cnt++;
+
+        return cnt;
+    }
+
+    public String licenseKeyFormatting(String s, int k) {
+        StringBuilder original = new StringBuilder();
+        Arrays.stream(s.split("-")).forEach(original::append);
+        int ind = 0;
+        StringBuilder sb = new StringBuilder();
+        int first = (int) original.length() % k;
+        if (first != 0) {
+            sb.append(original.substring(0, first).toUpperCase());
+            ind += first;
+            if (ind < original.length()) sb.append("-");
+        }
+
+        while (ind < original.length()) {
+            if (ind + k < original.length()) sb.append(original.substring(ind, ind + k).toUpperCase());
+            else sb.append(original.substring(ind).toUpperCase());
+            ind += k;
+            if (ind < original.length()) sb.append("-");
+        }
+
+        return sb.toString();
+    }
+
+
 }
 
 
