@@ -840,6 +840,7 @@ public class DP {
     final int mod = 1_000_000_007;
     int sp;
     int op;
+
     public int numberOfWays(int startPos, int endPos, int k) {
         sp = startPos;
         op = k;
@@ -847,6 +848,7 @@ public class DP {
         for (int[] d : dp) Arrays.fill(d, -1);
         return helper(startPos, endPos, k, dp);
     }
+
     private int helper(int currPos, int endPos, int k, int[][] dp) {
         // base case
         if (currPos == endPos && k == 0) return 1;
@@ -868,6 +870,48 @@ public class DP {
 
         return dp[newPos][k] = (left + right) % mod;
     }
+
+
+    //Author : Anand
+    int m, n;
+    public int numberOfPaths(int[][] grid, int k) {
+        m = grid.length;
+        n = grid[0].length;
+
+        int[][][] dp = new int[m][n][k];
+
+        for (int[][] f : dp) {
+            for (int[] d : f) Arrays.fill(d, -1);
+        }
+
+        return helper(grid, k, m - 1, n - 1, 0, dp);
+    }
+
+    private int helper(int[][] grid, int k, int m, int n, int sum, int[][][] dp) {
+        // base case
+        if (n == 0 && m == 0) {
+            if ((sum + grid[0][0]) % k == 0) return dp[m][n][sum] = 1;
+            return dp[m][n][sum] = 0;
+        }
+
+        if (n < 0 || m < 0) {
+            return 0;
+        }
+
+        if (dp[m][n][sum] != -1) return dp[m][n][sum] % MOD;
+
+        int up = helper(grid, k, m - 1, n, (sum + grid[m][n]) % k, dp) % MOD;
+        int down = helper(grid, k, m, n - 1, (sum + grid[m][n]) % k, dp) % MOD;
+
+        return dp[m][n][sum] = (up + down) % MOD;
+    }
+
+    private boolean isSafe(int[][] grid, int i, int j) {
+        int m = grid.length;
+        int n = grid[0].length;
+        return i >= 0 && i < m && j >= 0 && j < n;
+    }
+
 
     // Thoughts:
 	/*

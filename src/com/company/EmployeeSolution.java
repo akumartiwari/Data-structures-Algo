@@ -3959,6 +3959,97 @@ public class EmployeeSolution {
         return sb.toString();
     }
 
+    /*
+    Input: n = 10, logs = [[0,3],[2,5],[0,9],[1,15]]
+    Output: 1
+    Explanation:
+    Task 0 started at 0 and ended at 3 with 3 units of times.
+    Task 1 started at 3 and ended at 5 with 2 units of times.
+    Task 2 started at 5 and ended at 9 with 4 units of times.
+    Task 3 started at 9 and ended at 15 with 6 units of times.
+    The task with the longest time is task 3 and the employee with id 1 is the one that worked on it, so we return 1.
+
+
+     */
+    public int hardestWorker(int n, int[][] logs) {
+        int id = -1;
+        int prev = -1;
+        int time = Integer.MIN_VALUE;
+        for (int[] log : logs) {
+            int ei = log[0];
+            int end = log[1];
+            if (prev == -1 && id == -1) {
+                time = Math.max(time, end);
+                id = ei;
+            } else if ((end - prev) > time) {
+                time = end - prev;
+                id = ei;
+            } else if ((end - prev) == time) {
+                id = Math.min(ei, id);
+            }
+
+            prev = end;
+        }
+
+        return id;
+    }
+
+
+    public int[] findArray(int[] pref) {
+        int[] ans = new int[pref.length];
+        for (int i = 0; i < pref.length; i++) ans[i] = i == 0 ? pref[i] : pref[i - 1] ^ pref[i];
+        return ans;
+    }
+
+
+    //TODO: Complete it
+    public String robotWithString(String s) {
+        StringBuilder original = new StringBuilder();
+        original.append(s);
+
+        TreeMap<Character, List<Integer>> tm = new TreeMap<>();
+
+        for (int i = 0; i < s.length(); i++) {
+            if (!tm.containsKey(s.charAt(i))) tm.put(s.charAt(i), new ArrayList<>());
+            tm.get(s.charAt(i)).add(i);
+        }
+
+        int last = 0;
+        StringBuilder sb = new StringBuilder();
+        StringBuilder t = new StringBuilder();
+
+        List<Character> keyset = new ArrayList<>(tm.keySet());
+        for (char c = 0; c < keyset.size(); c++) {
+            List<Integer> elem = tm.get(keyset.get(c));
+            for (int e = 0; e < elem.size(); e++) {
+                if (elem.get(e) >= sb.length()) {
+                    StringBuilder str = new StringBuilder();
+                    if (last < original.length()) {
+                        str.append(elem.get(e) >= (original.length() - 1) ?
+                                new StringBuilder(original.substring(last))
+                                : new StringBuilder(original.substring(last, elem.get(e) + 1)));
+                    }
+                    if (t.length() > 0 && str.length() > 0 && t.charAt(t.length() - 1) > str.charAt(0)) t.append(str);
+                    else t.insert(0, str);
+
+                    for (int i = t.length() - 1; i >= 0; i--) {
+                        int top = c >= (keyset.size() - 1) ? -1 : (int) (keyset.get(c + 1) - 'a');
+                        if (top == -1 || (int) (t.charAt(i) - 'a') < top) {
+                            sb.append(String.valueOf((char) (t.charAt(i))));
+                            t.deleteCharAt(i);
+                        }
+                    }
+
+                    last = elem.get(e) + 1;
+                }
+            }
+
+
+        }
+
+        return sb.toString();
+    }
+
 
 }
 
