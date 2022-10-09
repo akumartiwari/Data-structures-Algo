@@ -88,7 +88,7 @@ public class SegmentTree {
 
         // If the input index is in range of this node, then update the
         // value of the node and its children
-        st[si] = st[si] + diff;
+        st[si] += diff;
         if (se != ss) {
             int mid = getMid(ss, se);
             updateValueUtil(ss, mid, i, diff, 2 * si + 1);

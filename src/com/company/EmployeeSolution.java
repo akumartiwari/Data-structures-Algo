@@ -205,12 +205,25 @@ public class EmployeeSolution {
     }
 
 
+    // KADAN's ALGO
+    public int maxSubArray(int[] nums) {
+        int n = nums.length;
+        int max_sum_so_far = Integer.MIN_VALUE, max_ending_here = 0;
+
+        for (int i = 0; i < n; i++) {
+            max_ending_here += nums[i];
+            max_sum_so_far = Math.max(max_ending_here, max_sum_so_far);
+            if (max_ending_here < 0) max_ending_here = 0;
+        }
+        return max_sum_so_far;
+    }
+
     // O(n+m), O(1)
 	/*
      This problem is called Merge Sorted Array
      Example:-
      Input: nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3
-     Output: [1,2,2,3,5,6]
+Output: [1,2,2,3,5,6]
 
     Algo :- We start filling the array from right end till all elements of nums1 is consumed
         After that remaining element of nums2 is utitlised
@@ -228,6 +241,119 @@ public class EmployeeSolution {
         }
     }
 
+    // Thoughts:-
+
+	/*
+
+	   TC = O(2^n), Sc = O(n)
+
+	   Algorithm:-
+	  - The idea is to split array in two parts such that
+	     avg(A) = avg(B)
+	  - Iterate thrugh array elements and for each elem
+	     check if we can split it in two parts with equals avg
+
+	  -  We have choice of take or dont take in first part
+	     ie. if arr(i) is taken in part1 sumA+arr(i)
+	     else sumB + arr(i)
+
+	  - Do above step recursilvely and backtrack
+	  - check if sumA == sumB && (index == n-1) { that means all elements have been segregated into two parts successfuly
+	  }
+	     - if true return true
+	      else return false and recurse further
+	  - Add Memoization to improve exponential time complexity
+
+	  total  = sumA + sumB
+	  sumB = total - sumA
+
+	  A+B=n
+	  B=n-A
+
+	  sumA/A = sumB/B
+
+	  sumA/A = total-sumA/B
+	  sumA/A = total-sumA/n-A
+	  n*sumA/A  = total
+	  sumA = total * lenA / n
+
+	  problem boils down to finding a subsequence of length len1
+	  with sum equals sumA
+	*/
+
+    public boolean splitArraySameAverage(int[] nums) {
+        int n = nums.length, total = 0;
+        for (int i = 0; i < n; i++) total += nums[i];
+
+        HashMap<String, Boolean> map = new HashMap<>();
+        for (int cnt = 1; cnt < n; cnt++) {
+            if ((total * cnt) % n == 0) {
+                if (isPossible(nums, 0, cnt, (total * cnt) / n, map)) return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isPossible(int[] nums, int ind, int len, int sum, HashMap<String, Boolean> map) {
+        int n = nums.length;
+        // base case
+        if (sum == 0 && len == 0) {
+            return true;
+        }
+
+        if (ind >= n || len == 0) return false;
+        String key = len + "-" + sum + "-" + ind;
+        if (map.containsKey(key)) return map.get(key);
+        // if number can be taken
+        if (sum - nums[ind] >= 0) {
+            // taken
+            boolean case1 = isPossible(nums, ind + 1, len - 1, sum - nums[ind], map);
+
+            // not taken
+            boolean case2 = isPossible(nums, ind + 1, len, sum, map);
+
+            map.put(key, (case1 || case2));
+            return case1 || case2;
+        }
+
+        // Can't be taken
+        boolean case2 = isPossible(nums, ind + 1, len, sum, map);
+
+        map.put(key, case2);
+        return case2;
+    }
+
+    // Min. no. of steps to  make both strings equal
+    // Input: word1 = "sea", word2 = "eat"
+    // Output: 2
+    // TC = O(n1*n2), SC =  O(n1*n2)
+    public int minDistance(String word1, String word2) {
+        int n1 = word1.length();
+        int n2 = word2.length();
+        int[][] dp = new int[n1 + 1][n2 + 1]; // To get no of steps after removing a character from either strings
+
+        for (int i = 0; i <= n1; i++) {
+            for (int j = 0; j <= n2; j++) {
+                // if no character is removed from word1 then steps = no. of characters of word2
+                if (i == 0) dp[i][j] = j;
+                    // if no character is removed from word2 then steps = no. of character of word1
+                else if (j == 0) dp[i][j] = i;
+                else {
+                    // if prev chartacters are same then steps = prev steps
+                    if (word1.charAt(i - 1) == word2.charAt(j - 1)) {
+                        dp[i][j] = dp[i - 1][j - 1];
+                    }
+
+                    // Else take min of both cases
+                    else {
+                        dp[i][j] = 1 + Math.min(dp[i - 1][j], dp[i][j - 1]);
+                    }
+                }
+            }
+        }
+        return dp[n1][n2];
+
+    }
 
     // TC = O(V+E), SC = O(V+E)
     long maxScore;
@@ -4048,101 +4174,46 @@ public class EmployeeSolution {
 
         return sb.toString();
     }
-
-
 }
 
-
-
-
-    /*
-    // TODO: maxRunTime Binary search solution
-    public:
-    bool fun(vector<int>& a, long long x, long long k){
-        long long val = x*k;
-        for(int i=0; i<a.size(); i++){
-            val -= min((long long)a[i],k);
-        }
-        return val <= 0;
-    }
-    long long maxRunTime(int n, vector<int>& a) {
-        long long sum = 0;
-        for(auto i : a){
-            sum += i;
-        }
-        long long ans = 0;
-        long long l = 0, r = sum;
-        while(l <= r){
-            long long mid = l + (r-l)/2;
-            if(fun(a,n,mid)){
-                ans = mid;
-                l = mid + 1;
-            }
-            else{
-                r = mid - 1;
-            }
-        }
-        return ans;
-    }
-     */
-
 /*
-    private static final int[][] DIRS = new int[][]{{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+    // in some cases, player needs to push the box further in order to change its direction; hence, tracking the box itself isn't enough,
 
-    public int minPushBox(char[][] grid) {
-        int R = grid.length, C = grid[0].length;
-        int[] box = new int[2], player = new int[2];
-        for (int i = 0; i < R; i++) {
-            for (int j = 0; j < C; j++) {
-                if (grid[i][j] == 'B') {
-                    box[0] = i;
-                    box[1] = j;
-                } else if (grid[i][j] == 'S') {
-                    player[0] = i;
-                    player[1] = j;
-                }
-            }
-        }
-        Queue<Pair<int[], int[]>> queue = new LinkedList();
-        queue.add(new Pair(box, player));
-        boolean[][] visited = new boolean[R * C][R * C];
-        // in some cases, player needs to push the box further in order to change its direction; hence, tracking the box itself isn't enough,
-
-        // we need to track both box and player locations. for example,
-        // . # T # .
-        // . . . B S
-        // . . . # .
-        // `B` needs to land on location(1,2) twice
-        visited[box[0] * C + box[1]][player[0] * C + player[1]] = true;
-        int step = 0;
+    // we need to track both box and player locations. for example,
+    // . # T # .
+    // . . . B S
+    // . . . # .
+    // `B` needs to land on location(1,2) twice
+    visited[box[0] * C + box[1]][player[0] * C + player[1]] = true;
+    int step = 0;
         while (!queue.isEmpty()) {
-            step++;
-            for (int i = queue.size() - 1; i >= 0; i--) {
-                Pair<int[], int[]> state = queue.poll();
-                int[] b = state.getKey(), p = state.getValue();
-                for (int j = 0; j < DIRS.length; j++) {
-                    int[] nb = new int[]{b[0] + DIRS[j][0], b[1] + DIRS[j][1]};
-                    if (nb[0] >= 0 && nb[0] < R && nb[1] >= 0 && nb[1] < C && grid[nb[0]][nb[1]] != '#') {
-                        // check where was it pushed from. basically, the opposite direction where the box moves to.
-                        int[] np = new int[]{b[0] - DIRS[j][0], b[1] - DIRS[j][1]};
-                        if (np[0] >= 0 && np[0] < R && np[1] >= 0 && np[1] < C
-                                && grid[np[0]][np[1]] != '#'
-                                && !visited[nb[0] * C + nb[1]][np[0] * C + np[1]]) {
-                            // can the player reach to the box-pushing location
-                            if (isReachable(grid, R, C, b, p, np)) {
-                                if (grid[nb[0]][nb[1]] == 'T') {
-                                    return step;
-                                }
-                                visited[nb[0] * C + nb[1]][np[0] * C + np[1]] = true;
-                                queue.add(new Pair(nb, b));
+        step++;
+        for (int i = queue.size() - 1; i >= 0; i--) {
+            Pair<int[], int[]> state = queue.poll();
+            int[] b = state.getKey(), p = state.getValue();
+            for (int j = 0; j < DIRS.length; j++) {
+                int[] nb = new int[]{b[0] + DIRS[j][0], b[1] + DIRS[j][1]};
+                if (nb[0] >= 0 && nb[0] < R && nb[1] >= 0 && nb[1] < C && grid[nb[0]][nb[1]] != '#') {
+                    // check where was it pushed from. basically, the opposite direction where the box moves to.
+                    int[] np = new int[]{b[0] - DIRS[j][0], b[1] - DIRS[j][1]};
+                    if (np[0] >= 0 && np[0] < R && np[1] >= 0 && np[1] < C
+                            && grid[np[0]][np[1]] != '#'
+                            && !visited[nb[0] * C + nb[1]][np[0] * C + np[1]]) {
+                        // can the player reach to the box-pushing location
+                        if (isReachable(grid, R, C, b, p, np)) {
+                            if (grid[nb[0]][nb[1]] == 'T') {
+                                return step;
                             }
+                            visited[nb[0] * C + nb[1]][np[0] * C + np[1]] = true;
+                            queue.add(new Pair(nb, b));
                         }
                     }
                 }
             }
         }
-        return -1;
     }
+        return -1;
+}
 
     private boolean isReachable(char[][] grid, int R, int C, int[] box, int[] from, int[] to) {
         Queue<int[]> queue = new LinkedList();
@@ -4166,4 +4237,5 @@ public class EmployeeSolution {
         }
         return false;
     }
+
  */

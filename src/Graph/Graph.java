@@ -1,7 +1,6 @@
 package Graph;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 // Adjacency list representation of graph
@@ -346,7 +345,7 @@ public class Graph {
     Property ->  a^a=0, 0^a=a
 
     The idea is to use this property via below algorithm
-    - Do dfs from root and strore xor for each node's subtree
+    - Do dfs from root and store xor for each node's subtree
     - Store ancestors for each node
     - Now for each pair of edges there are couple of ways to select them
         1. both edges can be part of same side

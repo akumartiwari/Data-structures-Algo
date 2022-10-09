@@ -142,7 +142,7 @@ public class TopologicalSort {
                 // reduce indegreee by 1 as node as visited
                 indegree[next] -= 1;
 
-                // if indegree=0 means all its adajancent node has been visisted , Now move on to next  parent node
+                // if indegree=0 means all its adjancent node has been visited , Now move on to next  parent node
                 if (indegree[next] == 0) {
                     pq.offer(new int[]{next, currTime + time[next]});
                 }
