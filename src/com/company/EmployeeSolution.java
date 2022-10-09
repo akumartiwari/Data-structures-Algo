@@ -3433,49 +3433,6 @@ Output: [1,2,2,3,5,6]
         return uniqueEmails.size();
     }
 
-    public String licenseKeyFormatting(String s, int k) {
-        int n = s.length();
-        StringBuilder ans = new StringBuilder();
-        int ind = n - 1;
-        while (ind >= 0) {
-            char ch = s.charAt(ind);
-            if (ch == '-') {
-                ind--;
-                continue;
-            }
-
-            int cnt = k;
-            StringBuilder sb = new StringBuilder();
-            sb.append(Character.toUpperCase(ch));
-            ind--;
-            cnt--;
-
-            while (cnt > 0 && ind >= 0) {
-                if (s.charAt(ind) == '-') {
-                    ind--;
-                    continue;
-                }
-
-                sb.insert(0, Character.toUpperCase(s.charAt(ind--)));
-                cnt--;
-            }
-
-            if (ind >= 0 && sb.length() > 0) ans.insert(0, "-" + sb);
-
-            else if (ind < 0 && sb.length() > 0) {
-                ans.insert(0, sb);
-                break;
-            } else if (ind < 0 && sb.length() == 0) {
-                ans.deleteCharAt(0);
-                break;
-            }
-        }
-
-        if (ans.length() > 0 && ans.charAt(0) == '-') ans.deleteCharAt(0);
-        return ans.toString();
-    }
-
-
     //Author: Anand
     public int totalFruit(int[] fruits) {
         Map<Integer, Integer> map = new HashMap<>();
@@ -4068,100 +4025,195 @@ Output: [1,2,2,3,5,6]
         if (set.size() > 0) cnt++;
         return cnt;
     }
-    
-}
 
 
+    public int findComplement(int num) {
+        String nums = Integer.toBinaryString(num);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < nums.length(); i++) sb.append(nums.charAt(i) == '1' ? '0' : '1');
+        return Integer.parseInt(sb.toString(), 2);
+    }
 
+    public int magicalString(int n) {
+        int cnt = 0;
+        StringBuilder sb = new StringBuilder();
+        sb.append('1');
+
+        int li = 0;
+
+        while (sb.length() < n) {
+            if (sb.charAt(li) == '1' && sb.length() == 1) {
+                sb.append("22");
+                li += 2;
+            } else if (sb.charAt(li) == '2') {
+                if (sb.charAt(sb.length() - 1) == '1') sb.append("22");
+                else sb.append("11");
+                li++;
+            } else if (sb.charAt(li) == '1') {
+                if (sb.charAt(sb.length() - 1) == '2') sb.append("1");
+                else sb.append("2");
+                li++;
+            }
+        }
+
+
+        int ind = 0;
+        while (ind < n) if (sb.charAt(ind++) == '1') cnt++;
+
+        return cnt;
+    }
+
+    public String licenseKeyFormatting(String s, int k) {
+        StringBuilder original = new StringBuilder();
+        Arrays.stream(s.split("-")).forEach(original::append);
+        int ind = 0;
+        StringBuilder sb = new StringBuilder();
+        int first = (int) original.length() % k;
+        if (first != 0) {
+            sb.append(original.substring(0, first).toUpperCase());
+            ind += first;
+            if (ind < original.length()) sb.append("-");
+        }
+
+        while (ind < original.length()) {
+            if (ind + k < original.length()) sb.append(original.substring(ind, ind + k).toUpperCase());
+            else sb.append(original.substring(ind).toUpperCase());
+            ind += k;
+            if (ind < original.length()) sb.append("-");
+        }
+
+        return sb.toString();
+    }
 
     /*
-    // TODO: maxRunTime Binary search solution
-    public:
-    bool fun(vector<int>& a, long long x, long long k){
-        long long val = x*k;
-        for(int i=0; i<a.size(); i++){
-            val -= min((long long)a[i],k);
+    Input: n = 10, logs = [[0,3],[2,5],[0,9],[1,15]]
+    Output: 1
+    Explanation:
+    Task 0 started at 0 and ended at 3 with 3 units of times.
+    Task 1 started at 3 and ended at 5 with 2 units of times.
+    Task 2 started at 5 and ended at 9 with 4 units of times.
+    Task 3 started at 9 and ended at 15 with 6 units of times.
+    The task with the longest time is task 3 and the employee with id 1 is the one that worked on it, so we return 1.
+
+
+     */
+    public int hardestWorker(int n, int[][] logs) {
+        int id = -1;
+        int prev = -1;
+        int time = Integer.MIN_VALUE;
+        for (int[] log : logs) {
+            int ei = log[0];
+            int end = log[1];
+            if (prev == -1 && id == -1) {
+                time = Math.max(time, end);
+                id = ei;
+            } else if ((end - prev) > time) {
+                time = end - prev;
+                id = ei;
+            } else if ((end - prev) == time) {
+                id = Math.min(ei, id);
+            }
+
+            prev = end;
         }
-        return val <= 0;
+
+        return id;
     }
-    long long maxRunTime(int n, vector<int>& a) {
-        long long sum = 0;
-        for(auto i : a){
-            sum += i;
-        }
-        long long ans = 0;
-        long long l = 0, r = sum;
-        while(l <= r){
-            long long mid = l + (r-l)/2;
-            if(fun(a,n,mid)){
-                ans = mid;
-                l = mid + 1;
-            }
-            else{
-                r = mid - 1;
-            }
-        }
+
+
+    public int[] findArray(int[] pref) {
+        int[] ans = new int[pref.length];
+        for (int i = 0; i < pref.length; i++) ans[i] = i == 0 ? pref[i] : pref[i - 1] ^ pref[i];
         return ans;
     }
-     */
 
-/*
-    private static final int[][] DIRS = new int[][]{{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 
-    public int minPushBox(char[][] grid) {
-        int R = grid.length, C = grid[0].length;
-        int[] box = new int[2], player = new int[2];
-        for (int i = 0; i < R; i++) {
-            for (int j = 0; j < C; j++) {
-                if (grid[i][j] == 'B') {
-                    box[0] = i;
-                    box[1] = j;
-                } else if (grid[i][j] == 'S') {
-                    player[0] = i;
-                    player[1] = j;
+    //TODO: Complete it
+    public String robotWithString(String s) {
+        StringBuilder original = new StringBuilder();
+        original.append(s);
+
+        TreeMap<Character, List<Integer>> tm = new TreeMap<>();
+
+        for (int i = 0; i < s.length(); i++) {
+            if (!tm.containsKey(s.charAt(i))) tm.put(s.charAt(i), new ArrayList<>());
+            tm.get(s.charAt(i)).add(i);
+        }
+
+        int last = 0;
+        StringBuilder sb = new StringBuilder();
+        StringBuilder t = new StringBuilder();
+        List<Character> keyset = new ArrayList<>(tm.keySet());
+        for (char c = 0; c < keyset.size(); c++) {
+            List<Integer> elem = tm.get(keyset.get(c));
+            for (int e = 0; e < elem.size(); e++) {
+                if (elem.get(e) >= sb.length()) {
+                    StringBuilder str = new StringBuilder();
+                    if (last < original.length()) {
+                        str.append(elem.get(e) >= (original.length() - 1) ?
+                                new StringBuilder(original.substring(last))
+                                : new StringBuilder(original.substring(last, elem.get(e) + 1)));
+                    }
+                    if (t.length() > 0 && str.length() > 0 && t.charAt(t.length() - 1) > str.charAt(0)) t.append(str);
+                    else t.insert(0, str);
+
+                    for (int i = t.length() - 1; i >= 0; i--) {
+                        int top = c >= (keyset.size() - 1) ? -1 : (int) (keyset.get(c + 1) - 'a');
+                        if (top == -1 || (int) (t.charAt(i) - 'a') < top) {
+                            sb.append(String.valueOf((char) (t.charAt(i))));
+                            t.deleteCharAt(i);
+                        }
+                    }
+
+                    last = elem.get(e) + 1;
                 }
             }
-        }
-        Queue<Pair<int[], int[]>> queue = new LinkedList();
-        queue.add(new Pair(box, player));
-        boolean[][] visited = new boolean[R * C][R * C];
-        // in some cases, player needs to push the box further in order to change its direction; hence, tracking the box itself isn't enough,
 
-        // we need to track both box and player locations. for example,
-        // . # T # .
-        // . . . B S
-        // . . . # .
-        // `B` needs to land on location(1,2) twice
-        visited[box[0] * C + box[1]][player[0] * C + player[1]] = true;
-        int step = 0;
+
+        }
+
+        return sb.toString();
+    }
+}
+
+/*
+    // in some cases, player needs to push the box further in order to change its direction; hence, tracking the box itself isn't enough,
+
+    // we need to track both box and player locations. for example,
+    // . # T # .
+    // . . . B S
+    // . . . # .
+    // `B` needs to land on location(1,2) twice
+    visited[box[0] * C + box[1]][player[0] * C + player[1]] = true;
+    int step = 0;
         while (!queue.isEmpty()) {
-            step++;
-            for (int i = queue.size() - 1; i >= 0; i--) {
-                Pair<int[], int[]> state = queue.poll();
-                int[] b = state.getKey(), p = state.getValue();
-                for (int j = 0; j < DIRS.length; j++) {
-                    int[] nb = new int[]{b[0] + DIRS[j][0], b[1] + DIRS[j][1]};
-                    if (nb[0] >= 0 && nb[0] < R && nb[1] >= 0 && nb[1] < C && grid[nb[0]][nb[1]] != '#') {
-                        // check where was it pushed from. basically, the opposite direction where the box moves to.
-                        int[] np = new int[]{b[0] - DIRS[j][0], b[1] - DIRS[j][1]};
-                        if (np[0] >= 0 && np[0] < R && np[1] >= 0 && np[1] < C
-                                && grid[np[0]][np[1]] != '#'
-                                && !visited[nb[0] * C + nb[1]][np[0] * C + np[1]]) {
-                            // can the player reach to the box-pushing location
-                            if (isReachable(grid, R, C, b, p, np)) {
-                                if (grid[nb[0]][nb[1]] == 'T') {
-                                    return step;
-                                }
-                                visited[nb[0] * C + nb[1]][np[0] * C + np[1]] = true;
-                                queue.add(new Pair(nb, b));
+        step++;
+        for (int i = queue.size() - 1; i >= 0; i--) {
+            Pair<int[], int[]> state = queue.poll();
+            int[] b = state.getKey(), p = state.getValue();
+            for (int j = 0; j < DIRS.length; j++) {
+                int[] nb = new int[]{b[0] + DIRS[j][0], b[1] + DIRS[j][1]};
+                if (nb[0] >= 0 && nb[0] < R && nb[1] >= 0 && nb[1] < C && grid[nb[0]][nb[1]] != '#') {
+                    // check where was it pushed from. basically, the opposite direction where the box moves to.
+                    int[] np = new int[]{b[0] - DIRS[j][0], b[1] - DIRS[j][1]};
+                    if (np[0] >= 0 && np[0] < R && np[1] >= 0 && np[1] < C
+                            && grid[np[0]][np[1]] != '#'
+                            && !visited[nb[0] * C + nb[1]][np[0] * C + np[1]]) {
+                        // can the player reach to the box-pushing location
+                        if (isReachable(grid, R, C, b, p, np)) {
+                            if (grid[nb[0]][nb[1]] == 'T') {
+                                return step;
                             }
+                            visited[nb[0] * C + nb[1]][np[0] * C + np[1]] = true;
+                            queue.add(new Pair(nb, b));
                         }
                     }
                 }
             }
         }
-        return -1;
     }
+        return -1;
+}
 
     private boolean isReachable(char[][] grid, int R, int C, int[] box, int[] from, int[] to) {
         Queue<int[]> queue = new LinkedList();
@@ -4185,4 +4237,5 @@ Output: [1,2,2,3,5,6]
         }
         return false;
     }
+
  */
