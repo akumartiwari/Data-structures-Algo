@@ -4017,7 +4017,6 @@ public class EmployeeSolution {
         int last = 0;
         StringBuilder sb = new StringBuilder();
         StringBuilder t = new StringBuilder();
-
         List<Character> keyset = new ArrayList<>(tm.keySet());
         for (char c = 0; c < keyset.size(); c++) {
             List<Integer> elem = tm.get(keyset.get(c));
