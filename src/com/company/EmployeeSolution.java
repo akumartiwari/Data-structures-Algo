@@ -4146,13 +4146,11 @@ Output: [1,2,2,3,5,6]
         List<Character> keyset = new ArrayList<>(tm.keySet());
         for (char c = 0; c < keyset.size(); c++) {
             List<Integer> elem = tm.get(keyset.get(c));
-            for (int e = 0; e < elem.size(); e++) {
-                if (elem.get(e) >= sb.length()) {
+            for (Integer integer : elem) {
+                if (integer >= sb.length()) {
                     StringBuilder str = new StringBuilder();
                     if (last < original.length()) {
-                        str.append(elem.get(e) >= (original.length() - 1) ?
-                                new StringBuilder(original.substring(last))
-                                : new StringBuilder(original.substring(last, elem.get(e) + 1)));
+                        str.append(integer >= (original.length() - 1) ? original.substring(last) : original.substring(last, integer + 1));
                     }
                     if (t.length() > 0 && str.length() > 0 && t.charAt(t.length() - 1) > str.charAt(0)) t.append(str);
                     else t.insert(0, str);
@@ -4165,7 +4163,7 @@ Output: [1,2,2,3,5,6]
                         }
                     }
 
-                    last = elem.get(e) + 1;
+                    last = integer + 1;
                 }
             }
 
