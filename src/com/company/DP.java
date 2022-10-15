@@ -747,7 +747,7 @@ public class DP {
     /*
     The idea is to use DP :-
     Consider both arrays 1 by 1 that will yield max result
-    I has used Map<String, Integer> in place of 3d DP array but it was giving TLE
+    I have used Map<String, Integer> in place of 3d DP array but it was giving TLE
     as sometimes key check in map is more than O(1) (Be careful while using Map)
     Return Maximum of ans1, ans2
     */
@@ -870,7 +870,7 @@ public class DP {
             if (next == null) dp[i][0] = 0;
             else if (dp[tm.get(next)][1] > 0) dp[i][0] = 1;
 
-            // even jump starting from index i
+            // even jump-starting from index i
             next = tm.floorKey(arr[i]);
             if (next == null) dp[i][1] = 0;
             else if (dp[tm.get(next)][0] > 0) dp[i][1] = 1;

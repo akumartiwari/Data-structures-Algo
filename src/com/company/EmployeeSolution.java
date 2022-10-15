@@ -3,7 +3,7 @@ package com.company;
 import javafx.util.Pair;
 
 import java.awt.*;
-import java.util.Iterator;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Queue;
 import java.util.*;
@@ -4172,7 +4172,94 @@ Output: [1,2,2,3,5,6]
 
         return sb.toString();
     }
+
+
+    public int countTime(String time) {
+        String[] array = time.split(":");
+        int cnt = 1;
+
+        int ind = 0;
+        for (String s : array) {
+
+            boolean both = false;
+            if (s.charAt(0) == '?' && s.charAt(1) == '?') both = true;
+            if (both) {
+                if (ind == 0) cnt *= 24;
+                else cnt *= 60;
+            } else {
+                if (ind == 0) {
+                    if (s.charAt(0) == '?') {
+                        if (Integer.parseInt(String.valueOf(s.charAt(1))) < 4) cnt *= 3;
+                        else cnt *= 2;
+                    } else if (s.charAt(1) == '?') {
+                        if (Integer.parseInt(String.valueOf(s.charAt(0))) < 2) cnt *= 10;
+                        else cnt *= 4;
+                    }
+                } else {
+                    if (s.charAt(0) == '?') {
+                        cnt *= 6;
+                    } else if (s.charAt(1) == '?') {
+                        cnt *= 10;
+                    }
+                }
+            }
+            ind++;
+        }
+
+        return cnt;
+    }
+
+
+    int MOD = (int) 1e9 + 7;
+
+    public int[] productQueries(int n, int[][] queries) {
+
+        List<Integer> list = new ArrayList<>();
+
+        String bs = Integer.toBinaryString(n);
+        for (int i = bs.length() - 1; i >= 0; i--) {
+            if (bs.charAt(i) == '1') list.add((int) Math.pow(2, bs.length() - 1 - i));
+        }
+
+        Collections.sort(list);
+        System.out.println(Arrays.toString(list.stream().mapToInt(x -> x).toArray()));
+
+        BigInteger[] prefix = new BigInteger[list.size()];
+        int idx = 0;
+        for (int e : list) {
+            prefix[idx] = idx++ == 0 ? new BigInteger(String.valueOf(e)) :
+                    new BigInteger(String.valueOf((e))).multiply(new BigInteger(String.valueOf((prefix[idx - 1]))));
+        }
+
+
+        System.out.println(Arrays.toString(prefix));
+
+        List<Integer> ans = new ArrayList<>();
+        for (int[] query : queries) {
+            if (query[0] == query[1]) ans.add(list.get(query[0]));
+            else {
+                BigInteger b1 = new BigInteger(String.valueOf(prefix[query[1]]));
+                BigInteger b2 = new BigInteger(String.valueOf(query[0] == 0 ? 1 : prefix[Math.max(query[0] - 1, 0)]));
+
+                BigInteger res = b1.divide(b2);
+                boolean flag = false;
+                int er = Integer.MAX_VALUE;
+                while (!flag) {
+                    try {
+                        er = Integer.parseInt(String.valueOf(res.mod(new BigInteger(String.valueOf(MOD)))));
+                        flag = true;
+                    } catch (Exception ex) {
+                        res = new BigInteger(String.valueOf(res.mod(new BigInteger(String.valueOf(MOD)))));
+                    }
+                }
+
+                ans.add(er);
+            }
+        }
+        return ans.stream().mapToInt(x -> x).toArray();
+    }
 }
+
 
 /*
     // in some cases, player needs to push the box further in order to change its direction; hence, tracking the box itself isn't enough,
