@@ -4258,6 +4258,97 @@ Output: [1,2,2,3,5,6]
         }
         return ans.stream().mapToInt(x -> x).toArray();
     }
+
+
+    //Author: Anand
+    public int findMaxK(int[] nums) {
+        TreeMap<Integer, Integer> tm = new TreeMap<>(Collections.reverseOrder()); // number-> count
+
+        for (int num : nums) tm.put(num, tm.getOrDefault(num, 0) + 1);
+
+        for (Map.Entry<Integer, Integer> entry : tm.entrySet()) {
+            if (entry.getKey() > 0 && tm.containsKey(-entry.getKey())) return entry.getKey();
+        }
+
+        return -1;
+    }
+
+    //Author: Anand
+    public int countDistinctIntegers(int[] nums) {
+
+        Set<Integer> set = new HashSet<>();
+
+        for (int num : nums) set.add(num);
+
+        for (int num : nums) {
+            StringBuilder sb = new StringBuilder();
+            int nn = Integer.parseInt(sb.append(num).reverse().toString());
+            set.add(nn);
+        }
+
+        return set.size();
+    }
+
+    //Author: Anand
+    public boolean sumOfNumberAndReverse(int num) {
+
+        for (int i = 1; i <= num; i++) {
+            StringBuilder sb = new StringBuilder();
+            int nn = Integer.parseInt(sb.append(i).reverse().toString());
+            if (i + nn == num) return true;
+        }
+
+        return false;
+    }
+
+
+    //TODO: TBD
+    //Author: Anand
+    public long countSubarrays(int[] nums, int minK, int maxK) {
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+        long cnt = 0L;
+
+        TreeMap<Integer, Integer> map = new TreeMap<>();
+        min = nums[0];
+        max = nums[0];
+        map.put(min, map.getOrDefault(min, 0) + 1);
+
+        for (int i = 0, j = 0; i < nums.length; ++i) {
+
+            if (i > 0) {
+                map.put(nums[i], map.getOrDefault(nums[i], 0) - 1);
+                if (map.get(nums[i]) <= 0) map.remove(nums[i]);
+
+                min = map.firstKey();
+                max = map.lastKey();
+            }
+
+
+            boolean flag = false;
+            while (min != minK && max != maxK && j < nums.length) {
+
+                flag = true;
+                j++;
+                min = Math.min(min, nums[j]);
+                max = Math.max(max, nums[j]);
+
+                map.clear();
+
+                map.put(min, map.getOrDefault(min, 0) + 1);
+                map.put(max, map.getOrDefault(max, 0) + 1);
+            }
+
+
+            if (min == minK && max == maxK) {
+
+                if (!flag) cnt += i - j + 1;
+                else cnt++;
+            }
+
+        }
+
+        return cnt;
+    }
 }
 
 
