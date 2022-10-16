@@ -4157,8 +4157,8 @@ Output: [1,2,2,3,5,6]
 
                     for (int i = t.length() - 1; i >= 0; i--) {
                         int top = c >= (keyset.size() - 1) ? -1 : (int) (keyset.get(c + 1) - 'a');
-                        if (top == -1 || (int) (t.charAt(i) - 'a') < top) {
-                            sb.append(String.valueOf((char) (t.charAt(i))));
+                        if (top == -1 || (t.charAt(i) - 'a') < top) {
+                            sb.append(t.charAt(i));
                             t.deleteCharAt(i);
                         }
                     }
@@ -4221,41 +4221,41 @@ Output: [1,2,2,3,5,6]
             if (bs.charAt(i) == '1') list.add((int) Math.pow(2, bs.length() - 1 - i));
         }
 
-        Collections.sort(list);
-        System.out.println(Arrays.toString(list.stream().mapToInt(x -> x).toArray()));
-
         BigInteger[] prefix = new BigInteger[list.size()];
         int idx = 0;
         for (int e : list) {
-            prefix[idx] = idx++ == 0 ? new BigInteger(String.valueOf(e)) :
-                    new BigInteger(String.valueOf((e))).multiply(new BigInteger(String.valueOf((prefix[idx - 1]))));
+            prefix[idx] = idx == 0 ? new BigInteger(String.valueOf(e)) : new BigInteger(String.valueOf((e))).multiply(prefix[idx - 1]);
+            idx++;
         }
 
-
-        System.out.println(Arrays.toString(prefix));
-
-        List<Integer> ans = new ArrayList<>();
+        List<BigInteger> bigIntegers = new ArrayList<>();
         for (int[] query : queries) {
-            if (query[0] == query[1]) ans.add(list.get(query[0]));
+            if (query[0] == query[1]) bigIntegers.add(new BigInteger(String.valueOf(list.get(query[0]))));
             else {
                 BigInteger b1 = new BigInteger(String.valueOf(prefix[query[1]]));
                 BigInteger b2 = new BigInteger(String.valueOf(query[0] == 0 ? 1 : prefix[Math.max(query[0] - 1, 0)]));
 
                 BigInteger res = b1.divide(b2);
-                boolean flag = false;
-                int er = Integer.MAX_VALUE;
-                while (!flag) {
-                    try {
-                        er = Integer.parseInt(String.valueOf(res.mod(new BigInteger(String.valueOf(MOD)))));
-                        flag = true;
-                    } catch (Exception ex) {
-                        res = new BigInteger(String.valueOf(res.mod(new BigInteger(String.valueOf(MOD)))));
-                    }
-                }
-
-                ans.add(er);
+                bigIntegers.add(res);
             }
         }
+
+        List<Integer> ans = new ArrayList<>();
+        for (BigInteger a : bigIntegers) {
+            boolean flag = false;
+            int er = Integer.MAX_VALUE;
+            while (!flag) {
+                try {
+                    er = Integer.parseInt(String.valueOf(a.mod(new BigInteger(String.valueOf(MOD)))));
+                    flag = true;
+                } catch (Exception ex) {
+                    a = new BigInteger(String.valueOf(a.mod(new BigInteger(String.valueOf(MOD)))));
+                }
+            }
+
+            ans.add(er);
+        }
+
         return ans.stream().mapToInt(x -> x).toArray();
     }
 
@@ -4301,53 +4301,34 @@ Output: [1,2,2,3,5,6]
         return false;
     }
 
-
-    //TODO: TBD
-    //Author: Anand
     public long countSubarrays(int[] nums, int minK, int maxK) {
-        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
-        long cnt = 0L;
+        long cnt1 = subArrays(nums, minK, maxK);
+        long cnt2 = subArrays(nums, minK + 1, maxK);
+        long cnt3 = subArrays(nums, minK, maxK - 1);
+        long cnt4 = subArrays(nums, minK + 1, maxK - 1);
 
-        TreeMap<Integer, Integer> map = new TreeMap<>();
-        min = nums[0];
-        max = nums[0];
-        map.put(min, map.getOrDefault(min, 0) + 1);
+        return cnt1 - cnt2 - cnt3 + cnt4;
+    }
 
-        for (int i = 0, j = 0; i < nums.length; ++i) {
-
-            if (i > 0) {
-                map.put(nums[i], map.getOrDefault(nums[i], 0) - 1);
-                if (map.get(nums[i]) <= 0) map.remove(nums[i]);
-
-                min = map.firstKey();
-                max = map.lastKey();
+    private long subArrays(int[] arr, int l, int u) {
+        int i = 0, n = arr.length;
+        long ans = 0L;
+        while (i < n) {
+            if (arr[i] > u || arr[i] < l) {
+                i++;
+                continue;
             }
 
-
-            boolean flag = false;
-            while (min != minK && max != maxK && j < nums.length) {
-
-                flag = true;
-                j++;
-                min = Math.min(min, nums[j]);
-                max = Math.max(max, nums[j]);
-
-                map.clear();
-
-                map.put(min, map.getOrDefault(min, 0) + 1);
-                map.put(max, map.getOrDefault(max, 0) + 1);
+            long count = 0;
+            while (i < n && arr[i] <= u && arr[i] >= l) {
+                count++;
+                i++;
             }
 
-
-            if (min == minK && max == maxK) {
-
-                if (!flag) cnt += i - j + 1;
-                else cnt++;
-            }
-
+            ans += (count * (count + 1)) / 2;
         }
 
-        return cnt;
+        return ans;
     }
 }
 
