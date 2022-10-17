@@ -33,16 +33,6 @@ public class EmployeeSolution {
         System.out.println(maxSum(arr));
     }
 
-//
-//         [5:20 pm] Keshav Bansal
-//
-//    { 2, -1, -3, 6, 8, -4, 5, -8, -5, 9, 3, -3, 4 }
-//
-//   dp[1] = 2
-//   dp[2] = 2
-//   dp[3] = 6
-//   dp[4] = 8
-
     public static int maxSum(int[] arr) {
         int n = arr.length;
         if (n == 0) return 0;
