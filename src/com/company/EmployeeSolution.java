@@ -759,8 +759,7 @@ Output: [1,2,2,3,5,6]
         int s = 0, e = 0;
         long cnt = 1;
         for (e = 1; e < n; e++) {
-            if (prices[e - 1] - prices[e] == 1)
-                cnt += (e - s + 1);
+            if (prices[e - 1] - prices[e] == 1) cnt += (e - s + 1);
             else {
                 s = e;
                 cnt++;
@@ -991,11 +990,8 @@ Output: [1,2,2,3,5,6]
      */
 
     public List<String> findAllRecipes(String[] recipes, List<List<String>> ingredients, String[] supplies) {
-        if (recipes == null || recipes.length == 0
-                || ingredients == null || ingredients.size() == 0
-                || supplies == null || supplies.length == 0
-                || recipes.length != ingredients.size()
-        ) return new ArrayList<>();
+        if (recipes == null || recipes.length == 0 || ingredients == null || ingredients.size() == 0 || supplies == null || supplies.length == 0 || recipes.length != ingredients.size())
+            return new ArrayList<>();
 
 
         // key- ingredient, value -> List of indexes of recipe
@@ -1096,9 +1092,7 @@ Output: [1,2,2,3,5,6]
 
         for (String word : words) {
             String reverse = new StringBuilder(word).reverse().toString();
-            if (!(word.charAt(0) == word.charAt(word.length() - 1))
-                    && (map.containsKey(word) && map.get(word) > 0 && map.containsKey(reverse) && map.get(reverse) > 0
-            )) {
+            if (!(word.charAt(0) == word.charAt(word.length() - 1)) && (map.containsKey(word) && map.get(word) > 0 && map.containsKey(reverse) && map.get(reverse) > 0)) {
                 int count = Math.min(map.get(word), map.get(reverse));
                 lp += count * 4;
                 while (count-- > 0) {
@@ -1107,9 +1101,7 @@ Output: [1,2,2,3,5,6]
                     map.put(reverse, map.getOrDefault(reverse, 0) - 1);
                     if (map.get(reverse) <= 0) map.remove(reverse);
                 }
-            } else if (word.charAt(0) == word.charAt(word.length() - 1)
-                    && (map.containsKey(word) && map.get(word) > 0)
-            ) {
+            } else if (word.charAt(0) == word.charAt(word.length() - 1) && (map.containsKey(word) && map.get(word) > 0)) {
                 int count = map.get(word);
                 int evenCnt = count / 2;
                 lp += evenCnt * 4;
@@ -1120,8 +1112,7 @@ Output: [1,2,2,3,5,6]
 
         //  We can also use exactly one in the middle to form an even longer palindrome.
         for (String word : map.keySet()) {
-            if (word.charAt(0) == word.charAt(word.length() - 1)
-                    && map.get(word) == 1) {
+            if (word.charAt(0) == word.charAt(word.length() - 1) && map.get(word) == 1) {
                 lp += 2;
                 map.put(word, map.getOrDefault(word, 0) - 1);
                 if (map.get(word) <= 0) map.remove(word);
@@ -1351,8 +1342,7 @@ Output: [1,2,2,3,5,6]
                 res = new ArrayList<>();
                 res.add((Integer) entry.getKey());
                 max_sum = sum;
-            } else if (sum == max_sum)
-                res.add((Integer) entry.getKey());
+            } else if (sum == max_sum) res.add((Integer) entry.getKey());
         }
 
         return res;
@@ -1939,8 +1929,7 @@ Output: [1,2,2,3,5,6]
 
     //long version for gcd
     public long __gcd(long a, long b) {
-        if (b == 0)
-            return a;
+        if (b == 0) return a;
 
         return __gcd(b, a % b);
     }
@@ -2267,15 +2256,12 @@ Output: [1,2,2,3,5,6]
     public int countCollisions(String s) {
         int l = 0, n = s.length(), r = n - 1, ans = 0;
 
-        while (l < n && s.charAt(l) == 'L')
-            l++;
+        while (l < n && s.charAt(l) == 'L') l++;
 
-        while (r >= 0 && s.charAt(r) == 'R')
-            r--;
+        while (r >= 0 && s.charAt(r) == 'R') r--;
 
         while (l <= r) {
-            if (s.charAt(l) != 'S')
-                ans++;
+            if (s.charAt(l) != 'S') ans++;
 
             l++;
         }
@@ -2466,10 +2452,7 @@ Output: [1,2,2,3,5,6]
         for (int[] num : nums) {
             List<Integer> list = Arrays.stream(num).boxed().collect(Collectors.toList());
             if (ans.isEmpty()) ans = list;
-            else ans = list.stream()
-                    .distinct()
-                    .filter(ans::contains)
-                    .collect(Collectors.toList());
+            else ans = list.stream().distinct().filter(ans::contains).collect(Collectors.toList());
         }
         Collections.sort(ans);
         return ans;
@@ -2619,8 +2602,7 @@ Output: [1,2,2,3,5,6]
             // Check if the slopes of three consecutive points are equal then continue
             // otherwise add another line to the count.
             // check (y2 - y1) / (x2 - x1) == (y1 - y0) / (x1 - x0) => (y2 - y1) * (x1 - x0) == (y1 - y0) * (x2 - x1)
-            if ((stockPrices[i][1] - stockPrices[i - 1][1]) * (stockPrices[i - 1][0] - stockPrices[i - 2][0]) ==
-                    (stockPrices[i - 1][1] - stockPrices[i - 2][1]) * (stockPrices[i][0] - stockPrices[i - 1][0]))
+            if ((stockPrices[i][1] - stockPrices[i - 1][1]) * (stockPrices[i - 1][0] - stockPrices[i - 2][0]) == (stockPrices[i - 1][1] - stockPrices[i - 2][1]) * (stockPrices[i][0] - stockPrices[i - 1][0]))
                 continue;
 
             cnt += 1;
@@ -2696,14 +2678,7 @@ Output: [1,2,2,3,5,6]
 
     // function to sort hashmap by values
     public static HashMap<String, Integer> sortByValue(Map<String, Integer> hm) {
-        HashMap<String, Integer> temp
-                = hm.entrySet()
-                .stream()
-                .sorted((i1, i2) -> i2.getValue().compareTo(i1.getValue()))
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (e1, e2) -> e1, LinkedHashMap::new));
+        HashMap<String, Integer> temp = hm.entrySet().stream().sorted((i1, i2) -> i2.getValue().compareTo(i1.getValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
         return temp;
     }
@@ -2879,9 +2854,7 @@ Output: [1,2,2,3,5,6]
 
         for (int i = 0; i < s.length(); i++) {
             char key = s.charAt(i);
-            if (lowercase.contains(Character.toLowerCase(key))
-                    && Character.isUpperCase(key)
-                    && (ans.isEmpty() || (int) key > (int) ans.charAt(0))) {
+            if (lowercase.contains(Character.toLowerCase(key)) && Character.isUpperCase(key) && (ans.isEmpty() || (int) key > (int) ans.charAt(0))) {
                 ans = String.valueOf(key);
             }
         }
@@ -3110,8 +3083,7 @@ Output: [1,2,2,3,5,6]
 
     //long version for gcd
     public static long _gcd(long a, long b) {
-        if (b == 0)
-            return a;
+        if (b == 0) return a;
 
         return _gcd(b, a % b);
     }
@@ -3149,8 +3121,7 @@ Output: [1,2,2,3,5,6]
             for (Pair<Integer, String> pair : list) {
                 int person = pair.getKey();
 
-                int[] arr = Arrays.stream(store.get(person).split("-"))
-                        .mapToInt(Integer::parseInt).toArray();
+                int[] arr = Arrays.stream(store.get(person).split("-")).mapToInt(Integer::parseInt).toArray();
                 String nk = day + "-" + (day + delay) + "-" + (day + forget);
 
                 if (day >= arr[1] && day < arr[2]) {
@@ -3522,8 +3493,7 @@ Output: [1,2,2,3,5,6]
         if (!lists.equals(listt)) return false;
 
         for (Map.Entry<Character, List<Integer>> entry : maps.entrySet()) {
-            if (entry.getValue().size() != mapt.getOrDefault(entry.getKey(), new ArrayList<>()).size())
-                return false;
+            if (entry.getValue().size() != mapt.getOrDefault(entry.getKey(), new ArrayList<>()).size()) return false;
 
             int idx = 0;
             List<Integer> values = entry.getValue();
@@ -3534,6 +3504,40 @@ Output: [1,2,2,3,5,6]
         return true;
     }
 
+    public String complexNumberMultiply(String num1, String num2) {
+
+        String[] n1 = num1.split("\\+");
+        String[] n2 = num2.split("\\+");
+
+        int part = 0;
+        StringBuilder imag = new StringBuilder();
+        for (String s1 : n1) {
+            for (String s2 : n2) {
+                if (s2.contains("i") && s1.contains("i")) {
+                    part -= Integer.parseInt(s1.replace("i", "")) * Integer.parseInt(s2.replace("i", ""));
+                } else if (s1.contains("i")) {
+                    int np = Integer.parseInt(s2) * Integer.parseInt(s1.replace("i", ""));
+                    if (imag.length() != 0) {
+                        int first = Integer.parseInt(imag.toString().replace("i", ""));
+                        imag.delete(0, imag.length());
+                        imag.append(first + np);
+                    } else imag.append(np);
+
+                    imag.append("i");
+                } else if (s2.contains("i")) {
+                    int np = Integer.parseInt(s1) * Integer.parseInt(s2.replace("i", ""));
+                    if (imag.length() != 0) {
+                        int first = Integer.parseInt(imag.toString().replace("i", ""));
+                        imag.delete(0, imag.length());
+                        imag.append(first + np);
+                    } else imag.append(np);
+
+                    imag.append("i");
+                } else part += Integer.parseInt(s1) * Integer.parseInt(s2);
+            }
+        }
+        return imag.insert(0, part + "+").toString();
+    }
 
     public String decodeCiphertext(String encodedText, int rows) {
 
@@ -4342,6 +4346,20 @@ Output: [1,2,2,3,5,6]
     }
 
 
+    public boolean checkPerfectNumber(int num) {
+        if (num == 1) return false;
+        int sum = 0;
+        for (int i = 1; i <= Math.sqrt(num); i++) {
+            if (num % i == 0) {
+                // If divisors are equal, print only one
+                if ((num / i) != i && i != 1) sum += (num / i);
+                sum += i;
+            }
+        }
+
+        if (sum == num) return true;
+        return false;
+    }
 }
 
 
