@@ -3,6 +3,7 @@ package com.company;
 import javafx.util.Pair;
 
 import java.awt.*;
+import java.math.BigInteger;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
@@ -32,6 +33,16 @@ public class EmployeeSolution {
 
         System.out.println(maxSum(arr));
     }
+
+//
+//         [5:20 pm] Keshav Bansal
+//
+//    { 2, -1, -3, 6, 8, -4, 5, -8, -5, 9, 3, -3, 4 }
+//
+//   dp[1] = 2
+//   dp[2] = 2
+//   dp[3] = 6
+//   dp[4] = 8
 
     public static int maxSum(int[] arr) {
         int n = arr.length;
@@ -4136,24 +4147,24 @@ Output: [1,2,2,3,5,6]
         List<Character> keyset = new ArrayList<>(tm.keySet());
         for (char c = 0; c < keyset.size(); c++) {
             List<Integer> elem = tm.get(keyset.get(c));
-            for (Integer integer : elem) {
-                if (integer >= sb.length()) {
+            for (Integer item : elem) {
+                if (item >= sb.length()) {
                     StringBuilder str = new StringBuilder();
                     if (last < original.length()) {
-                        str.append(integer >= (original.length() - 1) ? original.substring(last) : original.substring(last, integer + 1));
+                        str.append(item >= (original.length() - 1) ? original.substring(last) : original.substring(last, item + 1));
                     }
                     if (t.length() > 0 && str.length() > 0 && t.charAt(t.length() - 1) > str.charAt(0)) t.append(str);
                     else t.insert(0, str);
 
                     for (int i = t.length() - 1; i >= 0; i--) {
                         int top = c >= (keyset.size() - 1) ? -1 : (int) (keyset.get(c + 1) - 'a');
-                        if (top == -1 || (int) (t.charAt(i) - 'a') < top) {
-                            sb.append(String.valueOf((char) (t.charAt(i))));
+                        if (top == -1 || (t.charAt(i) - 'a') < top) {
+                            sb.append(t.charAt(i));
                             t.deleteCharAt(i);
                         }
                     }
 
-                    last = integer + 1;
+                    last = item + 1;
                 }
             }
 
@@ -4162,7 +4173,177 @@ Output: [1,2,2,3,5,6]
 
         return sb.toString();
     }
+
+
+    public int countTime(String time) {
+        String[] array = time.split(":");
+        int cnt = 1;
+        int ind = 0;
+        for (String s : array) {
+            if (s.charAt(0) == '?' && s.charAt(1) == '?') {
+                if (ind == 0) cnt *= 24;
+                else cnt *= 60;
+            } else {
+                if (ind == 0) {
+                    if (s.charAt(0) == '?') {
+                        if (Integer.parseInt(String.valueOf(s.charAt(1))) < 4) cnt *= 3;
+                        else cnt *= 2;
+                    } else if (s.charAt(1) == '?') {
+                        if (Integer.parseInt(String.valueOf(s.charAt(0))) < 2) cnt *= 10;
+                        else cnt *= 4;
+                    }
+                } else {
+                    if (s.charAt(0) == '?') {
+                        cnt *= 6;
+                    } else if (s.charAt(1) == '?') {
+                        cnt *= 10;
+                    }
+                }
+            }
+            ind++;
+        }
+
+        return cnt;
+    }
+
+
+    int MOD = (int) 1e9 + 7;
+
+    public int[] productQueries(int n, int[][] queries) {
+
+        List<Integer> list = new ArrayList<>();
+
+        String bs = Integer.toBinaryString(n);
+        for (int i = bs.length() - 1; i >= 0; i--) {
+            if (bs.charAt(i) == '1') list.add((int) Math.pow(2, bs.length() - 1 - i));
+        }
+
+        BigInteger[] prefix = new BigInteger[list.size()];
+        int idx = 0;
+        for (int e : list) {
+            prefix[idx] = idx == 0 ? new BigInteger(String.valueOf(e)) : new BigInteger(String.valueOf((e))).multiply(prefix[idx - 1]);
+            idx++;
+        }
+
+        List<BigInteger> bigIntegers = new ArrayList<>();
+        for (int[] query : queries) {
+            if (query[0] == query[1]) bigIntegers.add(new BigInteger(String.valueOf(list.get(query[0]))));
+            else {
+                BigInteger b1 = new BigInteger(String.valueOf(prefix[query[1]]));
+                BigInteger b2 = new BigInteger(String.valueOf(query[0] == 0 ? 1 : prefix[Math.max(query[0] - 1, 0)]));
+
+                BigInteger res = b1.divide(b2);
+                bigIntegers.add(res);
+            }
+        }
+
+        List<Integer> ans = new ArrayList<>();
+        for (BigInteger a : bigIntegers) {
+            boolean flag = false;
+            int er = Integer.MAX_VALUE;
+            while (!flag) {
+                try {
+                    er = Integer.parseInt(String.valueOf(a.mod(new BigInteger(String.valueOf(MOD)))));
+                    flag = true;
+                } catch (Exception ex) {
+                    a = new BigInteger(String.valueOf(a.mod(new BigInteger(String.valueOf(MOD)))));
+                }
+            }
+
+            ans.add(er);
+        }
+
+        return ans.stream().mapToInt(x -> x).toArray();
+    }
+
+
+    //Author: Anand
+    public int findMaxK(int[] nums) {
+        TreeMap<Integer, Integer> tm = new TreeMap<>(Collections.reverseOrder()); // number-> count
+
+        for (int num : nums) tm.put(num, tm.getOrDefault(num, 0) + 1);
+
+        for (Map.Entry<Integer, Integer> entry : tm.entrySet()) {
+            if (entry.getKey() > 0 && tm.containsKey(-entry.getKey())) return entry.getKey();
+        }
+
+        return -1;
+    }
+
+    //Author: Anand
+    public int countDistinctIntegers(int[] nums) {
+
+        Set<Integer> set = new HashSet<>();
+
+        for (int num : nums) set.add(num);
+
+        for (int num : nums) {
+            StringBuilder sb = new StringBuilder();
+            int nn = Integer.parseInt(sb.append(num).reverse().toString());
+            set.add(nn);
+        }
+
+        return set.size();
+    }
+
+    //Author: Anand
+    public boolean sumOfNumberAndReverse(int num) {
+
+        for (int i = 1; i <= num; i++) {
+            StringBuilder sb = new StringBuilder();
+            int nn = Integer.parseInt(sb.append(i).reverse().toString());
+            if (i + nn == num) return true;
+        }
+
+        return false;
+    }
+
+    public long countSubarrays(int[] nums, int minK, int maxK) {
+        long cnt1 = subArrays(nums, minK, maxK);
+        long cnt2 = subArrays(nums, minK + 1, maxK);
+        long cnt3 = subArrays(nums, minK, maxK - 1);
+        long cnt4 = subArrays(nums, minK + 1, maxK - 1);
+
+        return cnt1 - cnt2 - cnt3 + cnt4;
+    }
+
+    private long subArrays(int[] arr, int l, int u) {
+        int i = 0, n = arr.length;
+        long ans = 0L;
+        while (i < n) {
+            if (arr[i] > u || arr[i] < l) {
+                i++;
+                continue;
+            }
+
+            long count = 0;
+            while (i < n && arr[i] <= u && arr[i] >= l) {
+                count++;
+                i++;
+            }
+
+            ans += (count * (count + 1)) / 2;
+        }
+
+        return ans;
+    }
+
+
+    public int minimizeArrayValue(int[] nums) {
+        long sum = 0L;
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+            int avg = (int) Math.ceil((sum + i) / (i + 1));
+            max = Math.max(max, avg);
+        }
+
+        return max;
+    }
+
+
 }
+
 
 /*
     // in some cases, player needs to push the box further in order to change its direction; hence, tracking the box itself isn't enough,
