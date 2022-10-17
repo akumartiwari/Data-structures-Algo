@@ -4332,60 +4332,19 @@ Output: [1,2,2,3,5,6]
     }
 
 
-    //TODO:- TBD
     public int minimizeArrayValue(int[] nums) {
-
-            int max = Integer.MIN_VALUE, ind = -1;
-
-            for (int i = 0; i < nums.length; i++) {
-                if (nums[i] > max) {
-                    max = nums[i];
-                    ind = i;
-                }
-            }
-
-            if (ind == 0) return max;
-
-            TreeMap<Integer, List<Integer>> tm = new TreeMap<>();
-
-            ind = 0;
-            for (int num : nums) {
-                if (!tm.containsKey(num)) tm.put(num, new ArrayList<>());
-                tm.get(num).add(ind++);
-            }
-
-            PriorityQueue<Pair<Integer, List<Integer>>> pq = new PriorityQueue<>(Collections.reverseOrder(Comparator.comparingInt(Pair::getKey)));
-
-
-            for (Map.Entry<Integer, List<Integer>> entry : tm.entrySet()) {
-                List<Integer> indices = entry.getValue();
-                Collections.sort(indices);
-                pq.add(new Pair<>(entry.getKey(), indices));
-            }
-
-            while (!pq.isEmpty()) {
-                Pair<Integer, List<Integer>> pair = pq.poll();
-
-                List<Integer> indices = pair.getValue();
-                Collections.sort(indices);
-
-                for (int i : indices) {
-                    if (i == 0 || nums[i] == nums[i - 1]) return pair.getKey();
-
-                    int updated = pair.getKey() - 1;
-
-
-                    if (pq.peek().getKey() == updated) {
-                        Pair<Integer, List<Integer>> p = pq.poll();
-                        p.getValue().add(i);
-                        pq.offer(p);
-                    }
-                }
-            }
-
-
-            return pq.poll().getKey();
+        long sum = 0L;
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+            int avg = (int) Math.ceil((sum + i) / (i + 1));
+            max = Math.max(max, avg);
         }
+
+        return max;
+    }
+
+    
 }
 
 
