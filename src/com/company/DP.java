@@ -4,6 +4,53 @@ import java.util.*;
 
 public class DP {
 
+    /*
+    Input: s = "abcabcdabc"
+    Output: 2
+    Explanation:
+    - Delete the first 3 letters ("abc") since the next 3 letters are equal. Now, s = "abcdabc".
+    - Delete all the letters.
+    We used 2 operations so return 2. It can be proven that 2 is the maximum number of operations needed.
+    Note that in the second operation we cannot delete "abc" again because the next occurrence of "abc" does not happen in the next 3 letters.
+     */
+
+    Integer[] dp;
+
+    public int deleteString(String s) {
+        dp = new Integer[s.length()];
+        return helper(s.toCharArray(), 0);
+    }
+
+    private int helper(char[] s, int index) {
+        if (index >= s.length) return 0;
+
+        if (dp[index] != null) return dp[index];
+
+        int res = 0;
+        boolean found = false;
+        for (int i = index; i < index + (s.length - index) / 2; i++) {
+            if (dp[i] != null) continue;
+            if (isEqual(s, index, i + 1, i + 1, i + 1 + (i - index + 1))) {
+                found = true;
+                res = Math.max(res, 1 + helper(s, i + 1));
+            }
+        }
+        if (!found) return dp[index] = 1;
+        return dp[index] = res;
+    }
+
+    private boolean isEqual(char[] s, int st1, int en1, int st2, int en2) {
+        boolean ans = true;
+        for (int i = st1, j = st2; i < en1 && j < en2; i++, j++) {
+            if (s[i] != s[j]) {
+                ans = false;
+                break;
+            }
+        }
+        return ans;
+    }
+
+
     // Author: Anand
     // Solution using DP
     // TC = O(n)
@@ -700,7 +747,7 @@ public class DP {
     /*
     The idea is to use DP :-
     Consider both arrays 1 by 1 that will yield max result
-    I has used Map<String, Integer> in place of 3d DP array but it was giving TLE
+    I have used Map<String, Integer> in place of 3d DP array but it was giving TLE
     as sometimes key check in map is more than O(1) (Be careful while using Map)
     Return Maximum of ans1, ans2
     */
@@ -823,7 +870,7 @@ public class DP {
             if (next == null) dp[i][0] = 0;
             else if (dp[tm.get(next)][1] > 0) dp[i][0] = 1;
 
-            // even jump starting from index i
+            // even jump-starting from index i
             next = tm.floorKey(arr[i]);
             if (next == null) dp[i][1] = 0;
             else if (dp[tm.get(next)][0] > 0) dp[i][1] = 1;
@@ -874,6 +921,7 @@ public class DP {
 
     //Author : Anand
     int m, n;
+
     public int numberOfPaths(int[][] grid, int k) {
         m = grid.length;
         n = grid[0].length;
@@ -1024,6 +1072,7 @@ public class DP {
             }
         }
         return dp[n1][n2];
-
     }
+
+
 }
