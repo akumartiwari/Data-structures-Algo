@@ -4146,11 +4146,11 @@ Output: [1,2,2,3,5,6]
         List<Character> keyset = new ArrayList<>(tm.keySet());
         for (char c = 0; c < keyset.size(); c++) {
             List<Integer> elem = tm.get(keyset.get(c));
-            for (Integer integer : elem) {
-                if (integer >= sb.length()) {
+            for (Integer item : elem) {
+                if (item >= sb.length()) {
                     StringBuilder str = new StringBuilder();
                     if (last < original.length()) {
-                        str.append(integer >= (original.length() - 1) ? original.substring(last) : original.substring(last, integer + 1));
+                        str.append(item >= (original.length() - 1) ? original.substring(last) : original.substring(last, item + 1));
                     }
                     if (t.length() > 0 && str.length() > 0 && t.charAt(t.length() - 1) > str.charAt(0)) t.append(str);
                     else t.insert(0, str);
@@ -4163,7 +4163,7 @@ Output: [1,2,2,3,5,6]
                         }
                     }
 
-                    last = integer + 1;
+                    last = item + 1;
                 }
             }
 
@@ -4177,13 +4177,9 @@ Output: [1,2,2,3,5,6]
     public int countTime(String time) {
         String[] array = time.split(":");
         int cnt = 1;
-
         int ind = 0;
         for (String s : array) {
-
-            boolean both = false;
-            if (s.charAt(0) == '?' && s.charAt(1) == '?') both = true;
-            if (both) {
+            if (s.charAt(0) == '?' && s.charAt(1) == '?') {
                 if (ind == 0) cnt *= 24;
                 else cnt *= 60;
             } else {
@@ -4344,7 +4340,7 @@ Output: [1,2,2,3,5,6]
         return max;
     }
 
-    
+
 }
 
 
