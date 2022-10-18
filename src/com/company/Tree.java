@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.*;
+
 public class Tree {
     int res = 0;
 
@@ -77,7 +79,7 @@ public class Tree {
             //Recursively traverse the left child
             res += sumOfLeftLeaves(root.left);
         }
-        //Traverse right subtree iof root node
+        //Traverse right subtree of root node
         res += sumOfLeftLeaves(root.right);
         return res;
     }
@@ -115,22 +117,111 @@ public class Tree {
         rol(left.right, right.left, level + 1);
     }
 
+
     /**
      * Definition for a binary tree node.
      * public class TreeNode {
-     *     int val;
-     *     TreeNode left;
-     *     TreeNode right;
-     *     TreeNode() {}
-     *     TreeNode(int val) { this.val = val; }
-     *     TreeNode(int val, TreeNode left, TreeNode right) {
-     *         this.val = val;
-     *         this.left = left;
-     *         this.right = right;
-     *     }
+     * int val;
+     * TreeNode left;
+     * TreeNode right;
+     * TreeNode() {}
+     * TreeNode(int val) { this.val = val; }
+     * TreeNode(int val, TreeNode left, TreeNode right) {
+     * this.val = val;
+     * this.left = left;
+     * this.right = right;
+     * }
      * }
      */
 
+
+    // Algo:-
+
+    // - if tree is null retrun empty array list
+    // - Apply preorder traversal recursively and check of node had beee already taken in map or not
+    // - if its taken first time for that level fetch it else skip it
+    // - return the global ans
+
+    /*
+
+    [1,2,3,4,5,6,7]
+       [(0, [1]),(-1, [2]), (-2, [4]),  ]
+
+    TC = O(Nlogn) + O(N) ~= O(nlogn)
+    SC = O(N)
+    */
+
+    public class Pair implements Comparable<Pair> {
+        int key;
+        int value;
+
+        public Pair(int key, int value) //Constructor of the class
+        {
+            this.key = key;
+            this.value = value;
+        }
+
+        public int compareTo(Pair o) {
+            return this.key - o.key;
+        }
+    }
+
+    // To store the vline and nodes with level on that vline
+    HashMap<Integer, PriorityQueue<Pair>> map = new HashMap<>();
+
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+        if (root == null) return null;
+        inorder(root, 0, 0);
+        List<List<Integer>> ans = new ArrayList<>();
+        Map<Integer, PriorityQueue<Pair>> treemap = new TreeMap<>(map);
+
+        // Iterate through map and get the result in desired format
+        for (Map.Entry<Integer, PriorityQueue<Pair>> entry : treemap.entrySet()) {
+            PriorityQueue<Pair> pq = entry.getValue();
+            // to store level along iwth nodes on that level
+            // grouping the nodes based on level
+            Map<Integer, List<Integer>> hm = new TreeMap<>();
+            List<Integer> colList = new ArrayList<>();
+
+            while (!pq.isEmpty()) {
+                Pair res = pq.poll();
+                if (hm.containsKey(res.key)) {
+                    List<Integer> list = new ArrayList<>();
+                    List<Integer> l = hm.get(res.key);
+                    l.add(res.value);
+                    hm.put(res.key, l);
+                } else hm.put(res.key, new ArrayList<>(Arrays.asList(res.value)));
+            }
+
+            for (Map.Entry<Integer, List<Integer>> e : hm.entrySet()) {
+                List<Integer> pd = e.getValue();
+                Collections.sort(pd);
+                for (Integer data : pd) colList.add(data);
+            }
+            ans.add(colList);
+        }
+        return ans;
+    }
+
+    private void inorder(TreeNode root, int level, int vline) {
+        if (root == null) return;
+
+        vline -= 1;
+        inorder(root.left, level + 1, vline);
+        vline += 1;
+        // node on this vline is already present then add new node in list of this vline
+        if (map.get(vline) != null) {
+            PriorityQueue<Pair> existingpq = map.get(vline);
+            existingpq.add(new Pair(level, root.val));
+            map.put(vline, existingpq);
+        } else {
+            // Else if node on this vline is found first time then simply add it
+            PriorityQueue<Pair> newNode = new PriorityQueue<>();
+            newNode.add(new Pair(level, root.val));
+            map.put(vline, newNode);
+        }
+        inorder(root.right, level + 1, vline + 1);
+    }
 
 }
 

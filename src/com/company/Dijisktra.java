@@ -35,7 +35,7 @@ public class Dijisktra {
         return res;
     }
 
-    // Dijisktra algorithm to find shortest distance b/w each node
+    // Dijkstra algorithm to find the shortest distance b/w each node
     private void shortestPath(int src, long[] srcTo, List<int[]>[] graph) {
         // min PQ to find SD b/w src, dest
         PriorityQueue<long[]> queue = new PriorityQueue<>((a, b) -> Long.compare(a[1], b[1]));
@@ -157,7 +157,7 @@ public class Dijisktra {
         return ans;
     }
 
-    // Dijisktra algorithm to find shortest distance b/w each node
+    // Dijkstra algorithm to find the shortest distance b/w each node
     private void shortestPath(int src, long[] srcTo, List<List<Integer>> graph) {
         // min PQ to find SD b/w src, dest
         PriorityQueue<long[]> queue = new PriorityQueue<>((a, b) -> Long.compare(a[1], b[1]));

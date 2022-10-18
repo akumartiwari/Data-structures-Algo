@@ -1074,5 +1074,40 @@ public class DP {
         return dp[n1][n2];
     }
 
+    // Intial thoughts:-
+    // BFS algorithm
 
+
+    //  DP
+    //  - create a map to adjancent nodes alogn with distance
+    //  - iterate through all nodes and calculate cost of each path recursively
+    //  - update minCost path if currNode reaches to destination
+    //  - returm minCost;
+    // TC  = (2^n)
+    // SC = O(n)
+
+    Map<Integer, List<int[]>> map;
+    Integer cpDP[][];
+
+    int find(int src, int dest, int k) {
+        if (k < 0) return 1000_000_00;
+        if (src == dest) return 0;
+        if (cpDP[src][k] != null) return cpDP[src][k];
+        int max = 1000_000_00;
+        for (int arr[] : map.getOrDefault(src, new ArrayList<>())) {
+            max = Math.min(max, arr[1] + find(arr[0], dest, k - 1));
+        }
+        return cpDP[src][k] = max;
+    }
+
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
+        map = new HashMap<>();
+        cpDP = new Integer[n + 1][K + 2];
+        for (int a[] : flights) {
+            map.computeIfAbsent(a[0], k -> new ArrayList<>());
+            map.get(a[0]).add(new int[]{a[1], a[2]});
+        }
+        int temp = find(src, dst, K + 1);
+        return temp >= 1000_000_00 ? -1 : temp;
+    }
 }

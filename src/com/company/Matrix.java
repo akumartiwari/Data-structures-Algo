@@ -68,4 +68,23 @@ public class Matrix {
 
         return ans;
     }
+
+
+    public long maxMatrixSum(int[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int mini = Integer.MAX_VALUE;
+        int cnt = 0;
+        long sum = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                sum += Math.abs(matrix[i][j]);
+                if (matrix[i][j] < 0) cnt++;
+                mini = Math.min(mini, Math.abs(matrix[i][j]));
+            }
+        }
+        if (cnt % 2 == 0) return sum;
+        return sum - 2 * mini;
+    }
+
 }

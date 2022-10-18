@@ -262,4 +262,45 @@ public class PartitionDP {
     }
 
 
+    int[] nums;
+    int n;
+    boolean[] vis;
+
+    public boolean canPartitionKSubsets(int[] nums, int k) {
+        this.n = nums.length;
+        this.nums = nums;
+        vis = new boolean[n];
+        int t = 0;
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < n; i++) {
+            t += nums[i];
+            max = Math.max(max, nums[i]);
+        }
+
+        if (t % k != 0) return false;
+
+        for (int i = 0; i < n; i++) if (nums[i] > max) return false;
+
+        int target = t / k;
+        return dfs(0, target, 0, k);
+    }
+
+    private boolean dfs(int sum, int target, int idx, int left) {
+        if (left == 1) return true;
+
+        if (sum == target) {
+            return dfs(0, target, 0, left - 1);
+        }
+
+        if (sum > target || idx >= n) return false;
+
+        for (int i = idx; i < n; i++) {
+            if (!vis[i]) {
+                vis[i] = true;
+                if (dfs(sum + nums[i], target, idx + 1, left)) return true;
+                vis[i] = false;
+            }
+        }
+        return false;
+    }
 }
