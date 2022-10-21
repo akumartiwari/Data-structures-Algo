@@ -77,5 +77,49 @@ public class StackExamples {
 
         return ans;
     }
+
+    /*
+    Input: s = "zza"
+    Output: "azz"
+    Explanation: Let p denote the written string.
+    Initially p="", s="zza", t="".
+    Perform first operation three times p="", s="", t="zza".
+    Perform second operation three times p="azz", s="", t="".
+    */
+    /*
+    The first loop is to record the frequence of every character, the array freq,
+    the second loop is to add every character into a stack,
+    when adding the character into the stack, decreate the frequency of the character by one in the array freq,
+    then the array freq is the frequency of every character in the rest of string.
+    When adding one character from the top of the stack to the result, we check if there is one smaller character in the rest of the string,
+    if there is, keep pushing the character of the rest of the string into the stack, if there is not,
+    then add the top character into the result.
+     */
+    public String robotWithString(String s) {
+        int[] freq = new int[26];
+        for (char c : s.toCharArray()) freq[c - 'a']++;
+
+        StringBuilder sb = new StringBuilder();
+        Stack<Character> stack = new Stack<>();
+
+        for (char c : s.toCharArray()) {
+            stack.add(c);
+            freq[c - 'a']--;
+
+            while (!stack.isEmpty()) {
+                char curr = stack.peek();
+                if (hasSmaller(curr, freq)) break;
+                sb.append(stack.pop());
+            }
+        }
+        return sb.toString();
+    }
+
+    private boolean hasSmaller(char c, int[] freq) {
+        for (int i = 0; i < (c - 'a'); ++i) if (freq[i] > 0) return true;
+        return false;
+    }
+
+
 }
 
