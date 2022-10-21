@@ -14,7 +14,171 @@ public class DP {
     Note that in the second operation we cannot delete "abc" again because the next occurrence of "abc" does not happen in the next 3 letters.
      */
 
+    // TC = O(n*nCk), SC = O(n*nCk)
+    static long maxSum;
+    // TODO : Complete it
+    static int ans = 0;
+    final int mod = 1_000_000_007;
     Integer[] dp;
+    int MOD = 1_000_000_000 + 7;
+    int sp;
+    int op;
+    //Author : Anand
+    int m, n;
+    Map<Integer, List<int[]>> map;
+    Integer[][] cpDP;
+
+    // DP to tabulation:-= Bottom-up approach
+    // TC = O(n), SC = O(n)
+    public static int frogJump(int n, int[] heights) {
+        int[] dp = new int[n];
+        dp[0] = 0;
+        for (int i = 1; i < n; i++) {
+            int left = dp[i - 1] + Math.abs(heights[i] - heights[i - 1]);
+
+            int right = Integer.MAX_VALUE;
+            if (i > 1) {
+                right = dp[i - 2] + Math.abs(heights[i] - heights[i - 2]);
+            }
+
+            dp[i] = Math.min(left, right);
+        }
+        return dp[n - 1];
+    }
+
+    public static long maximumSum(ArrayList<Integer> nums, int k) {
+        maxSum = Long.MIN_VALUE;
+
+        int n = nums.size();
+        if (n < k) return 0;
+
+        sub(nums, k, 0, 0, Long.MIN_VALUE);
+        return maxSum == Long.MIN_VALUE ? -1 : maxSum;
+    }
+
+    private static void sub(ArrayList<Integer> nums, int k, int ind, long sum, long prev) {
+        // base case
+        if (k == 0) {
+            maxSum = Math.max(maxSum, sum);
+            return;
+        }
+
+        if (k < 0 || ind >= nums.size()) {
+            return;
+        }
+
+        if (nums.get(ind) >= prev && nums.get(ind) > 0) {
+            int num = nums.get(ind);
+            // take
+            sum += num;
+            sub(nums, k - 1, ind + 1, sum, nums.get(ind));
+            sum -= num;
+            sub(nums, k, ind + 1, sum, prev);
+        } else sub(nums, k, ind + 1, sum, prev);
+    }
+
+    public static long maximumSumOptimised(ArrayList<Integer> nums, int k) {
+
+        int n = nums.size();
+        if (n < k) return 0;
+
+        long[][] dp = new long[n][k + 1]; // maximumSum of a subsequence of size = k ending at ind = n
+        for (int i = 0; i < n; i++) Arrays.fill(dp[i], -1);
+
+
+        // Fill for subsequence of size = 1 it'll have current/first element only
+        for (int i = 0; i < n; i++) dp[i][1] = nums.get(i);
+
+        for (int endIndex = 1; endIndex < n; endIndex++) {
+            for (int prev = 0; prev < endIndex; prev++) {
+
+                // valid choice
+                if (nums.get(prev) <= nums.get(endIndex)) {
+                    for (int size = 2; size <= k; size++) {
+                        if (dp[prev][size - 1] != -1) {
+                            dp[endIndex][size] = Math.max((dp[prev][size - 1] + nums.get(endIndex)), dp[endIndex][size]);
+                        }
+                    }
+                }
+            }
+        }
+
+        long max = Long.MIN_VALUE;
+        // For all ending index get  the max_value for size=k
+        for (int endIndex = 0; endIndex < n; endIndex++) {
+            max = Math.max(max, dp[endIndex][k]);
+        }
+        return max;
+
+    }
+
+    // TC = O(m*n*2), SC=O(n)
+    public static int sellMaximum(ArrayList<Integer> desiredSize, ArrayList<Integer> apartmentSize, int k) {
+        int n = desiredSize.size();
+        int m = apartmentSize.size();
+
+        int[] dp = new int[n]; // dp stores for each desiredSize the maximum no. of apartement that can be sold out
+        Arrays.fill(dp, -1);
+        sellMax(desiredSize, apartmentSize, k, 0, 0, new ArrayList<>(), dp);
+
+        return ans;
+    }
+
+    private static int sellMax(ArrayList<Integer> desiredSize, ArrayList<Integer> apartmentSize, int k, int ind, int ca, List<Integer> taken, int[] dp) {
+        int n = desiredSize.size();
+        int m = apartmentSize.size();
+        // base-cases
+        if (ind >= n) {
+            ans = Math.max(ans, ca);
+            return ans;
+        }
+
+        if (dp[ind] != -1) return dp[ind];
+        for (int i = 0; i < m; i++) {
+            // If curr apartment can be taken
+            if ((apartmentSize.get(i) <= desiredSize.get(ind) + k)
+                    && (apartmentSize.get(i) >= desiredSize.get(ind) - k)
+                    && !taken.contains(apartmentSize.get(i))
+            ) {
+                // take
+                taken.add(apartmentSize.get(i));
+                dp[ind] = sellMax(desiredSize, apartmentSize, k, ind + 1, ca + 1, taken, dp);
+                // backtrack
+                taken.remove(apartmentSize.get(i));
+            }
+        }
+        return dp[ind];
+    }
+
+    // TOP-DOWN DP
+    // TC = O(n2*k)
+    // SC = O(n*k)
+
+    private static int ls(int ind, int[] arr, int num, int k, int len, int[] dp) {
+        if (ind < 0) {
+            if (num <= k) {
+                return len;
+            }
+            return 0;
+        }
+
+
+        if (num > k) return -1;
+        if (dp[ind] != -1) return dp[ind];
+
+        int nt = Integer.MIN_VALUE, t = Integer.MIN_VALUE;
+
+        if (!(arr[ind] == 1 && num >= k)) {
+            // take
+            num += arr[ind] == 1 ? Math.pow(2, len) : 0;
+            t = ls(ind - 1, arr, num, k, len + 1, dp);
+            num -= arr[ind] == 1 ? Math.pow(2, len) : 0; // backtrack
+        }
+
+        // not-take
+        nt = ls(ind - 1, arr, num, k, len, dp);
+        return dp[ind] = Math.max(t, nt);
+    }
 
     public int deleteString(String s) {
         dp = new Integer[s.length()];
@@ -50,7 +214,6 @@ public class DP {
         return ans;
     }
 
-
     // Author: Anand
     // Solution using DP
     // TC = O(n)
@@ -68,28 +231,6 @@ public class DP {
         if (dp[n] != -1) return dp[n];
         return dp[n] = fib(n - 1) + fib(n - 2);
     }
-
-    // DP to tabulation:-= Bottom-up approach
-    // TC = O(n), SC = O(n)
-    public static int frogJump(int n, int heights[]) {
-        int[] dp = new int[n];
-        dp[0] = 0;
-        for (int i = 1; i < n; i++) {
-            int left = dp[i - 1] + Math.abs(heights[i] - heights[i - 1]);
-
-            int right = Integer.MAX_VALUE;
-            if (i > 1) {
-                right = dp[i - 2] + Math.abs(heights[i] - heights[i - 2]);
-            }
-
-            dp[i] = Math.min(left, right);
-        }
-        return dp[n - 1];
-    }
-
-
-    int MOD = 1_000_000_000 + 7;
-
 
     // DP based solution
     // TC = O(n * no. of states * no. of different recursive calls)
@@ -141,7 +282,6 @@ public class DP {
         return dp[ind][seats] = calls;
     }
 
-
     // Similar to Frog jump
     // Author: Anand
     //    [0,1,2,3,0]
@@ -152,7 +292,6 @@ public class DP {
         Map<String, Integer> map = new HashMap<>();
         return recurse(obstacles, 0, ans, lane, map);
     }
-
 
     private int recurse(int[] obstacles, int i, int ans, int lane, Map<String, Integer> map) {
 
@@ -261,121 +400,6 @@ public class DP {
         return Math.min(Math.min(dp[n - 1][0], dp[n - 1][1]), dp[n - 1][2]);
     }
 
-    // TC = O(n*nCk), SC = O(n*nCk)
-    static long maxSum;
-
-    public static long maximumSum(ArrayList<Integer> nums, int k) {
-        maxSum = Long.MIN_VALUE;
-
-        int n = nums.size();
-        if (n < k) return 0;
-
-        sub(nums, k, 0, 0, Long.MIN_VALUE);
-        return maxSum == Long.MIN_VALUE ? -1 : maxSum;
-    }
-
-    private static void sub(ArrayList<Integer> nums, int k, int ind, long sum, long prev) {
-        // base case
-        if (k == 0) {
-            maxSum = Math.max(maxSum, sum);
-            return;
-        }
-
-        if (k < 0 || ind >= nums.size()) {
-            return;
-        }
-
-        if (nums.get(ind) >= prev && nums.get(ind) > 0) {
-            int num = nums.get(ind);
-            // take
-            sum += num;
-            sub(nums, k - 1, ind + 1, sum, nums.get(ind));
-            sum -= num;
-            sub(nums, k, ind + 1, sum, prev);
-        } else sub(nums, k, ind + 1, sum, prev);
-    }
-
-    // TOP-DOWN DP
-    // TC = O(n2*k)
-    // SC = O(n*k)
-
-    public static long maximumSumOptimised(ArrayList<Integer> nums, int k) {
-
-        int n = nums.size();
-        if (n < k) return 0;
-
-        long[][] dp = new long[n][k + 1]; // maximumSum of a subsequence of size = k ending at ind = n
-        for (int i = 0; i < n; i++) Arrays.fill(dp[i], -1);
-
-
-        // Fill for subsequence of size = 1 it'll have current/first element only
-        for (int i = 0; i < n; i++) dp[i][1] = nums.get(i);
-
-        for (int endIndex = 1; endIndex < n; endIndex++) {
-            for (int prev = 0; prev < endIndex; prev++) {
-
-                // valid choice
-                if (nums.get(prev) <= nums.get(endIndex)) {
-                    for (int size = 2; size <= k; size++) {
-                        if (dp[prev][size - 1] != -1) {
-                            dp[endIndex][size] = Math.max((dp[prev][size - 1] + nums.get(endIndex)), dp[endIndex][size]);
-                        }
-                    }
-                }
-            }
-        }
-
-        long max = Long.MIN_VALUE;
-        // For all ending index get  the max_value for size=k
-        for (int endIndex = 0; endIndex < n; endIndex++) {
-            max = Math.max(max, dp[endIndex][k]);
-        }
-        return max;
-
-    }
-
-
-    // TODO : Complete it
-    static int ans = 0;
-
-    // TC = O(m*n*2), SC=O(n)
-    public static int sellMaximum(ArrayList<Integer> desiredSize, ArrayList<Integer> apartmentSize, int k) {
-        int n = desiredSize.size();
-        int m = apartmentSize.size();
-
-        int[] dp = new int[n]; // dp stores for each desiredSize the maximum no. of apartement that can be sold out
-        Arrays.fill(dp, -1);
-        sellMax(desiredSize, apartmentSize, k, 0, 0, new ArrayList<>(), dp);
-
-        return ans;
-    }
-
-    private static int sellMax(ArrayList<Integer> desiredSize, ArrayList<Integer> apartmentSize, int k, int ind, int ca, List<Integer> taken, int[] dp) {
-        int n = desiredSize.size();
-        int m = apartmentSize.size();
-        // base-cases
-        if (ind >= n) {
-            ans = Math.max(ans, ca);
-            return ans;
-        }
-
-        if (dp[ind] != -1) return dp[ind];
-        for (int i = 0; i < m; i++) {
-            // If curr apartment can be taken
-            if ((apartmentSize.get(i) <= desiredSize.get(ind) + k)
-                    && (apartmentSize.get(i) >= desiredSize.get(ind) - k)
-                    && !taken.contains(apartmentSize.get(i))
-            ) {
-                // take
-                taken.add(apartmentSize.get(i));
-                dp[ind] = sellMax(desiredSize, apartmentSize, k, ind + 1, ca + 1, taken, dp);
-                // backtrack
-                taken.remove(apartmentSize.get(i));
-            }
-        }
-        return dp[ind];
-    }
-
     /*
     Input: s = "1100101"
     Output: 5
@@ -478,7 +502,7 @@ public class DP {
         if (prev != s.charAt(i)) {
             take = cntWays(s, i + 1, cnt + 1, (int) s.charAt(i) - '0', dp);
         }
-        long ntake = cntWays(s, i + 1, cnt, (int) prev - '0', dp);
+        long ntake = cntWays(s, i + 1, cnt, prev - '0', dp);
 
         long ans = take + ntake;
 
@@ -571,9 +595,7 @@ public class DP {
         int[][] dp = new int[row][col]; // minimum cost to reach at r,c cell
 
         // For every cell in 1st row fill the cost
-        for (int c = 0; c < col; c++) {
-            dp[0][c] = grid[0][c];
-        }
+        System.arraycopy(grid[0], 0, dp[0], 0, col);
         // For remaining rows fill this
         for (int r = 1; r < row; r++) {
             for (int c = 0; c < col; c++) {
@@ -599,7 +621,6 @@ public class DP {
         }
         return min;
     }
-
 
     /*
     Input: cookies = [8,15,10,20,8], k = 2
@@ -653,32 +674,6 @@ public class DP {
         return ls(s.length() - 1, s.chars().map(x -> x - '0').toArray(), 0, k, 0, dp);
     }
 
-    private static int ls(int ind, int[] arr, int num, int k, int len, int[] dp) {
-        if (ind < 0) {
-            if (num <= k) {
-                return len;
-            }
-            return 0;
-        }
-
-
-        if (num > k) return -1;
-        if (dp[ind] != -1) return dp[ind];
-
-        int nt = Integer.MIN_VALUE, t = Integer.MIN_VALUE;
-
-        if (!(arr[ind] == 1 && num >= k)) {
-            // take
-            num += arr[ind] == 1 ? Math.pow(2, len) : 0;
-            t = ls(ind - 1, arr, num, k, len + 1, dp);
-            num -= arr[ind] == 1 ? Math.pow(2, len) : 0; // backtrack
-        }
-
-        // not-take
-        nt = ls(ind - 1, arr, num, k, len, dp);
-        return dp[ind] = Math.max(t, nt);
-    }
-
     private int gcd(int a, int b) {
         if (b == 0)
             return a;
@@ -722,6 +717,18 @@ public class DP {
 
         return dp[ind][l1][l2] = take;
     }
+
+    /*
+    Input: arr = [10,13,12,14,15]
+    Output: 2
+    Explanation:
+    From starting index i = 0, we can make our 1st jump to i = 2 (since arr[2] is the smallest among arr[1], arr[2], arr[3], arr[4] that is greater or equal to arr[0]), then we cannot jump any more.
+    From starting index i = 1 and i = 2, we can make our 1st jump to i = 3, then we cannot jump any more.
+    From starting index i = 3, we can make our 1st jump to i = 4, so we have reached the end.
+    From starting index i = 4, we have reached the end already.
+    In total, there are 2 different starting indices i = 3 and i = 4, where we can reach the end with some number of
+    jumps.
+     */
 
     //Author: Anand
     public int countHousePlacements(int n) {
@@ -824,25 +831,13 @@ public class DP {
         if (prev != '#' && dp[ind][(int) prev - 'a'] != -1) return dp[ind][(int) prev - 'a'];
         int take = 0, nt = 0;
         //take
-        if (prev == '#' || (int) Math.abs(prev - s.charAt(ind)) <= k) {
+        if (prev == '#' || Math.abs(prev - s.charAt(ind)) <= k) {
             take = 1 + ls(s, k, ind + 1, s.charAt(ind), dp);
         }
         // not take
         nt = ls(s, k, ind + 1, prev, dp);
         return dp[ind][Math.abs((int) prev - 'a')] = Math.max(take, nt);
     }
-
-    /*
-    Input: arr = [10,13,12,14,15]
-    Output: 2
-    Explanation:
-    From starting index i = 0, we can make our 1st jump to i = 2 (since arr[2] is the smallest among arr[1], arr[2], arr[3], arr[4] that is greater or equal to arr[0]), then we cannot jump any more.
-    From starting index i = 1 and i = 2, we can make our 1st jump to i = 3, then we cannot jump any more.
-    From starting index i = 3, we can make our 1st jump to i = 4, so we have reached the end.
-    From starting index i = 4, we have reached the end already.
-    In total, there are 2 different starting indices i = 3 and i = 4, where we can reach the end with some number of
-    jumps.
-     */
 
     /*
     1. int[][] dp[n][2], to save if from "i" can jump to final (1 for true, 0 for false). [2] dimension for "odd" or "even" jumps.
@@ -884,10 +879,6 @@ public class DP {
 
     }
 
-    final int mod = 1_000_000_007;
-    int sp;
-    int op;
-
     public int numberOfWays(int startPos, int endPos, int k) {
         sp = startPos;
         op = k;
@@ -917,10 +908,6 @@ public class DP {
 
         return dp[newPos][k] = (left + right) % mod;
     }
-
-
-    //Author : Anand
-    int m, n;
 
     public int numberOfPaths(int[][] grid, int k) {
         m = grid.length;
@@ -952,12 +939,6 @@ public class DP {
         int down = helper(grid, k, m, n - 1, (sum + grid[m][n]) % k, dp) % MOD;
 
         return dp[m][n][sum] = (up + down) % MOD;
-    }
-
-    private boolean isSafe(int[][] grid, int i, int j) {
-        int m = grid.length;
-        int n = grid[0].length;
-        return i >= 0 && i < m && j >= 0 && j < n;
     }
 
 
@@ -999,6 +980,12 @@ public class DP {
 	  problem boils down to finding a subsequence of length len1
 	  with sum equals sumA
 	*/
+
+    private boolean isSafe(int[][] grid, int i, int j) {
+        int m = grid.length;
+        int n = grid[0].length;
+        return i >= 0 && i < m && j >= 0 && j < n;
+    }
 
     public boolean splitArraySameAverage(int[] nums) {
         int n = nums.length, total = 0;
@@ -1042,6 +1029,17 @@ public class DP {
         return case2;
     }
 
+    // Intial thoughts:-
+    // BFS algorithm
+
+
+    //  DP
+    //  - create a map to adjancent nodes alogn with distance
+    //  - iterate through all nodes and calculate cost of each path recursively
+    //  - update minCost path if currNode reaches to destination
+    //  - returm minCost;
+    // TC  = (2^n)
+    // SC = O(n)
 
     // Min. no. of steps to  make both strings equal
     // Input: word1 = "sea", word2 = "eat"
@@ -1074,27 +1072,12 @@ public class DP {
         return dp[n1][n2];
     }
 
-    // Intial thoughts:-
-    // BFS algorithm
-
-
-    //  DP
-    //  - create a map to adjancent nodes alogn with distance
-    //  - iterate through all nodes and calculate cost of each path recursively
-    //  - update minCost path if currNode reaches to destination
-    //  - returm minCost;
-    // TC  = (2^n)
-    // SC = O(n)
-
-    Map<Integer, List<int[]>> map;
-    Integer cpDP[][];
-
     int find(int src, int dest, int k) {
         if (k < 0) return 1000_000_00;
         if (src == dest) return 0;
         if (cpDP[src][k] != null) return cpDP[src][k];
         int max = 1000_000_00;
-        for (int arr[] : map.getOrDefault(src, new ArrayList<>())) {
+        for (int[] arr : map.getOrDefault(src, new ArrayList<>())) {
             max = Math.min(max, arr[1] + find(arr[0], dest, k - 1));
         }
         return cpDP[src][k] = max;
@@ -1103,11 +1086,49 @@ public class DP {
     public int findCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
         map = new HashMap<>();
         cpDP = new Integer[n + 1][K + 2];
-        for (int a[] : flights) {
+        for (int[] a : flights) {
             map.computeIfAbsent(a[0], k -> new ArrayList<>());
             map.get(a[0]).add(new int[]{a[1], a[2]});
         }
         int temp = find(src, dst, K + 1);
         return temp >= 1000_000_00 ? -1 : temp;
+    }
+
+    class Solution {
+        public int componentValue(int[] nums, int[][] edges) {
+
+            Map<Integer, List<Integer>> graph = new HashMap<>();
+
+            for (int[] edge : edges) {
+                if (!graph.containsKey(edge[0])) graph.put(edge[0], new ArrayList<>());
+                if (!graph.containsKey(edge[1])) graph.put(edge[1], new ArrayList<>());
+                graph.get(edge[0]).add(edge[1]);
+                graph.get(edge[1]).add(edge[0]);
+            }
+            int max = -1;
+            for (int i = 0; i < nums.length; i++) {
+                max = Math.max(max, helper(i, nums, graph, 0, 0));
+            }
+
+            return max;
+        }
+
+
+        private int helper(int start, int[] nums, Map<Integer, List<Integer>> graph, int currentSum, int expectedSum) {
+            // base case
+            if (currentSum == expectedSum) return 1;
+            if (start >= nums.length) return 0;
+
+            int sum = nums[start];
+            int cw = 0, ncw = 0;
+            for (int node : graph.get(start)) {
+                // make a cut
+                cw += 1 + helper(node, nums, graph, 0, nums[start]);
+                // Don't make a cut
+                ncw += helper(node, nums, graph, sum + nums[node], expectedSum);
+            }
+
+            return Math.max(cw, ncw);
+        }
     }
 }
