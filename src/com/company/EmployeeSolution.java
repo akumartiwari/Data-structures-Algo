@@ -4071,7 +4071,31 @@ Output: [1,2,2,3,5,6]
         for (int i = 0; i < pref.length; i++) ans[i] = i == 0 ? pref[i] : pref[i - 1] ^ pref[i];
         return ans;
     }
+    class Solution {
+        //Author: Anand
+        public int[][] reconstructQueue(int[][] people) {
+            int[][] ans = new int[people.length][2];
+            Arrays.sort(people, Comparator.comparingInt(a -> a[0]));
+            Map<Integer, Integer> lhm = new LinkedHashMap<>();
+            for (int i = people.length - 1; i >= 0; i--) lhm.put(i, -1);
 
+            int prev = -1;
+            for (int[] p : people) {
+                int htG = p[1];
+                int idx = lhm.keySet().size() > htG ? new ArrayList<>(lhm.keySet()).get(htG) : new ArrayList<>(lhm.keySet()).get(0);
+                if (p[0] == prev && htG > 1) idx++;
+                ans[idx] = p;
+                lhm.remove(idx);
+                prev = p[0];
+            }
+
+            int idx = 0;
+            int[][] res = new int[people.length][2];
+            for (int[] a : ans) res[people.length - 1 - idx++] = a;
+
+            return res;
+        }
+    }
     public int countTime(String time) {
         String[] array = time.split(":");
         int cnt = 1;
@@ -4247,30 +4271,48 @@ Output: [1,2,2,3,5,6]
         return sum == num;
     }
 
-    class Solution {
-        //Author: Anand
-        public int[][] reconstructQueue(int[][] people) {
-            int[][] ans = new int[people.length][2];
-            Arrays.sort(people, Comparator.comparingInt(a -> a[0]));
-            Map<Integer, Integer> lhm = new LinkedHashMap<>();
-            for (int i = people.length - 1; i >= 0; i--) lhm.put(i, -1);
-
-            int prev = -1;
-            for (int[] p : people) {
-                int htG = p[1];
-                int idx = lhm.keySet().size() > htG ? new ArrayList<>(lhm.keySet()).get(htG) : new ArrayList<>(lhm.keySet()).get(0);
-                if (p[0] == prev && htG > 1) idx++;
-                ans[idx] = p;
-                lhm.remove(idx);
-                prev = p[0];
-            }
-
-            int idx = 0;
-            int[][] res = new int[people.length][2];
-            for (int[] a : ans) res[people.length - 1 - idx++] = a;
-
-            return res;
+    public boolean judgeCircle(String moves) {
+        int x = 0, y = 0;
+        Map<Character, List<Integer>> dirs = new HashMap<>();
+        // l, r, u, d
+        int[][] move = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
+        char[] d = new char[]{'L', 'R', 'U', 'D'};
+        int idx = 0;
+        for (int[] m : move) {
+            dirs.put(d[idx++], new ArrayList<>(Arrays.asList(m[0], m[1])));
         }
+
+
+        for (char c : moves.toCharArray()) {
+            List<Integer> cord = dirs.get(c);
+            x += cord.get(0);
+            y += cord.get(1);
+        }
+
+        return x == 0 && y == 0;
+    }
+
+    public List<Integer> findClosestElements(int[] arr, int k, int x) {
+
+        // [dist, element]
+
+        PriorityQueue<int[]> pq = new PriorityQueue<>((t1, t2) -> {
+            if (t1[0] < t2[0]) return -1;
+            if (t1[0] > t2[0]) return 1;
+            return Integer.compare(t1[1], t2[1]);
+        });
+
+
+        for (int a : arr) pq.add(new int[]{Math.abs(a - x), a});
+
+        List<Integer> ans = new ArrayList<>();
+        while (!pq.isEmpty()) {
+            ans.add(pq.poll()[1]);
+            if (--k <= 0) break;
+        }
+
+        Collections.sort(ans);
+        return ans;
     }
 }
 
