@@ -9,6 +9,8 @@ import java.util.Queue;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static CF_Templates.B.gcd;
+
 public class EmployeeSolution {
     String name;
     Integer salary;
@@ -4008,6 +4010,30 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+    //Author: Anand
+    public int[][] reconstructQueue(int[][] people) {
+        int[][] ans = new int[people.length][2];
+        Arrays.sort(people, Comparator.comparingInt(a -> a[0]));
+        Map<Integer, Integer> lhm = new LinkedHashMap<>();
+        for (int i = people.length - 1; i >= 0; i--) lhm.put(i, -1);
+
+        int prev = -1;
+        for (int[] p : people) {
+            int htG = p[1];
+            int idx = lhm.keySet().size() > htG ? new ArrayList<>(lhm.keySet()).get(htG) : new ArrayList<>(lhm.keySet()).get(0);
+            if (p[0] == prev && htG > 1) idx++;
+            ans[idx] = p;
+            lhm.remove(idx);
+            prev = p[0];
+        }
+
+        int idx = 0;
+        int[][] res = new int[people.length][2];
+        for (int[] a : ans) res[people.length - 1 - idx++] = a;
+
+        return res;
+    }
+
     public String licenseKeyFormatting(String s, int k) {
         StringBuilder original = new StringBuilder();
         Arrays.stream(s.split("-")).forEach(original::append);
@@ -4071,31 +4097,7 @@ Output: [1,2,2,3,5,6]
         for (int i = 0; i < pref.length; i++) ans[i] = i == 0 ? pref[i] : pref[i - 1] ^ pref[i];
         return ans;
     }
-    class Solution {
-        //Author: Anand
-        public int[][] reconstructQueue(int[][] people) {
-            int[][] ans = new int[people.length][2];
-            Arrays.sort(people, Comparator.comparingInt(a -> a[0]));
-            Map<Integer, Integer> lhm = new LinkedHashMap<>();
-            for (int i = people.length - 1; i >= 0; i--) lhm.put(i, -1);
 
-            int prev = -1;
-            for (int[] p : people) {
-                int htG = p[1];
-                int idx = lhm.keySet().size() > htG ? new ArrayList<>(lhm.keySet()).get(htG) : new ArrayList<>(lhm.keySet()).get(0);
-                if (p[0] == prev && htG > 1) idx++;
-                ans[idx] = p;
-                lhm.remove(idx);
-                prev = p[0];
-            }
-
-            int idx = 0;
-            int[][] res = new int[people.length][2];
-            for (int[] a : ans) res[people.length - 1 - idx++] = a;
-
-            return res;
-        }
-    }
     public int countTime(String time) {
         String[] array = time.split(":");
         int cnt = 1;
@@ -4313,6 +4315,205 @@ Output: [1,2,2,3,5,6]
 
         Collections.sort(ans);
         return ans;
+    }
+
+    public boolean haveConflict(String[] event1, String[] event2) {
+
+        List<Integer> el1 = new ArrayList<>();
+        List<Integer> el2 = new ArrayList<>();
+
+        for (String e1 : event1) {
+            int time = Integer.parseInt(e1.split(":")[0]) * 60 + Integer.parseInt(e1.split(":")[1]);
+            el1.add(time);
+        }
+
+        for (String e2 : event2) {
+            int time = Integer.parseInt(e2.split(":")[0]) * 60 + Integer.parseInt(e2.split(":")[1]);
+            el2.add(time);
+        }
+
+        if (el2.get(0) <= el1.get(1) && el2.get(0) >= el1.get(0)) return true;
+        return el1.get(0) <= el2.get(1) && el1.get(0) >= el2.get(0);
+    }
+
+    public int subarrayGCD(int[] nums, int k) {
+        int cnt = 0;
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            list.add(nums[i]);
+            if (list.get(list.size() - 1) == k) cnt++;
+            for (int j = i + 1; j < nums.length; j++) {
+                int _gcd = j == i + 1 ? gcd(nums[i], nums[j]) : gcd(list.get(list.size() - 1), nums[j]);
+                list.add(_gcd);
+                if (list.get(list.size() - 1) == k) cnt++;
+            }
+        }
+        return cnt;
+    }
+
+    /*
+        Time Complexity: O(N * log(N))
+        Space Complexity: O(1)
+
+        Where N is the number of elements in array
+    */
+    public long minCost(int[] arr, int[] cost) {
+        int[] copyArray = arr;
+
+        int n = arr.length;
+        // Variable to contain minimum value of array
+        int lowerLimit = Integer.MAX_VALUE;
+
+        long ans = Long.MAX_VALUE;
+        // Variable to contain maximum value )of array
+        int upperLimit = Integer.MIN_VALUE;
+
+        for (int a : arr) {
+            lowerLimit = Math.min(lowerLimit, a);
+            upperLimit = Math.max(upperLimit, a);
+        }
+
+        int diff = upperLimit - lowerLimit;
+        if (diff <= 2) {
+            while (upperLimit >= lowerLimit) {
+                long cc = findCostWithTargetValue(copyArray, cost, n, upperLimit);
+                ans = Math.min(ans, cc);
+                upperLimit--;
+            }
+            return ans;
+        }
+
+        int maxCost = Integer.MIN_VALUE;
+        int elem = Integer.MAX_VALUE;
+        for (int i = 0; i < cost.length; i++) {
+            if (cost[i] > maxCost) {
+                maxCost = cost[i];
+                elem = arr[i];
+            }
+        }
+
+        ans = Math.min(ans, findCostWithTargetValue(arr, cost, n, elem));
+
+        while (upperLimit - lowerLimit > 2) {
+            int mid1 = lowerLimit + (upperLimit - lowerLimit) / 3;
+            int mid2 = upperLimit - (upperLimit - lowerLimit) / 3;
+
+            // Variable which contains cost with mid1 as target value
+            long cost1 = findCostWithTargetValue(copyArray, cost, n, mid1);
+
+            // Variable which contains cost with mid2 as target value
+            long cost2 = findCostWithTargetValue(copyArray, cost, n, mid2);
+
+            if (cost1 < cost2) {
+                upperLimit = mid2;
+            } else {
+                lowerLimit = mid1;
+            }
+
+            ans = Math.min(ans, Math.min(cost1, cost2));
+        }
+
+        // Returning cost with average of lowerLimit and upperLimit as target value
+        return Math.min(ans, findCostWithTargetValue(arr, cost, n, (lowerLimit + upperLimit) / 2));
+    }
+
+    private long findCostWithTargetValue(int[] arr, int[] cost, int n, int target) {
+        long tc = 0L;
+        // Loop to calculate cost with given target value
+        for (int index = 0; index < n; index++) {
+            tc += (long) Math.abs(arr[index] - target) * cost[index];
+        }
+        // Return cost
+        return tc;
+    }
+
+    class Solution {
+        public long makeSimilar(int[] nums, int[] target) {
+            Arrays.sort(nums);
+            Arrays.sort(target);
+            TreeMap<Integer, Integer> freq = new TreeMap<>();
+            for (int t : target) freq.put(t, freq.getOrDefault(t, 0) + 1);
+            TreeMap<Integer, Integer> nm = new TreeMap<>();
+            for (int num : nums) nm.put(num, nm.getOrDefault(num, 0) + 1);
+
+
+            Map<Integer, Integer> ef = new HashMap<>();
+            //sanitise both maps
+            for (Map.Entry<Integer, Integer> entry : nm.entrySet()) {
+                if (freq.containsKey(entry.getKey())) {
+                    int reduce = Math.min(entry.getValue(), freq.get(entry.getKey()));
+                    freq.put(entry.getKey(), freq.get(entry.getKey()) - reduce);
+                    if (freq.get(entry.getKey()) <= 0) freq.remove(entry.getKey());
+                    ef.put(entry.getKey(), reduce);
+                }
+            }
+
+            //sanitise nm
+            for (Map.Entry<Integer, Integer> entry : ef.entrySet()) {
+                nm.put(entry.getKey(), nm.get(entry.getKey()) - entry.getValue());
+                if (nm.get(entry.getKey()) <= 0) nm.remove(entry.getKey());
+            }
+
+            for (Map.Entry<Integer, Integer> entry : nm.entrySet()) {
+                if (freq.containsKey(entry.getKey())) {
+                    int reduce = Math.min(entry.getValue(), freq.get(entry.getKey()));
+                    freq.put(entry.getKey(), freq.get(entry.getKey()) - reduce);
+                    if (freq.get(entry.getKey()) <= 0) freq.remove(entry.getKey());
+                    ef.put(entry.getKey(), reduce);
+                }
+            }
+
+
+            List<Integer> keyset = new ArrayList<>();
+            keyset.addAll(nm.keySet());
+
+            for (int i = 0; i < keyset.size() - 1; i++) {
+
+                // set nums[i] = nums[i] + 2 and
+                if (nm.get(keyset.get(i)) < freq.get(i)) {
+
+                }
+
+                // set nums[j] = nums[j] - 2.
+                if (nm.get(keyset.get(i + 1)) < freq.get(i)) {
+
+                }
+            }
+
+
+            long cnt = 0;
+            int ind = 0;
+            while (ind < nums.length - 1) {
+                if (freq.size() == 0) return cnt;
+
+                if (nums[ind] == freq.firstKey()) {
+                    freq.put(nums[ind], freq.get(nums[ind] - 1));
+                    if (freq.get(nums[ind]) <= 0) freq.remove(nums[ind]);
+                } else {
+                    if (nums[ind] < freq.firstKey()) {
+                        nums[ind] += 2;
+
+                        if (nums[ind] == freq.firstKey()) {
+                            freq.put(nums[ind], freq.get(nums[ind] - 1));
+                            if (freq.get(nums[ind]) <= 0) freq.remove(nums[ind]);
+                        }
+
+                        // As next element then check only its existence
+                        if (freq.containsKey(nums[ind + 1])) {
+                            freq.put(nums[ind + 1], freq.get(nums[ind + 1] - 1));
+                            if (freq.get(nums[ind + 1]) <= 0) freq.remove(nums[ind + 1]);
+                        }
+
+                    }
+
+                    cnt++;
+                }
+
+
+            }
+
+            return cnt;
+        }
     }
 }
 
