@@ -8,6 +8,8 @@ import java.util.*;
 
 public class PriorityQueueExamples {
 
+    Map<Integer, Long> map = new TreeMap<>(); // {roomId, count}
+
     /*
     Input: nums = [2,4,-2], k = 5
     Output: 2
@@ -84,16 +86,13 @@ public class PriorityQueueExamples {
         return (int) prod;
     }
 
+    //***********
+
     public long mod_mul(long a, long b, long m) {
         a = a % m;
         b = b % m;
         return (((a * b) % m) + m) % m;
     }
-
-    //***********
-
-    Map<Integer, Long> map = new TreeMap<>(); // {roomId, count}
-
 
     /*
     Input: n = 2, meetings = [[0,10],[1,5],[2,7],[3,4]]
@@ -147,6 +146,75 @@ public class PriorityQueueExamples {
         return maxCount();
     }
 
+    //O(n*log(n)) time and O(n*log(n)) space
+
+    /*
+    Input: nums = [8,12,6], target = [2,14,10]
+    Output: 2
+    Explanation: It is possible to make nums similar to target in two operations:
+    - Choose i = 0 and j = 2, nums = [10,12,4].
+    - Choose i = 1 and j = 2, nums = [10,14,2].
+    It can be shown that 2 is the minimum number of operations needed.
+
+     */
+    public long makeSimilar(int[] nums, int[] target) {
+
+        PriorityQueue<Integer> numsEven = new PriorityQueue<>();
+        PriorityQueue<Integer> numsOdd = new PriorityQueue<>();
+        PriorityQueue<Integer> targetEven = new PriorityQueue<>();
+        PriorityQueue<Integer> targetOdd = new PriorityQueue<>();
+
+        for (int num : nums)
+            if (num % 2 == 0) numsEven.add(num);
+            else numsOdd.add(num);
+        for (int t : target)
+            if (t % 2 == 0) targetEven.add(t);
+            else targetOdd.add(t);
+
+        long[] even = helper(numsEven, targetEven, 0L, 0L);
+        long[] odd = helper(numsOdd, targetOdd, even[1], even[2]);
+
+        return even[0] + odd[0];
+    }
+
+    private long[] helper(PriorityQueue<Integer> pqNums, PriorityQueue<Integer> pqTarget, long add, long sub) {
+        //greedy solution
+        long out = 0;
+
+        while (!pqNums.isEmpty()) {
+            //get the smallest numbers from nums and target and see if we can match them
+            int num = pqNums.poll();
+            int target = pqTarget.poll();
+
+            if (num < target) {
+                //calculate number of operations we need to use to make numbers similar and apply free adds we gained by previously using subs
+                long diff = (target - num) / 2 - add;
+
+                if (diff > 0) {
+                    //how many operations we need to use
+                    out += diff;
+                    //no free adds
+                    add = 0;
+                    //add free subs we can use later
+                    sub += diff;
+                } else {
+                    //still have some adds to use in the future (or 0)
+                    add = -diff;
+                }
+            } else {
+                long diff = (num - target) / 2 - sub;
+
+                if (diff > 0) {
+                    out += diff;
+                    sub = 0;
+                    add += diff;
+                }
+            }
+        }
+
+        return new long[]{out, add, sub};
+    }
+
 
     private int maxCount() {
         int room = -1;
@@ -158,6 +226,31 @@ public class PriorityQueueExamples {
             }
         }
         return room;
+    }
+
+    public int minGroups(int[][] intervals) {
+
+        Arrays.sort(intervals, (a, b) -> {
+            if (a[0] != b[0])
+                return a[0] - b[0];
+            return Math.min(a[1], b[1]);
+        });
+
+        PriorityQueue<TimeInterval> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a.end));
+
+        for (int[] interval : intervals) {
+
+            int start = interval[0];
+            int end = interval[1];
+            if (!pq.isEmpty() && pq.peek().end < start) {
+                TimeInterval ti = pq.poll();
+                pq.offer(new TimeInterval(ti.start, end));
+            } else {
+                pq.offer(new TimeInterval(start, end));
+            }
+        }
+
+        return pq.size();
     }
 
     class Node {
@@ -190,31 +283,6 @@ public class PriorityQueueExamples {
             this.start = start;
             this.end = end;
         }
-    }
-
-    public int minGroups(int[][] intervals) {
-
-        Arrays.sort(intervals, (a, b) -> {
-            if (a[0] != b[0])
-                return a[0] - b[0];
-            return Math.min(a[1], b[1]);
-        });
-
-        PriorityQueue<TimeInterval> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a.end));
-
-        for (int[] interval : intervals) {
-
-            int start = interval[0];
-            int end = interval[1];
-            if (!pq.isEmpty() && pq.peek().end < start) {
-                TimeInterval ti = pq.poll();
-                pq.offer(new TimeInterval(ti.start, end));
-            } else {
-                pq.offer(new TimeInterval(start, end));
-            }
-        }
-
-        return pq.size();
     }
 
 }
