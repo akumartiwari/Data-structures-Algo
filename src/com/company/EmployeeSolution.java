@@ -4438,8 +4438,6 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
-}
-
     public boolean isPossible(int[] nums) {
         int n = nums.length;
 
