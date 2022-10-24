@@ -4358,8 +4358,6 @@ Output: [1,2,2,3,5,6]
         Where N is the number of elements in array
     */
     public long minCost(int[] arr, int[] cost) {
-        int[] copyArray = arr;
-
         int n = arr.length;
         // Variable to contain minimum value of array
         int lowerLimit = Integer.MAX_VALUE;
@@ -4376,7 +4374,7 @@ Output: [1,2,2,3,5,6]
         int diff = upperLimit - lowerLimit;
         if (diff <= 2) {
             while (upperLimit >= lowerLimit) {
-                long cc = findCostWithTargetValue(copyArray, cost, n, upperLimit);
+                long cc = findCostWithTargetValue(arr, cost, n, upperLimit);
                 ans = Math.min(ans, cc);
                 upperLimit--;
             }
@@ -4399,10 +4397,10 @@ Output: [1,2,2,3,5,6]
             int mid2 = upperLimit - (upperLimit - lowerLimit) / 3;
 
             // Variable which contains cost with mid1 as target value
-            long cost1 = findCostWithTargetValue(copyArray, cost, n, mid1);
+            long cost1 = findCostWithTargetValue(arr, cost, n, mid1);
 
             // Variable which contains cost with mid2 as target value
-            long cost2 = findCostWithTargetValue(copyArray, cost, n, mid2);
+            long cost2 = findCostWithTargetValue(arr, cost, n, mid2);
 
             if (cost1 < cost2) {
                 upperLimit = mid2;
@@ -4427,6 +4425,47 @@ Output: [1,2,2,3,5,6]
         return tc;
     }
 
+
+    public int newInteger(int n) {
+        int ans = 0;
+        int base = 1;
+
+        while (n > 0) {
+            ans += n % 9 * base;
+            n /= 9;
+            base *= 10;
+        }
+        return ans;
+    }
+
+}
+
+    public boolean isPossible(int[] nums) {
+        int n = nums.length;
+
+        TreeMap<Integer, List<Integer>> tm = new TreeMap<>(); // {(lastElement, List with the sizes in sorted order)}
+
+        for (int num : nums) {
+            int key = num - 1;
+            if (tm.containsKey(key) && tm.get(key).size() > 0) {
+                List<Integer> sizes = tm.get(key);
+                Collections.sort(sizes);
+                int cnt = sizes.get(0);
+                sizes.remove(0);
+                tm.put(key, sizes);
+
+                if (!tm.containsKey(num)) tm.put(num, new ArrayList<>());
+                tm.get(num).add(cnt + 1);
+            } else {
+                if (!tm.containsKey(num)) tm.put(num, new ArrayList<>());
+                tm.get(num).add(1);
+            }
+        }
+        for (int v : tm.values().stream().flatMap(Collection::stream).collect(Collectors.toList())) {
+            if (v < 3) return false;
+        }
+        return true;
+    }
 }
 
 
