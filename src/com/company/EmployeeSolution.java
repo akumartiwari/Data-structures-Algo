@@ -4464,6 +4464,56 @@ Output: [1,2,2,3,5,6]
         }
         return true;
     }
+
+
+    //TODO: Complete this-one
+    class Solution {
+        public int maxA(int n) {
+            StringBuilder sb = new StringBuilder();
+            sb.append('A');
+            return helper(sb, "", 1, n);
+        }
+
+        private int helper(StringBuilder sb, String copied, int op, int n) {
+            // base case
+            if (op == n) return sb.length();
+            //last operation was not feasible
+
+            int min = Integer.MAX_VALUE;
+            int len = Integer.MIN_VALUE;
+            // try all possible ways
+
+            // paste operation is possible
+            if (!copied.isEmpty()) {
+                sb = sb.append(copied);
+                int cnt = helper(sb, copied, op + 1, n);
+                min = Math.min(min, op + 1);
+                len = Math.max(len, cnt);
+                //bactrack
+                sb = sb.delete(sb.length() - 1 - copied.length(), sb.length());
+            }
+
+            // ctrl+A -> ctrl+C -> ctrl+V
+            if (op + 3 <= n) {
+                String prev = sb.toString();
+                sb = sb.append(prev);
+
+                int cnt = helper(sb, sb.toString(), op + 3, n);
+                min = Math.min(min, op + 3);
+                len = Math.max(len, cnt);
+
+                //bactrack
+                sb = sb.delete(sb.length() - prev.length(), sb.length());
+            }
+
+            if (op + 1 <= n) {
+                int cnt = helper(sb.append('A'), copied, op + 1, n);
+                min = Math.min(min, op + 1);
+                len = Math.max(len, cnt);
+            }
+            return len;
+        }
+    }
 }
 
 

@@ -6,6 +6,8 @@ import java.util.stream.IntStream;
 
 //      Definition for a binary tree node.
 class TreeNode {
+    static final int MAX = 100;
+    static final int MAX_CHAR = 26;
     int val;
     TreeNode left;
     TreeNode right;
@@ -13,9 +15,11 @@ class TreeNode {
     TreeNode() {
     }
 
+
     TreeNode(int val) {
         this.val = val;
     }
+
 
     TreeNode(int val, TreeNode left, TreeNode right) {
         this.val = val;
@@ -23,12 +27,49 @@ class TreeNode {
         this.right = right;
     }
 
+    // Precompute the prefix and suffix array.
+    static void precompute(String s, int n, int[][] l,
+                           int[][] r) {
+        l[s.charAt(0) - 'a'][0] = 1;
+
+        // Precompute the prefix 2D array
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < MAX_CHAR; j++)
+                l[j][i] += l[j][i - 1];
+
+            l[s.charAt(i) - 'a'][i]++;
+        }
+
+        r[s.charAt(n - 1) - 'a'][n - 1] = 1;
+
+        // Precompute the Suffix 2D array.
+        for (int i = n - 2; i >= 0; i--) {
+            for (int j = 0; j < MAX_CHAR; j++)
+                r[j][i] += r[j][i + 1];
+
+            r[s.charAt(i) - 'a'][i]++;
+        }
+    }
+
+    // Find the number of palindromic subsequence of
+// length k
+    static int countPalindromes(int k, int n, int[][] l,
+                                int[][] r) {
+        int ans = 0;
+
+        // For k greater than 2. Adding all the products
+        // of value of prefix and suffix array.
+        for (int i = 1; i < n - 1; i++)
+            for (int j = 0; j < MAX_CHAR; j++)
+                ans += l[j][i - 1] * r[j][i + 1];
+
+        return ans;
+    }
 
     public List<TreeNode> generateTrees(int n) {
         List<TreeNode> ans = new ArrayList<>();
         return generateTree(1, n, ans);
     }
-
 
     private List<TreeNode> generateTree(int start, int end, List<TreeNode> ans) {
 
@@ -89,6 +130,34 @@ class TreeNode {
         }
         return list;
     }
+
+
+            /*
+            Input: nums1 = [4,1,2], nums2 = [1,3,4,2]
+Output: [-1,3,-1]
+E
+            */
+
+        /*
+        public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+            int n = nums1.length;
+            int[] ans = new int[n];
+            Arrays.fill(ans, -1);
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < nums2.length; j++) {
+                    if (nums2[j] == nums1[i]) {
+                        while (j < nums2.length && nums2[j] <= nums1[i]) {
+                            j++;
+                        }
+                        if (j != nums2.length) ans[i] = nums2[j];
+                        break;
+                    }
+                }
+            }
+            return ans;
+        }
+
+         */
 
     public int numTrees(int n) {
         int[][] dp = new int[n + 1][n + 1];
@@ -153,34 +222,6 @@ class TreeNode {
         return nextWarmerday;
     }
 
-
-            /*
-            Input: nums1 = [4,1,2], nums2 = [1,3,4,2]
-Output: [-1,3,-1]
-E
-            */
-
-        /*
-        public int[] nextGreaterElement(int[] nums1, int[] nums2) {
-            int n = nums1.length;
-            int[] ans = new int[n];
-            Arrays.fill(ans, -1);
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < nums2.length; j++) {
-                    if (nums2[j] == nums1[i]) {
-                        while (j < nums2.length && nums2[j] <= nums1[i]) {
-                            j++;
-                        }
-                        if (j != nums2.length) ans[i] = nums2[j];
-                        break;
-                    }
-                }
-            }
-            return ans;
-        }
-
-         */
-
     public int[] nextGreaterElement(int[] nums1, int[] nums2) {
         int n1 = nums1.length;
         int n2 = nums2.length;
@@ -221,7 +262,6 @@ E
         }
         return ans;
     }
-
 
     public int countTriples(int n) {
         if (n == 0 || n == 1) return 0;
@@ -276,55 +316,12 @@ E
         return false;
     }
 
-
-    static final int MAX = 100;
-    static final int MAX_CHAR = 26;
-
-    // Precompute the prefix and suffix array.
-    static void precompute(String s, int n, int l[][],
-                           int r[][]) {
-        l[s.charAt(0) - 'a'][0] = 1;
-
-        // Precompute the prefix 2D array
-        for (int i = 1; i < n; i++) {
-            for (int j = 0; j < MAX_CHAR; j++)
-                l[j][i] += l[j][i - 1];
-
-            l[s.charAt(i) - 'a'][i]++;
-        }
-
-        r[s.charAt(n - 1) - 'a'][n - 1] = 1;
-
-        // Precompute the Suffix 2D array.
-        for (int i = n - 2; i >= 0; i--) {
-            for (int j = 0; j < MAX_CHAR; j++)
-                r[j][i] += r[j][i + 1];
-
-            r[s.charAt(i) - 'a'][i]++;
-        }
-    }
-
-    // Find the number of palindromic subsequence of
-// length k
-    static int countPalindromes(int k, int n, int l[][],
-                                int r[][]) {
-        int ans = 0;
-
-        // For k greater than 2. Adding all the products
-        // of value of prefix and suffix array.
-        for (int i = 1; i < n - 1; i++)
-            for (int j = 0; j < MAX_CHAR; j++)
-                ans += l[j][i - 1] * r[j][i + 1];
-
-        return ans;
-    }
-
     // Driver code
     public int countPalindromicSubsequence(String s) {
         int k = 3;
         int n = s.length();
-        int l[][] = new int[MAX_CHAR][MAX];
-        int r[][] = new int[MAX_CHAR][MAX];
+        int[][] l = new int[MAX_CHAR][MAX];
+        int[][] r = new int[MAX_CHAR][MAX];
         precompute(s, n, l, r);
         return countPalindromes(k, n, l, r);
     }
@@ -534,57 +531,27 @@ E
     }
 
     public List<TreeNode> findDuplicateSubtrees(TreeNode root) {
-
-        /*
-        List<TreeNode> ans = new ArrayList<>();
-        if (root == null) return ans;
-        duplicate(root, ans);
-        return ans;
-    }
-
-    private void duplicate(TreeNode root, List<TreeNode> ans) {
-
-        if (root == null) return;
-        List<TreeNode> left = findDuplicateSubtrees(root.left);
-        List<TreeNode> right = findDuplicateSubtrees(root.right);
-
-
-        // check if both halfs are equal
-        int index = 0;
-        for (TreeNode node : right) {
-            if (node != left.get(index)) break;
-            index++;
-        }
-        if (left.size() == right.size() && (index == left.size() - 1)) ans.addAll(left);
-        return;
-    }
-
-       */
-
         List<TreeNode> ans = new ArrayList<>();
         getAllSubTrees(root, new HashMap<>(), ans);
         return ans;
-
     }
 
     private String getAllSubTrees(TreeNode root, HashMap<String, Integer> map, List<TreeNode> ans) {
 
         if (root == null) return " ";
         //inorder recursion call stack
-        // check if tree is non empty then add to ans
+        // check if tree is non-empty then add to ans
 
         String curr = "^" + getAllSubTrees(root.left, map, ans) + root.val + getAllSubTrees(root.right, map, ans);
         int val = map.getOrDefault(curr, 0);
         // if curr value already exists in map  ie. duplicate
-        // check if tree is non empty then add to ans
+        // check if tree is non-empty then add to ans
         if (val == 1) ans.add(root);
         map.put(curr, val + 1);
         return curr;
-
     }
 
-// Write a function to return a prime or not
-
+    // Write a function to return a prime or not
     // 4 , 7, 11
     public boolean isPrime(int n) {
         for (int i = 3; i < Math.sqrt(n); i += 2) {
@@ -592,13 +559,6 @@ E
         }
         return true;
     }
-
-    /*
-
-       number = 7
-       counter = 4
-
-     */
 
     public int nthPrimeNumber(int n) {
         int counter = 0;
@@ -613,6 +573,12 @@ E
         return number;
     }
 
+    /*
+
+       number = 7
+       counter = 4
+
+     */
 
     /*
     // Algo :-
@@ -662,7 +628,6 @@ Dry-run :-
         return ret;
     }
 
-
     /*
     Input: nums = [7,2,5,10,8], m = 2
 Output: 18
@@ -699,7 +664,6 @@ Output: 18
         return min;
     }
 
-
     public int maxProfit(int[] prices) {
         int n = prices.length;
         int[] dp = new int[n];
@@ -713,7 +677,6 @@ Output: 18
         }
         return dp[n - 1];
     }
-
 
     public ListNode reverseBetween(ListNode head, int left, int right) {
 
@@ -754,5 +717,17 @@ Output: 18
         }
         tail.next = curr;
         return head;
+    }
+
+    class Solution {
+        public List<List<String>> deleteDuplicateFolder(List<List<String>> paths) {
+            List<List<String>> ans = new ArrayList<>();
+            TreeNode root = new TreeNode();
+
+            for (List<String> nodes : paths) {
+                root.left = new TreeNode();
+            }
+            return ans;
+        }
     }
 }
