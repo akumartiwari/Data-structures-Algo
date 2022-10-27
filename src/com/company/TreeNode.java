@@ -718,16 +718,4 @@ Output: 18
         tail.next = curr;
         return head;
     }
-
-    class Solution {
-        public List<List<String>> deleteDuplicateFolder(List<List<String>> paths) {
-            List<List<String>> ans = new ArrayList<>();
-            TreeNode root = new TreeNode();
-
-            for (List<String> nodes : paths) {
-                root.left = new TreeNode();
-            }
-            return ans;
-        }
-    }
 }
