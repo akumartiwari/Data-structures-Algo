@@ -4465,6 +4465,7 @@ Output: [1,2,2,3,5,6]
         return true;
     }
 
+    // More optimised solution exist in DP.java file
     public int maxA(int n) {
         StringBuilder sb = new StringBuilder();
         sb.append('A');
