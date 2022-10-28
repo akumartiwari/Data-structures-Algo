@@ -4464,6 +4464,63 @@ Output: [1,2,2,3,5,6]
         }
         return true;
     }
+
+    // More optimised solution exist in DP.java file
+    public int maxA(int n) {
+        StringBuilder sb = new StringBuilder();
+        sb.append('A');
+
+        Map<String, Integer> dp = new HashMap<>();
+        return helper(sb, "", 1, n, dp);
+    }
+
+    private int helper(StringBuilder sb, String copied, int op, int n, Map<String, Integer> dp) {
+        // base case
+        if (op == n) return sb.length();
+
+        String key = sb.toString() + "-" + copied + "-" + op;
+        if (dp.containsKey(key)) return dp.get(key);
+        //last operation was not feasible
+        int len = Integer.MIN_VALUE;
+        // try all possible ways
+
+        // paste operation is possible
+        if (!copied.isEmpty()) {
+
+            // System.out.println("copied=" + copied);
+            sb.append(copied);
+            len = Math.max(len, helper(sb, copied, op + 1, n, dp));
+            //backtrack
+            sb.delete(Math.max(sb.length() - copied.length(), 0), sb.length());
+            // System.out.println("bactrack=" + sb);
+        }
+
+        // ctrl+A -> ctrl+C -> ctrl+V
+        if (op + 3 <= n && sb.length() >= 3) {
+            String prev = sb.toString();
+            sb.append(prev);
+
+            // System.out.println("copied=" + prev);
+            int cnt = helper(sb, prev, op + 3, n, dp);
+            len = Math.max(len, cnt);
+
+            //bactrack
+            sb.delete(Math.max(sb.length() - prev.length(), 0), sb.length());
+            // System.out.println("bactrack=" + sb);
+        }
+
+        if (op + 1 <= n) {
+            sb.append("A");
+            // System.out.println("copied=" + copied);
+            int cnt = helper(sb, copied, op + 1, n, dp);
+            len = Math.max(len, cnt);
+            sb.delete(Math.max(sb.length() - 1, 0), sb.length());
+            // System.out.println("bactrack=" + sb.substring(sb.length() - 1, sb.length()));
+        }
+
+        dp.put(key, len);
+        return len;
+    }
 }
 
 
