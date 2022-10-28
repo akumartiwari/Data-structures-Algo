@@ -27,45 +27,6 @@ class TreeNode {
         this.right = right;
     }
 
-    // Precompute the prefix and suffix array.
-    static void precompute(String s, int n, int[][] l,
-                           int[][] r) {
-        l[s.charAt(0) - 'a'][0] = 1;
-
-        // Precompute the prefix 2D array
-        for (int i = 1; i < n; i++) {
-            for (int j = 0; j < MAX_CHAR; j++)
-                l[j][i] += l[j][i - 1];
-
-            l[s.charAt(i) - 'a'][i]++;
-        }
-
-        r[s.charAt(n - 1) - 'a'][n - 1] = 1;
-
-        // Precompute the Suffix 2D array.
-        for (int i = n - 2; i >= 0; i--) {
-            for (int j = 0; j < MAX_CHAR; j++)
-                r[j][i] += r[j][i + 1];
-
-            r[s.charAt(i) - 'a'][i]++;
-        }
-    }
-
-    // Find the number of palindromic subsequence of
-// length k
-    static int countPalindromes(int k, int n, int[][] l,
-                                int[][] r) {
-        int ans = 0;
-
-        // For k greater than 2. Adding all the products
-        // of value of prefix and suffix array.
-        for (int i = 1; i < n - 1; i++)
-            for (int j = 0; j < MAX_CHAR; j++)
-                ans += l[j][i - 1] * r[j][i + 1];
-
-        return ans;
-    }
-
     public List<TreeNode> generateTrees(int n) {
         List<TreeNode> ans = new ArrayList<>();
         return generateTree(1, n, ans);
@@ -130,34 +91,6 @@ class TreeNode {
         }
         return list;
     }
-
-
-            /*
-            Input: nums1 = [4,1,2], nums2 = [1,3,4,2]
-Output: [-1,3,-1]
-E
-            */
-
-        /*
-        public int[] nextGreaterElement(int[] nums1, int[] nums2) {
-            int n = nums1.length;
-            int[] ans = new int[n];
-            Arrays.fill(ans, -1);
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < nums2.length; j++) {
-                    if (nums2[j] == nums1[i]) {
-                        while (j < nums2.length && nums2[j] <= nums1[i]) {
-                            j++;
-                        }
-                        if (j != nums2.length) ans[i] = nums2[j];
-                        break;
-                    }
-                }
-            }
-            return ans;
-        }
-
-         */
 
     public int numTrees(int n) {
         int[][] dp = new int[n + 1][n + 1];
@@ -314,16 +247,6 @@ E
             }
         }
         return false;
-    }
-
-    // Driver code
-    public int countPalindromicSubsequence(String s) {
-        int k = 3;
-        int n = s.length();
-        int[][] l = new int[MAX_CHAR][MAX];
-        int[][] r = new int[MAX_CHAR][MAX];
-        precompute(s, n, l, r);
-        return countPalindromes(k, n, l, r);
     }
 
     public TreeNode canMerge(List<TreeNode> trees) {
@@ -573,12 +496,6 @@ E
         return number;
     }
 
-    /*
-
-       number = 7
-       counter = 4
-
-     */
 
     /*
     // Algo :-
@@ -589,17 +506,17 @@ E
      * return min
 
 
-Input: nums = [7,2,5,10,8], m = 2
-Output: 18
+    Input: nums = [7,2,5,10,8], m = 2
+    Output: 18
 
 
-First half till ith position and remaining half can be found from left elements of array
+    First half till ith position and remaining half can be found from left elements of array
 
-Dry-run :-
+    Dry-run :-
 
 
-[1,4,4]
-3
+    [1,4,4]
+    3
      */
     public int splitArrayOpt(int[] nums, int m) {
         int low = IntStream.of(nums).max().orElse(0);
@@ -630,7 +547,7 @@ Dry-run :-
 
     /*
     Input: nums = [7,2,5,10,8], m = 2
-Output: 18
+    Output: 18
      */
     public int splitArray(int[] nums, int m) {
         int n = nums.length;
