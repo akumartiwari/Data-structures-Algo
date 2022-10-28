@@ -6,8 +6,6 @@ import java.util.stream.IntStream;
 
 //      Definition for a binary tree node.
 class TreeNode {
-    static final int MAX = 100;
-    static final int MAX_CHAR = 26;
     int val;
     TreeNode left;
     TreeNode right;

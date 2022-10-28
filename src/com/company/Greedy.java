@@ -93,19 +93,6 @@ public class Greedy {
         return btime;
     }
 
-   /*
-    Input: target = 19, maxDoubles = 2
-    Output: 7
-    Explanation: Initially, x = 1
-    Increment 3 times so x = 4
-    Double once so x = 8
-    Increment once so x = 9
-    Double again so x = 18
-    Increment once so x = 19
-
-    Greedy Approach
-     */
-
     // Author: Anand
     // TC= O(n)
     public String[] divideString(String s, int k, char fill) {
@@ -130,6 +117,19 @@ public class Greedy {
 
     // TC = O(logn)
     // Author: Anand
+       /*
+    Input: target = 19, maxDoubles = 2
+    Output: 7
+    Explanation: Initially, x = 1
+    Increment 3 times so x = 4
+    Double once so x = 8
+    Increment once so x = 9
+    Double again so x = 18
+    Increment once so x = 19
+
+    Greedy Approach
+     */
+
     public int minMoves(int target, int maxDoubles) {
         if (maxDoubles == 0) return target - 1;
         int ans = 0;
@@ -448,7 +448,6 @@ public class Greedy {
 
         return "";
     }
-
 
 
 }
