@@ -1094,41 +1094,65 @@ public class DP {
         return temp >= 1000_000_00 ? -1 : temp;
     }
 
-    class Solution {
-        public int componentValue(int[] nums, int[][] edges) {
+    public int componentValue(int[] nums, int[][] edges) {
 
-            Map<Integer, List<Integer>> graph = new HashMap<>();
+        Map<Integer, List<Integer>> graph = new HashMap<>();
 
-            for (int[] edge : edges) {
-                if (!graph.containsKey(edge[0])) graph.put(edge[0], new ArrayList<>());
-                if (!graph.containsKey(edge[1])) graph.put(edge[1], new ArrayList<>());
-                graph.get(edge[0]).add(edge[1]);
-                graph.get(edge[1]).add(edge[0]);
-            }
-            int max = -1;
-            for (int i = 0; i < nums.length; i++) {
-                max = Math.max(max, helper(i, nums, graph, 0, 0));
-            }
-
-            return max;
+        for (int[] edge : edges) {
+            if (!graph.containsKey(edge[0])) graph.put(edge[0], new ArrayList<>());
+            if (!graph.containsKey(edge[1])) graph.put(edge[1], new ArrayList<>());
+            graph.get(edge[0]).add(edge[1]);
+            graph.get(edge[1]).add(edge[0]);
+        }
+        int max = -1;
+        for (int i = 0; i < nums.length; i++) {
+            max = Math.max(max, helper(i, nums, graph, 0, 0));
         }
 
+        return max;
+    }
 
-        private int helper(int start, int[] nums, Map<Integer, List<Integer>> graph, int currentSum, int expectedSum) {
-            // base case
-            if (currentSum == expectedSum) return 1;
-            if (start >= nums.length) return 0;
+    private int helper(int start, int[] nums, Map<Integer, List<Integer>> graph, int currentSum, int expectedSum) {
+        // base case
+        if (currentSum == expectedSum) return 1;
+        if (start >= nums.length) return 0;
 
-            int sum = nums[start];
-            int cw = 0, ncw = 0;
-            for (int node : graph.get(start)) {
-                // make a cut
-                cw += 1 + helper(node, nums, graph, 0, nums[start]);
-                // Don't make a cut
-                ncw += helper(node, nums, graph, sum + nums[node], expectedSum);
-            }
-
-            return Math.max(cw, ncw);
+        int sum = nums[start];
+        int cw = 0, ncw = 0;
+        for (int node : graph.get(start)) {
+            // make a cut
+            cw += 1 + helper(node, nums, graph, 0, nums[start]);
+            // Don't make a cut
+            ncw += helper(node, nums, graph, sum + nums[node], expectedSum);
         }
+
+        return Math.max(cw, ncw);
+    }
+
+
+    /*
+   Input: n = 7
+   Output: 9
+   Explanation: We can at most get 9 A's on screen by pressing following key sequence:
+   A, A, A, Ctrl A, Ctrl C, Ctrl V, Ctrl V
+ */
+    public int maxA(int n) {
+        int[] dp = new int[n + 1];
+        Arrays.fill(dp, -1);
+        return rec(n, dp);
+    }
+
+    private int rec(int n, int[] dp) {
+        // base case
+        if (n < 3) return Math.max(0, n);
+
+        if (dp[n] != -1) return dp[n];
+        int max = 0;
+        max = Math.max(max, 1 + rec(n - 1, dp)); // 'A'
+        max = Math.max(max, 2 * rec(n - 3, dp)); // ctrl+a -> ctrl+c -> ctrl+v
+        max = Math.max(max, 3 * rec(n - 4, dp)); // ctrl+a -> ctrl+c -> ctrl+v -> ctrl+v
+        max = Math.max(max, 4 * rec(n - 5, dp)); // ctrl+a -> ctrl+c -> ctrl+v -> ctrl+v -> ctrl+v
+
+        return dp[n] = max;
     }
 }
