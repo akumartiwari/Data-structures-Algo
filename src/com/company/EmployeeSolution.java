@@ -4521,6 +4521,70 @@ Output: [1,2,2,3,5,6]
         dp.put(key, len);
         return len;
     }
+
+
+    public String oddString(String[] words) {
+
+        Map<List<Integer>, List<String>> diffM = new HashMap<>();
+        for (String word : words) {
+            List<Integer> sb = new ArrayList<>();
+            char prev = '#';
+            for (char c : word.toCharArray()) {
+                if (prev != '#') sb.add((int) c - prev);
+                prev = c;
+            }
+
+            if (!diffM.containsKey(sb)) diffM.put(sb, new ArrayList<>());
+            diffM.get(sb).add(word);
+        }
+
+        for (Map.Entry<List<Integer>, List<String>> entry : diffM.entrySet()) {
+            if (entry.getValue().size() == 1) return entry.getValue().get(0);
+        }
+        return "";
+    }
+
+    public List<String> twoEditWords(String[] queries, String[] dictionary) {
+        List<String> ans = new ArrayList<>();
+        for (String query : queries) {
+
+            for (String word : dictionary) {
+                int cnt = 0;
+                for (int i = 0; i < word.length(); i++) {
+                    if (word.charAt(i) != query.charAt(i)) cnt++;
+                    if (cnt > 2) break;
+                }
+                if (cnt <= 2) {
+                    ans.add(query);
+                    break;
+                }
+            }
+        }
+
+        return ans;
+    }
+
+    // To be optimised
+    public int destroyTargets(int[] nums, int space) {
+
+        Set<Integer> choices = new TreeSet<>();
+        for (int num : nums) choices.add(num);
+        System.out.println(choices);
+        int ans = -1;
+        int maxCnt = 0;
+        for (int choice : choices) {
+            int cnt = 0;
+            for (int num : nums) {
+                if (Math.abs(choice - num) % space == 0) cnt++;
+            }
+
+            if (cnt > maxCnt) {
+                maxCnt = cnt;
+                ans = choice;
+            }
+        }
+        return ans;
+    }
 }
 
 
