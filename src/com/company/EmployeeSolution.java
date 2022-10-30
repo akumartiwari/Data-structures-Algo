@@ -1,5 +1,6 @@
 package com.company;
 
+import CF_Templates.topcoder;
 import javafx.util.Pair;
 
 import java.awt.*;
@@ -4585,7 +4586,98 @@ Output: [1,2,2,3,5,6]
         }
         return ans;
     }
+
+
+    public int averageValue(int[] nums) {
+        List<Integer> list = new ArrayList<>();
+        for (int num : nums) if (num % 2 == 0 && num % 3 == 0) list.add(num);
+        return list.size() > 0 ? Math.abs(list.stream().mapToInt(x -> x).sum() / list.size()) : 0;
+    }
+
+    public List<List<String>> mostPopularCreator(String[] creators, String[] ids, int[] views) {
+        List<List<String>> ans = new ArrayList<>();
+
+        Map<String, List<Pair<String, Integer>>> map = new HashMap<>();
+
+        for (int i = 0; i < creators.length; i++) {
+            if (!map.containsKey(creators[i])) map.put(creators[i], new ArrayList<>());
+            map.get(creators[i]).add(new Pair<>(ids[i], views[i]));
+        }
+
+
+        PriorityQueue<Pair<String, Long>> pq = new PriorityQueue<>(Collections.reverseOrder(Comparator.comparingInt(a -> Math.toIntExact(a.getValue()))));
+
+        for (Map.Entry<String, List<Pair<String, Integer>>> entry : map.entrySet()) {
+            long v = entry.getValue().stream().mapToInt(Pair::getValue).sum();
+            pq.add(new Pair<>(entry.getKey(), v));
+        }
+        Set<String> pc = new HashSet<>();
+        long hv = Long.MIN_VALUE;
+
+        while (!pq.isEmpty()) {
+            Pair<String, Long> entry = pq.poll();
+            if (entry.getValue() >= hv) {
+                pc.add(entry.getKey());
+                hv = entry.getValue();
+            } else break;
+        }
+
+        for (String creator : pc) {
+
+            List<Pair<String, Integer>> value = map.get(creator);
+            Collections.sort(value, (o1, o2) -> {
+                if (o1.getValue() < o2.getValue()) return 1;
+                if (o2.getValue() < o1.getValue()) return -1;
+                return o1.getKey().compareTo(o2.getKey());
+            });
+
+            ans.add(new ArrayList<>(Arrays.asList(creator, value.get(0).getKey())));
+
+        }
+
+        return ans;
+    }
+
+
+    public long makeIntegerBeautiful(long n, int target) {
+
+        StringBuilder ans = new StringBuilder();
+        int ds = sod(n);
+        String ns = String.valueOf(n);
+        int carry = 0;
+        if (ds > target) {
+            for (int i = ns.length() - 1; i >= 0; i--) {
+                int d = Integer.parseInt(String.valueOf(ns.charAt(i)));
+                int complement = 10 - d - carry;
+                // skip that digit in this case
+                if (complement == 10) {
+                    ans.insert(0, 0);
+                    continue;
+                }
+                ans.insert(0, complement);
+                carry = 1;
+                ds = ds - d;
+                // take carry as well for sum of digits carried from last
+                if (ds + carry <= target) break;
+            }
+            return Long.parseLong(ans.toString());
+        }
+        return 0L;
+    }
+
+    private int sod(long n) {
+        int s = 0;
+        while (n > 0) {
+            s += n % 10;
+            n /= 10;
+        }
+
+        return s;
+    }
+
+
 }
+
 
 
 /*
