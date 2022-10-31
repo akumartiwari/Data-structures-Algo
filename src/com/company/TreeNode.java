@@ -13,11 +13,9 @@ class TreeNode {
     TreeNode() {
     }
 
-
     TreeNode(int val) {
         this.val = val;
     }
-
 
     TreeNode(int val, TreeNode left, TreeNode right) {
         this.val = val;
@@ -378,7 +376,6 @@ class TreeNode {
         return index;
     }
 
-
     /**
      * Definition for a binary tree node.
      * public class TreeNode {
@@ -443,29 +440,6 @@ class TreeNode {
         return curr;
     }
 
-    // Write a function to return a prime or not
-    // 4 , 7, 11
-    public boolean isPrime(int n) {
-        for (int i = 3; i < Math.sqrt(n); i += 2) {
-            if (n % i == 0) return false;
-        }
-        return true;
-    }
-
-    public int nthPrimeNumber(int n) {
-        int counter = 0;
-        int number = 2;
-        while (true) {
-            if (isPrime(number)) {
-                counter++;
-            }
-            number++;
-            if (counter == n) break;
-        }
-        return number;
-    }
-
-
     /*
     // Algo :-
      * Iterate through all array elements
@@ -513,6 +487,31 @@ class TreeNode {
         }
         return ret;
     }
+
+
+
+    /*
+
+    Problem statement :-
+    ## Tree is given you need to tell the height of modified tree
+      (after deletion iof subTree node for each query)
+
+    ALGO-
+    First of All you need to find the level, and height of each node of a tree and store them in a map
+    Then store the 2 maximum node of each level
+
+    Now start traversing in the queries array, suppose
+    the node you wants to remove is not having the maximum height in its level,
+    then the removal of that node, doesn't impact in height of tree,
+
+    the node you wants to remove is having the maximum height in its level,
+    then the removal of that node, impact in height of tree,
+    it decreases the height by
+    (height of that node - 2nd maximum height of that level)
+
+    so in that case queries[i]=heightOf(queries[i])-2nd maximum height of that level;
+
+     */
 
     /*
     Input: nums = [7,2,5,10,8], m = 2

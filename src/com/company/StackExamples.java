@@ -78,6 +78,71 @@ public class StackExamples {
         return ans;
     }
 
+
+    // TC = O(N), SC = O(N)
+    // FAB PROBLEM
+    public int[] nextGreaterElementsOptimised(int[] nums) {
+        int n = nums.length;
+        int[] ans = new int[n];
+        Stack<Integer> stk = new Stack<>(); // to store next greater elements in stack
+        for (int i = 2 * n - 1; i >= 0; i--) {
+            while (!stk.isEmpty() && nums[i % n] >= nums[stk.peek()]) stk.pop();
+
+            ans[i % n] = stk.isEmpty() ? -1 : nums[stk.peek()];
+            stk.push(i % n);
+        }
+        return ans;
+    }
+
+
+    /*
+    Input: nums = [2,4,0,9,6]
+    Output: [9,6,6,-1,-1]
+    Explanation:
+    0th index: 4 is the first integer greater than 2, and 9 is the second integer greater than 2, to the right of 2.
+    1st index: 9 is the first, and 6 is the second integer greater than 4, to the right of 4.
+    2nd index: 9 is the first, and 6 is the second integer greater than 0, to the right of 0.
+    3rd index: There is no integer greater than 9 to its right, so the second greater integer is considered to be -1.
+    4th index: There is no integer greater than 6 to its right, so the second greater integer is considered to be -1.
+    Thus, we return [9,6,6,-1,-1].
+     */
+    public int[] secondGreaterElement(int[] nums) {
+
+        Map<Integer, Integer> map = new HashMap<>(); // ind , NG ind
+        Stack<Integer> stk = new Stack<>();
+
+        for (int i = nums.length - 1; i >= 0; i--) {
+            while (!stk.isEmpty() && nums[stk.peek()] <= nums[i]) stk.pop();
+
+            if (!stk.isEmpty()) map.put(i, stk.peek());
+            else map.put(i, -1);
+
+            stk.push(i);
+        }
+
+        int[] ans = new int[nums.length];
+        Arrays.fill(ans, -1);
+
+        for (int i = 0; i < nums.length - 2; i++) {
+            if (map.get(i) == -1) continue;
+
+            int fgi = map.get(i);
+
+            int sgi = fgi + 1;
+
+            // For eg. if nums[sgi] is <= current element then all the remaining smaller (smaller than sgi) elements will be smaller than current.
+            // Hence, we can directly jump to next greater of sgi ie, map.get(sgi)
+
+            while (sgi != -1 && sgi < nums.length && nums[sgi] <= nums[i]) sgi = map.get(sgi);
+
+            if (sgi >= nums.length || sgi == -1) ans[i] = -1;
+            else ans[i] = nums[sgi];
+
+        }
+        return ans;
+    }
+
+
     /*
     Input: s = "zza"
     Output: "azz"
