@@ -363,35 +363,6 @@ class TreeNode {
         return (int) (Math.pow(Math.pow(m, n), 3) % 1000000007);
     }
 
-    public TreeNode constructMaximumBinaryTree(int[] nums) {
-        int n = nums.length;
-        if (n == 0) return null;
-        TreeNode root = new TreeNode();
-        form(root, 0, n - 1, nums);
-        return root;
-    }
-
-    private void form(TreeNode root, int start, int end, int[] nums) {
-        // base cases
-        if (start > end) return;
-
-        int rootIndex = maxIndex(start, end, nums);
-        root.val = nums[rootIndex];
-
-        if (rootIndex > start) {
-            root.left = new TreeNode();
-            // call recursilvely for left half
-            form(root.left, start, rootIndex - 1, nums);
-        }
-        if (rootIndex < end) {
-            root.right = new TreeNode();
-
-            // call recursilvely for right half
-            form(root.right, rootIndex + 1, end, nums);
-        }
-
-    }
-
     private int maxIndex(int start, int end, int[] nums) {
         int index = Integer.MIN_VALUE;
         int max = Integer.MIN_VALUE;
@@ -632,4 +603,42 @@ class TreeNode {
         tail.next = curr;
         return head;
     }
+
+    public boolean findTarget(TreeNode root, int k) {
+        return getAllNodes(root, new HashSet<>(), k);
+    }
+
+    private Boolean getAllNodes(TreeNode root, Set<Integer> set, int k) {
+        if (root == null) return false;
+        if (set.contains(k - root.val)) return true;
+        set.add(root.val);
+        boolean left = getAllNodes(root.left, set, k);
+        boolean right = getAllNodes(root.right, set, k);
+        return left || right;
+    }
+
+    //Author: Anand
+    public TreeNode constructMaximumBinaryTree(int[] nums) {
+        return cmt(0, nums.length - 1, nums);
+    }
+
+    private TreeNode cmt(int start, int end, int[] nums) {
+        if (start > end) return null;
+        if (start == end) return new TreeNode(nums[start]);
+        int max = Integer.MIN_VALUE;
+        int ind = -1;
+        for (int i = start; i <= end; i++) {
+            if (nums[i] > max) {
+                max = Math.max(max, nums[i]);
+                ind = i;
+            }
+        }
+
+        TreeNode root = new TreeNode(max);
+        root.left = cmt(start, ind - 1, nums);
+        root.right = cmt(ind + 1, end, nums);
+        return root;
+    }
+
+
 }
