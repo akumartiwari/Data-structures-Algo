@@ -4554,29 +4554,6 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
-    // To be optimised
-    public int destroyTargets(int[] nums, int space) {
-
-        Set<Integer> choices = new TreeSet<>();
-        for (int num : nums) choices.add(num);
-        System.out.println(choices);
-        int ans = -1;
-        int maxCnt = 0;
-        for (int choice : choices) {
-            int cnt = 0;
-            for (int num : nums) {
-                if (Math.abs(choice - num) % space == 0) cnt++;
-            }
-
-            if (cnt > maxCnt) {
-                maxCnt = cnt;
-                ans = choice;
-            }
-        }
-        return ans;
-    }
-
-
     public int averageValue(int[] nums) {
         List<Integer> list = new ArrayList<>();
         for (int num : nums) if (num % 2 == 0 && num % 3 == 0) list.add(num);
@@ -4627,7 +4604,6 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
-
     public long makeIntegerBeautiful(long n, int target) {
 
         StringBuilder ans = new StringBuilder();
@@ -4663,8 +4639,6 @@ Output: [1,2,2,3,5,6]
 
         return s;
     }
-
-
 
 }
 
