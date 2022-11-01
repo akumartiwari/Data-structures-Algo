@@ -135,8 +135,7 @@ public class StackExamples {
 
             while (sgi != -1 && sgi < nums.length && nums[sgi] <= nums[i]) sgi = map.get(sgi);
 
-            if (sgi >= nums.length || sgi == -1) ans[i] = -1;
-            else ans[i] = nums[sgi];
+            if (sgi < nums.length && sgi != -1) ans[i] = nums[sgi];
 
         }
         return ans;
