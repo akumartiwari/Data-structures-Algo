@@ -4641,6 +4641,74 @@ Output: [1,2,2,3,5,6]
     }
 
 
+    public int[][] imageSmoother(int[][] img) {
+
+        int m = img.length, n = img[0].length;
+        final int[][] dirs = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}, {-1, -1}, {1, 1}, {-1, 1}, {1, -1}};
+        int[][] ans = new int[m][n];
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+
+                int sum = img[i][j], cnt = 1;
+                for (int[] dir : dirs) {
+                    int x = i + dir[0];
+                    int y = j + dir[1];
+                    if (isSafe(x, y, img)) {
+                        sum += img[x][y];
+                        cnt++;
+                    }
+                }
+
+                int avg = Math.abs(sum / cnt);
+                ans[i][j] = avg;
+            }
+        }
+
+        return ans;
+    }
+
+    private boolean isSafe(int x, int y, int[][] img) {
+        return x >= 0 && y >= 0 && x < img.length && y < img[0].length;
+    }
+
+
+    // TBD
+    class Solution {
+        // level order traversal and cnt  no  of nodes on each level  and maximise them
+        public int widthOfBinaryTree(TreeNode root) {
+            int h = height(root);
+
+            int[] arr = new int[h];
+            wdOfBT(root, arr, 0);
+            return getMax(arr);
+        }
+
+        private int getMax(int[] arr) {
+            int max = Integer.MIN_VALUE;
+            for (int a : arr) max = Math.max(max, a);
+            return max;
+        }
+
+
+        private void wdOfBT(TreeNode root, int[] arr, int level) {
+            if (root != null) {
+                arr[level]++;
+                wdOfBT(root.left, arr, level + 1);
+                wdOfBT(root.right, arr, level + 1);
+            }
+
+        }
+
+        private int height(TreeNode root) {
+            // base case
+            if (root == null) return 0;
+            int left = 1 + height(root.left);
+            int right = 1 + height(root.right);
+            return Math.max(left, right);
+        }
+    }
+
 }
 
 
