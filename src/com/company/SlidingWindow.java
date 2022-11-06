@@ -3,18 +3,6 @@ package com.company;
 import java.util.*;
 
 public class SlidingWindow {
-    /*
-    Input: tiles = [[1,5],[10,11],[12,18],[20,25],[30,32]], carpetLen = 10
-    Output: 9
-    Explanation: Place the carpet starting on tile 10.
-    It covers 9 white tiles, so we return 9.
-    Note that there may be other places where the carpet covers 9 white tiles.
-    It can be shown that the carpet cannot cover more than 9 white tiles.
-     */
-    // Author: Anand
-    int end = 1;
-    int start = 0;
-
     // Sliding window
     // TC = O(26N)
     //Author: Anand
@@ -40,6 +28,18 @@ public class SlidingWindow {
 
         return total;
     }
+
+    /*
+    Input: tiles = [[1,5],[10,11],[12,18],[20,25],[30,32]], carpetLen = 10
+    Output: 9
+    Explanation: Place the carpet starting on tile 10.
+    It covers 9 white tiles, so we return 9.
+    Note that there may be other places where the carpet covers 9 white tiles.
+    It can be shown that the carpet cannot cover more than 9 white tiles.
+     */
+    // Author: Anand
+    int end = 1;
+    int start = 0;
 
     int maximumWhiteTiles(int[][] tiles, int len) {
 
