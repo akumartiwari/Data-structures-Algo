@@ -4641,6 +4641,46 @@ Output: [1,2,2,3,5,6]
     }
 
 
+    class Solution {
+        public int[] applyOperations(int[] nums) {
+            for (int i = 0; i < nums.length - 1; i++) {
+                if (nums[i] == nums[i + 1]) {
+                    nums[i] *= 2;
+                    nums[i + 1] = 0;
+                }
+            }
+
+            List<Integer> m = new ArrayList<>();
+
+            m.addAll(Arrays.stream(nums).boxed().collect(Collectors.toList()));
+            move_zeros_to_right(m);
+
+            return m.stream().mapToInt(x -> x).toArray();
+        }
+
+
+        // function to shift zeros
+        private void move_zeros_to_right(List<Integer> m) {
+            int count = 0;
+            for (int i = 0; i < m.size(); i++) {
+                if (m.get(i) == 0) {
+                    count++;
+
+                    // deleting the element from vector
+                    m.remove(i);
+                    i--;
+                }
+            }
+
+            for (int i = 0; i < count; i++) {
+
+                // inserting the zero into arraylist
+                m.add(0);
+            }
+        }
+    }
+
+
 }
 
 

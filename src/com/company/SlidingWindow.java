@@ -3,6 +3,18 @@ package com.company;
 import java.util.*;
 
 public class SlidingWindow {
+    /*
+    Input: tiles = [[1,5],[10,11],[12,18],[20,25],[30,32]], carpetLen = 10
+    Output: 9
+    Explanation: Place the carpet starting on tile 10.
+    It covers 9 white tiles, so we return 9.
+    Note that there may be other places where the carpet covers 9 white tiles.
+    It can be shown that the carpet cannot cover more than 9 white tiles.
+     */
+    // Author: Anand
+    int end = 1;
+    int start = 0;
+
     // Sliding window
     // TC = O(26N)
     //Author: Anand
@@ -28,18 +40,6 @@ public class SlidingWindow {
 
         return total;
     }
-
-    /*
-    Input: tiles = [[1,5],[10,11],[12,18],[20,25],[30,32]], carpetLen = 10
-    Output: 9
-    Explanation: Place the carpet starting on tile 10.
-    It covers 9 white tiles, so we return 9.
-    Note that there may be other places where the carpet covers 9 white tiles.
-    It can be shown that the carpet cannot cover more than 9 white tiles.
-     */
-    // Author: Anand
-    int end = 1;
-    int start = 0;
 
     int maximumWhiteTiles(int[][] tiles, int len) {
 
@@ -113,7 +113,6 @@ public class SlidingWindow {
         return cnt;
     }
 
-
     /*
     Input: nums = [1,3,0,0,2,0,0,4]
     Output: 6
@@ -131,4 +130,42 @@ public class SlidingWindow {
         }
         return cnt;
     }
+
+    class Solution {
+        public long maximumSubarraySum(int[] nums, int k) {
+            long sum = 0L;
+            boolean duplicate = false;
+
+            long maxSum = 0L;
+            Map<Integer, Integer> freq = new HashMap<>();
+            for (int i = 0, j = 0; i < nums.length; ++i) {
+                sum += nums[i];
+                freq.put(nums[i], freq.getOrDefault(nums[i], 0) + 1);
+
+                if (freq.get(nums[i]) >= 2) duplicate = true;
+
+                if (freq.values().size() == k && !duplicate) maxSum = Math.max(maxSum, sum);
+                else if (freq.values().size() > k && !duplicate) {
+                    freq.put(nums[j], freq.getOrDefault(nums[j], 0) - 1);
+                    if (freq.get(nums[j]) <= 0) freq.remove(nums[j]);
+                    sum -= nums[j++];
+                    maxSum = Math.max(maxSum, sum);
+                } else {
+                    while (freq.containsKey(nums[i]) && freq.get(nums[i]) >= 2) {
+                        sum -= nums[j];
+                        freq.put(nums[j], freq.getOrDefault(nums[j], 0) - 1);
+                        if (freq.get(nums[j]) <= 0) freq.remove(nums[j]);
+                        j++;
+                    }
+
+                    if (freq.get(nums[i]) <= 1) duplicate = false;
+                    if (i - j + 1 == k) maxSum = Math.max(maxSum, sum);
+                }
+            }
+
+            return maxSum;
+        }
+    }
+
+
 }
