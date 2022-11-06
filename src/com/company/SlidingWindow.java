@@ -131,41 +131,36 @@ public class SlidingWindow {
         return cnt;
     }
 
-    class Solution {
-        public long maximumSubarraySum(int[] nums, int k) {
-            long sum = 0L;
-            boolean duplicate = false;
+    public long maximumSubarraySum(int[] nums, int k) {
+        long sum = 0L;
+        boolean duplicate = false;
 
-            long maxSum = 0L;
-            Map<Integer, Integer> freq = new HashMap<>();
-            for (int i = 0, j = 0; i < nums.length; ++i) {
-                sum += nums[i];
-                freq.put(nums[i], freq.getOrDefault(nums[i], 0) + 1);
+        long maxSum = 0L;
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int i = 0, j = 0; i < nums.length; ++i) {
+            sum += nums[i];
+            freq.put(nums[i], freq.getOrDefault(nums[i], 0) + 1);
 
-                if (freq.get(nums[i]) >= 2) duplicate = true;
+            if (freq.get(nums[i]) >= 2) duplicate = true;
 
-                if (freq.values().size() == k && !duplicate) maxSum = Math.max(maxSum, sum);
-                else if (freq.values().size() > k && !duplicate) {
+            if (freq.values().size() == k && !duplicate) maxSum = Math.max(maxSum, sum);
+            else if (freq.values().size() > k && !duplicate) {
+                freq.put(nums[j], freq.getOrDefault(nums[j], 0) - 1);
+                if (freq.get(nums[j]) <= 0) freq.remove(nums[j]);
+                sum -= nums[j++];
+                maxSum = Math.max(maxSum, sum);
+            } else {
+                while (freq.containsKey(nums[i]) && freq.get(nums[i]) >= 2) {
                     freq.put(nums[j], freq.getOrDefault(nums[j], 0) - 1);
                     if (freq.get(nums[j]) <= 0) freq.remove(nums[j]);
                     sum -= nums[j++];
-                    maxSum = Math.max(maxSum, sum);
-                } else {
-                    while (freq.containsKey(nums[i]) && freq.get(nums[i]) >= 2) {
-                        sum -= nums[j];
-                        freq.put(nums[j], freq.getOrDefault(nums[j], 0) - 1);
-                        if (freq.get(nums[j]) <= 0) freq.remove(nums[j]);
-                        j++;
-                    }
-
-                    if (freq.get(nums[i]) <= 1) duplicate = false;
-                    if (i - j + 1 == k) maxSum = Math.max(maxSum, sum);
                 }
+
+                if (freq.get(nums[i]) <= 1) duplicate = false;
+                if (i - j + 1 == k) maxSum = Math.max(maxSum, sum);
             }
-
-            return maxSum;
         }
+
+        return maxSum;
     }
-
-
 }
