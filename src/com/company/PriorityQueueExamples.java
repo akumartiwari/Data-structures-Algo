@@ -282,98 +282,54 @@ public class PriorityQueueExamples {
         return pq.poll().getValue().get(0);
     }
 
-    class Solution {
-        public long totalCost(int[] costs, int k, int candidates) {
-            // element, index
-            PriorityQueue<Pair<Pair<Integer, Integer>, Boolean>> pq = new PriorityQueue<>((o1, o2) -> {
-                if (o1.getKey().getKey() < o2.getKey().getKey()) return -1;
-                if (o1.getKey().getKey() > o2.getKey().getKey()) return 1;
-                return o1.getKey().getValue().compareTo(o2.getKey().getValue());
-            }); //  element  -> index
-            long minCost = 0L;
+    public long totalCost(int[] costs, int k, int candidates) {
+        // element, index
+        PriorityQueue<Pair<Pair<Integer, Integer>, Boolean>> pq = new PriorityQueue<>((o1, o2) -> {
+            if (o1.getKey().getKey() < o2.getKey().getKey()) return -1;
+            if (o1.getKey().getKey() > o2.getKey().getKey()) return 1;
+            return o1.getKey().getValue().compareTo(o2.getKey().getValue());
+        }); //  element  -> index
+        long minCost = 0L;
 
+        for (int i = 0; i < costs.length; i++) {
+            if (i >= candidates) break;
 
-            // taken
-            Map<Integer, Integer> taken = new TreeMap<>(); // index, element
-            for (int i = 0; i < costs.length; i++) taken.put(i, costs[i]);
+            pq.offer(new Pair<>(new Pair<>(costs[i], i), true));
 
-
-            StringBuilder sb = new StringBuilder();
-            if (costs.length < 2 * candidates) {
-
-                // element, index
-                PriorityQueue<Pair<Integer, Integer>> minPq = new PriorityQueue<>((o1, o2) -> {
-                    if (o1.getKey() < o2.getKey()) return -1;
-                    if (o1.getKey() > o2.getKey()) return 1;
-                    return o1.getValue().compareTo(o2.getValue());
-                }); //  element  -> index
-
-                for (int i = 0; i < costs.length; i++) {
-                    minPq.offer(new Pair<>(costs[i], i));
-                }
-
-                while (k-- > 0 && !minPq.isEmpty()) {
-                    Pair<Integer, Integer> elem = minPq.poll();
-                    System.out.println(elem.getKey() + ":" + elem.getValue());
-                    minCost += elem.getKey();
-                }
-
-                return minCost;
-
-            } else {
-                for (int i = 0; i < costs.length; i++) {
-                    if (i >= candidates) break;
-
-                    if (i < candidates) {
-                        sb.append("\nelem=" + costs[i] + ", index=" + i + ", half=" + true);
-                        pq.offer(new Pair<>(new Pair<>(costs[i], i), true));
-                    }
-
-                    if (costs.length - 1 - i >= 0) {
-                        sb.append("\nelem=" + costs[costs.length - 1 - i] + ", index=" + (costs.length - 1 - i) + ", half=" + false);
-
-                        pq.offer(new Pair<>(new Pair<>(costs[costs.length - 1 - i], costs.length - 1 - i), false));
-                    }
-
-                }
+            if (costs.length - 1 - i >= 0 && i < (costs.length - 1 - i)) {
+                pq.offer(new Pair<>(new Pair<>(costs[costs.length - 1 - i], costs.length - 1 - i), false));
             }
-
-
-            System.out.println(sb);
-
-            while (k-- > 0 && !pq.isEmpty()) {
-                Pair<Pair<Integer, Integer>, Boolean> elem = pq.poll();
-                System.out.println(elem.getKey().getKey() + ":" + elem.getKey().getValue());
-                taken.remove(elem.getKey().getValue()); // taken out
-
-                minCost += elem.getKey().getKey();
-
-                int ind = elem.getKey().getValue();
-                int ni = -1;
-
-                // First half
-                if (elem.getValue()) {
-                    ni = ind + 1;
-                    while (!taken.containsKey(ni) && ni < costs.length - 1) {
-                        ni++;
-                    }
-                    if (ni < costs.length) pq.offer(new Pair<>(new Pair<>(costs[ni], ni), true));
-                } else {
-                    ni = ind - 1;
-                    while (!taken.containsKey(ni) && ni > 0) {
-                        ni--;
-                    }
-                    if (ni >= 0) pq.offer(new Pair<>(new Pair<>(costs[ni], ni), false));
-                }
-
-                taken.remove(ni); // taken out
-                System.out.println("ni=" + ni + ", element=" + ((ni < 0 || ni >= costs.length) ? -1 : costs[ni]));
-                System.out.println("map=" + taken);
-
-            }
-
-            return minCost;
         }
+
+        int lif = candidates - 1;
+        int lie = costs.length - candidates;
+
+        while (k-- > 0 && !pq.isEmpty()) {
+            Pair<Pair<Integer, Integer>, Boolean> elem = pq.poll();
+            minCost += elem.getKey().getKey();
+
+            int ni;
+
+            // First half
+            if (elem.getValue()) {
+                ni = lif + 1;
+
+                if (ni >= lie) continue;
+                if (ni < costs.length) {
+                    lif = ni;
+                    pq.offer(new Pair<>(new Pair<>(costs[ni], ni), true));
+                }
+            } else {
+                ni = lie - 1;
+                if (ni <= lif) continue;
+                if (ni >= 0) {
+                    lie = ni;
+                    pq.offer(new Pair<>(new Pair<>(costs[ni], ni), false));
+                }
+            }
+        }
+
+        return minCost;
     }
 
     class Node {
