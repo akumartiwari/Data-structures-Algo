@@ -4673,41 +4673,41 @@ Output: [1,2,2,3,5,6]
     }
 
 
-    // TBD
-    class Solution {
-        // level order traversal and cnt  no  of nodes on each level  and maximise them
-        public int widthOfBinaryTree(TreeNode root) {
-            int h = height(root);
+    // level order traversal and cnt  no  of nodes on each level  and maximise them
+    public int widthOfBinaryTree(TreeNode root) {
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        int max = 0;
+        Map<TreeNode, Integer> map = new HashMap<>();  // node, value
 
-            int[] arr = new int[h];
-            wdOfBT(root, arr, 0);
-            return getMax(arr);
-        }
+        map.put(root, 1);
+        while (!queue.isEmpty()) {
+            int sz = queue.size();
+            int start = 0, end = 0;
 
-        private int getMax(int[] arr) {
-            int max = Integer.MIN_VALUE;
-            for (int a : arr) max = Math.max(max, a);
-            return max;
-        }
+            for (int i = 0; i < sz; i++) {
+                TreeNode element = queue.poll();
+                if (i == 0) start = map.get(element);
+                if (i == sz - 1) end = map.get(element);
 
 
-        private void wdOfBT(TreeNode root, int[] arr, int level) {
-            if (root != null) {
-                arr[level]++;
-                wdOfBT(root.left, arr, level + 1);
-                wdOfBT(root.right, arr, level + 1);
+                if (element.left != null) {
+                    queue.add(element.left);
+                    map.put(element.left, 2 * map.get(element));
+                }
+
+                if (element.right != null) {
+                    queue.add(element.right);
+                    map.put(element.right, 2 * map.get(element) + 1);
+                }
             }
 
+            max = Math.max(max, end - start + 1);
         }
-
-        private int height(TreeNode root) {
-            // base case
-            if (root == null) return 0;
-            int left = 1 + height(root.left);
-            int right = 1 + height(root.right);
-            return Math.max(left, right);
-        }
+        return max;
     }
+
+    // Recursive based solution
 
 }
 
