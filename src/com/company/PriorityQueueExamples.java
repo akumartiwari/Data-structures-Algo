@@ -282,6 +282,56 @@ public class PriorityQueueExamples {
         return pq.poll().getValue().get(0);
     }
 
+    public long totalCost(int[] costs, int k, int candidates) {
+        // element, index
+        PriorityQueue<Pair<Pair<Integer, Integer>, Boolean>> pq = new PriorityQueue<>((o1, o2) -> {
+            if (o1.getKey().getKey() < o2.getKey().getKey()) return -1;
+            if (o1.getKey().getKey() > o2.getKey().getKey()) return 1;
+            return o1.getKey().getValue().compareTo(o2.getKey().getValue());
+        }); //  element  -> index
+        long minCost = 0L;
+
+        for (int i = 0; i < costs.length; i++) {
+            if (i >= candidates) break;
+
+            pq.offer(new Pair<>(new Pair<>(costs[i], i), true));
+
+            if (costs.length - 1 - i >= 0 && i < (costs.length - 1 - i)) {
+                pq.offer(new Pair<>(new Pair<>(costs[costs.length - 1 - i], costs.length - 1 - i), false));
+            }
+        }
+
+        int lif = candidates - 1;
+        int lie = costs.length - candidates;
+
+        while (k-- > 0 && !pq.isEmpty()) {
+            Pair<Pair<Integer, Integer>, Boolean> elem = pq.poll();
+            minCost += elem.getKey().getKey();
+
+            int ni;
+
+            // First half
+            if (elem.getValue()) {
+                ni = lif + 1;
+
+                if (ni >= lie) continue;
+                if (ni < costs.length) {
+                    lif = ni;
+                    pq.offer(new Pair<>(new Pair<>(costs[ni], ni), true));
+                }
+            } else {
+                ni = lie - 1;
+                if (ni <= lif) continue;
+                if (ni >= 0) {
+                    lie = ni;
+                    pq.offer(new Pair<>(new Pair<>(costs[ni], ni), false));
+                }
+            }
+        }
+
+        return minCost;
+    }
+
     class Node {
         int roomId;
         int endTime;
