@@ -79,10 +79,6 @@ public class DP {
         } else sub(nums, k, ind + 1, sum, prev);
     }
 
-    // TOP-DOWN DP
-    // TC = O(n2*k)
-    // SC = O(n*k)
-
     public static long maximumSumOptimised(ArrayList<Integer> nums, int k) {
 
         int n = nums.size();
@@ -156,6 +152,9 @@ public class DP {
         return dp[ind];
     }
 
+    // TOP-DOWN DP
+    // TC = O(n2*k)
+    // SC = O(n*k)
     private static int ls(int ind, int[] arr, int num, int k, int len, int[] dp) {
         if (ind < 0) {
             if (num <= k) {
@@ -676,17 +675,6 @@ public class DP {
         return ls(s.length() - 1, s.chars().map(x -> x - '0').toArray(), 0, k, 0, dp);
     }
 
-    /*
-    Input: arr = [10,13,12,14,15]
-    Output: 2
-    Explanation:
-    From starting index i = 0, we can make our 1st jump to i = 2 (since arr[2] is the smallest among arr[1], arr[2], arr[3], arr[4] that is greater or equal to arr[0]), then we cannot jump any more.
-    From starting index i = 1 and i = 2, we can make our 1st jump to i = 3, then we cannot jump any more.
-    From starting index i = 3, we can make our 1st jump to i = 4, so we have reached the end.
-    From starting index i = 4, we have reached the end already.
-    In total, there are 2 different starting indices i = 3 and i = 4, where we can reach the end with some number of
-    jumps.
-     */
 
     private int gcd(int a, int b) {
         if (b == 0)
@@ -731,6 +719,18 @@ public class DP {
 
         return dp[ind][l1][l2] = take;
     }
+
+    /*
+    Input: arr = [10,13,12,14,15]
+    Output: 2
+    Explanation:
+    From starting index i = 0, we can make our 1st jump to i = 2 (since arr[2] is the smallest among arr[1], arr[2], arr[3], arr[4] that is greater or equal to arr[0]), then we cannot jump any more.
+    From starting index i = 1 and i = 2, we can make our 1st jump to i = 3, then we cannot jump any more.
+    From starting index i = 3, we can make our 1st jump to i = 4, so we have reached the end.
+    From starting index i = 4, we have reached the end already.
+    In total, there are 2 different starting indices i = 3 and i = 4, where we can reach the end with some number of
+    jumps.
+     */
 
     //Author: Anand
     public int countHousePlacements(int n) {
@@ -890,45 +890,6 @@ public class DP {
     }
 
 
-    // Thoughts:
-	/*
-
-	   TC = O(2^n), Sc = O(n)
-
-	   Algorithm:-
-	  - The idea is to split array in two parts such that
-	     avg(A) = avg(B)
-	  - Iterate through array elements and for each elem
-	     check if we can split it in two parts with equals avg
-
-	  -  We have choice of take or dont take in first part
-	     ie. if arr(i) is taken in part1 sumA+arr(i)
-	     else sumB + arr(i)
-
-	  - Do above step recursilvely and backtrack
-	  - check if sumA == sumB && (index == n-1) { that means all elements have been segregated into two parts successfuly
-	  }
-	     - if true return true
-	      else return false and recurse further
-	  - Add Memoization to improve exponential time complexity
-
-	  total  = sumA + sumB
-	  sumB = total - sumA
-
-	  A+B=n
-	  B=n-A
-
-	  sumA/A = sumB/B
-
-	  sumA/A = total-sumA/B
-	  sumA/A = total-sumA/n-A
-	  n*sumA/A  = total
-	  sumA = total * lenA / n
-
-	  problem boils down to finding a subsequence of length len1
-	  with sum equals sumA
-	*/
-
     private int helper(int currPos, int endPos, int k, int[][] dp) {
         // base case
         if (currPos == endPos && k == 0) return 1;
@@ -987,6 +948,7 @@ public class DP {
     // BFS algorithm
 
 
+
     //  DP
     //  - create a map to adjancent nodes alogn with distance
     //  - iterate through all nodes and calculate cost of each path recursively
@@ -1001,6 +963,44 @@ public class DP {
         return i >= 0 && i < m && j >= 0 && j < n;
     }
 
+    // Thoughts:
+	/*
+
+	   TC = O(2^n), Sc = O(n)
+
+	   Algorithm:-
+	  - The idea is to split array in two parts such that
+	     avg(A) = avg(B)
+	  - Iterate through array elements and for each elem
+	     check if we can split it in two parts with equals avg
+
+	  -  We have choice of take or dont take in first part
+	     ie. if arr(i) is taken in part1 sumA+arr(i)
+	     else sumB + arr(i)
+
+	  - Do above step recursilvely and backtrack
+	  - check if sumA == sumB && (index == n-1) { that means all elements have been segregated into two parts successfuly
+	  }
+	     - if true return true
+	      else return false and recurse further
+	  - Add Memoization to improve exponential time complexity
+
+	  total  = sumA + sumB
+	  sumB = total - sumA
+
+	  A+B=n
+	  B=n-A
+
+	  sumA/A = sumB/B
+
+	  sumA/A = total-sumA/B
+	  sumA/A = total-sumA/n-A
+	  n*sumA/A  = total
+	  sumA = total * lenA / n
+
+	  problem boils down to finding a subsequence of length len1
+	  with sum equals sumA
+	*/
     public boolean splitArraySameAverage(int[] nums) {
         int n = nums.length, total = 0;
         for (int i = 0; i < n; i++) total += nums[i];
