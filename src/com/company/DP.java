@@ -1155,4 +1155,62 @@ public class DP {
 
         return dp[n] = max;
     }
+
+
+
+    class Solution {
+        public long minimumTotalDistance(List<Integer> robot, int[][] factory) {
+            Collections.sort(robot);
+            Arrays.sort(factory, (a, b) -> a[0] - b[0]);
+            TreeMap<Integer, Integer> fm = new TreeMap<>(); // position, capacity
+            for (int[] f : factory) fm.put(f[0], f[1]);
+            return helper(robot, 0, fm);
+        }
+
+        private long helper(List<Integer> robot, int ind, TreeMap<Integer, Integer> fm) {
+            // base case
+
+            if (ind >= robot.size()) return 0L;
+            long ans = 0L;
+            for (int i = ind; i < robot.size(); i++) {
+                int r = robot.get(i);
+                long d1 = Long.MAX_VALUE, d2 = Long.MAX_VALUE;
+                if (fm.ceilingKey(r) != null && fm.get(fm.ceilingKey(r)) > 0) {
+                    d1 = fm.ceilingKey(r);
+                }
+
+                if (fm.floorKey(r) != null && fm.get(fm.floorKey(r)) > 0) {
+                    d2 = fm.floorKey(r);
+                }
+
+                System.out.println(d1 + ":" + d2 + ":" + i + ":" + r);
+                long left = Long.MAX_VALUE, right = Long.MAX_VALUE;
+                if (d1 != Long.MAX_VALUE) {
+                    ans += Math.abs(d1 - r);
+                    int key = fm.ceilingKey(r);
+                    fm.put(key, fm.get(key) - 1);
+                    if (fm.get(fm.ceilingKey(r)) <= 0) fm.remove(key);
+                    left = helper(robot, i + 1, fm);
+
+                    //backtrack
+                    ans -= Math.abs(d1 - r);
+                    fm.put(key, fm.getOrDefault(key, 0) + 1);
+                }
+
+                if (d2 != Long.MAX_VALUE) {
+                    ans += Math.abs(d2 - r);
+                    int fk = fm.floorKey(r);
+                    fm.put(fk, fm.get(fk) - 1);
+
+                    if (fm.get(fk) <= 0) fm.remove(fk);
+                    right = helper(robot, i + 1, fm);
+                }
+
+                ans += Math.min(left, right);
+            }
+
+            System.out.println("ans=" + ans);
+            return ans;
+        }
+    }
 }
