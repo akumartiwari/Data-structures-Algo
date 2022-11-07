@@ -27,6 +27,8 @@ public class DP {
     int m, n;
     Map<Integer, List<int[]>> map;
     Integer[][] cpDP;
+    List<Integer> robot;
+    int[][] factory;
 
     // DP to tabulation:-= Bottom-up approach
     // TC = O(n), SC = O(n)
@@ -76,6 +78,10 @@ public class DP {
             sub(nums, k, ind + 1, sum, prev);
         } else sub(nums, k, ind + 1, sum, prev);
     }
+
+    // TOP-DOWN DP
+    // TC = O(n2*k)
+    // SC = O(n*k)
 
     public static long maximumSumOptimised(ArrayList<Integer> nums, int k) {
 
@@ -149,10 +155,6 @@ public class DP {
         }
         return dp[ind];
     }
-
-    // TOP-DOWN DP
-    // TC = O(n2*k)
-    // SC = O(n*k)
 
     private static int ls(int ind, int[] arr, int num, int k, int len, int[] dp) {
         if (ind < 0) {
@@ -674,6 +676,18 @@ public class DP {
         return ls(s.length() - 1, s.chars().map(x -> x - '0').toArray(), 0, k, 0, dp);
     }
 
+    /*
+    Input: arr = [10,13,12,14,15]
+    Output: 2
+    Explanation:
+    From starting index i = 0, we can make our 1st jump to i = 2 (since arr[2] is the smallest among arr[1], arr[2], arr[3], arr[4] that is greater or equal to arr[0]), then we cannot jump any more.
+    From starting index i = 1 and i = 2, we can make our 1st jump to i = 3, then we cannot jump any more.
+    From starting index i = 3, we can make our 1st jump to i = 4, so we have reached the end.
+    From starting index i = 4, we have reached the end already.
+    In total, there are 2 different starting indices i = 3 and i = 4, where we can reach the end with some number of
+    jumps.
+     */
+
     private int gcd(int a, int b) {
         if (b == 0)
             return a;
@@ -717,18 +731,6 @@ public class DP {
 
         return dp[ind][l1][l2] = take;
     }
-
-    /*
-    Input: arr = [10,13,12,14,15]
-    Output: 2
-    Explanation:
-    From starting index i = 0, we can make our 1st jump to i = 2 (since arr[2] is the smallest among arr[1], arr[2], arr[3], arr[4] that is greater or equal to arr[0]), then we cannot jump any more.
-    From starting index i = 1 and i = 2, we can make our 1st jump to i = 3, then we cannot jump any more.
-    From starting index i = 3, we can make our 1st jump to i = 4, so we have reached the end.
-    From starting index i = 4, we have reached the end already.
-    In total, there are 2 different starting indices i = 3 and i = 4, where we can reach the end with some number of
-    jumps.
-     */
 
     //Author: Anand
     public int countHousePlacements(int n) {
@@ -887,6 +889,46 @@ public class DP {
         return helper(startPos, endPos, k, dp);
     }
 
+
+    // Thoughts:
+	/*
+
+	   TC = O(2^n), Sc = O(n)
+
+	   Algorithm:-
+	  - The idea is to split array in two parts such that
+	     avg(A) = avg(B)
+	  - Iterate through array elements and for each elem
+	     check if we can split it in two parts with equals avg
+
+	  -  We have choice of take or dont take in first part
+	     ie. if arr(i) is taken in part1 sumA+arr(i)
+	     else sumB + arr(i)
+
+	  - Do above step recursilvely and backtrack
+	  - check if sumA == sumB && (index == n-1) { that means all elements have been segregated into two parts successfuly
+	  }
+	     - if true return true
+	      else return false and recurse further
+	  - Add Memoization to improve exponential time complexity
+
+	  total  = sumA + sumB
+	  sumB = total - sumA
+
+	  A+B=n
+	  B=n-A
+
+	  sumA/A = sumB/B
+
+	  sumA/A = total-sumA/B
+	  sumA/A = total-sumA/n-A
+	  n*sumA/A  = total
+	  sumA = total * lenA / n
+
+	  problem boils down to finding a subsequence of length len1
+	  with sum equals sumA
+	*/
+
     private int helper(int currPos, int endPos, int k, int[][] dp) {
         // base case
         if (currPos == endPos && k == 0) return 1;
@@ -941,45 +983,17 @@ public class DP {
         return dp[m][n][sum] = (up + down) % MOD;
     }
 
+    // Intial thoughts:-
+    // BFS algorithm
 
-    // Thoughts:
-	/*
 
-	   TC = O(2^n), Sc = O(n)
-
-	   Algorithm:-
-	  - The idea is to split array in two parts such that
-	     avg(A) = avg(B)
-	  - Iterate through array elements and for each elem
-	     check if we can split it in two parts with equals avg
-
-	  -  We have choice of take or dont take in first part
-	     ie. if arr(i) is taken in part1 sumA+arr(i)
-	     else sumB + arr(i)
-
-	  - Do above step recursilvely and backtrack
-	  - check if sumA == sumB && (index == n-1) { that means all elements have been segregated into two parts successfuly
-	  }
-	     - if true return true
-	      else return false and recurse further
-	  - Add Memoization to improve exponential time complexity
-
-	  total  = sumA + sumB
-	  sumB = total - sumA
-
-	  A+B=n
-	  B=n-A
-
-	  sumA/A = sumB/B
-
-	  sumA/A = total-sumA/B
-	  sumA/A = total-sumA/n-A
-	  n*sumA/A  = total
-	  sumA = total * lenA / n
-
-	  problem boils down to finding a subsequence of length len1
-	  with sum equals sumA
-	*/
+    //  DP
+    //  - create a map to adjancent nodes alogn with distance
+    //  - iterate through all nodes and calculate cost of each path recursively
+    //  - update minCost path if currNode reaches to destination
+    //  - returm minCost;
+    // TC  = (2^n)
+    // SC = O(n)
 
     private boolean isSafe(int[][] grid, int i, int j) {
         int m = grid.length;
@@ -1028,18 +1042,6 @@ public class DP {
         map.put(key, case2);
         return case2;
     }
-
-    // Intial thoughts:-
-    // BFS algorithm
-
-
-    //  DP
-    //  - create a map to adjancent nodes alogn with distance
-    //  - iterate through all nodes and calculate cost of each path recursively
-    //  - update minCost path if currNode reaches to destination
-    //  - returm minCost;
-    // TC  = (2^n)
-    // SC = O(n)
 
     // Min. no. of steps to  make both strings equal
     // Input: word1 = "sea", word2 = "eat"
@@ -1112,6 +1114,8 @@ public class DP {
         return max;
     }
 
+    //Knapsack based problem
+
     private int helper(int start, int[] nums, Map<Integer, List<Integer>> graph, int currentSum, int expectedSum) {
         // base case
         if (currentSum == expectedSum) return 1;
@@ -1128,7 +1132,6 @@ public class DP {
 
         return Math.max(cw, ncw);
     }
-
 
     /*
    Input: n = 7
@@ -1157,60 +1160,59 @@ public class DP {
     }
 
 
+    /*
+    Input: robot = [0,4,6], factory = [[2,2],[6,2]]
+    Output: 4
+    Explanation: As shown in the figure:
+    - The first robot at position 0 moves in the positive direction. It will be repaired at the first factory.
+    - The second robot at position 4 moves in the negative direction. It will be repaired at the first factory.
+    - The third robot at position 6 will be repaired at the second factory. It does not need to move.
+    The limit of the first factory is 2, and it fixed 2 robots.
+    The limit of the second factory is 2, and it fixed 1 robot.
+    The total distance is |2 - 0| + |2 - 4| + |6 - 6| = 4. It can be shown that we cannot achieve a better total distance than 4.
 
-    class Solution {
-        public long minimumTotalDistance(List<Integer> robot, int[][] factory) {
-            Collections.sort(robot);
-            Arrays.sort(factory, (a, b) -> a[0] - b[0]);
-            TreeMap<Integer, Integer> fm = new TreeMap<>(); // position, capacity
-            for (int[] f : factory) fm.put(f[0], f[1]);
-            return helper(robot, 0, fm);
-        }
+    ALGO- (Knapsack Type)
+        Sort the robots postions.
+        Sort the factory positions.
+        Iterate from left robot to right. For each robot, you have 2 options:
+        Choose to fix it in current factory if possible (If the factory hasn't reached its limit) (like take item from the current sack)
+        or Try to fix the robot in the next factory (or don't take from the current sack)
+        Answer = max(option1, option2)
+        Time Complexity: O(n * n * n)
+        Space Complexity: O(n * n * n)
+     */
+    public long minimumTotalDistance(List<Integer> robot, int[][] factory) {
+        this.robot = robot;
+        this.factory = factory;
+        n = factory.length;
+        Collections.sort(robot);
+        Arrays.sort(factory, Comparator.comparingInt(a -> a[0]));
+        long[][][] dp = new long[111][111][111];
 
-        private long helper(List<Integer> robot, int ind, TreeMap<Integer, Integer> fm) {
-            // base case
+        for (long[][] d1 : dp) for (long[] d2 : d1) Arrays.fill(d2, -1L);
 
-            if (ind >= robot.size()) return 0L;
-            long ans = 0L;
-            for (int i = ind; i < robot.size(); i++) {
-                int r = robot.get(i);
-                long d1 = Long.MAX_VALUE, d2 = Long.MAX_VALUE;
-                if (fm.ceilingKey(r) != null && fm.get(fm.ceilingKey(r)) > 0) {
-                    d1 = fm.ceilingKey(r);
-                }
+        return helper(0, 0, factory[0][1], dp);
+    }
 
-                if (fm.floorKey(r) != null && fm.get(fm.floorKey(r)) > 0) {
-                    d2 = fm.floorKey(r);
-                }
+    private long helper(int robot_index, int factory_index, int capacity, long[][][] dp) {
+        // base case
+        if (robot_index == this.robot.size()) return 0L;
+        // Still there are robots to repair but no factories remained
+        if (factory_index == this.factory.length) return Long.MAX_VALUE;
 
-                System.out.println(d1 + ":" + d2 + ":" + i + ":" + r);
-                long left = Long.MAX_VALUE, right = Long.MAX_VALUE;
-                if (d1 != Long.MAX_VALUE) {
-                    ans += Math.abs(d1 - r);
-                    int key = fm.ceilingKey(r);
-                    fm.put(key, fm.get(key) - 1);
-                    if (fm.get(fm.ceilingKey(r)) <= 0) fm.remove(key);
-                    left = helper(robot, i + 1, fm);
+        if (dp[robot_index][factory_index][capacity] != -1L) return dp[robot_index][factory_index][capacity];
 
-                    //backtrack
-                    ans -= Math.abs(d1 - r);
-                    fm.put(key, fm.getOrDefault(key, 0) + 1);
-                }
+        // Means robot cant be fixed at current factory, let's repair it at next
+        if (capacity == 0)
+            return dp[robot_index][factory_index][capacity] = helper(robot_index, factory_index + 1, (factory_index + 1) == n ? 0 : factory[factory_index + 1][1], dp);
 
-                if (d2 != Long.MAX_VALUE) {
-                    ans += Math.abs(d2 - r);
-                    int fk = fm.floorKey(r);
-                    fm.put(fk, fm.get(fk) - 1);
+        // If robot can be fixed at current factory
+        // then 2 cases ->
+        // will fix at current OR will fix at next
 
-                    if (fm.get(fk) <= 0) fm.remove(fk);
-                    right = helper(robot, i + 1, fm);
-                }
-
-                ans += Math.min(left, right);
-            }
-
-            System.out.println("ans=" + ans);
-            return ans;
-        }
+        long subAns1 = helper(robot_index + 1, factory_index, capacity - 1, dp);
+        if (subAns1 != Long.MAX_VALUE) subAns1 += Math.abs(this.robot.get(robot_index) - factory[factory_index][0]);
+        long subAns2 = helper(robot_index, factory_index + 1, (factory_index + 1) == n ? 0 : factory[factory_index + 1][1], dp);
+        return dp[robot_index][factory_index][capacity] = Math.min(subAns2, subAns1);
     }
 }
