@@ -1,6 +1,5 @@
 package com.company;
 
-import CF_Templates.topcoder;
 import javafx.util.Pair;
 
 import java.awt.*;
@@ -4673,7 +4672,28 @@ Output: [1,2,2,3,5,6]
             m.add(0);
         }
     }
+    public int distinctAverages(int[] nums) {
 
+        PriorityQueue<Integer> minPq = new PriorityQueue<>();
+        PriorityQueue<Integer> maxPq = new PriorityQueue<>(Collections.reverseOrder());
+
+        for (int num : nums) {
+            minPq.offer(num);
+            maxPq.offer(num);
+        }
+
+        int sz = 0;
+
+        Set<Double> ans = new HashSet<>();
+        while (true) {
+            if (sz == nums.length) return ans.size();
+            int min = minPq.poll();
+            int max = maxPq.poll();
+            double avg = (float) (min + max) / 2;
+            ans.add(avg);
+            sz += 2;
+        }
+    }
 }
 
 
