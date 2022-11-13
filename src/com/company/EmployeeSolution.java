@@ -4777,49 +4777,6 @@ Output: [1,2,2,3,5,6]
         arr[j] = temp;
     }
 
-    //TODO: TBC
-    public int maxPalindromes(String s, int k) {
-        int n = s.length();
-        boolean[][] memob = new boolean[n][n];
-
-        Set<String> ans = new HashSet<>();
-
-        for (int i = 0; i < n; i++) {
-            for (int m = 0; m < n - i; m++) {
-                String ns = s.substring(m, m + i + 1);
-                if (isPalindrome(s, m, m + i, memob) && ns.length() >= k) {
-
-                    Set<String> remove = new HashSet<>();
-
-                    for (String a : ans) {
-                        if (ns.contains(a)) remove.add(a);
-                    }
-
-                    // ans.removeAll(remove);
-                    // System.out.println(ns);
-                    ans.add(ns);
-                }
-            }
-        }
-
-        System.out.println(ans);
-
-        return ans.size();
-    }
-
-    private boolean isPalindrome(String s, int i, int j, boolean[][] memob) {
-        if (i == j || i > j) return true;
-        if (memob[i][j]) return memob[i][j];
-
-        char ch1 = s.charAt(i);
-        char ch2 = s.charAt(j);
-
-        if (ch1 == ch2) {
-            memob[i][j] = isPalindrome(s, i + 1, j - 1, memob);
-        } else return false;
-        return memob[i][j];
-    }
-
 }
 
 

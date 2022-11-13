@@ -1216,21 +1216,11 @@ public class DP {
     }
 
 
-    private String str(char c, int times) {
-        char[] repeat = new char[times];
-        Arrays.fill(repeat, c);
-        return new String(repeat);
-    }
-
     public int countGoodStrings(int low, int high, int zero, int one) {
         String z = str('0', zero);
         String o = str('1', one);
         Map<Integer, Integer> dp = new HashMap<>();
         return rec(low, high, z, o, new StringBuilder(), dp);
-    }
-
-    private boolean valid(StringBuilder sb, int low, int high) {
-        return sb.length() >= low && sb.length() <= high;
     }
 
     private int rec(int low, int high, String zero, String one, StringBuilder sb, Map<Integer, Integer> dp) {
@@ -1255,6 +1245,79 @@ public class DP {
         dp.put(sb.length(), ans);
         return ans;
 
+    }
+
+    private String str(char c, int times) {
+        char[] repeat = new char[times];
+        Arrays.fill(repeat, c);
+        return new String(repeat);
+    }
+
+    private boolean valid(StringBuilder sb, int low, int high) {
+        return sb.length() >= low && sb.length() <= high;
+    }
+
+
+
+    //TBD
+    class Solution {
+
+        public int maxPalindromes(String s, int k) {
+            int ans = rec(s, k, 0, 1);
+
+            return ans == 0 ? 0: ans+1;
+        }
+
+
+        private int rec(String s, int k, int i, int j) {
+            int n = s.length();
+            boolean[][] memob = new boolean[n][n];
+            int max = 0;
+            int ind = i;
+            int left = 0, right = 0;
+
+            if (i >= n || i < 0) return 0;
+            if (j >= n || j < 0) return 0;
+
+            while (ind < n && i < j) {
+                memob = new boolean[n][n];
+
+                boolean valid = false;
+                int end = -1;
+                for (int m = j; m < n; m++) {
+
+                    // System.out.println(ind + ":" + m);
+                    String ns = s.substring(ind, m);
+
+                    if (isPalindrome(s, ind, m - 1, memob) && ns.length() >= k) {
+
+                        // take the current one
+                        left += 1 + rec(s, k, m, m + 1);
+                        // skip the current one
+                        right += rec(s, k, ind, m + 1);
+
+                        return max = Math.max(left, right);
+                    }
+                }
+                ind++;
+                j = ind+1;
+            }
+
+            return  max;
+        }
+
+        private boolean isPalindrome(String s, int i, int j, boolean[][] memob) {
+            if (i == j || i > j) return true;
+            if (memob[i][j]) return memob[i][j];
+
+            char ch1 = s.charAt(i);
+            char ch2 = s.charAt(j);
+
+            if (ch1 == ch2) {
+                memob[i][j] = isPalindrome(s, i + 1, j - 1, memob);
+            } else return false;
+            return memob[i][j];
+        }
     }
 
 }
