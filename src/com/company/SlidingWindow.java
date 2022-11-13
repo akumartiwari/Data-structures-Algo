@@ -148,7 +148,6 @@ public class SlidingWindow {
 
     }
 
-}
 
     /*
     Input: nums = [1,3,0,0,2,0,0,4]
