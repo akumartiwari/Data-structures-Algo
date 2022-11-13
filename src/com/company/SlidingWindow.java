@@ -1,6 +1,9 @@
 package com.company;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SlidingWindow {
     // Sliding window
@@ -112,6 +115,40 @@ public class SlidingWindow {
 
         return cnt;
     }
+
+    public int subarrayLCM(int[] nums, int k) {
+        int cnt = 0;
+        int lcm = -1;
+        int sz = 0;
+        for (int i = 0; i < nums.length; i++) {
+            sz = 1;
+            lcm = -1;
+            if (nums[i] == k) cnt++;
+            for (int j = i + 1; j < nums.length; j++) {
+                sz++;
+                lcm = lcm != -1 ? lcm(lcm, nums[j]) : lcm(nums[i], nums[j]);
+                if (lcm == k) cnt++;
+                else if (lcm <= k) continue;
+                else break;
+            }
+        }
+        return cnt;
+    }
+
+    public int lcm(int a, int b) {
+        return (a * b) / gcd(a, b);
+    }
+
+    //int version for gcd
+    public int gcd(int a, int b) {
+        if (b == 0)
+            return a;
+
+        return gcd(b, a % b);
+
+    }
+
+}
 
     /*
     Input: nums = [1,3,0,0,2,0,0,4]

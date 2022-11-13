@@ -4672,6 +4672,7 @@ Output: [1,2,2,3,5,6]
             m.add(0);
         }
     }
+
     public int distinctAverages(int[] nums) {
 
         PriorityQueue<Integer> minPq = new PriorityQueue<>();
@@ -4694,6 +4695,131 @@ Output: [1,2,2,3,5,6]
             sz += 2;
         }
     }
+
+    public double[] convertTemperature(double celsius) {
+        double[] ans = new double[2];
+        ans[0] = celsius + 273.15000;
+        ans[1] = celsius * 1.80000 + 32.00000;
+        return ans;
+    }
+
+    public int minimumOperations(TreeNode root) {
+        if (root == null) return 0;
+
+        int cnt = 0;
+        List<Integer> result = new ArrayList<>();
+        // Standard level order traversal code
+        // using queue
+        Queue<TreeNode> q = new LinkedList<>(); // Create a queue
+        q.add(root); // Enqueue root
+        while (!q.isEmpty()) {
+            int n = q.size();
+            List<Integer> level = new ArrayList<>();
+            // If this node has children
+            while (n > 0) {
+                // Dequeue an item from queue
+                TreeNode p = q.peek();
+                q.remove();
+                level.add(p.val);
+                // Enqueue all children of
+                // the dequeued item
+                if (p.left != null) q.add(p.left);
+                if (p.right != null) q.add(p.right);
+                n--;
+            }
+            cnt += minSwaps(level.stream().mapToInt(x -> x).toArray(), level.size());
+        }
+        return cnt;
+    }
+
+    // Return the minimum number
+    // of swaps required to sort the array
+    public int minSwaps(int[] arr, int N) {
+
+        int ans = 0;
+        int[] temp = Arrays.copyOfRange(arr, 0, N);
+
+        // Hashmap which stores the
+        // indexes of the input array
+        HashMap<Integer, Integer> h
+                = new HashMap<Integer, Integer>();
+
+        Arrays.sort(temp);
+        for (int i = 0; i < N; i++) {
+            h.put(arr[i], i);
+        }
+        for (int i = 0; i < N; i++) {
+
+            // This is checking whether
+            // the current element is
+            // at the right place or not
+            if (arr[i] != temp[i]) {
+                ans++;
+                int init = arr[i];
+
+                // If not, swap this element
+                // with the index of the
+                // element which should come here
+                swap(arr, i, h.get(temp[i]));
+
+                // Update the indexes in
+                // the hashmap accordingly
+                h.put(init, h.get(temp[i]));
+                h.put(temp[i], i);
+            }
+        }
+        return ans;
+    }
+
+    public void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    //TODO: TBC
+    public int maxPalindromes(String s, int k) {
+        int n = s.length();
+        boolean[][] memob = new boolean[n][n];
+
+        Set<String> ans = new HashSet<>();
+
+        for (int i = 0; i < n; i++) {
+            for (int m = 0; m < n - i; m++) {
+                String ns = s.substring(m, m + i + 1);
+                if (isPalindrome(s, m, m + i, memob) && ns.length() >= k) {
+
+                    Set<String> remove = new HashSet<>();
+
+                    for (String a : ans) {
+                        if (ns.contains(a)) remove.add(a);
+                    }
+
+                    // ans.removeAll(remove);
+                    // System.out.println(ns);
+                    ans.add(ns);
+                }
+            }
+        }
+
+        System.out.println(ans);
+
+        return ans.size();
+    }
+
+    private boolean isPalindrome(String s, int i, int j, boolean[][] memob) {
+        if (i == j || i > j) return true;
+        if (memob[i][j]) return memob[i][j];
+
+        char ch1 = s.charAt(i);
+        char ch2 = s.charAt(j);
+
+        if (ch1 == ch2) {
+            memob[i][j] = isPalindrome(s, i + 1, j - 1, memob);
+        } else return false;
+        return memob[i][j];
+    }
+
 }
 
 
