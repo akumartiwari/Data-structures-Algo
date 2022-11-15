@@ -1258,53 +1258,83 @@ public class DP {
     }
 
 
-
-    //TBD
     class Solution {
 
-        public int maxPalindromes(String s, int k) {
-            int ans = rec(s, k, 0, 1);
+        //Optimal solution
+        public int maxPalindromesOptimal(String s, int k) {
+            int ans = 0, n = s.length();
+            int[] dp = new int[n + 1];
+            for (int i = k - 1; i < n; i++) {
+                dp[i + 1] = dp[i];
+                if (helper(s, i - k + 1, i)) dp[i + 1] = Math.max(dp[i + 1], 1 + dp[i - k + 1]);
+                if (i - k >= 0 && helper(s, i - k, i)) dp[i + 1] = Math.max(dp[i + 1], 1 + dp[i - k]);
+            }
+            return dp[n];
+        }
 
-            return ans == 0 ? 0: ans+1;
+        boolean helper(String s, int l, int r) {
+            while (l < r) {
+                if (s.charAt(l) != s.charAt(r)) return false;
+                l++;
+                r--;
+            }
+            return true;
         }
 
 
-        private int rec(String s, int k, int i, int j) {
+        // My Solution
+        public int maxPalindromes(String s, int k) {
             int n = s.length();
-            boolean[][] memob = new boolean[n][n];
-            int max = 0;
-            int ind = i;
-            int left = 0, right = 0;
+            int[][] dp = new int[n][n + 1];
+            for (int[] d : dp) Arrays.fill(d, -1);
 
-            if (i >= n || i < 0) return 0;
-            if (j >= n || j < 0) return 0;
 
-            while (ind < n && i < j) {
-                memob = new boolean[n][n];
+            boolean[][] palind = new boolean[n][n + 1];
+            boolean[][] memob = new boolean[n][n + 1];
 
-                boolean valid = false;
-                int end = -1;
-                for (int m = j; m < n; m++) {
-
-                    // System.out.println(ind + ":" + m);
-                    String ns = s.substring(ind, m);
-
-                    if (isPalindrome(s, ind, m - 1, memob) && ns.length() >= k) {
-
-                        // take the current one
-                        left += 1 + rec(s, k, m, m + 1);
-                        // skip the current one
-                        right += rec(s, k, ind, m + 1);
-
-                        return max = Math.max(left, right);
-                    }
+            // precompute palindrome from indexes {i, j}
+            for (int i = 0; i < n; i++) {
+                for (int j = i + 1; j <= n; j++) {
+                    palind[i][j - 1] = isPalindrome(s, i, j - 1, memob);
                 }
-                ind++;
-                j = ind+1;
             }
 
-            return  max;
+            return rec(s, k, 0, 1, palind, dp);
         }
+
+
+        private int rec(String s, int k, int i, int j, boolean[][] palind, int[][] dp) {
+            int n = s.length();
+            int ind = i;
+            int left, right;
+            if (i > j || i >= n || j >= n + 1) return 0;
+            if (dp[i][j] != -1) return dp[i][j];
+
+
+            while (ind < n && i < j) {
+                //To check the palindrome of odd length palindromic sub-string
+                if (palind[ind][ind] && (m - ind) >= k) {
+                    // take the current one
+                    left = 1 + rec(s, k, m, m + 1, palind, dp);
+                    // skip the current one
+                    right = rec(s, k, ind, m + 1, palind, dp);
+                    return dp[i][j] = Math.max(left, right);
+                }
+
+                //To check the palindrome of even length palindromic sub-string
+                if (palind[ind][ind + 1] && (m - ind + 1) >= k) {
+                    // take the current one
+                    left = 1 + rec(s, k, m, m + 1, palind, dp);
+                    // skip the current one
+                    right = rec(s, k, ind, m + 1, palind, dp);
+                    return dp[i][j] = Math.max(left, right);
+                }
+                ind += 1;
+            }
+
+            return 0;
+        }
+
 
         private boolean isPalindrome(String s, int i, int j, boolean[][] memob) {
             if (i == j || i > j) return true;
