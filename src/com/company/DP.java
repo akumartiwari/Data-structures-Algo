@@ -1095,6 +1095,42 @@ public class DP {
         return temp >= 1000_000_00 ? -1 : temp;
     }
 
+
+    // TODO- mpp
+    class Solution {
+
+        Map<Integer, List<int[]>> map;
+
+        Integer[][] mpDP;
+
+        public int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+            map = new HashMap<>();
+            int n = amount.length;
+            mpDP = new Integer[n + 1][edges.length + 2];
+            for (int[] a : edges) {
+                map.computeIfAbsent(a[0], k -> new ArrayList<>());
+                map.get(a[0]).add(new int[]{a[1], a[2]});
+            }
+
+            Boolean[] visited = new Boolean[n + 1];
+            int temp = find(0, n + 1, visited);
+            return temp >= 1000_000_00 ? -1 : temp;
+        }
+
+
+        int find(int src, int k, Boolean[] visited) {
+            if (k < 0) return 1000_000_00;
+
+            if (cpDP[src][k] != null) return cpDP[src][k];
+            int max = Integer.MIN_VALUE;
+            for (int[] arr : map.getOrDefault(src, new ArrayList<>())) {
+
+                max = Math.max(max, arr[1] + find(arr[0], k - 1, visited));
+            }
+            return cpDP[src][k] = max;
+        }
+    }
+
     public int componentValue(int[] nums, int[][] edges) {
 
         Map<Integer, List<Integer>> graph = new HashMap<>();
@@ -1258,96 +1294,92 @@ public class DP {
     }
 
 
-    class Solution {
-
-        //Optimal solution
-        public int maxPalindromesOptimal(String s, int k) {
-            int ans = 0, n = s.length();
-            int[] dp = new int[n + 1];
-            for (int i = k - 1; i < n; i++) {
-                dp[i + 1] = dp[i];
-                if (helper(s, i - k + 1, i)) dp[i + 1] = Math.max(dp[i + 1], 1 + dp[i - k + 1]);
-                if (i - k >= 0 && helper(s, i - k, i)) dp[i + 1] = Math.max(dp[i + 1], 1 + dp[i - k]);
-            }
-            return dp[n];
+    //Optimal solution
+    public int maxPalindromesOptimal(String s, int k) {
+        int ans = 0, n = s.length();
+        int[] dp = new int[n + 1];
+        for (int i = k - 1; i < n; i++) {
+            dp[i + 1] = dp[i];
+            if (helper(s, i - k + 1, i)) dp[i + 1] = Math.max(dp[i + 1], 1 + dp[i - k + 1]);
+            if (i - k >= 0 && helper(s, i - k, i)) dp[i + 1] = Math.max(dp[i + 1], 1 + dp[i - k]);
         }
-
-        boolean helper(String s, int l, int r) {
-            while (l < r) {
-                if (s.charAt(l) != s.charAt(r)) return false;
-                l++;
-                r--;
-            }
-            return true;
-        }
-
-
-        // My Solution
-        public int maxPalindromes(String s, int k) {
-            int n = s.length();
-            int[][] dp = new int[n][n + 1];
-            for (int[] d : dp) Arrays.fill(d, -1);
-
-
-            boolean[][] palind = new boolean[n][n + 1];
-            boolean[][] memob = new boolean[n][n + 1];
-
-            // precompute palindrome from indexes {i, j}
-            for (int i = 0; i < n; i++) {
-                for (int j = i + 1; j <= n; j++) {
-                    palind[i][j - 1] = isPalindrome(s, i, j - 1, memob);
-                }
-            }
-
-            return rec(s, k, 0, 1, palind, dp);
-        }
-
-
-        private int rec(String s, int k, int i, int j, boolean[][] palind, int[][] dp) {
-            int n = s.length();
-            int ind = i;
-            int left, right;
-            if (i > j || i >= n || j >= n + 1) return 0;
-            if (dp[i][j] != -1) return dp[i][j];
-
-
-            while (ind < n && i < j) {
-                //To check the palindrome of odd length palindromic sub-string
-                if (palind[ind][ind] && (m - ind) >= k) {
-                    // take the current one
-                    left = 1 + rec(s, k, m, m + 1, palind, dp);
-                    // skip the current one
-                    right = rec(s, k, ind, m + 1, palind, dp);
-                    return dp[i][j] = Math.max(left, right);
-                }
-
-                //To check the palindrome of even length palindromic sub-string
-                if (palind[ind][ind + 1] && (m - ind + 1) >= k) {
-                    // take the current one
-                    left = 1 + rec(s, k, m, m + 1, palind, dp);
-                    // skip the current one
-                    right = rec(s, k, ind, m + 1, palind, dp);
-                    return dp[i][j] = Math.max(left, right);
-                }
-                ind += 1;
-            }
-
-            return 0;
-        }
-
-
-        private boolean isPalindrome(String s, int i, int j, boolean[][] memob) {
-            if (i == j || i > j) return true;
-            if (memob[i][j]) return memob[i][j];
-
-            char ch1 = s.charAt(i);
-            char ch2 = s.charAt(j);
-
-            if (ch1 == ch2) {
-                memob[i][j] = isPalindrome(s, i + 1, j - 1, memob);
-            } else return false;
-            return memob[i][j];
-        }
+        return dp[n];
     }
 
+    boolean helper(String s, int l, int r) {
+        while (l < r) {
+            if (s.charAt(l) != s.charAt(r)) return false;
+            l++;
+            r--;
+        }
+        return true;
+    }
+
+
+    // My Solution
+    public int maxPalindromes(String s, int k) {
+        int n = s.length();
+        int[][] dp = new int[n][n + 1];
+        for (int[] d : dp) Arrays.fill(d, -1);
+
+
+        boolean[][] palind = new boolean[n][n + 1];
+        boolean[][] memob = new boolean[n][n + 1];
+
+        // precompute palindrome from indexes {i, j}
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j <= n; j++) {
+                palind[i][j - 1] = isPalindrome(s, i, j - 1, memob);
+            }
+        }
+
+        return rec(s, k, 0, 1, palind, dp);
+    }
+
+
+    private int rec(String s, int k, int i, int j, boolean[][] palind, int[][] dp) {
+        int n = s.length();
+        int ind = i;
+        int left, right;
+        if (i > j || i >= n || j >= n + 1) return 0;
+        if (dp[i][j] != -1) return dp[i][j];
+
+
+        while (ind < n && i < j) {
+            //To check the palindrome of odd length palindromic sub-string
+            if (palind[ind][ind] && (m - ind) >= k) {
+                // take the current one
+                left = 1 + rec(s, k, m, m + 1, palind, dp);
+                // skip the current one
+                right = rec(s, k, ind, m + 1, palind, dp);
+                return dp[i][j] = Math.max(left, right);
+            }
+
+            //To check the palindrome of even length palindromic sub-string
+            if (palind[ind][ind + 1] && (m - ind + 1) >= k) {
+                // take the current one
+                left = 1 + rec(s, k, m, m + 1, palind, dp);
+                // skip the current one
+                right = rec(s, k, ind, m + 1, palind, dp);
+                return dp[i][j] = Math.max(left, right);
+            }
+            ind += 1;
+        }
+
+        return 0;
+    }
+
+
+    private boolean isPalindrome(String s, int i, int j, boolean[][] memob) {
+        if (i == j || i > j) return true;
+        if (memob[i][j]) return memob[i][j];
+
+        char ch1 = s.charAt(i);
+        char ch2 = s.charAt(j);
+
+        if (ch1 == ch2) {
+            memob[i][j] = isPalindrome(s, i + 1, j - 1, memob);
+        } else return false;
+        return memob[i][j];
+    }
 }
