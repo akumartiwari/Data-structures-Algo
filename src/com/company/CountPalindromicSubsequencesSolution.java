@@ -66,9 +66,7 @@ class CountPalindromicSubsequencesSolution {
 
 
     final int mod = 1_000_000_007;
-
     public int countPalindromes(String s) {
-
         int ans = 0;
         int len = s.length();
         int[][] dp = new int[len][len];
@@ -80,20 +78,12 @@ class CountPalindromicSubsequencesSolution {
                 if (s.charAt(i) == s.charAt(j)) {
                     dp[i][j] = (dp[i][j] + j - i - 1) % mod;
                 }
-            }
-        }
 
-        /* re-use the above data to calculate for palindromes of length 5*/
-        for (int i = 0; i < len; ++i) {
-            for (int j = i + 4; j < len; ++j) {
-                if (s.charAt(i) == s.charAt(j)) {
+                if (s.charAt(i) == s.charAt(j) && j >= i + 4) {
                     ans = (ans + dp[i + 1][j - 1]) % mod;
                 }
             }
         }
-
-        // for(int i=0;i<len;++i) System.out.println(Arrays.toString(dp[i]));
-
         return ans;
     }
     /*
