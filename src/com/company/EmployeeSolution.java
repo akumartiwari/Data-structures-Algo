@@ -4689,7 +4689,7 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
-    //---------------------------------------------------------------------------------------------------
+    //28th Nov---------------------------------------------------------------------------------------------------
     public int pivotInteger(int n) {
         int total = Math.abs(n * (n + 1) / 2);
 
@@ -4720,49 +4720,82 @@ Output: [1,2,2,3,5,6]
 
     }
 
-    class Solution {
-        public ListNode removeNodes(ListNode head) {
-
-            TreeMap<Integer, Integer> tm = new TreeMap<>();
-
-            List<Integer> nodes = new ArrayList<>();
-            ListNode temp = head;
-            while (temp != null) {
-                nodes.add(temp.val);
-                temp = temp.next;
-            }
-
-            Set<Integer> indexDeleted = new HashSet<>();
-
-            for (int i = nodes.size() - 1; i >= 0; i--) {
-                tm.put(nodes.get(i), tm.getOrDefault(nodes.get(i), 0) + 1);
-
-                if (tm.higherKey(nodes.get(i)) != null && tm.higherKey(nodes.get(i)) > nodes.get(i)) {
-                    indexDeleted.add(i);
-                }
-            }
-
-
-            ListNode ptr = new ListNode(-1);
-            ptr.next = head;
-
-            ListNode cur = head;
-            ListNode prev = ptr;
-
-            int curr = 0;
-
-            while (cur != null) {
-                if (indexDeleted.contains(curr++)) {
-                    prev.next = cur.next;
-                } else {
-                    prev = cur;
-                }
-                cur = cur.next;
-            }
-            return ptr.next;
-
-        }
+    public int numberOfCuts(int n) {
+        if (n == 1) return 0;
+        if (n % 2 == 0 && n % 3 == 0) return n / 2;
+        if (n % 2 == 0) return n / 2;
+        return n;
     }
+
+    public int[][] onesMinusZeros(int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        int[][] ans = new int[m][n];
+
+        List<Pair<Integer, Integer>> rows = new ArrayList<>();
+        List<Pair<Integer, Integer>> cols = new ArrayList<>();
+
+
+        for (int i = 0; i < m; i++) {
+            int cnt1 = 0, cnt0 = 0;
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 0) cnt0++;
+                else cnt1++;
+            }
+            rows.add(new Pair<>(cnt0, cnt1));
+        }
+
+        for (int i = 0; i < n; i++) {
+            int cnt1 = 0, cnt0 = 0;
+            for (int j = 0; j < m; j++) {
+                if (grid[j][i] == 0) cnt0++;
+                else cnt1++;
+            }
+            cols.add(new Pair<>(cnt0, cnt1));
+        }
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                ans[i][j] = rows.get(i).getValue() + cols.get(j).getValue() - rows.get(i).getKey() - cols.get(j).getKey();
+            }
+        }
+
+        return ans;
+    }
+
+    public int bestClosingTime(String customers) {
+
+        TreeMap<Integer, Integer> tm = new TreeMap<>();
+        int cntN = 0;
+        for (int i = 0; i < customers.length(); i++) {
+            if (customers.charAt(i) == 'Y') {
+                tm.put(i, cntN + 1);
+            } else {
+                tm.put(i, cntN);
+                cntN++;
+            }
+        }
+
+        tm.put(customers.length(), cntN);
+        int cntY = 0;
+        for (int i = customers.length() - 1; i >= 0; i--) {
+            tm.put(i, tm.getOrDefault(i, 0) + cntY);
+            if (customers.charAt(i) == 'Y') cntY++;
+        }
+
+        int ans = Integer.MAX_VALUE, ind = 0;
+
+        int ci = 0;
+        for (Map.Entry<Integer, Integer> entry : tm.entrySet()) {
+            if (entry.getValue() < ans) {
+                ans = entry.getValue();
+                ind = ci;
+            }
+            ci++;
+        }
+
+        return ind;
+    }
+
 }
 
 
