@@ -2,6 +2,7 @@ package com.company;
 
 import java.util.*;
 
+
 class CountPalindromicSubsequencesSolution {
     public int countPalindromicSubsequences(String s) {
         int len = s.length();
@@ -64,6 +65,37 @@ class CountPalindromicSubsequencesSolution {
     }
 
 
+    final int mod = 1_000_000_007;
+
+    public int countPalindromes(String s) {
+
+        int ans = 0;
+        int len = s.length();
+        int[][] dp = new int[len][len];
+
+        /* compute how many palindromes of length 3 are possible for every 2 characters match */
+        for (int i = len - 2; i >= 0; --i) {
+            for (int j = i + 2; j < len; ++j) {
+                dp[i][j] = (dp[i][j - 1] + (dp[i + 1][j] == dp[i + 1][j - 1] ? 0 : dp[i + 1][j] - dp[i + 1][j - 1])) % mod;
+                if (s.charAt(i) == s.charAt(j)) {
+                    dp[i][j] = (dp[i][j] + j - i - 1) % mod;
+                }
+            }
+        }
+
+        /* re-use the above data to calculate for palindromes of length 5*/
+        for (int i = 0; i < len; ++i) {
+            for (int j = i + 4; j < len; ++j) {
+                if (s.charAt(i) == s.charAt(j)) {
+                    ans = (ans + dp[i + 1][j - 1]) % mod;
+                }
+            }
+        }
+
+        // for(int i=0;i<len;++i) System.out.println(Arrays.toString(dp[i]));
+
+        return ans;
+    }
     /*
       // 2-d array chacters
   wedfx
@@ -271,7 +303,7 @@ if it occurs within (and including) 60 minutes of another transaction with the s
 
     public int hammingWeight(int n) {
         StringBuilder number = new StringBuilder(n);
-        System.out.println(number.toString());
+        System.out.println(number);
         int ans = 0;
         for (int i = 0; i < number.toString().length(); i++) {
             if (number.toString().charAt(i) == '1') ans++;
