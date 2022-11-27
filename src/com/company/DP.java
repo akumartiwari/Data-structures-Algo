@@ -948,7 +948,6 @@ public class DP {
     // BFS algorithm
 
 
-
     //  DP
     //  - create a map to adjancent nodes alogn with distance
     //  - iterate through all nodes and calculate cost of each path recursively
@@ -1214,5 +1213,44 @@ public class DP {
         if (subAns1 != Long.MAX_VALUE) subAns1 += Math.abs(this.robot.get(robot_index) - factory[factory_index][0]);
         long subAns2 = helper(robot_index, factory_index + 1, (factory_index + 1) == n ? 0 : factory[factory_index + 1][1], dp);
         return dp[robot_index][factory_index][capacity] = Math.min(subAns2, subAns1);
+    }
+
+
+    //TLE - Can be improved further
+    public int countPalindromes(String s) {
+        Map<String, Integer> dp = new HashMap<>();
+        return helper(s, 0, new StringBuilder(), dp);
+    }
+
+    private int helper(String s, int ind, StringBuilder sb, Map<String, Integer> dp) {
+        // base case
+        if (sb.length() == 5) return 1;
+
+        if (ind >= s.length()) return 0;
+        int cnt = 0;
+
+        String key = ind + "-" + sb;
+        if (dp.containsKey(key)) return dp.get(key);
+        if (sb.length() == 0 || sb.length() == 1 || sb.length() == 2) {
+            sb.append(s.charAt(ind));
+            cnt = (cnt + helper(s, ind + 1, sb, dp)) % mod;
+            sb.deleteCharAt(sb.length() - 1);
+        } else if (sb.length() == 3) {
+            if (s.charAt(ind) == sb.charAt(1)) {
+                sb.append(s.charAt(ind));
+                cnt = (cnt + helper(s, ind + 1, sb, dp)) % mod;
+                sb.deleteCharAt(sb.length() - 1);
+            }
+        } else if (sb.length() == 4) {
+            if (s.charAt(ind) == sb.charAt(0)) {
+                sb.append(s.charAt(ind));
+                cnt = (cnt + helper(s, ind + 1, sb, dp)) % mod;
+                sb.deleteCharAt(sb.length() - 1);
+            }
+        }
+
+        cnt = (cnt + helper(s, ind + 1, sb, dp)) % mod;
+        dp.put(key, cnt);
+        return cnt;
     }
 }
