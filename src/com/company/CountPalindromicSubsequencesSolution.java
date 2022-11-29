@@ -66,6 +66,7 @@ class CountPalindromicSubsequencesSolution {
 
 
     final int mod = 1_000_000_007;
+
     public int countPalindromes(String s) {
         int ans = 0;
         int len = s.length();
@@ -86,12 +87,107 @@ class CountPalindromicSubsequencesSolution {
         }
         return ans;
     }
+
+
+    // TC = O(10*10*N)
+    /*
+       To create a 5 digit palindrome we do not need to care about the middle element.
+       We just need to find subsequence of pattern XY_YX.
+       Calculate number of subsequences of type XY and subsequences of type YX around any given point i and multiply them to find number of subsequences of type XY_YX.
+       Since string only has digits, the time complexity will be 100*n.
+
+    Approach -
+    We will be maintaing the counts of digit in the list cnts
+    Keep 2 arrays pre and suf to store the number of prefixes of type XY and suffixes of type YX. pre[i-1][1][2] means prefixes of type 12 before index i.
+    Similarly suf[i+1][1][2] means suffixes of type 21 after index i
+    Remember given string is made of digits that is 0123456789.
+    That's a total of 10 unique characters
+    Once we have calculated the prefix and suffix lists we just need to multiply pre[i - 1][j][k] with suf[i + 1][j][k] to find number of palindromic subsequences
+     */
+    public int countPalindromesLength5(String s) {
+        int n = s.length(), ans = 0;
+        int[][][] prefix = new int[n][10][10], suffix = new int[n][10][10];
+
+        int[] cnts = new int[10];
+        for (int i = 0; i < n; i++) {
+            int c = s.charAt(i) - '0';
+            if (i != 0) {
+                for (int j = 0; j < 10; j++) {
+                    for (int k = 0; k < 10; k++) {
+                        prefix[i][j][k] = prefix[i - 1][j][k];
+                        if (k == c) prefix[i][j][k] += cnts[j];
+                    }
+                }
+            }
+            cnts[c]++;
+        }
+
+
+        Arrays.fill(cnts, 0);
+        for (int i = n - 1; i >= 0; i--) {
+            int c = s.charAt(i) - '0';
+            if (i != n - 1) {
+                for (int j = 0; j < 10; j++) {
+                    for (int k = 0; k < 10; k++) {
+                        suffix[i][j][k] = suffix[i + 1][j][k];
+                        if (k == c) suffix[i][j][k] += cnts[j];
+                    }
+                }
+            }
+            cnts[c]++;
+        }
+
+
+        for (int i = 1; i < n - 1; i++) {
+            for (int j = 0; j < 10; j++) {
+                for (int k = 0; k < 10; k++) {
+                    ans = (int) ((ans + (long) prefix[i - 1][j][k] * suffix[i + 1][j][k]) % mod);
+                }
+            }
+        }
+
+        return ans;
+    }
+
+
+    //TC = O(26N)
+    //Author: Anand
+    public int countPalindromicSubsequenceLength3(String s) {
+        int ans = 0;
+        boolean[] vis;
+        int[] si = new int[26], ei = new int[26];
+        Arrays.fill(si, -1);
+        Arrays.fill(ei, -1);
+
+        for (int i = 0; i < s.length(); i++) {
+            int c = s.charAt(i) - 'a';
+            if (si[c] == -1) si[c] = i;
+            ei[c] = i;
+        }
+
+        for (int i = 0; i < 26; i++) {
+            vis = new boolean[26];
+            Arrays.fill(vis, false);
+
+            for (int j = si[i] + 1; j < ei[i]; j++) {
+                if (!vis[s.charAt(j) - 'a']) ans++;
+                vis[s.charAt(j) - 'a'] = true;
+            }
+        }
+
+        return ans;
+
+    }
+
+
+
+
     /*
       // 2-d array chacters
-  wedfx
+      wedfx
 
-  z x f c f g
-     */
+      z x f c f g
+    */
 
     public static void main(String[] args) {
         char[][] arr = {{'q', 'w', 'e', 'r', 't', 'y'}, {'a', 's', 'd', 'f', 'g', 'h'}};
