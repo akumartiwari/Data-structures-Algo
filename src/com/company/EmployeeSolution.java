@@ -4796,6 +4796,69 @@ Output: [1,2,2,3,5,6]
         return ind;
     }
 
+
+    // TBC
+    public String multiply(String num1, String num2) {
+        List<Integer> prev = new ArrayList<>();
+
+        StringBuilder sb = new StringBuilder();
+
+        int pos = 1;
+        for (int i = num2.length() - 1; i >= 0; i--) {
+            List<Integer> list = new ArrayList<>();
+            int carry = 0;
+            for (int j = num1.length() - 1; j >= 0; j--) {
+                int ans = Integer.parseInt(String.valueOf(num2.charAt(i))) *
+                        Integer.parseInt(String.valueOf(num1.charAt(j))) + carry;
+                list.add(ans % 10);
+                carry = ans / 10;
+            }
+
+            if (carry > 0) list.add(carry);
+            Collections.reverse(list);
+
+            System.out.println(Arrays.toString(list.toArray()));
+            if (prev.size() == 0) {
+                sb.insert(0, list.get(list.size() - 1));
+                prev.clear();
+                prev.addAll(list);
+                pos++;
+            } else {
+                int nc = 0;
+                System.out.println("prev=" + Arrays.toString(prev.toArray()) + ", pos=" + pos);
+                int ind = prev.size() - pos++;
+                System.out.println("list=" + Arrays.toString(list.toArray()));
+
+
+                int cut = ind;
+                int pl = sb.length();
+                for (int k = list.size() - 1; k >= 0; k--) {
+                    int elem = (ind >= 0 ? prev.get(ind) : 0) + list.get(k);
+
+                    if (pl > cut && cut >= 0) {
+                        sb.setCharAt(ind, (char) ((elem + nc) % 10 + '0'));
+                        cut--;
+                    } else sb.insert(0, ((elem + nc) % 10));
+                    System.out.println("sb_cal=" + sb);
+                    nc = elem / 10;
+                    ind--;
+                }
+
+                if (nc > 0) sb.insert(0, nc);
+                prev.clear();
+                for (int t = 0; t < sb.length(); t++) {
+                    prev.add(Integer.parseInt(String.valueOf(sb.charAt(t))));
+                }
+            }
+
+            System.out.println("sb=" + sb);
+        }
+
+
+        return sb.toString();
+
+    }
+
 }
 
 
