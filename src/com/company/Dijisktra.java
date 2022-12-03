@@ -9,7 +9,7 @@ public class Dijisktra {
     public long minimumWeight(int n, int[][] edges, int src1, int src2, int dest) {
         buildGraph(n, edges);
 
-        // To fetch shorstest path from all possible nodes
+        // To fetch the shortest path from all possible nodes
         long[] src1To = new long[n], src2To = new long[n], destTo = new long[n];
         Arrays.fill(src1To, -1);
         Arrays.fill(src2To, -1);
