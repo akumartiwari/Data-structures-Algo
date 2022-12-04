@@ -1096,42 +1096,6 @@ public class DP {
         return temp >= 1000_000_00 ? -1 : temp;
     }
 
-
-    // TODO- mpp
-    class Solution {
-
-        Map<Integer, List<int[]>> map;
-
-        Integer[][] mpDP;
-
-        public int mostProfitablePath(int[][] edges, int bob, int[] amount) {
-            map = new HashMap<>();
-            int n = amount.length;
-            mpDP = new Integer[n + 1][edges.length + 2];
-            for (int[] a : edges) {
-                map.computeIfAbsent(a[0], k -> new ArrayList<>());
-                map.get(a[0]).add(new int[]{a[1], a[2]});
-            }
-
-            Boolean[] visited = new Boolean[n + 1];
-            int temp = find(0, n + 1, visited);
-            return temp >= 1000_000_00 ? -1 : temp;
-        }
-
-
-        int find(int src, int k, Boolean[] visited) {
-            if (k < 0) return 1000_000_00;
-
-            if (cpDP[src][k] != null) return cpDP[src][k];
-            int max = Integer.MIN_VALUE;
-            for (int[] arr : map.getOrDefault(src, new ArrayList<>())) {
-
-                max = Math.max(max, arr[1] + find(arr[0], k - 1, visited));
-            }
-            return cpDP[src][k] = max;
-        }
-    }
-
     public int componentValue(int[] nums, int[][] edges) {
 
         Map<Integer, List<Integer>> graph = new HashMap<>();
@@ -1441,5 +1405,41 @@ public class DP {
             memob[i][j] = isPalindrome(s, i + 1, j - 1, memob);
         } else return false;
         return memob[i][j];
+    }
+
+
+    // TODO- mpp
+    class Solution {
+
+        Map<Integer, List<int[]>> map;
+
+        Integer[][] mpDP;
+
+        public int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+            map = new HashMap<>();
+            int n = amount.length;
+            mpDP = new Integer[n + 1][edges.length + 2];
+            for (int[] a : edges) {
+                map.computeIfAbsent(a[0], k -> new ArrayList<>());
+                map.get(a[0]).add(new int[]{a[1], a[2]});
+            }
+
+            Boolean[] visited = new Boolean[n + 1];
+            int temp = find(0, n + 1, visited);
+            return temp >= 1000_000_00 ? -1 : temp;
+        }
+
+
+        int find(int src, int k, Boolean[] visited) {
+            if (k < 0) return 1000_000_00;
+
+            if (mpDP[src][k] != null) return mpDP[src][k];
+            int max = Integer.MIN_VALUE;
+            for (int[] arr : map.getOrDefault(src, new ArrayList<>())) {
+
+                max = Math.max(max, arr[1] + find(arr[0], k - 1, visited));
+            }
+            return mpDP[src][k] = max;
+        }
     }
 }
