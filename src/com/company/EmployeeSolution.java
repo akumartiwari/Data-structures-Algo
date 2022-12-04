@@ -4859,6 +4859,40 @@ Output: [1,2,2,3,5,6]
 
     }
 
+
+    //Author: Anand
+    public boolean isCircularSentence(String sentence) {
+        String[] words = sentence.split(" ");
+        char first = '#';
+        char last = '#';
+        for (String word : words) {
+            if (first == '#') first = word.charAt(0);
+            if (last == '#') last = word.charAt(word.length() - 1);
+            else if (last != word.charAt(0)) return false;
+
+            last = word.charAt(word.length() - 1);
+        }
+
+        return last == first;
+    }
+
+    //Author: Anand
+    public long dividePlayers(int[] skill) {
+        Arrays.sort(skill);
+        int i = 0, j = skill.length - 1;
+        long ans = 0L;
+
+        long sum = -1L;
+        while (i < j) {
+            if (sum == -1) sum = (long) skill[i] + skill[j];
+            else if (sum != (long) skill[i] + skill[j]) return -1;
+            ans += (long) skill[i++] * skill[j--];
+        }
+
+        return ans;
+    }
+
+
 }
 
 
