@@ -1,5 +1,7 @@
 package com.company;
 
+import javafx.util.Pair;
+
 import java.util.*;
 
 public class DP {
@@ -948,7 +950,6 @@ public class DP {
     // BFS algorithm
 
 
-
     //  DP
     //  - create a map to adjancent nodes alogn with distance
     //  - iterate through all nodes and calculate cost of each path recursively
@@ -1276,6 +1277,7 @@ public class DP {
 
         return ans;
     }
+
     public int countGoodStrings(int low, int high, int zero, int one) {
         String z = str('0', zero);
         String o = str('1', one);
@@ -1408,38 +1410,82 @@ public class DP {
     }
 
 
-    // TODO- mpp
+    // TODO
     class Solution {
-
-        Map<Integer, List<int[]>> map;
-
-        Integer[][] mpDP;
-
         public int mostProfitablePath(int[][] edges, int bob, int[] amount) {
-            map = new HashMap<>();
-            int n = amount.length;
-            mpDP = new Integer[n + 1][edges.length + 2];
-            for (int[] a : edges) {
-                map.computeIfAbsent(a[0], k -> new ArrayList<>());
-                map.get(a[0]).add(new int[]{a[1], a[2]});
+            Map<Integer, List<Integer>> graph = new HashMap<>();
+            Map<Pair<Integer, Integer>, Integer> dm = new HashMap<>(); // wt of each edge
+
+            for (int[] edge : edges) {
+                int start = edge[0];
+                int end = edge[1];
+
+                dm.put(new Pair<>(start, end), amount[end]);
+                dm.put(new Pair<>(end, start), amount[start]);
+
+                if (graph.containsKey(edge[0])) {
+                    List<Integer> exist = graph.get(edge[0]);
+                    exist.add(edge[1]);
+                    graph.put(edge[0], exist);
+                } else graph.put(edge[0], new ArrayList<>(Collections.singletonList(edge[1])));
+
+                if (graph.containsKey(edge[1])) {
+                    List<Integer> exist = graph.get(edge[1]);
+                    exist.add(edge[0]);
+                    graph.put(edge[1], exist);
+                } else graph.put(edge[1], new ArrayList<>(Collections.singletonList(edge[0])));
+            }
+            // To fetch the shortest path from all possible nodes
+            TreeMap<Integer, Pair<Long, Long>> tm = new TreeMap<>();
+
+            for (int i = 0; i < n; i++) {
+                tm.put(i, new Pair<>(Long.MAX_VALUE, 0L));
             }
 
-            Boolean[] visited = new Boolean[n + 1];
-            int temp = find(0, n + 1, visited);
-            return temp >= 1000_000_00 ? -1 : temp;
+            // Bob
+            shortestPath(bob, tm, graph, dm);
+
+            // To fetch the shortest path from all possible nodes
+            TreeMap<Integer, Pair<Long, Long>> atm = new TreeMap<>();
+
+            for (int i = 0; i < n; i++) {
+                atm.put(i, new Pair<>(Long.MAX_VALUE, 0L));
+            }
+
+
+            //Alice
+            shortestPath(0, atm, graph, dm);
+
+            int cost = 0;
+            for (Map.Entry<Integer, Pair<Long, Long>> entry : atm.entrySet()) {
+                if (tm.containsKey(entry.getKey()) && tm.get(entry.getKey()).getValue() == entry.getValue().getValue()) {
+                    cost += entry.getValue().getValue() / 2;
+                } else if (tm.containsKey(entry.getKey()) && tm.get(entry.getKey()).getValue() >= entry.getValue().getValue())
+                    cost += entry.getValue().getKey();
+            }
+
+            return cost;
         }
 
 
-        int find(int src, int k, Boolean[] visited) {
-            if (k < 0) return 1000_000_00;
+        // Dijkstra algorithm to find the shortest distance b/w each node
+        private void shortestPath(int src, TreeMap<Integer, Pair<Long, Long>> tm, Map<Integer, List<Integer>> graph, Map<Pair<Integer, Integer>, Integer> dm) {
+            // min PQ to find SD b/w src, dest
+            PriorityQueue<long[]> queue = new PriorityQueue<>(Comparator.comparingLong(a -> a[1]));
 
-            if (mpDP[src][k] != null) return mpDP[src][k];
-            int max = Integer.MIN_VALUE;
-            for (int[] arr : map.getOrDefault(src, new ArrayList<>())) {
+            queue.add(new long[]{src, Long.MAX_VALUE, 0});
 
-                max = Math.max(max, arr[1] + find(arr[0], k - 1, visited));
+            while (!queue.isEmpty()) {
+                long[] node = queue.poll();
+                int to = (int) node[0];
+                long dist = node[1];
+                if (tm.get(to).getKey() != Long.MAX_VALUE && tm.get(to).getKey() <= dist) continue;
+                tm.put(to, new Pair<>(dist, tm.get(to).getValue()));
+                // For all adjacent nodes continue the process;
+                for (int next : graph.get(to)) {
+                    queue.add(new long[]{next, dist + dm.get(new Pair<>(to, next)), tm.get(to).getValue() + 1});
+                }
             }
-            return mpDP[src][k] = max;
         }
     }
 }
