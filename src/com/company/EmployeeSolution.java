@@ -650,15 +650,8 @@ Output: [1,2,2,3,5,6]
 
         // TC = O(n)
         for (int i = 0; i < n; i++) {
-            if (map.containsKey(nums[i])) {
-                List<Integer> exist = map.get(nums[i]);
-                exist.add(i);
-                map.put(nums[i], exist);
-            } else {
-                List<Integer> list = new ArrayList<>();
-                list.add(i);
-                map.put(nums[i], list);
-            }
+            if(!map.containsKey(nums[i])) map.put(nums[i], new ArrayList<>());
+            map.get(nums[i]).add(i);
         }
 
 
@@ -4892,6 +4885,18 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+
+    public int maximumValue(String[] strs) {
+        int max = Integer.MIN_VALUE;
+        for (String s : strs) {
+            if (s.replaceAll("\\d", "").isEmpty()) {
+                max = Math.max(max, Integer.parseInt(s));
+            } else {
+                max = Math.max(max, s.length());
+            }
+        }
+        return (int) max;
+    }
 
 }
 
