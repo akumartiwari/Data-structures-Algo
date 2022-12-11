@@ -1,8 +1,6 @@
 package com.company;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeSet;
+import java.util.*;
 
 public class ObjectOrientedDesign {
     //Author: Anand
@@ -120,3 +118,80 @@ public class ObjectOrientedDesign {
  * int param_2 = obj.count(tot);
  */
 }
+
+
+class Allocator {
+
+    int[] allocator;
+
+    TreeMap<Integer, Integer> tm;
+
+    public Allocator(int n) {
+        allocator = new int[n];
+        tm = new TreeMap<>();
+        tm.put(0, n);
+    }
+
+    public int allocate(int size, int mID) {
+
+        int ind = -1;
+        for (Map.Entry<Integer, Integer> entry : tm.entrySet()) {
+            if ((entry.getValue() - entry.getKey()) >= size) {
+                ind = entry.getKey();
+                break;
+            }
+        }
+
+        tm.remove(ind);
+        // place the next freed index
+        int ni = ind + size;
+
+
+        if (tm.ceilingKey(ni) == null) {
+            tm.put(ni, allocator.length);
+        } else if (tm.ceilingKey(ni) != ni) {
+            tm.put(ni, tm.ceilingKey(ni));
+        }
+
+        if (ind != -1) {
+            // maintain allocator
+            for (int i = ind; i < ind + size; i++) {
+                allocator[i] = mID;
+            }
+        }
+
+        System.out.println(tm);
+
+        return ind;
+    }
+
+    public int free(int mID) {
+        int cnt = 0;
+
+        System.out.println(Arrays.toString(allocator));
+
+        int i = 0;
+
+
+        while (i < allocator.length) {
+            int ind = i;
+            while (ind < allocator.length && allocator[ind] == mID) {
+                ind++;
+                cnt++;
+            }
+
+            // maintain map
+            if (ind > i) tm.put(i, ind);
+            i = ind + 1;
+        }
+
+        return cnt;
+    }
+}
+
+/**
+ * Your Allocator object will be instantiated and called as such:
+ * Allocator obj = new Allocator(n);
+ * int param_1 = obj.allocate(size,mID);
+ * int param_2 = obj.free(mID);
+ */

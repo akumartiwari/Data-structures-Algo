@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Queue;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static CF_Templates.B.gcd;
@@ -650,7 +651,7 @@ Output: [1,2,2,3,5,6]
 
         // TC = O(n)
         for (int i = 0; i < n; i++) {
-            if(!map.containsKey(nums[i])) map.put(nums[i], new ArrayList<>());
+            if (!map.containsKey(nums[i])) map.put(nums[i], new ArrayList<>());
             map.get(nums[i]).add(i);
         }
 
@@ -4895,9 +4896,65 @@ Output: [1,2,2,3,5,6]
                 max = Math.max(max, s.length());
             }
         }
-        return (int) max;
+        return max;
     }
 
+    //Author: Anand
+    public int deleteGreatestValue(int[][] grid) {
+
+        Map<Integer, PriorityQueue<Integer>> rowiseMax = new ConcurrentHashMap<>();
+
+        int row = 0;
+        for (int[] g : grid) {
+            for (int r : g) {
+                if (!rowiseMax.containsKey(row)) rowiseMax.put(row, new PriorityQueue<>(Collections.reverseOrder()));
+                rowiseMax.get(row).offer(r);
+            }
+            row++;
+        }
+
+        int ans = 0;
+
+        while (rowiseMax.size() > 0) {
+            int max = Integer.MIN_VALUE;
+            for (Map.Entry<Integer, PriorityQueue<Integer>> entry : rowiseMax.entrySet()) {
+                if (entry.getValue().size() == 0) {
+                    rowiseMax.remove(entry.getKey());
+                } else max = Math.max(max, entry.getValue().poll());
+            }
+
+            if (max != Integer.MIN_VALUE) ans += max;
+        }
+
+        return ans;
+    }
+
+
+    //Author: Anand
+    public int longestSquareStreak(int[] nums) {
+        Arrays.sort(nums);
+        int n = nums.length;
+
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int num : nums) {
+
+            if ((Math.sqrt(num) == Math.floor(Math.sqrt(num))) && !Double.isInfinite(Math.sqrt(num)) && map.containsKey((int) Math.sqrt(num))) {
+                List<Integer> exist = map.get((int) Math.sqrt(num));
+                map.remove((int) Math.sqrt(num));
+                exist.add(num);
+                map.put(num, exist);
+            } else {
+                if (!map.containsKey(num)) map.put(num, new ArrayList<>(Collections.singletonList(num)));
+            }
+        }
+        int max = -1;
+        for (Map.Entry<Integer, List<Integer>> entry : map.entrySet()) {
+            if (entry.getValue().size() > 1) max = Math.max(max, entry.getValue().size());
+        }
+
+        return max;
+    }
+        
 }
 
 
