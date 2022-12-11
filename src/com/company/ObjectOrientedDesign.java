@@ -133,7 +133,6 @@ class Allocator {
     }
 
     public int allocate(int size, int mID) {
-
         int ind = -1;
         for (Map.Entry<Integer, Integer> entry : tm.entrySet()) {
             if ((entry.getValue() - entry.getKey()) >= size) {
@@ -142,40 +141,38 @@ class Allocator {
             }
         }
 
-        tm.remove(ind);
-        // place the next freed index
-        int ni = ind + size;
-
-
-        if (tm.ceilingKey(ni) == null) {
-            tm.put(ni, allocator.length);
-        } else if (tm.ceilingKey(ni) != ni) {
-            tm.put(ni, tm.ceilingKey(ni));
-        }
-
         if (ind != -1) {
+
+            // place the next freed index
+            int ni = ind + size;
+
+            if (tm.ceilingKey(ni) == null) {
+                tm.put(ni, allocator.length);
+            }
+
+            if (ind != -1 && tm.get(ind) > ni) {
+                tm.put(ni, tm.get(ind));
+            }
+
+            tm.remove(ind);
+
             // maintain allocator
             for (int i = ind; i < ind + size; i++) {
                 allocator[i] = mID;
             }
         }
-
         System.out.println(tm);
-
         return ind;
     }
 
     public int free(int mID) {
         int cnt = 0;
-
-        System.out.println(Arrays.toString(allocator));
-
+        System.out.println(Arrays.toString(allocator) + "size=" + allocator.length);
         int i = 0;
-
-
         while (i < allocator.length) {
             int ind = i;
             while (ind < allocator.length && allocator[ind] == mID) {
+                allocator[ind] = 0;
                 ind++;
                 cnt++;
             }
@@ -185,10 +182,26 @@ class Allocator {
             i = ind + 1;
         }
 
+        Set<Integer> remove = new HashSet<>();
+        //Map Merge operation
+        int prevK = -1, prevV = -1;
+        for (Map.Entry<Integer, Integer> entry : tm.entrySet()) {
+
+            if (entry.getKey() == entry.getValue()) remove.add(entry.getKey());
+            if (prevV == entry.getKey()) {
+                tm.remove(prevK);
+                tm.put(prevK, entry.getValue());
+            }
+
+            prevV = entry.getValue();
+            prevK = entry.getKey();
+        }
+        for (int r : remove) tm.remove(r);
+        System.out.println(tm);
+
         return cnt;
     }
 }
-
 /**
  * Your Allocator object will be instantiated and called as such:
  * Allocator obj = new Allocator(n);
