@@ -1,5 +1,7 @@
 package com.company;
 
+import javafx.util.Pair;
+
 import java.util.*;
 
 public class Dijisktra {
@@ -9,7 +11,7 @@ public class Dijisktra {
     public long minimumWeight(int n, int[][] edges, int src1, int src2, int dest) {
         buildGraph(n, edges);
 
-        // To fetch shorstest path from all possible nodes
+        // To fetch the shortest path from all possible nodes
         long[] src1To = new long[n], src2To = new long[n], destTo = new long[n];
         Arrays.fill(src1To, -1);
         Arrays.fill(src2To, -1);
@@ -238,4 +240,60 @@ public class Dijisktra {
 
         return new int[]{cycleSize, entryPoint};
     }
+
+
+    public int minScore(int n, int[][] edges) {
+
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        Map<Pair<Integer, Integer>, Integer> dm = new HashMap<>();
+
+        for (int[] edge : edges) {
+            int start = edge[0];
+            int end = edge[1];
+            int distance = edge[2];
+
+            dm.put(new Pair<>(start, end), distance);
+            dm.put(new Pair<>(end, start), distance);
+
+            if (graph.containsKey(edge[0])) {
+                List<Integer> exist = graph.get(edge[0]);
+                exist.add(edge[1]);
+                graph.put(edge[0], exist);
+            } else graph.put(edge[0], new ArrayList<>(Collections.singletonList(edge[1])));
+
+            if (graph.containsKey(edge[1])) {
+                List<Integer> exist = graph.get(edge[1]);
+                exist.add(edge[0]);
+                graph.put(edge[1], exist);
+            } else graph.put(edge[1], new ArrayList<>(Collections.singletonList(edge[0])));
+        }
+        // To fetch the shortest path from all possible nodes
+        long[] srcTo = new long[n + 1];
+        Arrays.fill(srcTo, Long.MAX_VALUE);
+        shortestPath(1, srcTo, graph, dm);
+        return (int) srcTo[n];
+
+    }
+
+
+    // Dijkstra algorithm to find the shortest distance b/w each node
+    private void shortestPath(int src, long[] srcTo, Map<Integer, List<Integer>> graph, Map<Pair<Integer, Integer>, Integer> dm) {
+        // min PQ to find SD b/w src, dest
+        PriorityQueue<long[]> queue = new PriorityQueue<>((a, b) -> Long.compare(a[1], b[1]));
+
+        queue.add(new long[]{src, Long.MAX_VALUE});
+
+        while (!queue.isEmpty()) {
+            long[] node = queue.poll();
+            int to = (int) node[0];
+            long dist = node[1];
+            if (srcTo[to] != Long.MAX_VALUE && srcTo[to] <= dist) continue;
+            srcTo[to] = dist;
+            // For all adjacent nodes continue the process;
+            for (int next : graph.get(to)) {
+                queue.add(new long[]{next, Math.min(dist, dm.get(new Pair<>(to, next)))});
+            }
+        }
+    }
+
 }

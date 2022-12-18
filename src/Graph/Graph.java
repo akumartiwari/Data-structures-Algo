@@ -1,5 +1,7 @@
 package Graph;
 
+import javafx.util.Pair;
+
 import java.util.*;
 
 
@@ -142,7 +144,7 @@ public class Graph {
     //Directed Graphs
     //Quick Find - Eager Approach
     class QuickFindUFEager {
-        private int[] id;
+        private final int[] id;
 
         QuickFindUFEager(int N) {
             id = new int[N];
@@ -167,7 +169,7 @@ public class Graph {
 
     // Quick Find - Lazy Approach
     class QuickFindUFLazy {
-        private int[] id;
+        private final int[] id;
 
         QuickFindUFLazy(int N) {
             id = new int[N];
@@ -289,13 +291,13 @@ public class Graph {
                 List<Integer> exist = graph.get(edge[0]);
                 exist.add(edge[1]);
                 graph.put(edge[0], exist);
-            } else graph.put(edge[0], new ArrayList<>(Arrays.asList(edge[1])));
+            } else graph.put(edge[0], new ArrayList<>(Collections.singletonList(edge[1])));
 
             if (graph.containsKey(edge[1])) {
                 List<Integer> exist = graph.get(edge[1]);
                 exist.add(edge[0]);
                 graph.put(edge[1], exist);
-            } else graph.put(edge[1], new ArrayList<>(Arrays.asList(edge[0])));
+            } else graph.put(edge[1], new ArrayList<>(Collections.singletonList(edge[0])));
         }
 
         List<Integer> components = new ArrayList<>();
@@ -328,7 +330,6 @@ public class Graph {
                 DFS(graph.get(start).get(i), graph, visited);
         }
     }
-
 
     /*
     Input: nums = [1,5,5,4,11], edges = [[0,1],[1,2],[1,3],[3,4]]
@@ -381,13 +382,13 @@ public class Graph {
                     List<Integer> exist = adj.get(edge[0]);
                     exist.add(edge[1]);
                     adj.put(edge[0], exist);
-                } else adj.put(edge[0], new ArrayList<>(Arrays.asList(edge[1])));
+                } else adj.put(edge[0], new ArrayList<>(Collections.singletonList(edge[1])));
 
                 if (adj.containsKey(edge[1])) {
                     List<Integer> exist = adj.get(edge[1]);
                     exist.add(edge[0]);
                     adj.put(edge[1], exist);
-                } else adj.put(edge[1], new ArrayList<>(Arrays.asList(edge[0])));
+                } else adj.put(edge[1], new ArrayList<>(Collections.singletonList(edge[0])));
             }
 
 

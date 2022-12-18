@@ -267,5 +267,47 @@ public class BinaryTree {
         }
         return map.getOrDefault(root, null);
     }
+
+    // Check if 2 BT are same
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        if (p == null && q == null) return true;
+        if (p == null || q == null) return false;
+
+        return p.val == q.val && isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+    }
+
+
+    private void preorder(TreeNode root, TreeMap<Integer, Integer> tm) {
+        if (root == null) {
+            return;
+        }
+
+        tm.put(root.val, tm.getOrDefault(root.val, 0) + 1);
+        // recursively traverse left subtree
+        preorder(root.left, tm);
+
+        // recursively traverse right subtree
+        preorder(root.right, tm);
+    }
+
+    public List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+        List<List<Integer>> ans = new ArrayList<>();
+        TreeMap<Integer, Integer> tm = new TreeMap();
+
+        // base case
+        if (root == null) return ans;
+
+        preorder(root, tm);
+
+        for (int query : queries) {
+            ans.add(new ArrayList<>(Arrays.asList(tm.floorKey(query) == null ? -1 : tm.floorKey(query), tm.ceilingKey(query) == null ? -1 : tm.ceilingKey(query))));
+        }
+
+        return ans;
+    }
+
+
+
+
 }
 

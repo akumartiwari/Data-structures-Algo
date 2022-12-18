@@ -27,6 +27,8 @@ public class DP {
     int m, n;
     Map<Integer, List<int[]>> map;
     Integer[][] cpDP;
+    List<Integer> robot;
+    int[][] factory;
 
     // DP to tabulation:-= Bottom-up approach
     // TC = O(n), SC = O(n)
@@ -153,7 +155,6 @@ public class DP {
     // TOP-DOWN DP
     // TC = O(n2*k)
     // SC = O(n*k)
-
     private static int ls(int ind, int[] arr, int num, int k, int len, int[] dp) {
         if (ind < 0) {
             if (num <= k) {
@@ -674,6 +675,7 @@ public class DP {
         return ls(s.length() - 1, s.chars().map(x -> x - '0').toArray(), 0, k, 0, dp);
     }
 
+
     private int gcd(int a, int b) {
         if (b == 0)
             return a;
@@ -887,6 +889,7 @@ public class DP {
         return helper(startPos, endPos, k, dp);
     }
 
+
     private int helper(int currPos, int endPos, int k, int[][] dp) {
         // base case
         if (currPos == endPos && k == 0) return 1;
@@ -941,6 +944,23 @@ public class DP {
         return dp[m][n][sum] = (up + down) % MOD;
     }
 
+    // Intial thoughts:-
+    // BFS algorithm
+
+
+    //  DP
+    //  - create a map to adjancent nodes alogn with distance
+    //  - iterate through all nodes and calculate cost of each path recursively
+    //  - update minCost path if currNode reaches to destination
+    //  - returm minCost;
+    // TC  = (2^n)
+    // SC = O(n)
+
+    private boolean isSafe(int[][] grid, int i, int j) {
+        int m = grid.length;
+        int n = grid[0].length;
+        return i >= 0 && i < m && j >= 0 && j < n;
+    }
 
     // Thoughts:
 	/*
@@ -980,13 +1000,6 @@ public class DP {
 	  problem boils down to finding a subsequence of length len1
 	  with sum equals sumA
 	*/
-
-    private boolean isSafe(int[][] grid, int i, int j) {
-        int m = grid.length;
-        int n = grid[0].length;
-        return i >= 0 && i < m && j >= 0 && j < n;
-    }
-
     public boolean splitArraySameAverage(int[] nums) {
         int n = nums.length, total = 0;
         for (int i = 0; i < n; i++) total += nums[i];
@@ -1028,18 +1041,6 @@ public class DP {
         map.put(key, case2);
         return case2;
     }
-
-    // Intial thoughts:-
-    // BFS algorithm
-
-
-    //  DP
-    //  - create a map to adjancent nodes alogn with distance
-    //  - iterate through all nodes and calculate cost of each path recursively
-    //  - update minCost path if currNode reaches to destination
-    //  - returm minCost;
-    // TC  = (2^n)
-    // SC = O(n)
 
     // Min. no. of steps to  make both strings equal
     // Input: word1 = "sea", word2 = "eat"
@@ -1112,6 +1113,8 @@ public class DP {
         return max;
     }
 
+    //Knapsack based problem
+
     private int helper(int start, int[] nums, Map<Integer, List<Integer>> graph, int currentSum, int expectedSum) {
         // base case
         if (currentSum == expectedSum) return 1;
@@ -1128,7 +1131,6 @@ public class DP {
 
         return Math.max(cw, ncw);
     }
-
 
     /*
    Input: n = 7
@@ -1154,5 +1156,123 @@ public class DP {
         max = Math.max(max, 4 * rec(n - 5, dp)); // ctrl+a -> ctrl+c -> ctrl+v -> ctrl+v -> ctrl+v
 
         return dp[n] = max;
+    }
+
+
+    /*
+    Input: robot = [0,4,6], factory = [[2,2],[6,2]]
+    Output: 4
+    Explanation: As shown in the figure:
+    - The first robot at position 0 moves in the positive direction. It will be repaired at the first factory.
+    - The second robot at position 4 moves in the negative direction. It will be repaired at the first factory.
+    - The third robot at position 6 will be repaired at the second factory. It does not need to move.
+    The limit of the first factory is 2, and it fixed 2 robots.
+    The limit of the second factory is 2, and it fixed 1 robot.
+    The total distance is |2 - 0| + |2 - 4| + |6 - 6| = 4. It can be shown that we cannot achieve a better total distance than 4.
+
+    ALGO- (Knapsack Type)
+        Sort the robots postions.
+        Sort the factory positions.
+        Iterate from left robot to right. For each robot, you have 2 options:
+        Choose to fix it in current factory if possible (If the factory hasn't reached its limit) (like take item from the current sack)
+        or Try to fix the robot in the next factory (or don't take from the current sack)
+        Answer = max(option1, option2)
+        Time Complexity: O(n * n * n)
+        Space Complexity: O(n * n * n)
+     */
+    public long minimumTotalDistance(List<Integer> robot, int[][] factory) {
+        this.robot = robot;
+        this.factory = factory;
+        n = factory.length;
+        Collections.sort(robot);
+        Arrays.sort(factory, Comparator.comparingInt(a -> a[0]));
+        long[][][] dp = new long[111][111][111];
+
+        for (long[][] d1 : dp) for (long[] d2 : d1) Arrays.fill(d2, -1L);
+
+        return helper(0, 0, factory[0][1], dp);
+    }
+
+    private long helper(int robot_index, int factory_index, int capacity, long[][][] dp) {
+        // base case
+        if (robot_index == this.robot.size()) return 0L;
+        // Still there are robots to repair but no factories remained
+        if (factory_index == this.factory.length) return Long.MAX_VALUE;
+
+        if (dp[robot_index][factory_index][capacity] != -1L) return dp[robot_index][factory_index][capacity];
+
+        // Means robot cant be fixed at current factory, let's repair it at next
+        if (capacity == 0)
+            return dp[robot_index][factory_index][capacity] = helper(robot_index, factory_index + 1, (factory_index + 1) == n ? 0 : factory[factory_index + 1][1], dp);
+
+        // If robot can be fixed at current factory
+        // then 2 cases ->
+        // will fix at current OR will fix at next
+
+        long subAns1 = helper(robot_index + 1, factory_index, capacity - 1, dp);
+        if (subAns1 != Long.MAX_VALUE) subAns1 += Math.abs(this.robot.get(robot_index) - factory[factory_index][0]);
+        long subAns2 = helper(robot_index, factory_index + 1, (factory_index + 1) == n ? 0 : factory[factory_index + 1][1], dp);
+        return dp[robot_index][factory_index][capacity] = Math.min(subAns2, subAns1);
+    }
+
+
+    // TC = O(10*10*N)
+    /*
+       To create a 5 digit palindrome we do not need to care about the middle element.
+       We just need to find subsequence of pattern XY_YX.
+       Calculate number of subsequences of type XY and subsequences of type YX around any given point i and multiply them to find number of subsequences of type XY_YX.
+       Since string only has digits, the time complexity will be 100*n.
+
+    Approach -
+    We will be maintaing the counts of digit in the list cnts
+    Keep 2 arrays pre and suf to store the number of prefixes of type XY and suffixes of type YX. pre[i-1][1][2] means prefixes of type 12 before index i.
+    Similarly suf[i+1][1][2] means suffixes of type 21 after index i
+    Remember given string is made of digits that is 0123456789.
+    That's a total of 10 unique characters
+    Once we have calculated the prefix and suffix lists we just need to multiply pre[i - 1][j][k] with suf[i + 1][j][k] to find number of palindromic subsequences
+     */
+    public int countPalindromes(String s) {
+        int n = s.length(), ans = 0;
+        int[][][] prefix = new int[n][10][10], suffix = new int[n][10][10];
+
+        int[] cnts = new int[10];
+        for (int i = 0; i < n; i++) {
+            int c = s.charAt(i) - '0';
+            if (i != 0) {
+                for (int j = 0; j < 10; j++) {
+                    for (int k = 0; k < 10; k++) {
+                        prefix[i][j][k] = prefix[i - 1][j][k];
+                        if (k == c) prefix[i][j][k] += cnts[j];
+                    }
+                }
+            }
+            cnts[c]++;
+        }
+
+
+        Arrays.fill(cnts, 0);
+        for (int i = n - 1; i >= 0; i--) {
+            int c = s.charAt(i) - '0';
+            if (i != n - 1) {
+                for (int j = 0; j < 10; j++) {
+                    for (int k = 0; k < 10; k++) {
+                        suffix[i][j][k] = suffix[i + 1][j][k];
+                        if (k == c) suffix[i][j][k] += cnts[j];
+                    }
+                }
+            }
+            cnts[c]++;
+        }
+
+
+        for (int i = 1; i < n - 1; i++) {
+            for (int j = 0; j < 10; j++) {
+                for (int k = 0; k < 10; k++) {
+                    ans = (int) ((ans + (long) prefix[i - 1][j][k] * suffix[i + 1][j][k]) % mod);
+                }
+            }
+        }
+
+        return ans;
     }
 }
