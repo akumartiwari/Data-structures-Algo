@@ -5048,6 +5048,7 @@ Output: [1,2,2,3,5,6]
 
     // we need to track both box and player locations. for example,
     // . # T # .
+
     // . . . B S
     // . . . # .
     // `B` needs to land on location(1,2) twice
