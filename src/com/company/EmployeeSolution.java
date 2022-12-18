@@ -1,5 +1,6 @@
 package com.company;
 
+import CF_Templates.topcoder;
 import javafx.util.Pair;
 
 import java.awt.*;
@@ -4897,7 +4898,6 @@ Output: [1,2,2,3,5,6]
     Explanation: There are 2 pairs that satisfy the conditions:
     - i = 0 and j = 1 : both words[0] and words[1] only consist of characters 'a' and 'b'.
     - i = 3 and j = 4 : both words[3] and words[4] only consist of characters 'a', 'b', and 'c'.
-
      */
     public int similarPairs(String[] words) {
 
@@ -5039,6 +5039,7 @@ Output: [1,2,2,3,5,6]
 
         return un.size() > 0;
     }
+
 }
 
 
@@ -5048,7 +5049,6 @@ Output: [1,2,2,3,5,6]
 
     // we need to track both box and player locations. for example,
     // . # T # .
-
     // . . . B S
     // . . . # .
     // `B` needs to land on location(1,2) twice

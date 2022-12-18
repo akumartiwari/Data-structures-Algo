@@ -190,7 +190,7 @@ public class Tree {
                     List<Integer> l = hm.get(res.key);
                     l.add(res.value);
                     hm.put(res.key, l);
-                } else hm.put(res.key, new ArrayList<>(Arrays.asList(res.value)));
+                } else hm.put(res.key, new ArrayList<>(Collections.singletonList(res.value)));
             }
 
             for (Map.Entry<Integer, List<Integer>> e : hm.entrySet()) {
@@ -223,5 +223,55 @@ public class Tree {
         inorder(root.right, level + 1, vline + 1);
     }
 
+
+    boolean possible = false;
+
+    public boolean checkEqualTree(TreeNode root) {
+        SumAndCount t = tuple(root);
+        if (t.sum % 2 != 0) return false;
+        isPossible(root, t.sum, t.count);
+        return possible;
+    }
+
+    static class SumAndCount {
+        long sum;
+        int count;
+
+        SumAndCount() {
+            sum = 0L;
+            count = 0;
+        }
+
+
+        public SumAndCount(long currentSum, int currentCount) {
+            this.sum = currentSum;
+            this.count = currentCount;
+        }
+    }
+
+    private SumAndCount isPossible(TreeNode root, long sum, int cnt) {
+        if (root == null) return new SumAndCount(0L, 0);
+
+        SumAndCount left = isPossible(root.left, sum, cnt);
+        SumAndCount right = isPossible(root.right, sum, cnt);
+
+        long currsum = root.val + left.sum + right.sum;
+        int nodes = 1 + left.count + right.count;
+
+        if (currsum == sum / 2 && cnt != nodes) possible = true;
+        return new SumAndCount(currsum, nodes);
+    }
+
+    private SumAndCount tuple(TreeNode root) {
+
+        if (root == null) return new SumAndCount(0L, 0);
+
+        SumAndCount left = tuple(root.left);
+        SumAndCount right = tuple(root.right);
+
+        long currsum = root.val + left.sum + right.sum;
+        int nodes = 1 + left.count + right.count;
+        return new SumAndCount(currsum, nodes);
+    }
 }
 
