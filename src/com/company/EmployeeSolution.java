@@ -1,10 +1,8 @@
 package com.company;
 
-import CF_Templates.topcoder;
 import javafx.util.Pair;
 
 import java.awt.*;
-import java.beans.Introspector;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Queue;
@@ -4893,6 +4891,154 @@ Output: [1,2,2,3,5,6]
     }
 
 
+    /*
+    Input: words = ["aba","aabb","abcd","bac","aabc"]
+    Output: 2
+    Explanation: There are 2 pairs that satisfy the conditions:
+    - i = 0 and j = 1 : both words[0] and words[1] only consist of characters 'a' and 'b'.
+    - i = 3 and j = 4 : both words[3] and words[4] only consist of characters 'a', 'b', and 'c'.
+
+     */
+    public int similarPairs(String[] words) {
+
+        int cnt = 0;
+        for (int i = 0; i < words.length; i++) {
+            for (int j = i + 1; j < words.length; j++) {
+                if (isSimilar(words[i], words[j])) cnt++;
+            }
+        }
+        return cnt;
+    }
+
+    private boolean isSimilar(String word1, String word2) {
+        Set<Character> s1 = new HashSet<>();
+        for (char c : word1.toCharArray()) s1.add(c);
+        Set<Character> s2 = new HashSet<>();
+        for (char c : word2.toCharArray()) s2.add(c);
+        return s1.equals(s2);
+    }
+
+
+    List<Integer> primeNumbers = new ArrayList<>();
+
+    //prime sieve
+    public void primeSieve(int n) {
+        BitSet bitset = new BitSet(n + 1);
+        for (long i = 0; i < n; i++) {
+            if (i == 0 || i == 1) {
+                bitset.set((int) i);
+                continue;
+            }
+            if (bitset.get((int) i)) continue;
+            primeNumbers.add((int) i);
+            for (long j = i; j <= n; j += i)
+                bitset.set((int) j);
+        }
+    }
+
+    public int smallestValue(int n) {
+
+        if (n == 2 || n == 4) return n;
+
+        primeSieve(n);
+        List<Integer> powers = new ArrayList<>();
+        primeFactors(n, powers);
+        while (powers.size() > 0) {
+            n = powers.stream().mapToInt(x -> x).sum();
+            powers.clear();
+            primeNumbers.clear();
+            primeSieve(n);
+            primeFactors(n, powers);
+        }
+        return n;
+    }
+
+    // A function to print all prime factors
+    // of a given number n
+    public void primeFactors(int n, List<Integer> powers) {
+        // Print the number of 2s that divide n
+        while (n % 2 == 0) {
+            powers.add(2);
+            n /= 2;
+        }
+
+        // n must be odd at this point.  So we can
+        // skip one element (Note i = i +2)
+        for (int i : primeNumbers) {
+
+            if (i > n) break;
+            // While i divides n, print i and divide n
+            while (n % i == 0) {
+                powers.add(i);
+                n /= i;
+            }
+        }
+    }
+
+    public boolean isPossible(int n, List<List<Integer>> edges) {
+
+        Map<Integer, Set<Integer>> edgesM = new HashMap<>();
+        Map<Integer, Integer> map = new HashMap<>(); // node, degree
+
+        for (List<Integer> edge : edges) {
+            int n1 = edge.get(0);
+            int n2 = edge.get(1);
+            map.put(n1, map.getOrDefault(n1, 0) + 1);
+            map.put(n2, map.getOrDefault(n2, 0) + 1);
+
+            if (!edgesM.containsKey(n1)) edgesM.put(n1, new HashSet<>());
+            if (!edgesM.containsKey(n2)) edgesM.put(n2, new HashSet<>());
+            edgesM.get(n1).add(n2);
+            edgesM.get(n2).add(n1);
+        }
+
+        // collect all odd degree nodes
+        Map<Integer, Integer> oddD = map.entrySet()
+                .stream()
+                .filter(x -> x.getValue() % 2 != 0)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        if (oddD.size() == 0) return true;
+        if (oddD.size() > 4 || oddD.size() % 2 != 0) return false;
+
+        List<Integer> keyset = new ArrayList<>(oddD.keySet());
+
+        // If 4 nodes having odd degree then  check if there is combination to connect them with 2 edges
+        if (oddD.size() == 4) {
+            int cnt = 0;
+            for (int i = 0; i < keyset.size(); i++) {
+                for (int j = i + 1; j < keyset.size(); j++) {
+                    if (oddD.get(keyset.get(i)) % 2 == 0 || oddD.get(keyset.get(j)) % 2 == 0) continue;
+                    if (!edgesM.get(keyset.get(i)).contains(keyset.get(j))) {
+
+                        edgesM.get(keyset.get(i)).add(keyset.get(j));
+                        edgesM.get(keyset.get(j)).add(keyset.get(i));
+
+                        oddD.put(keyset.get(i), oddD.get(keyset.get(i)) + 1);
+                        oddD.put(keyset.get(j), oddD.get(keyset.get(j)) + 1);
+                        cnt++;
+                    }
+                }
+            }
+            return cnt == 2;
+        }
+
+        // 2 odd edges
+        // if 2 edges are not connected thn connect them and make degrees even
+        if (!edgesM.get(keyset.get(0)).contains(keyset.get(1))) return true;
+
+        // check if there exist a node with even degree that is not connected to either of them
+        // if exist connect it to both of them 1 by 1 and all degrees will become even
+        Map<Integer, Integer> un = map.entrySet()
+                .stream()
+                .filter(x -> (x.getValue() % 2 == 0 &&
+                        !edgesM.get(keyset.get(0)).contains(x.getKey())
+                        &&
+                        !edgesM.get(keyset.get(1)).contains(x.getKey())))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        return un.size() > 0;
+    }
 }
 
 
