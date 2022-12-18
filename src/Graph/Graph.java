@@ -446,6 +446,54 @@ public class Graph {
             return j;
         }
     }
+
+    public int maxStarSum(int[] vals, int[][] edges, int k) {
+        Map<Integer, List<Integer>> adj = new HashMap<>();
+        if (edges.length == 0) {
+            if (vals.length >= 1) {
+                return Arrays.stream(vals).max().getAsInt();
+            }
+            return 0;
+        }
+
+        int ans = Integer.MIN_VALUE;
+        for (int[] edge : edges) {
+            if (!adj.containsKey(edge[0])) adj.put(edge[0], new ArrayList<>());
+            adj.get(edge[0]).add(edge[1]);
+
+            if (!adj.containsKey(edge[1])) adj.put(edge[1], new ArrayList<>());
+            adj.get(edge[1]).add(edge[0]);
+        }
+        System.out.println(adj);
+
+        for (Map.Entry<Integer, List<Integer>> entry : adj.entrySet()) {
+            List<Integer> nodes = entry.getValue();
+            nodes.add(entry.getKey());
+
+            System.out.println(entry.getKey() + ":" + Arrays.toString(nodes.toArray()));
+
+            ans = Math.max(ans, mss(nodes.stream().mapToInt(x -> x).toArray(), vals, k));
+            System.out.println(ans);
+        }
+
+        return ans;
+    }
+
+    private int mss(int[] arr, int[] vals, int k) {
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+        for (int a : arr) pq.offer(vals[a]);
+
+
+        if (pq.size() == 1) return pq.poll();
+        int len = k, sum = 0;
+        while (len-- >= 0 & !pq.isEmpty()) {
+            int element = pq.poll();
+            if (element <= 0) return sum;
+            sum += element;
+        }
+
+        return sum;
+    }
 }
 
 
