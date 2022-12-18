@@ -4640,6 +4640,405 @@ Output: [1,2,2,3,5,6]
         return s;
     }
 
+    public int[] applyOperations(int[] nums) {
+        for (int i = 0; i < nums.length - 1; i++) {
+            if (nums[i] == nums[i + 1]) {
+                nums[i] *= 2;
+                nums[i + 1] = 0;
+            }
+        }
+
+        List<Integer> m = new ArrayList<>();
+
+        m.addAll(Arrays.stream(nums).boxed().collect(Collectors.toList()));
+        move_zeros_to_right(m);
+
+        return m.stream().mapToInt(x -> x).toArray();
+    }
+
+    // function to shift zeros
+    private void move_zeros_to_right(List<Integer> m) {
+        int count = 0;
+        for (int i = 0; i < m.size(); i++) {
+            if (m.get(i) == 0) {
+                count++;
+                // deleting the element from vector
+                m.remove(i);
+                i--;
+            }
+        }
+
+        for (int i = 0; i < count; i++) {
+            // inserting the zero into arraylist
+            m.add(0);
+        }
+    }
+
+
+    public int unequalTriplets(int[] nums) {
+        int cnt = 0;
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                for (int k = j + 1; k < nums.length; k++) {
+                    if (nums[i] != nums[j] && nums[i] != nums[k] && nums[j] != nums[k]) cnt++;
+                }
+            }
+        }
+
+        return cnt;
+    }
+
+    //28th Nov---------------------------------------------------------------------------------------------------
+    public int pivotInteger(int n) {
+        int total = Math.abs(n * (n + 1) / 2);
+
+        if (n == 1) return 1;
+        int currSum = 0;
+        for (int i = 1; i < n; i++) {
+            currSum += i;
+            if (currSum == (total + i - currSum)) return i;
+        }
+
+        return -1;
+    }
+
+
+    public int appendCharacters(String s, String t) {
+
+        List<Character> tl = new ArrayList<>();
+        for (char c : t.toCharArray()) tl.add(c);
+
+        int ind = 0;
+        for (char c : s.toCharArray()) {
+            if (ind < tl.size() && c == tl.get(ind)) {
+                ind++;
+            }
+        }
+
+        return tl.size() - ind;
+
+    }
+
+    public int numberOfCuts(int n) {
+        if (n == 1) return 0;
+        if (n % 2 == 0 && n % 3 == 0) return n / 2;
+        if (n % 2 == 0) return n / 2;
+        return n;
+    }
+
+    public int[][] onesMinusZeros(int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        int[][] ans = new int[m][n];
+
+        List<Pair<Integer, Integer>> rows = new ArrayList<>();
+        List<Pair<Integer, Integer>> cols = new ArrayList<>();
+
+
+        for (int i = 0; i < m; i++) {
+            int cnt1 = 0, cnt0 = 0;
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 0) cnt0++;
+                else cnt1++;
+            }
+            rows.add(new Pair<>(cnt0, cnt1));
+        }
+
+        for (int i = 0; i < n; i++) {
+            int cnt1 = 0, cnt0 = 0;
+            for (int j = 0; j < m; j++) {
+                if (grid[j][i] == 0) cnt0++;
+                else cnt1++;
+            }
+            cols.add(new Pair<>(cnt0, cnt1));
+        }
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                ans[i][j] = rows.get(i).getValue() + cols.get(j).getValue() - rows.get(i).getKey() - cols.get(j).getKey();
+            }
+        }
+
+        return ans;
+    }
+
+    public int bestClosingTime(String customers) {
+
+        TreeMap<Integer, Integer> tm = new TreeMap<>();
+        int cntN = 0;
+        for (int i = 0; i < customers.length(); i++) {
+            if (customers.charAt(i) == 'Y') {
+                tm.put(i, cntN + 1);
+            } else {
+                tm.put(i, cntN);
+                cntN++;
+            }
+        }
+
+        tm.put(customers.length(), cntN);
+        int cntY = 0;
+        for (int i = customers.length() - 1; i >= 0; i--) {
+            tm.put(i, tm.getOrDefault(i, 0) + cntY);
+            if (customers.charAt(i) == 'Y') cntY++;
+        }
+
+        int ans = Integer.MAX_VALUE, ind = 0;
+
+        int ci = 0;
+        for (Map.Entry<Integer, Integer> entry : tm.entrySet()) {
+            if (entry.getValue() < ans) {
+                ans = entry.getValue();
+                ind = ci;
+            }
+            ci++;
+        }
+
+        return ind;
+    }
+
+
+    // TBC
+    public String multiply(String num1, String num2) {
+        List<Integer> prev = new ArrayList<>();
+
+        StringBuilder sb = new StringBuilder();
+
+        int pos = 1;
+        for (int i = num2.length() - 1; i >= 0; i--) {
+            List<Integer> list = new ArrayList<>();
+            int carry = 0;
+            for (int j = num1.length() - 1; j >= 0; j--) {
+                int ans = Integer.parseInt(String.valueOf(num2.charAt(i))) *
+                        Integer.parseInt(String.valueOf(num1.charAt(j))) + carry;
+                list.add(ans % 10);
+                carry = ans / 10;
+            }
+
+            if (carry > 0) list.add(carry);
+            Collections.reverse(list);
+
+            System.out.println(Arrays.toString(list.toArray()));
+            if (prev.size() == 0) {
+                sb.insert(0, list.get(list.size() - 1));
+                prev.clear();
+                prev.addAll(list);
+                pos++;
+            } else {
+                int nc = 0;
+                System.out.println("prev=" + Arrays.toString(prev.toArray()) + ", pos=" + pos);
+                int ind = prev.size() - pos++;
+                System.out.println("list=" + Arrays.toString(list.toArray()));
+
+
+                int cut = ind;
+                int pl = sb.length();
+                for (int k = list.size() - 1; k >= 0; k--) {
+                    int elem = (ind >= 0 ? prev.get(ind) : 0) + list.get(k);
+
+                    if (pl > cut && cut >= 0) {
+                        sb.setCharAt(ind, (char) ((elem + nc) % 10 + '0'));
+                        cut--;
+                    } else sb.insert(0, ((elem + nc) % 10));
+                    System.out.println("sb_cal=" + sb);
+                    nc = elem / 10;
+                    ind--;
+                }
+
+                if (nc > 0) sb.insert(0, nc);
+                prev.clear();
+                for (int t = 0; t < sb.length(); t++) {
+                    prev.add(Integer.parseInt(String.valueOf(sb.charAt(t))));
+                }
+            }
+
+            System.out.println("sb=" + sb);
+        }
+
+
+        return sb.toString();
+
+    }
+
+
+    //Author: Anand
+    public boolean isCircularSentence(String sentence) {
+        String[] words = sentence.split(" ");
+        char first = '#';
+        char last = '#';
+        for (String word : words) {
+            if (first == '#') first = word.charAt(0);
+            if (last == '#') last = word.charAt(word.length() - 1);
+            else if (last != word.charAt(0)) return false;
+
+            last = word.charAt(word.length() - 1);
+        }
+
+        return last == first;
+    }
+
+    //Author: Anand
+    public long dividePlayers(int[] skill) {
+        Arrays.sort(skill);
+        int i = 0, j = skill.length - 1;
+        long ans = 0L;
+
+        long sum = -1L;
+        while (i < j) {
+            if (sum == -1) sum = (long) skill[i] + skill[j];
+            else if (sum != (long) skill[i] + skill[j]) return -1;
+            ans += (long) skill[i++] * skill[j--];
+        }
+
+        return ans;
+    }
+
+
+    /*
+    Input: words = ["aba","aabb","abcd","bac","aabc"]
+    Output: 2
+    Explanation: There are 2 pairs that satisfy the conditions:
+    - i = 0 and j = 1 : both words[0] and words[1] only consist of characters 'a' and 'b'.
+    - i = 3 and j = 4 : both words[3] and words[4] only consist of characters 'a', 'b', and 'c'.
+     */
+    public int similarPairs(String[] words) {
+
+        int cnt = 0;
+        for (int i = 0; i < words.length; i++) {
+            for (int j = i + 1; j < words.length; j++) {
+                if (isSimilar(words[i], words[j])) cnt++;
+            }
+        }
+        return cnt;
+    }
+
+    private boolean isSimilar(String word1, String word2) {
+        Set<Character> s1 = new HashSet<>();
+        for (char c : word1.toCharArray()) s1.add(c);
+        Set<Character> s2 = new HashSet<>();
+        for (char c : word2.toCharArray()) s2.add(c);
+        return s1.equals(s2);
+    }
+
+
+    List<Integer> primeNumbers = new ArrayList<>();
+
+    //prime sieve
+    public void primeSieve(int n) {
+        BitSet bitset = new BitSet(n + 1);
+        for (long i = 0; i < n; i++) {
+            if (i == 0 || i == 1) {
+                bitset.set((int) i);
+                continue;
+            }
+            if (bitset.get((int) i)) continue;
+            primeNumbers.add((int) i);
+            for (long j = i; j <= n; j += i)
+                bitset.set((int) j);
+        }
+    }
+
+    public int smallestValue(int n) {
+
+        if (n == 2 || n == 4) return n;
+
+        primeSieve(n);
+        List<Integer> powers = new ArrayList<>();
+        primeFactors(n, powers);
+        while (powers.size() > 0) {
+            n = powers.stream().mapToInt(x -> x).sum();
+            powers.clear();
+            primeNumbers.clear();
+            primeSieve(n);
+            primeFactors(n, powers);
+        }
+        return n;
+    }
+
+    // A function to print all prime factors
+    // of a given number n
+    public void primeFactors(int n, List<Integer> powers) {
+        // Print the number of 2s that divide n
+        while (n % 2 == 0) {
+            powers.add(2);
+            n /= 2;
+        }
+
+        // n must be odd at this point.  So we can
+        // skip one element (Note i = i +2)
+        for (int i : primeNumbers) {
+
+            if (i > n) break;
+            // While i divides n, print i and divide n
+            while (n % i == 0) {
+                powers.add(i);
+                n /= i;
+            }
+        }
+    }
+
+    public boolean isPossible(int n, List<List<Integer>> edges) {
+
+        Map<Integer, Set<Integer>> edgesM = new HashMap<>();
+        Map<Integer, Integer> map = new HashMap<>(); // node, degree
+
+        for (List<Integer> edge : edges) {
+            int n1 = edge.get(0);
+            int n2 = edge.get(1);
+            map.put(n1, map.getOrDefault(n1, 0) + 1);
+            map.put(n2, map.getOrDefault(n2, 0) + 1);
+
+            if (!edgesM.containsKey(n1)) edgesM.put(n1, new HashSet<>());
+            if (!edgesM.containsKey(n2)) edgesM.put(n2, new HashSet<>());
+            edgesM.get(n1).add(n2);
+            edgesM.get(n2).add(n1);
+        }
+
+        // collect all odd degree nodes
+        Map<Integer, Integer> oddD = map.entrySet()
+                .stream()
+                .filter(x -> x.getValue() % 2 != 0)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        if (oddD.size() == 0) return true;
+        if (oddD.size() > 4 || oddD.size() % 2 != 0) return false;
+
+        List<Integer> keyset = new ArrayList<>(oddD.keySet());
+
+        // If 4 nodes having odd degree then  check if there is combination to connect them with 2 edges
+        if (oddD.size() == 4) {
+            int cnt = 0;
+            for (int i = 0; i < keyset.size(); i++) {
+                for (int j = i + 1; j < keyset.size(); j++) {
+                    if (oddD.get(keyset.get(i)) % 2 == 0 || oddD.get(keyset.get(j)) % 2 == 0) continue;
+                    if (!edgesM.get(keyset.get(i)).contains(keyset.get(j))) {
+
+                        edgesM.get(keyset.get(i)).add(keyset.get(j));
+                        edgesM.get(keyset.get(j)).add(keyset.get(i));
+
+                        oddD.put(keyset.get(i), oddD.get(keyset.get(i)) + 1);
+                        oddD.put(keyset.get(j), oddD.get(keyset.get(j)) + 1);
+                        cnt++;
+                    }
+                }
+            }
+            return cnt == 2;
+        }
+
+        // 2 odd edges
+        // if 2 edges are not connected thn connect them and make degrees even
+        if (!edgesM.get(keyset.get(0)).contains(keyset.get(1))) return true;
+
+        // check if there exist a node with even degree that is not connected to either of them
+        // if exist connect it to both of them 1 by 1 and all degrees will become even
+        Map<Integer, Integer> un = map.entrySet()
+                .stream()
+                .filter(x -> (x.getValue() % 2 == 0 &&
+                        !edgesM.get(keyset.get(0)).contains(x.getKey())
+                        &&
+                        !edgesM.get(keyset.get(1)).contains(x.getKey())))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        return un.size() > 0;
+    }
 
 }
 
