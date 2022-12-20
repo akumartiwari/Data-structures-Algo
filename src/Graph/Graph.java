@@ -1,7 +1,5 @@
 package Graph;
 
-import javafx.util.Pair;
-
 import java.util.*;
 
 
@@ -445,6 +443,26 @@ public class Graph {
             if (ancestors[i].contains(j)) return i;
             return j;
         }
+    }
+
+    // The left node has the value 2 * val, and
+    // The right node has the value 2 * val + 1.
+    // The concept is to find LCA for each node in query
+    // and then find the distance of node with its LCA
+    // the total length of cycle is l1+l2+1
+    public int[] cycleLengthQueries(int n, int[][] queries) {
+        int[] ans = new int[queries.length];
+        int ind = 0;
+        for (int[] query : queries) {
+            int x = query[0], y = query[1];
+            while (x != y) {
+                if (x > y) x /= 2;
+                else y /= 2;
+                ans[ind]++;
+            }
+            ans[ind++]++;
+        }
+        return ans;
     }
 }
 
