@@ -1416,6 +1416,7 @@ public class DP {
             Map<Integer, List<Integer>> graph = new HashMap<>();
             Map<Pair<Integer, Integer>, Integer> dm = new HashMap<>(); // wt of each edge
 
+            int n = amount.length;
             for (int[] edge : edges) {
                 int start = edge[0];
                 int end = edge[1];
