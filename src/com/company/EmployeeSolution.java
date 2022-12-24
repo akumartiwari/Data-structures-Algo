@@ -1,10 +1,8 @@
 package com.company;
 
-import CF_Templates.topcoder;
 import javafx.util.Pair;
 
 import java.awt.*;
-import java.beans.Introspector;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Queue;
@@ -5102,6 +5100,65 @@ Output: [1,2,2,3,5,6]
 
         return un.size() > 0;
     }
+
+    public int captureForts(int[] forts) {
+        int pos = Integer.MIN_VALUE, maxCnt = 0, cnt = 0;
+        for (int fort : forts) {
+            if ((fort == 1 || fort == -1) && fort != pos) {
+                maxCnt = Math.max(maxCnt, cnt);
+                pos = fort;
+                cnt = 0;
+            } else if ((fort == 1 || fort == -1)) {
+                cnt = 0;
+            } else if (pos != Integer.MIN_VALUE) {
+                cnt++;
+            }
+        }
+
+        return maxCnt;
+    }
+
+    public List<Integer> topStudents(String[] positive_feedback, String[] negative_feedback, String[] report, int[] student_id, int k) {
+        PriorityQueue<Pair<Integer, Integer>> pq = new PriorityQueue<>(new Comparator<Pair<Integer, Integer>>() {
+            @Override
+            public int compare(Pair<Integer, Integer> o1, Pair<Integer, Integer> o2) {
+                if (o1.getValue() > o2.getValue()) return -1;
+                if (o1.getValue() < o2.getValue()) return 1;
+                return o1.getKey().compareTo(o2.getKey());
+            }
+        });
+
+
+        Set<String> pfs = new HashSet<>();
+        Collections.addAll(pfs, positive_feedback);
+
+        Set<String> nfs = new HashSet<>();
+        Collections.addAll(nfs, negative_feedback);
+
+        for (int i = 0; i < student_id.length; i++) {
+            int si = student_id[i];
+            String[] r = report[i].split(" ");
+
+            int score = 0;
+            for (String s : r) {
+                if (pfs.contains(s)) score += 3;
+                else if (nfs.contains(s)) score -= 1;
+            }
+
+            pq.offer(new Pair<>(si, score));
+        }
+
+        List<Integer> ans = new ArrayList<>();
+        while (!pq.isEmpty()) {
+            if (k-- == 0) break;
+            ans.add(pq.poll().getKey());
+        }
+
+        return ans;
+    }
+
+
+
 
 }
 
