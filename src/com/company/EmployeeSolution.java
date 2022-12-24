@@ -5159,6 +5159,39 @@ Output: [1,2,2,3,5,6]
 
 
 
+    // TODO: Solve for correct answer
+    public int minimizeSet(int divisor1, int divisor2, int uniqueCnt1, int uniqueCnt2) {
+
+        return Math.min(calc(divisor1, divisor2, uniqueCnt1, uniqueCnt2),
+                calc(divisor2, divisor1, uniqueCnt2, uniqueCnt1)
+        );
+    }
+
+    private int calc(int divisor1, int divisor2, int uniqueCnt1, int uniqueCnt2) {
+
+        int start = 1;
+        List<Integer> arr1 = new ArrayList<>();
+        List<Integer> arr2 = new ArrayList<>();
+
+        while (uniqueCnt1 > 0) {
+            if (start % divisor1 != 0) {
+                arr1.add(start);
+                uniqueCnt1--;
+            }
+            start++;
+        }
+
+        start = 1;
+        while (uniqueCnt2 > 0) {
+            if (start % divisor2 != 0 && !arr1.contains(start)) {
+                arr2.add(start);
+                uniqueCnt2--;
+            }
+            start++;
+        }
+        return Math.max(arr1.get(arr1.size() - 1), arr2.get(arr2.size() - 1));
+    }
+
 
 }
 
