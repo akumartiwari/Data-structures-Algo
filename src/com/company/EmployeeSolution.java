@@ -5193,6 +5193,80 @@ Output: [1,2,2,3,5,6]
     }
 
 
+    public int closetTarget(String[] words, String target, int startIndex) {
+        int n = words.length;
+        int cnt = 0, maxCnt = -1;
+        // left to right traversal
+
+
+        if (words[startIndex].equals(target)) return 0;
+        int ni = (startIndex + 1) % n;
+        cnt++;
+        while (!words[ni].equals(target) && ni != startIndex) {
+            ni = (ni + 1) % n;
+            cnt++;
+        }
+
+        if (ni != startIndex) maxCnt = Math.max(maxCnt, cnt);
+
+        cnt = 0;
+        ni = (startIndex - 1 + n) % n;
+        cnt++;
+        while (!words[ni].equals(target) && ni != startIndex) {
+            ni = (ni - 1 + n) % n;
+            cnt++;
+        }
+
+        if (ni != startIndex) {
+            if (cnt == 0) return maxCnt;
+            if (maxCnt == -1) return cnt;
+            return Math.min(maxCnt, cnt);
+        }
+        return maxCnt;
+    }
+
+    public int takeCharacters(String s, int k) {
+        int n = s.length();
+        TreeMap<Character, List<Integer>> pos = new TreeMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            if (!pos.containsKey(s.charAt(i))) pos.put(s.charAt(i), new ArrayList<>());
+            pos.get(s.charAt(i)).add(i);
+        }
+
+        int left = 0, right = n - 1;
+
+        if (pos.size() != 3) return -1;
+        for (Map.Entry<Character, List<Integer>> entry : pos.entrySet()) {
+            if (entry.getValue().size() < k) return -1;
+        }
+
+        System.out.println(pos);
+
+        for (Map.Entry<Character, List<Integer>> entry : pos.entrySet()) {
+            List<Integer> indexes = entry.getValue();
+            int ck = k;
+            int ind = 0;
+            while (ck-- > 0) {
+
+                int lp = indexes.get(ind);
+                int rp = indexes.get(indexes.size() - 1 - ind);
+                if (lp < n - rp) {
+                    left = Math.max(left, lp);
+                } else if (lp > n - rp) {
+                    if (n - rp > rp) {
+                        left = Math.max(left, lp);
+                    } else {
+                        right = Math.min(right, rp);
+                    }
+                }
+                ind++;
+
+                System.out.println(left + ":" + right);
+            }
+        }
+
+        return left + n - right + 1;
+    }
 }
 
 
