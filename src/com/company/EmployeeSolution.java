@@ -1,10 +1,8 @@
 package com.company;
 
-import CF_Templates.topcoder;
 import javafx.util.Pair;
 
 import java.awt.*;
-import java.beans.Introspector;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Queue;
@@ -5103,6 +5101,40 @@ Output: [1,2,2,3,5,6]
         return un.size() > 0;
     }
 
+
+    public int countDigits(int num) {
+
+        int cnt = 0;
+        for (char c : String.valueOf(num).toCharArray()) {
+            int d = c - '0';
+            if (num % d == 0) cnt++;
+        }
+        return cnt;
+    }
+
+
+    public int minimumPartition(String s, int k) {
+        // Sanitiy check for the algorithm
+        for (char c : s.toCharArray()) if ((c - '0') > k) return -1;
+
+        int cnt = 0;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+
+            sb.append(s.charAt(i));
+
+            // valid partition
+            if (sb.toString().replaceAll("^0+", "").length() > String.valueOf(k).length()
+                    || Integer.parseInt(sb.toString()) > k) {
+                cnt++;
+                sb.delete(0, sb.length());
+                sb.append(s.charAt(i));
+            }
+        }
+
+        if (sb.length() > 0 && sb.length() <= String.valueOf(k).length()) cnt++;
+        return cnt;
+    }
 }
 
 
