@@ -131,24 +131,49 @@ public class Prime {
     Explanation: The prime numbers between 10 and 19 are 11, 13, 17, and 19.
     The closest gap between any pair is 2, which can be achieved by [11,13] or [17,19].
     Since 11 is smaller than 17, we return the first pair.
+
+    int np = nextPrime(left);
+    ans[0] = np >= right ? -1 : np;
+    if (ans[0] == -1) {
+        ans[1] = -1;
+        valid = false;
+    } else np = nextPrime(ans[0]);
+    ans[1] = np > right ? -1 : np;
+
+    if (ans[1] == -1) valid = false;
+
+    if (!valid) return new int[]{-1, -1};
+    return ans;
      */
-    // TODO: Need to be solved
+
     public int[] closestPrimes(int left, int right) {
         int[] ans = new int[2];
         Arrays.fill(ans, -1);
 
-        boolean valid = true;
-        int np = nextPrime(left);
-        ans[0] = np >= right ? -1 : np;
-        if (ans[0] == -1) {
-            ans[1] = -1;
-            valid = false;
-        } else np = nextPrime(ans[0]);
-        ans[1] = np > right ? -1 : np;
+        List<Integer> primeNumbers = new ArrayList<>();
 
-        if (ans[1] == -1) valid = false;
+        for (int i = left - 1; i < right; i++) {
+            int np = nextPrime(i);
+            if (np >= left & np <= right) primeNumbers.add(np);
+        }
 
-        if (!valid) return new int[]{-1, -1};
+        Collections.sort(primeNumbers);
+
+        int last = -1;
+        int dist = Integer.MAX_VALUE;
+        for (int element : primeNumbers) {
+            if (last != -1) {
+                if (element - last < dist && dist != Integer.MAX_VALUE) {
+                    dist = element - last;
+                    ans[0] = last;
+                    ans[1] = element;
+                }
+            }
+
+            dist = element - last;
+            last = element;
+        }
+
         return ans;
     }
 
@@ -164,5 +189,4 @@ public class Prime {
         }
         return num;
     }
-
 }
