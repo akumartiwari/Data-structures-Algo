@@ -102,7 +102,7 @@ public class PartitionDP {
     // Copy the recurrence
     // return dp[1][c] // First recursive call
     // TC = O(n3), SC = O(n2)
-    public static int costTD(int n, int c, int cuts[]) {
+    public static int costTD(int n, int c, int[] cuts) {
         List<Integer> cutsl = new ArrayList<>();
         cutsl.add(0);
         cutsl.addAll(Arrays.stream(cuts).boxed().collect(Collectors.toList()));
