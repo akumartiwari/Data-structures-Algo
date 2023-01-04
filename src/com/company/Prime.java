@@ -1,6 +1,7 @@
 package com.company;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Prime {
 
@@ -131,62 +132,67 @@ public class Prime {
     Explanation: The prime numbers between 10 and 19 are 11, 13, 17, and 19.
     The closest gap between any pair is 2, which can be achieved by [11,13] or [17,19].
     Since 11 is smaller than 17, we return the first pair.
-
-    int np = nextPrime(left);
-    ans[0] = np >= right ? -1 : np;
-    if (ans[0] == -1) {
-        ans[1] = -1;
-        valid = false;
-    } else np = nextPrime(ans[0]);
-    ans[1] = np > right ? -1 : np;
-
-    if (ans[1] == -1) valid = false;
-
-    if (!valid) return new int[]{-1, -1};
-    return ans;
      */
+
+    private void sieveOfEratosthenes(long num, int[] s) {
+        // Create a boolean array
+        // "prime[0..n]"  and initialize
+        // all entries in it as false.
+        boolean[] prime = new boolean[(int) (num + 1L)];
+
+        // Initializing smallest
+        // factor equal to 2
+        // for all the even numbers
+        for (int i = 2; i <= num; i += 2)
+            s[i] = 2;
+
+        // For odd numbers less
+        // then equal to n
+        for (int i = 3; i <= num; i += 2) {
+            if (!prime[i]) {
+                // s(i) for a prime is
+                // the number itself
+                s[i] = i;
+
+                // For all multiples of
+                // current prime number
+                for (int j = i; (long) j * i <= num; j += 2) {
+
+                    // System.out.println(i*j);
+                    if (!prime[i * j]) {
+                        prime[i * j] = true;
+
+                        // i is the smallest prime
+                        // factor for number "i*j".
+                        s[i * j] = i;
+                    }
+                }
+            }
+        }
+    }
 
     public int[] closestPrimes(int left, int right) {
         int[] ans = new int[2];
         Arrays.fill(ans, -1);
 
-        List<Integer> primeNumbers = new ArrayList<>();
+        int[] s = new int[(int) ((long) right + 1L)];
+        sieveOfEratosthenes((long) right, s);
+        List<Integer> pn = Arrays.stream(s).boxed().distinct().collect(Collectors.toList());
+        // System.out.println(Arrays.toString(pn.toArray()));
+        Collections.sort(pn);
 
-        for (int i = left - 1; i < right; i++) {
-            int np = nextPrime(i);
-            if (np >= left & np <= right) primeNumbers.add(np);
-        }
-
-        Collections.sort(primeNumbers);
-
-        int last = -1;
-        int dist = Integer.MAX_VALUE;
-        for (int element : primeNumbers) {
-            if (last != -1) {
-                if (element - last < dist && dist != Integer.MAX_VALUE) {
-                    dist = element - last;
-                    ans[0] = last;
-                    ans[1] = element;
-                }
+        int last = -1, d = Integer.MAX_VALUE;
+        for (int e : pn) {
+            if (e < left) continue;
+            if (last != -1 && e - last < d) {
+                ans[0] = last;
+                ans[1] = e;
+                d = e - last;
             }
-
-            dist = element - last;
-            last = element;
+            last = e;
         }
 
         return ans;
     }
 
-    public int nextPrime(int num) {
-        num++;
-        for (int i = 2; i < num; i++) {
-            if (num % i == 0) {
-                num++;
-                i = 2;
-            } else {
-                continue;
-            }
-        }
-        return num;
-    }
 }
