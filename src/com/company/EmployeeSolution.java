@@ -5135,6 +5135,139 @@ Output: [1,2,2,3,5,6]
         if (sb.length() > 0 && sb.length() <= String.valueOf(k).length()) cnt++;
         return cnt;
     }
+
+    public int captureForts(int[] forts) {
+        int pos = Integer.MIN_VALUE, maxCnt = 0, cnt = 0;
+        for (int fort : forts) {
+            if ((fort == 1 || fort == -1) && fort != pos) {
+                maxCnt = Math.max(maxCnt, cnt);
+                pos = fort;
+                cnt = 0;
+            } else if ((fort == 1 || fort == -1)) {
+                cnt = 0;
+            } else if (pos != Integer.MIN_VALUE) {
+                cnt++;
+            }
+        }
+
+        return maxCnt;
+    }
+
+    public List<Integer> topStudents(String[] positive_feedback, String[] negative_feedback, String[] report, int[] student_id, int k) {
+        PriorityQueue<Pair<Integer, Integer>> pq = new PriorityQueue<>(new Comparator<Pair<Integer, Integer>>() {
+            @Override
+            public int compare(Pair<Integer, Integer> o1, Pair<Integer, Integer> o2) {
+                if (o1.getValue() > o2.getValue()) return -1;
+                if (o1.getValue() < o2.getValue()) return 1;
+                return o1.getKey().compareTo(o2.getKey());
+            }
+        });
+
+
+        Set<String> pfs = new HashSet<>();
+        Collections.addAll(pfs, positive_feedback);
+
+        Set<String> nfs = new HashSet<>();
+        Collections.addAll(nfs, negative_feedback);
+
+        for (int i = 0; i < student_id.length; i++) {
+            int si = student_id[i];
+            String[] r = report[i].split(" ");
+
+            int score = 0;
+            for (String s : r) {
+                if (pfs.contains(s)) score += 3;
+                else if (nfs.contains(s)) score -= 1;
+            }
+
+            pq.offer(new Pair<>(si, score));
+        }
+
+        List<Integer> ans = new ArrayList<>();
+        while (!pq.isEmpty()) {
+            if (k-- == 0) break;
+            ans.add(pq.poll().getKey());
+        }
+
+        return ans;
+    }
+
+
+    public int closetTarget(String[] words, String target, int startIndex) {
+        int n = words.length;
+        int cnt = 0, maxCnt = -1;
+        // left to right traversal
+
+
+        if (words[startIndex].equals(target)) return 0;
+        int ni = (startIndex + 1) % n;
+        cnt++;
+        while (!words[ni].equals(target) && ni != startIndex) {
+            ni = (ni + 1) % n;
+            cnt++;
+        }
+
+        if (ni != startIndex) maxCnt = Math.max(maxCnt, cnt);
+
+        cnt = 0;
+        ni = (startIndex - 1 + n) % n;
+        cnt++;
+        while (!words[ni].equals(target) && ni != startIndex) {
+            ni = (ni - 1 + n) % n;
+            cnt++;
+        }
+
+        if (ni != startIndex) {
+            if (cnt == 0) return maxCnt;
+            if (maxCnt == -1) return cnt;
+            return Math.min(maxCnt, cnt);
+        }
+        return maxCnt;
+    }
+
+    public int takeCharacters(String s, int k) {
+        int n = s.length();
+        TreeMap<Character, List<Integer>> pos = new TreeMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            if (!pos.containsKey(s.charAt(i))) pos.put(s.charAt(i), new ArrayList<>());
+            pos.get(s.charAt(i)).add(i);
+        }
+
+        int left = 0, right = n - 1;
+
+        if (pos.size() != 3) return -1;
+        for (Map.Entry<Character, List<Integer>> entry : pos.entrySet()) {
+            if (entry.getValue().size() < k) return -1;
+        }
+
+        System.out.println(pos);
+
+        for (Map.Entry<Character, List<Integer>> entry : pos.entrySet()) {
+            List<Integer> indexes = entry.getValue();
+            int ck = k;
+            int ind = 0;
+            while (ck-- > 0) {
+
+                int lp = indexes.get(ind);
+                int rp = indexes.get(indexes.size() - 1 - ind);
+                if (lp < n - rp) {
+                    left = Math.max(left, lp);
+                } else if (lp > n - rp) {
+                    if (n - rp > rp) {
+                        left = Math.max(left, lp);
+                    } else {
+                        right = Math.min(right, rp);
+                    }
+                }
+                ind++;
+
+                System.out.println(left + ":" + right);
+            }
+        }
+
+        return left + n - right + 1;
+    }
+
 }
 
 

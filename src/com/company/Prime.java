@@ -132,6 +132,9 @@ public class Prime {
     Explanation: The prime numbers between 10 and 19 are 11, 13, 17, and 19.
     The closest gap between any pair is 2, which can be achieved by [11,13] or [17,19].
     Since 11 is smaller than 17, we return the first pair.
+
+    TC = O(NlogN)
+    S = O(N)
      */
 
     private void sieveOfEratosthenes(long num, int[] s) {
@@ -157,8 +160,6 @@ public class Prime {
                 // For all multiples of
                 // current prime number
                 for (int j = i; (long) j * i <= num; j += 2) {
-
-                    // System.out.println(i*j);
                     if (!prime[i * j]) {
                         prime[i * j] = true;
 
@@ -177,9 +178,7 @@ public class Prime {
 
         int[] s = new int[(int) ((long) right + 1L)];
         sieveOfEratosthenes((long) right, s);
-        List<Integer> pn = Arrays.stream(s).boxed().distinct().collect(Collectors.toList());
-        // System.out.println(Arrays.toString(pn.toArray()));
-        Collections.sort(pn);
+        List<Integer> pn = Arrays.stream(s).boxed().distinct().sorted().collect(Collectors.toList());
 
         int last = -1, d = Integer.MAX_VALUE;
         for (int e : pn) {
