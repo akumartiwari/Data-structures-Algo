@@ -61,7 +61,7 @@ public class BinarySearch {
         long[] arr = new long[n];
 
         for (int i = 0; i < n; i++) {
-            arr[i] = (long) (candies[i]);
+            arr[i] = candies[i];
             //we need to find max for the upper bound in the binary search.
             max = Math.max(max, arr[i]);
         }
@@ -241,7 +241,7 @@ public class BinarySearch {
         return max;
     }
 
-    public int binarySearchCumulativeCost(long cost[], long num, int s, int e) {
+    public int binarySearchCumulativeCost(long[] cost, long num, int s, int e) {
         int i = s, j = e;
         while (i < j) {
             int mid = (i + j) / 2;
@@ -403,5 +403,57 @@ public class BinarySearch {
         }
 
         return value - 1;
+    }
+
+
+    /*
+    Input: divisor1 = 2, divisor2 = 7, uniqueCnt1 = 1, uniqueCnt2 = 3
+    Output: 4
+    Explanation:
+    We can distribute the first 4 natural numbers into arr1 and arr2.
+    arr1 = [1] and arr2 = [2,3,4].
+    We can see that both arrays satisfy all the conditions.
+    Since the maximum value is 4, we return it.
+
+    Intution-
+      Check if we can divide all numbers 1 to Integer.MAX_VALUE to arr1, arr2 such that conditions are met.
+      We will continue to minimise h i.e. higher limit of BS
+     */
+    // TC = O(lognN) where n ~= 10^9
+    public int minimizeSet(int d1, int d2, int c1, int c2) {
+        long l = 0L, h = Integer.MAX_VALUE;
+        long ans = Integer.MAX_VALUE;
+
+        while (l <= h) {
+            long mid = l + (h - l) / 2;
+
+            if (safely(mid, d1, d2, c1, c2)) {
+                ans = Math.min(ans, mid);
+                h = mid - 1;
+            } else l = mid + 1;
+        }
+
+        return (int) ans;
+    }
+
+
+    // This Fn will check if we can allocate elements within a range 0-mid safely as per above needs
+    private boolean safely(long mid, long d1, long d2, long c1, long c2) {
+
+        long notDivByD1 = mid - (mid / d1);
+        long notDivByD2 = mid - (mid / d2);
+
+        long notDivByBoth = mid - (mid / lcm(d1, d2));
+
+        return notDivByD1 >= c1 && notDivByD2 >= c2 && notDivByBoth >= c1 + c2;
+    }
+
+    private long lcm(long n1, long n2) {
+        return n1 * n2 / gcd(n1, n2);
+    }
+
+    private long gcd(long n1, long n2) {
+        if (n2 == 0) return n1;
+        return gcd(n2, n1 % n2);
     }
 }
