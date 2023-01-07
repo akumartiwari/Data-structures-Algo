@@ -5284,8 +5284,9 @@ Output: [1,2,2,3,5,6]
     }
 
 
-    public static long maxPower(int[] stations, int r, int k) {
-        int ans = Integer.MIN_VALUE;
+    // TODO: For all test cases
+    public long maxPower(int[] stations, int r, int k) {
+        long ans = Long.MIN_VALUE;
 
         int[] prefix = new int[stations.length];
         for (int i = 0; i < stations.length; i++) {
@@ -5309,6 +5310,7 @@ Output: [1,2,2,3,5,6]
         TreeMap<Integer, Integer> tm = new TreeMap<>(); // {value, cnt}
 
         for (int p : np) tm.put(p, tm.getOrDefault(p, 0) + 1);
+        ans = tm.firstKey();
 
         System.out.println("tm=" + tm);
         while (!pq.isEmpty() && k > 0) {
@@ -5319,7 +5321,7 @@ Output: [1,2,2,3,5,6]
                 k -= (pq.peek() - min) * cnt;
                 ans = Math.max(ans, pq.peek());
             } else {
-                ans = Math.max(ans, k / stations.length);
+                ans = Math.max(ans, (long) k / stations.length);
                 k = 0;
             }
         }
