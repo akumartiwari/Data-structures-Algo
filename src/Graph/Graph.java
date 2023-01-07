@@ -513,6 +513,12 @@ public class Graph {
         }
         return ans;
     }
+
+    // Graph based problem
+    public int countAnagrams(String s) {
+        return 0;
+    }
+
 }
 
 

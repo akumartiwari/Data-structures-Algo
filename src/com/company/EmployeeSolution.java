@@ -5268,6 +5268,64 @@ Output: [1,2,2,3,5,6]
         return left + n - right + 1;
     }
 
+
+    //Author: Anand 
+    public String categorizeBox(int length, int width, int height, int mass) {
+        boolean bulky = false;
+        long volume = (long) length * width * height;
+        if (volume >= Math.pow(10, 9) || length >= Math.pow(10, 4)
+                || width >= Math.pow(10, 4) || height >= Math.pow(10, 4)
+        ) bulky = true;
+        boolean heavy = mass >= 100;
+        if (heavy && bulky) return "Both";
+        if (!bulky && !heavy) return "Neither";
+        if (bulky) return "Bulky";
+        return "Heavy";
+    }
+
+
+    public static long maxPower(int[] stations, int r, int k) {
+        int ans = Integer.MIN_VALUE;
+
+        int[] prefix = new int[stations.length];
+        for (int i = 0; i < stations.length; i++) {
+            if (i == 0) prefix[i] = stations[i];
+            else prefix[i] = prefix[i - 1] + stations[i];
+        }
+
+        int[] np = new int[stations.length];
+
+        for (int i = 0; i < stations.length; i++) {
+            np[i] = prefix[Math.min(i + r, stations.length - 1)] - (i != 0 && (i - r - 1 >= 0) ? prefix[Math.max(i - r - 1, 0)] : 0);
+        }
+
+        System.out.println(Arrays.toString(prefix));
+
+        System.out.println(Arrays.toString(np));
+
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        for (int p : np) pq.add(p);
+
+        TreeMap<Integer, Integer> tm = new TreeMap<>(); // {value, cnt}
+
+        for (int p : np) tm.put(p, tm.getOrDefault(p, 0) + 1);
+
+        System.out.println("tm=" + tm);
+        while (!pq.isEmpty() && k > 0) {
+            int min = pq.poll();
+            if (pq.peek() != null) {
+                int cnt = 1; // cnt if items to be increased
+                if (tm.containsKey(min)) cnt = tm.get(min);
+                k -= (pq.peek() - min) * cnt;
+                ans = Math.max(ans, pq.peek());
+            } else {
+                ans = Math.max(ans, k / stations.length);
+                k = 0;
+            }
+        }
+
+        return ans;
+    }
 }
 
 
