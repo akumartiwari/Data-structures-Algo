@@ -5328,6 +5328,163 @@ Output: [1,2,2,3,5,6]
 
         return ans;
     }
+
+
+    class Solution {
+        public boolean isItPossible(String word1, String word2) {
+
+            Map<Character, Integer> map1 = new HashMap<>();
+            Map<Character, Integer> map2 = new HashMap<>();
+
+
+            for (char c : word1.toCharArray()) {
+                map1.put(c, map1.getOrDefault(c, 0) + 1);
+            }
+
+            for (char c : word2.toCharArray()) {
+                map2.put(c, map2.getOrDefault(c, 0) + 1);
+            }
+
+            System.out.println(map1);
+            System.out.println(map2);
+
+            boolean first = false;
+            Map<Character, Integer> bigger = new HashMap<>();
+            if (map1.size() > map2.size()) {
+                bigger.putAll(map1);
+                first = true;
+            } else if (map2.size() > map1.size()) bigger.putAll(map2);
+            else {
+                if (word1.length() > word2.length()) {
+                    first = true;
+                    bigger.putAll(map1);
+                } else bigger.putAll(map2);
+            }
+
+
+            boolean flag = map1.size() == map2.size();
+            for (Map.Entry<Character, Integer> ent : map2.entrySet()) {
+                if (ent.getValue() > 1) {
+                    flag = false;
+                    break;
+                }
+            }
+            for (Map.Entry<Character, Integer> ent : map1.entrySet()) {
+                if (ent.getValue() > 1) {
+                    flag = false;
+                    break;
+                }
+            }
+
+            if (flag) return true;
+
+            boolean move = false;
+            for (Map.Entry<Character, Integer> entry : bigger.entrySet()) {
+                if (first) {
+                    if (!map2.containsKey(entry.getKey())) {
+
+                        boolean pos = false;
+                        for (Map.Entry<Character, Integer> ent : map2.entrySet()) {
+                            if (ent.getValue() > 1) {
+                                pos = true;
+                                break;
+                            }
+                        }
+
+                        if (pos) {
+                            move = true;
+                            map2.put(entry.getKey(), map2.getOrDefault(entry.getKey(), 0) + 1);
+                            map1.put(entry.getKey(), map1.getOrDefault(entry.getKey(), 0) - 1);
+
+                            if (map1.get(entry.getKey()) <= 0) map1.remove(entry.getKey());
+                        }
+                        break;
+
+                    }
+                } else {
+                    if (!map1.containsKey(entry.getKey())) {
+
+                        boolean pos = false;
+                        for (Map.Entry<Character, Integer> ent : map1.entrySet()) {
+                            if (ent.getValue() > 1) {
+                                pos = true;
+                                break;
+                            }
+                        }
+
+                        if (pos) {
+                            move = true;
+                            map1.put(entry.getKey(), map1.getOrDefault(entry.getKey(), 0) + 1);
+                            map2.put(entry.getKey(), map2.getOrDefault(entry.getKey(), 0) - 1);
+
+                            if (map2.get(entry.getKey()) <= 0) map2.remove(entry.getKey());
+
+
+                        }
+                        break;
+                    }
+                }
+            }
+
+
+            if (move) {
+                if (first) {
+                    for (Map.Entry<Character, Integer> entry : map2.entrySet()) {
+                        if (!map1.containsKey(entry.getKey())) {
+
+                            boolean pos = false;
+                            for (Map.Entry<Character, Integer> ent : map2.entrySet()) {
+                                if (ent.getValue() > 1) {
+                                    pos = true;
+                                    break;
+                                }
+                            }
+
+                            if (pos) {
+                                move = true;
+                                map1.put(entry.getKey(), map1.getOrDefault(entry.getKey(), 0) + 1);
+                                map2.put(entry.getKey(), map2.getOrDefault(entry.getKey(), 0) - 1);
+
+                                if (map2.get(entry.getKey()) <= 0) map2.remove(entry.getKey());
+
+
+                            }
+                            break;
+                        }
+                    }
+                } else {
+                    for (Map.Entry<Character, Integer> entry : map1.entrySet()) {
+                        if (!map2.containsKey(entry.getKey())) {
+
+                            boolean pos = false;
+                            for (Map.Entry<Character, Integer> ent : map1.entrySet()) {
+                                if (ent.getValue() > 1) {
+                                    pos = true;
+                                    break;
+                                }
+                            }
+
+                            if (pos) {
+                                move = true;
+                                map2.put(entry.getKey(), map2.getOrDefault(entry.getKey(), 0) + 1);
+                                map1.put(entry.getKey(), map1.getOrDefault(entry.getKey(), 0) - 1);
+
+                                if (map1.get(entry.getKey()) <= 0) map1.remove(entry.getKey());
+                            }
+                            break;
+
+                        }
+                    }
+                }
+            }
+
+
+            System.out.println(map1);
+            System.out.println(map2);
+
+            return map1.keySet().size() == map2.keySet().size() && move;
+        }
+    }
 }
 
 
