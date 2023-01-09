@@ -4,6 +4,79 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class BrainStormingProblems {
+
+    /*
+
+Input: word1 = "ac", word2 = "b"
+Output: false
+Explanation: Any pair of swaps would yield two distinct characters in the first string, and one in the second string.
+----------------------------------------------------------------------------------------------------------
+APPROACH -
+Because we are bound to lowercase English letters,
+we know the search space is 26 letters.
+We will try all possible combinations of swaps which is 26*26.
+
+So with that intuition, we have the following procedure:
+
+Count the initial frequencies of the strings
+Try all possible letter swaps
+After every letter swap, check if we have the same amount of distinct characters
+
+ */
+    public boolean isItPossible(String word1, String word2) {
+        int[] word1Cnt = new int[26];
+        int[] word2Cnt = new int[26];
+
+        int distinct1 = 0, distinct2 = 0;
+
+        for (char c : word1.toCharArray()) {
+            word1Cnt[c - 'a']++;
+            if (word1Cnt[c - 'a'] == 1) distinct1++;
+        }
+        for (char c : word2.toCharArray()) {
+            word2Cnt[c - 'a']++;
+            if (word2Cnt[c - 'a'] == 1) distinct2++;
+        }
+
+
+        //Try all possible combinations i.e, 25*26;
+
+        for (int i = 0; i < 26; i++) {
+            char word1ToCharSwap = (char) (i + 'a');
+            if (word1Cnt[i] == 0) continue;
+
+            for (int j = 0; j < 26; j++) {
+
+                char word2ToCharSwap = (char) (j + 'a');
+                if (word2Cnt[j] == 0) continue;
+
+                int distinctTemp1 = distinct1;
+                int distinctTemp2 = distinct2;
+
+                // make swap
+                word1Cnt[i]--;
+                word2Cnt[i]++;
+                word1Cnt[j]++;
+                word2Cnt[j]--;
+
+                if (word1Cnt[i] == 0) distinctTemp1--;
+                if (word2Cnt[i] == 1) distinctTemp2++;
+                if (word1Cnt[j] == 1) distinctTemp1++;
+                if (word2Cnt[j] == 0) distinctTemp2--;
+
+                if (distinctTemp1 == distinctTemp2) return true;
+
+                // clean moves
+                word1Cnt[i]++;
+                word2Cnt[i]--;
+                word1Cnt[j]--;
+                word2Cnt[j]++;
+
+            }
+        }
+        return false;
+    }
+
     /*
     Input: nums1 = [1,2,3,4], nums2 = [2,10,20,19], k1 = 0, k2 = 0
     Output: 579
@@ -71,5 +144,5 @@ public class BrainStormingProblems {
         }
 
         return len;
-    }   
+    }
 }
