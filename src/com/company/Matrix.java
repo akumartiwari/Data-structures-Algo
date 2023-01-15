@@ -87,4 +87,31 @@ public class Matrix {
         return sum - 2 * mini;
     }
 
+    /*
+
+
+    Input: n = 3, queries = [[1,1,2,2],[0,0,1,1]]
+    Output: [[1,1,0],[1,2,1],[0,1,1]]
+    Explanation: The diagram above shows the initial matrix, the matrix after the first query, and the matrix after the second query.
+    - In the first query, we add 1 to every element in the submatrix with the top left corner (1, 1) and bottom right corner (2, 2).
+    - In the second query, we add 1 to every element in the submatrix with the top left corner (0, 0) and bottom right corner (1, 1).
+
+     */
+    public int[][] rangeAddQueries(int n, int[][] queries) {
+        int[][] ans = new int[n][n];
+
+        for (int[] query : queries) {
+            int r1 = query[0];
+            int c1 = query[1];
+            int r2 = query[2];
+            int c2 = query[3];
+
+            for (int i = r1; i <= r2; i++) {
+                for (int j = c1; j <= c2; j++) {
+                    ans[i][j]++;
+                }
+            }
+        }
+        return ans;
+    }
 }
