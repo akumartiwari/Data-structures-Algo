@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static CF_Templates.B.gcd;
+import static CF_Templates.B.sort;
 
 public class EmployeeSolution {
     String name;
@@ -5328,7 +5329,150 @@ Output: [1,2,2,3,5,6]
 
         return ans;
     }
+
+
+    public int differenceOfSum(int[] nums) {
+
+        long ds = 0L, ns = 0L;
+        for (int num : nums) {
+            ds += digitsum(num);
+            ns += num;
+        }
+        return (int) Math.abs(ds - ns);
+    }
+
+    private int digitsum(int num) {
+        int sum = 0;
+        while (num > 0) {
+            sum += num % 10;
+            num /= 10;
+        }
+        return sum;
+    }
+
+
+    int[][] dirs = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+    // R -> D -> L -> U
+    int n;
+
+    public int[][] rangeAddQueries(int n, int[][] queries) {
+        int[][] ans = new int[n][n];
+        this.n = n;
+
+        Set<Pair<Integer, Integer>> queue = new HashSet<>();
+        for (int[] query : queries) {
+            int r1 = query[0];
+            int c1 = query[1];
+            int r2 = query[2];
+            int c2 = query[3];
+
+            int x = r1, y = c1;
+            queue.add(new Pair<>(x, y));
+            ans[x][y] += 1;
+
+            while (true) {
+                boolean canMove = false;
+
+                for (int[] dir : dirs) {
+                    int nx = x + dir[0];
+                    int ny = y + dir[1];
+
+                    // check for boundary/obstacle condition
+                    while (safe(nx, ny) && nx <= r2 && ny <= c2 && nx >= r1 && ny >= c1
+                            && !queue.contains(new Pair<>(nx, ny))
+                    ) {
+                        queue.add(new Pair<>(nx, ny));
+                        ans[nx][ny] += 1;
+
+                        canMove = true;
+                        x = nx;
+                        y = ny;
+
+                        nx += dir[0];
+                        ny += dir[1];
+                    }
+                }
+
+                if (!canMove) break;
+            }
+        }
+
+        return ans;
+    }
+
+    private boolean safe(int nx, int ny) {
+        return nx >= 0 && ny >= 0 && nx < this.n && ny < this.n;
+    }
+
+    public int getCommon(int[] nums1, int[] nums2) {
+        Set<Integer> set = new HashSet<>();
+        for (int num : nums1) set.add(num);
+        for (int num : nums2) if (set.contains(num)) return num;
+        return -1;
+    }
+
+    public long minOperations(int[] nums1, int[] nums2, int k) {
+
+        int[] diff = new int[nums1.length];
+        for (int i = 0; i < nums1.length; i++) {
+            diff[i] = nums1[i] - nums2[i];
+        }
+
+        long pos = 0L, neg = 0L;
+
+        for (int num : diff) {
+            if (num > 0) pos += num;
+            else if (num < 0) neg += num;
+        }
+
+
+        if (k == 0) {
+            for (int i = 0; i < nums1.length; i++)
+                if (nums1[i] != nums2[i]) return -1;
+            return 0;
+        }
+
+
+        // check for each element should be mulitple of k
+        boolean valid = true;
+
+        for (int num : diff) {
+            if (num % k != 0) {
+                valid = false;
+                break;
+            }
+        }
+
+        if (valid && pos % k == 0 && neg % k == 0 && Math.abs(pos) == Math.abs(neg)) return pos / k;
+        if (valid && pos == 0 && neg == 0) return 0;
+        return -1;
+    }
+
+    public long maxScore(int[] nums1, int[] nums2, int k) {
+        int n = nums1.length;
+        int[][] pairs = new int[n][2];
+        for (int i = 0; i < n; i++) pairs[i] = new int[]{nums2[i], nums1[i]};
+        Arrays.sort(pairs, (a, b) -> b[0] - a[0]); // Sort num2 from big  to small
+
+        PriorityQueue<Integer> pq = new PriorityQueue<>(); // Sort num1 from small to big
+
+        long res = 0L, sumS = 0L;
+
+        for (int[] pair : pairs) {
+            pq.add(pair[1]); // Add num2 guy to get the minimum
+            sumS += pair[1];
+            if (pq.size() > k) {
+                // pop the minimum guy and compute the result
+                sumS -= pq.poll(); // Provides minimum num1 guy
+            }
+
+            if (pq.size() == k) res = Math.max(res, sumS * pair[0]);
+        }
+        return res;
+    }
+
 }
+
 
 
 
