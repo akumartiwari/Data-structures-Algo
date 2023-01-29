@@ -5471,6 +5471,52 @@ Output: [1,2,2,3,5,6]
         return res;
     }
 
+    public int distinctIntegers(int n) {
+
+        Set<Integer> dn = new HashSet<>();
+        dn.add(n);
+
+        for (int i = 2; i < n; i++) {
+            if (n % i == 1) dn.add(i);
+        }
+
+        while (true) {
+            boolean nn = false;
+            Set<Integer> factors = new HashSet<>();
+            factors.addAll(dn);
+
+
+            for (int factor : factors) {
+                for (int i = 2; i < factor; i++) {
+                    if (factor % i == 1 && !dn.contains(i)) {
+                        nn = true;
+                        dn.add(i);
+                    }
+                }
+            }
+
+            if (!nn) return dn.size();
+        }
+    }
+
+
+    public int monkeyMove(int n) {
+        int nn = (int) expo(2, n, MOD) - 2;
+        if (nn < 0) return (nn + MOD);
+        return nn;
+    }
+
+
+    public long expo(long a, long b, long mod) {
+        long res = 1;
+        while (b > 0) {
+            if ((b & 1) == 1L) res = (res * a) % mod;  //think about this one for a second
+            a = (a * a) % mod;
+            b = b >> 1;
+        }
+        return res;
+    }
+
 }
 
 
