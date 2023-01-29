@@ -4,6 +4,7 @@ import javafx.util.Pair;
 
 import java.awt.*;
 import java.math.BigInteger;
+import java.nio.file.LinkOption;
 import java.util.List;
 import java.util.Queue;
 import java.util.*;
@@ -5499,13 +5500,11 @@ Output: [1,2,2,3,5,6]
         }
     }
 
-
     public int monkeyMove(int n) {
         int nn = (int) expo(2, n, MOD) - 2;
         if (nn < 0) return (nn + MOD);
         return nn;
     }
-
 
     public long expo(long a, long b, long mod) {
         long res = 1;
@@ -5517,6 +5516,54 @@ Output: [1,2,2,3,5,6]
         return res;
     }
 
+
+    //TLE
+    public long countQuadruplets(int[] nums) {
+        long cnt = 0;
+
+        int n = nums.length;
+        Map<Integer, Pair<List<Integer>, List<Integer>>> map = new LinkedHashMap<>(); //  elem -> {[Smallest], [Largest]}
+
+        for (int num : nums) map.put(num, new Pair<>(Collections.emptyList(), Collections.emptyList()));
+        System.out.println(map);
+
+        for (int i = n - 1; i >= 0; i--) {
+            if (i < n - 1) {
+                for (int j = i + 1; j < n; j++) {
+                    if (nums[j] > nums[i]) {
+                        List<Integer> largest = map.get(nums[i]).getValue();
+                        if (largest.isEmpty()) {
+                            largest = new ArrayList<>(Collections.singletonList(nums[j]));
+                        } else largest.add(nums[j]);
+                        map.put(nums[i], new Pair<>(map.get(nums[i]).getKey(), largest));
+                    } else if (nums[j] < nums[i]) {
+                        List<Integer> smallest = map.get(nums[i]).getKey();
+                        if (smallest.isEmpty()) {
+                            smallest = new ArrayList<>(Collections.singletonList(nums[j]));
+                        } else smallest.add(nums[j]);
+                        map.put(nums[i], new Pair<>(smallest, map.get(nums[i]).getValue()));
+                    }
+                }
+            }
+        }
+
+
+        for (int i = 0; i < n; i++) {
+            Pair<List<Integer>, List<Integer>> pair = map.get(nums[i]);
+            List<Integer> bigger = pair.getValue();
+            for (int b : bigger) {
+                Pair<List<Integer>, List<Integer>> ap = map.get(b);
+                List<Integer> smaller = ap.getKey();
+                // smaller present
+                for (int s : smaller) {
+                    if (s > nums[i])
+                        cnt += (int) map.get(s).getValue().stream().filter(x -> x > b && s < x).count();
+                }
+            }
+        }
+
+        return cnt;
+    }
 }
 
 
