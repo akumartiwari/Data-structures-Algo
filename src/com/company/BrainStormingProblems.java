@@ -1,9 +1,55 @@
 package com.company;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 public class BrainStormingProblems {
+
+
+    /*
+    First for any of distributions,
+    we will sum up A[0] and A[n - 1] in the total socre,
+    so this won't make any difference between max and min.
+
+    To split into k bags,
+    we actually choose k-1 cut points:
+    A[0]...A[i1]
+    A[i1+1]....A[i2]
+    A[i2+1]....A[i3]
+    ....
+    A[ik+1]....A[n-1]
+
+    The result score is:
+    (A[0] + A[i1]) + (A[i2] + A[i3]) +..... + (A[ik+1] + A[n-1])
+    equals to
+    A[0] + (A[i1] + A[i1+1]) + (A[i2] + A[i2+1]) + ....
+
+    So the problem turns out to be,
+    calculate the max/min sum of k - 1 numbers in
+    A[0] + A[1], A[1] + A[2],..., A[n-1] + A[n].
+
+    We can simply sort them in O(sort)
+    or we can apply a priority queue in O(nlogk).
+
+    Input: weights = [1,3,5,1], k = 2
+    Output: 4
+    Explanation:
+    The distribution [1],[3,5,1] results in the minimal score of (1+1) + (3+1) = 6.
+    The distribution [1,3],[5,1], results in the maximal score of (1+3) + (5+1) = 10.
+    Thus, we return their difference 10 - 6 = 4.
+     */
+    public long putMarbles(int[] weights, int k) {
+        int n = weights.length - 1;
+        long[] adj = new long[n];
+        for (int i = 0; i < n; i++) adj[i] = weights[i] + weights[i + 1];
+
+        // Choose k max/min choices
+        Arrays.sort(adj);
+        long res = 0L;
+        for (int i = 0; i < k - 1; i++) res += adj[n - 1 - i] - adj[i];
+        return res;
+    }
 
     /*
 
