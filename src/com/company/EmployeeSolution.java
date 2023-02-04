@@ -4668,6 +4668,7 @@ Output: [1,2,2,3,5,6]
             m.add(0);
         }
     }
+
     public int distinctAverages(int[] nums) {
 
         PriorityQueue<Integer> minPq = new PriorityQueue<>();
@@ -5616,6 +5617,122 @@ Output: [1,2,2,3,5,6]
             b = b >> 1;
         }
         return res;
+    }
+
+
+    public int[] separateDigits(int[] nums) {
+        List<Integer> ans = new ArrayList<>();
+        for (int num : nums) ans.addAll(digits(num));
+        return ans.stream().mapToInt(x -> x).toArray();
+    }
+
+    private List<Integer> digits(int num) {
+        List<Integer> d = new ArrayList<>();
+        while (num > 0) {
+            d.add(num % 10);
+            num /= 10;
+        }
+        Collections.reverse(d);
+        return d;
+    }
+
+    public int maxCount(int[] banned, int n, int maxSum) {
+        long ms = 0L;
+        int cnt = 0;
+        Set<Integer> set = Arrays.stream(banned).boxed().collect(Collectors.toSet());
+
+        for (int i = 1; i <= n; i++) {
+            if (!set.contains(i)) {
+                ms += i;
+                if (ms > maxSum) return cnt;
+                cnt++;
+            }
+        }
+
+        return cnt;
+    }
+
+    // Solve for edge cases
+    //Author: Anand
+    // TC = O(N), SC=O(N)
+    public int maximizeWin(int[] prizePositions, int k) {
+
+        int ans = 0;
+        TreeMap<Integer, Integer> treeMap = new TreeMap<>();
+        for (int pp : prizePositions) treeMap.put(pp, treeMap.getOrDefault(pp, 0) + 1);
+
+
+        if (k == 0) {
+
+            int f = 0, s = 0;
+            for (Map.Entry<Integer, Integer> entry : treeMap.entrySet()) {
+                if (entry.getValue() >= f) {
+                    s = f;
+                    f = entry.getValue();
+                }
+            }
+            return f + s;
+        }
+
+
+        Set<Integer> keyset = treeMap.keySet();
+
+        List<Integer> segment1 = ptr(new ArrayList<>(keyset), k, treeMap);
+
+        System.out.println(segment1);
+        HashMap<Integer, Integer> nm = new HashMap<>();
+        nm.putAll(treeMap);
+
+
+        if (segment1.size() == 0) {
+            return treeMap.values().stream().mapToInt(x -> x).sum();
+        }
+        for (Map.Entry<Integer, Integer> entry : treeMap.entrySet()) {
+            if (entry.getKey() >= segment1.get(0) && entry.getKey() > segment1.get(1)) {
+                nm.remove(entry.getKey());
+                ans += entry.getValue();
+            }
+        }
+
+
+        treeMap = new TreeMap<>(nm);
+        keyset = treeMap.keySet();
+        // 2 ptr technique for optimal segment
+        List<Integer> segment2 = ptr(new ArrayList<>(keyset), k, treeMap);
+
+        nm = new HashMap<>();
+        nm.putAll(treeMap);
+
+        for (Map.Entry<Integer, Integer> entry : treeMap.entrySet()) {
+            if (entry.getKey() >= segment1.get(0) && entry.getKey() <= segment1.get(1)) {
+                nm.remove(entry.getKey());
+                ans += entry.getValue();
+            }
+        }
+
+        return ans;
+    }
+
+    // 2 ptr technique for optimal segment
+    private List<Integer> ptr(List<Integer> keyset, int k, TreeMap<Integer, Integer> treeMap) {
+        int i = 0, j = 0;
+        int curr = 0, max = 0;
+        List<Integer> ans = new ArrayList<>();
+
+        while (i < keyset.size() && j < keyset.size() && i <= j) {
+            int s = keyset.get(j);
+            if (keyset.get(j) - keyset.get(i) <= k) {
+                curr += treeMap.get(s);
+                j++;
+            } else {
+                max = Math.max(max, curr);
+                ans = new ArrayList<>(Arrays.asList(i, j));
+                i++;
+                curr -= treeMap.get(keyset.get(i));
+            }
+        }
+
+        return ans;
     }
 }
 
