@@ -190,7 +190,7 @@ public class Tree {
                     List<Integer> l = hm.get(res.key);
                     l.add(res.value);
                     hm.put(res.key, l);
-                } else hm.put(res.key, new ArrayList<>(Collections.singletonList(res.value)));
+                } else hm.put(res.key, new ArrayList<>(Arrays.asList(res.value)));
             }
 
             for (Map.Entry<Integer, List<Integer>> e : hm.entrySet()) {
@@ -272,6 +272,64 @@ public class Tree {
         long currsum = root.val + left.sum + right.sum;
         int nodes = 1 + left.count + right.count;
         return new SumAndCount(currsum, nodes);
+    }
+
+    //TODO
+    class Solution {
+        TreeMap<Integer, Integer> nodes = new TreeMap<>();
+
+        class Tuple {
+            TreeMap<Integer, Integer> nodes;
+            boolean valid;
+
+            Tuple() {
+                nodes = new TreeMap<>();
+                valid = false;
+            }
+
+
+            public Tuple(TreeMap<Integer, Integer> tm, boolean valid) {
+                this.nodes = tm;
+                this.valid = valid;
+            }
+        }
+
+        private Tuple helper(TreeNode root) {
+
+            if (root == null) return new Tuple(new TreeMap<>(), true);
+            nodes.put(root.val, nodes.getOrDefault(root.val, 0) + 1);
+
+            boolean left = true, right = true;
+            if (root.left != null)
+                left = root.val > root.left.val;
+
+            if (root.right != null)
+                right = root.val < root.right.val;
+
+            // validate for left and right nodes
+            if (!(left && right)) return new Tuple(new TreeMap<>(), false);
+
+            Tuple ls = helper(root.left);
+
+            if (ls.nodes.size() > 0 && ls.nodes.ceilingKey(root.val) != null) new Tuple(ls.nodes, false);
+
+            Tuple rs = helper(root.right);
+
+            // validate for left and right subtrees
+            if (rs.nodes.size() > 0 && rs.nodes.floorKey(root.val) != null) new Tuple(rs.nodes, false);
+
+            nodes.put(root.val, nodes.getOrDefault(root.val, 0) + 1);
+            nodes.putAll(ls.nodes);
+            nodes.putAll(rs.nodes);
+
+            return new Tuple(nodes, true);
+        }
+
+
+        public boolean isValidBST(TreeNode root) {
+            return helper(root).valid;
+        }
+
     }
 }
 

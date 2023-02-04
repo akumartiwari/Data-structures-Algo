@@ -1,5 +1,7 @@
 package com.company;
 
+import javafx.util.Pair;
+
 import java.util.*;
 
 public class DP {
@@ -1276,46 +1278,215 @@ public class DP {
         return ans;
     }
 
-    //TLE
-    //DP
-    public long countQuadruplets(int[] nums) {
-        Map<String, Long> dp = new HashMap<>();
-        return helper(nums, 0, new ArrayList<>(), dp);
+    public int countGoodStrings(int low, int high, int zero, int one) {
+        String z = str('0', zero);
+        String o = str('1', one);
+        Map<Integer, Integer> dp = new HashMap<>();
+        return rec(low, high, z, o, new StringBuilder(), dp);
     }
 
-    private long helper(int[] nums, int ind, List<Integer> selected, Map<String, Long> dp) {
+    private int rec(int low, int high, String zero, String one, StringBuilder sb, Map<Integer, Integer> dp) {
+        // base case
+        if (sb.length() > high) return 0;
+        if (dp.containsKey(sb.length())) return dp.get(sb.length());
+        int tz = 0, to = 0;
+        // take zero
+        sb.append(zero);
+        tz += ((valid(sb, low, high) ? 1 : 0) + rec(low, high, zero, one, sb, dp)) % mod;
 
-        String key = String.valueOf(ind);
-        for (int s : selected) key += "-" + s;
+        // backtrack;
+        sb.delete(sb.length() - zero.length(), sb.length());
 
-        if (selected.size() == 4) {
-            return 1;
-        }
+        // take one
+        sb.append(one);
+        to += ((valid(sb, low, high) ? 1 : 0) + rec(low, high, zero, one, sb, dp)) % mod;
+        // backtrack
+        sb.delete(sb.length() - one.length(), sb.length());
 
-        if (ind >= nums.length || selected.size() > 4) return 0;
+        int ans = (tz + to) % mod;
+        dp.put(sb.length(), ans);
+        return ans;
 
-        if (dp.containsKey(key)) return dp.get(key);
-
-        long cnt = 0L;
-        // take
-        if (selected.size() == 0
-                || (selected.size() == 1 && selected.get(0) + 1 < nums[ind])
-                || (selected.size() == 2 && selected.get(0) < nums[ind] && selected.get(1) > nums[ind])
-                || (selected.size() == 3
-                && selected.get(0) < nums[ind]
-                && selected.get(1) < nums[ind]
-                && selected.get(2) < nums[ind])
-        ) {
-            selected.add(nums[ind]);
-            cnt += helper(nums, ind + 1, selected, dp);
-            // bactrack
-            selected.remove(selected.size() - 1); // deleted last added element
-        }
-
-        //not-take
-        cnt += helper(nums, ind + 1, selected, dp);
-        dp.put(key, cnt);
-        return cnt;
     }
 
+    private String str(char c, int times) {
+        char[] repeat = new char[times];
+        Arrays.fill(repeat, c);
+        return new String(repeat);
+    }
+
+    private boolean valid(StringBuilder sb, int low, int high) {
+        return sb.length() >= low && sb.length() <= high;
+    }
+
+
+    //Optimal solution
+    public int maxPalindromesOptimal(String s, int k) {
+        int ans = 0, n = s.length();
+        int[] dp = new int[n + 1];
+        for (int i = k - 1; i < n; i++) {
+            dp[i + 1] = dp[i];
+            if (helper(s, i - k + 1, i)) dp[i + 1] = Math.max(dp[i + 1], 1 + dp[i - k + 1]);
+            if (i - k >= 0 && helper(s, i - k, i)) dp[i + 1] = Math.max(dp[i + 1], 1 + dp[i - k]);
+        }
+        return dp[n];
+    }
+
+    boolean helper(String s, int l, int r) {
+        while (l < r) {
+            if (s.charAt(l) != s.charAt(r)) return false;
+            l++;
+            r--;
+        }
+        return true;
+    }
+
+
+    // My Solution
+    public int maxPalindromes(String s, int k) {
+        int n = s.length();
+        int[][] dp = new int[n][n + 1];
+        for (int[] d : dp) Arrays.fill(d, -1);
+
+
+        boolean[][] palind = new boolean[n][n + 1];
+        boolean[][] memob = new boolean[n][n + 1];
+
+        // precompute palindrome from indexes {i, j}
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j <= n; j++) {
+                palind[i][j - 1] = isPalindrome(s, i, j - 1, memob);
+            }
+        }
+
+        return rec(s, k, 0, 1, palind, dp);
+    }
+
+
+    private int rec(String s, int k, int i, int j, boolean[][] palind, int[][] dp) {
+        int n = s.length();
+        int ind = i;
+        int left, right;
+        if (i > j || i >= n || j >= n + 1) return 0;
+        if (dp[i][j] != -1) return dp[i][j];
+
+
+        while (ind < n && i < j) {
+            //To check the palindrome of odd length palindromic sub-string
+            if (palind[ind][ind] && (m - ind) >= k) {
+                // take the current one
+                left = 1 + rec(s, k, m, m + 1, palind, dp);
+                // skip the current one
+                right = rec(s, k, ind, m + 1, palind, dp);
+                return dp[i][j] = Math.max(left, right);
+            }
+
+            //To check the palindrome of even length palindromic sub-string
+            if (palind[ind][ind + 1] && (m - ind + 1) >= k) {
+                // take the current one
+                left = 1 + rec(s, k, m, m + 1, palind, dp);
+                // skip the current one
+                right = rec(s, k, ind, m + 1, palind, dp);
+                return dp[i][j] = Math.max(left, right);
+            }
+            ind += 1;
+        }
+
+        return 0;
+    }
+
+
+    private boolean isPalindrome(String s, int i, int j, boolean[][] memob) {
+        if (i == j || i > j) return true;
+        if (memob[i][j]) return memob[i][j];
+
+        char ch1 = s.charAt(i);
+        char ch2 = s.charAt(j);
+
+        if (ch1 == ch2) {
+            memob[i][j] = isPalindrome(s, i + 1, j - 1, memob);
+        } else return false;
+        return memob[i][j];
+    }
+
+
+    // TODO
+    class Solution {
+        public int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+            Map<Integer, List<Integer>> graph = new HashMap<>();
+            Map<Pair<Integer, Integer>, Integer> dm = new HashMap<>(); // wt of each edge
+
+            int n = amount.length;
+            for (int[] edge : edges) {
+                int start = edge[0];
+                int end = edge[1];
+
+                dm.put(new Pair<>(start, end), amount[end]);
+                dm.put(new Pair<>(end, start), amount[start]);
+
+                if (graph.containsKey(edge[0])) {
+                    List<Integer> exist = graph.get(edge[0]);
+                    exist.add(edge[1]);
+                    graph.put(edge[0], exist);
+                } else graph.put(edge[0], new ArrayList<>(Collections.singletonList(edge[1])));
+
+                if (graph.containsKey(edge[1])) {
+                    List<Integer> exist = graph.get(edge[1]);
+                    exist.add(edge[0]);
+                    graph.put(edge[1], exist);
+                } else graph.put(edge[1], new ArrayList<>(Collections.singletonList(edge[0])));
+            }
+            // To fetch the shortest path from all possible nodes
+            TreeMap<Integer, Pair<Long, Long>> tm = new TreeMap<>();
+
+            for (int i = 0; i < n; i++) {
+                tm.put(i, new Pair<>(Long.MAX_VALUE, 0L));
+            }
+
+            // Bob
+            shortestPath(bob, tm, graph, dm);
+
+            // To fetch the shortest path from all possible nodes
+            TreeMap<Integer, Pair<Long, Long>> atm = new TreeMap<>();
+
+            for (int i = 0; i < n; i++) {
+                atm.put(i, new Pair<>(Long.MAX_VALUE, 0L));
+            }
+
+
+            //Alice
+            shortestPath(0, atm, graph, dm);
+
+            int cost = 0;
+            for (Map.Entry<Integer, Pair<Long, Long>> entry : atm.entrySet()) {
+                if (tm.containsKey(entry.getKey()) && tm.get(entry.getKey()).getValue() == entry.getValue().getValue()) {
+                    cost += entry.getValue().getValue() / 2;
+                } else if (tm.containsKey(entry.getKey()) && tm.get(entry.getKey()).getValue() >= entry.getValue().getValue())
+                    cost += entry.getValue().getKey();
+            }
+
+            return cost;
+        }
+
+
+        // Dijkstra algorithm to find the shortest distance b/w each node
+        private void shortestPath(int src, TreeMap<Integer, Pair<Long, Long>> tm, Map<Integer, List<Integer>> graph, Map<Pair<Integer, Integer>, Integer> dm) {
+            // min PQ to find SD b/w src, dest
+            PriorityQueue<long[]> queue = new PriorityQueue<>(Comparator.comparingLong(a -> a[1]));
+
+            queue.add(new long[]{src, Long.MAX_VALUE, 0});
+
+            while (!queue.isEmpty()) {
+                long[] node = queue.poll();
+                int to = (int) node[0];
+                long dist = node[1];
+                if (tm.get(to).getKey() != Long.MAX_VALUE && tm.get(to).getKey() <= dist) continue;
+                tm.put(to, new Pair<>(dist, tm.get(to).getValue()));
+                // For all adjacent nodes continue the process;
+                for (int next : graph.get(to)) {
+                    queue.add(new long[]{next, dist + dm.get(new Pair<>(to, next)), tm.get(to).getValue() + 1});
+                }
+            }
+        }
+    }
 }
