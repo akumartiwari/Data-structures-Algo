@@ -5734,6 +5734,45 @@ Output: [1,2,2,3,5,6]
 
         return ans;
     }
+
+
+    public long pickGifts(int[] gifts, int k) {
+        long ans = 0L;
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());//max pq
+        for (int gift : gifts) pq.add(gift);
+        while (k-- > 0) {
+            int gift = pq.poll();
+            pq.add((int) Math.floor(Math.sqrt(gift)));
+        }
+        while (!pq.isEmpty()) ans += pq.poll();
+        return ans;
+    }
+
+    public int[] vowelStrings(String[] words, int[][] queries) {
+
+        int[] ps = new int[words.length];
+        int[] ans = new int[queries.length];
+        Set<Character> vowel = new HashSet<>();
+        vowel.add('a');
+        vowel.add('e');
+        vowel.add('i');
+        vowel.add('o');
+        vowel.add('u');
+
+        for (int i = 0; i < words.length; i++) {
+            boolean valid = (vowel.contains(words[i].charAt(0)) && vowel.contains(words[i].charAt(words[i].length() - 1)));
+            if (i == 0) ps[i] += valid ? 1 : 0;
+            else ps[i] += ps[i - 1] + (valid ? 1 : 0);
+        }
+
+        int ind = 0;
+        for (int[] query : queries) {
+            ans[ind++] = ps[query[1]] - (query[0] > 0 ? ps[query[0] - 1] : 0);
+        }
+        return ans;
+    }
+
+
 }
 
 
