@@ -5772,6 +5772,72 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    public long findTheArrayConcVal(int[] nums) {
+        long ans = 0L;
+        int last = nums.length % 2 != 0 ? (int) Math.ceil((double) nums.length / 2) : nums.length / 2;
+        for (int i = 0; i < last; i++) {
+            String eval = "";
+            if (i == last - 1 && nums.length % 2 != 0) eval += nums[i];
+            else eval = nums[i] + ((nums.length - 1 - i) >= 0 ? String.valueOf(nums[nums.length - 1 - i]) : "");
+            ans += eval.isEmpty() ? 0 : Long.parseLong(eval);
+        }
+        return ans;
+    }
+
+
+    public int minMaxDifference(int num) {
+        String nums = String.valueOf(num);
+
+        int maxi = -1, mini = -1;
+        for (int i = 0; i < nums.length(); i++) {
+            if (nums.charAt(i) != '9' && maxi == -1) maxi = i;
+            if (nums.charAt(i) != '0' && mini == -1) mini = i;
+        }
+
+        int max = maxi != -1 ? Integer.parseInt(nums.replaceAll(String.valueOf(nums.charAt(maxi)), "9")) : num;
+        int min = mini != -1 ? Integer.parseInt(nums.replaceAll(String.valueOf(nums.charAt(mini)), "0")) : 0;
+
+        return max - min;
+    }
+
+    // TODO: Complete for correct answer
+    public int minimizeSum(int[] nums) {
+        TreeMap<Integer, Integer> tm = new TreeMap<>();
+        for (int num : nums) tm.put(num, tm.getOrDefault(num, 0) + 1);
+        int avg = (int) Math.ceil((double) Arrays.stream(nums).sum() / nums.length);
+        Arrays.sort(nums);
+
+        boolean first = false;
+        if (Math.abs(avg - nums[0]) > Math.abs(avg - nums[nums.length - 1])) {
+            nums[0] = avg;
+            first = true;
+        } else nums[nums.length - 1] = avg;
+
+
+        if (first) {
+            if (Math.abs(avg - nums[1]) > Math.abs(avg - nums[nums.length - 1])) {
+                nums[1] = avg;
+            } else nums[nums.length - 1] = avg;
+        } else {
+            if (Math.abs(avg - nums[0]) > Math.abs(avg - nums[nums.length - 2])) {
+                nums[0] = avg;
+            } else nums[nums.length - 2] = avg;
+        }
+
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        PriorityQueue<Integer> maxpq = new PriorityQueue<>(Collections.reverseOrder());
+
+        for (int num : nums) {
+            pq.add(num);
+            maxpq.add(num);
+        }
+        System.out.println(Arrays.toString(nums));
+        int max = maxpq.poll();
+        int min = pq.poll();
+        System.out.println(max + ":" + min);
+        return Math.abs(max - min);
+    }
+
 
 }
 
