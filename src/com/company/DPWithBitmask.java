@@ -89,7 +89,7 @@ public class DPWithBitmask {
     It can be proven that there are no more than 3 square-free subsets in the given array.
     */
     //DO with DP 6 bitmask
-    int MOD = 1_00000_0000 + 7;
+    int MOD = (int) (1e9 + 7);
 
     public int squareFreeSubsets(int[] nums) {
         Map<String, Integer> dp = new HashMap<>();

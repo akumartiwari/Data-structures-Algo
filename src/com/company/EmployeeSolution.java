@@ -5883,6 +5883,35 @@ Output: [1,2,2,3,5,6]
         }
         return op;
     }
+
+    public int[] leftRigthDifference(int[] nums) {
+        int[] ls = new int[nums.length];
+        int[] rs = new int[nums.length];
+        for (int i = 0; i < nums.length; i++) {
+            ls[i] += nums[i] + (i == 0 ? 0 : ls[i - 1]);
+            rs[nums.length - 1 - i] += nums[nums.length - 1 - i] + (i == 0 ? 0 : rs[nums.length - i]);
+        }
+
+        int[] ans = new int[nums.length];
+        for (int i = 0; i < nums.length; i++) ans[i] = Math.abs(ls[i] - rs[i]);
+        return ans;
+    }
+
+
+    //TLE
+    public int[] divisibilityArray(String word, int m) {
+        int[] ans = new int[word.length()];
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < word.length(); i++) {
+            sb.append(word.charAt(i));
+            // Converting long to BigInteger
+            BigInteger b = new BigInteger(sb.toString());
+            ans[i] += b.remainder(new BigInteger(String.valueOf(m))).equals(new BigInteger(String.valueOf(0))) ? 1 : 0;
+        }
+
+        return ans;
+    }
 }
 
 
