@@ -4668,6 +4668,7 @@ Output: [1,2,2,3,5,6]
             m.add(0);
         }
     }
+
     public int distinctAverages(int[] nums) {
 
         PriorityQueue<Integer> minPq = new PriorityQueue<>();
@@ -5616,6 +5617,90 @@ Output: [1,2,2,3,5,6]
             b = b >> 1;
         }
         return res;
+    }
+
+
+    public int splitNum(int num) {
+        TreeMap<Integer, Integer> tm = new TreeMap<>();
+
+        while (num > 0) {
+            int r = num % 10;
+            tm.put(r, tm.getOrDefault(r, 0) + 1);
+            num /= 10;
+        }
+
+        StringBuilder sb1 = new StringBuilder(), sb2 = new StringBuilder();
+        for (Map.Entry<Integer, Integer> entry : tm.entrySet()) {
+            int cnt = entry.getValue();
+            while (cnt-- > 0) {
+                if (sb1.length() > sb2.length()) sb2.append(entry.getKey());
+                else sb1.append(entry.getKey());
+            }
+        }
+
+        return Integer.parseInt(sb1.toString()) + Integer.parseInt(sb2.toString());
+    }
+
+
+    class Solution {
+
+
+        // TC = O(mn), SC = O(mn)
+        // Author : Anand
+        // DFS on graph
+        public int countUnguarded(int m, int n, int[][] guards, int[][] walls) {
+            char[][] grid = new char[m][n];
+            Queue<int[]> queue = new LinkedList<>();
+            int[][] dirs = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
+
+            for (int[] guard : guards) {
+                grid[guard[0]][guard[1]] = 'G';
+                queue.offer(new int[]{guard[0], guard[1]});
+            }
+
+            for (int[] wall : walls) grid[wall[0]][wall[1]] = 'W';
+
+            // DFS for all guards and marked coordinate as 'P'
+            while (!queue.isEmpty()) {
+                int[] point = queue.poll();
+                for (int[] dir : dirs) {
+                    int x = point[0] + dir[0];
+                    int y = point[1] + dir[1];
+                    // check for boundary/obstacle condition
+                    while (safe(x, y, grid)) {
+                        grid[x][y] = 'P';
+                        x += dir[0];
+                        y += dir[1];
+                    }
+                }
+            }
+
+            int cnt = 0;
+            // count cells that are not blocker
+            for (int i = 0; i < grid.length; i++) {
+                for (int j = 0; j < grid[0].length; j++) {
+                    if (grid[i][j] != 'W' && grid[i][j] != 'G' && grid[i][j] != 'P') cnt++;
+                }
+            }
+            return cnt;
+        }
+
+        private boolean safe(int x, int y, char[][] grid) {
+            return x >= 0 && x < grid.length && y >= 0 && y < grid[0].length && grid[x][y] != 'W' && grid[x][y] != 'G';
+        }
+
+
+        public long coloredCells(int n) {
+            long cnt = 0;
+            if (n == 1) return 1;
+            Queue<Double> queue = new LinkedList<>();
+            queue.add(Math.sqrt(2) / 2);
+            while (!queue.isEmpty() && n-- > 0) {
+                Double element = queue.poll();
+
+
+            }
+        }
     }
 }
 
