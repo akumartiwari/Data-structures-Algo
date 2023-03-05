@@ -5702,6 +5702,113 @@ Output: [1,2,2,3,5,6]
             }
         }
     }
+
+    public long kthLargestLevelSum(TreeNode root, int k) {
+        if (root == null) return 0;
+        PriorityQueue<Long> pq = new PriorityQueue<>(Collections.reverseOrder()); // sum PQ
+        // Standard level order traversal code
+        // using queue
+        Queue<TreeNode> q = new LinkedList<>(); // Create a queue
+        q.add(root); // Enqueue root
+        while (!q.isEmpty()) {
+            int n = q.size();
+            long sum = 0L;
+            // If this node has children
+            while (n > 0) {
+                // Dequeue an item from queue
+                TreeNode p = q.peek();
+                q.remove();
+                sum += p.val;
+                // Enqueue all children of
+                // the dequeued item
+                if (p.left != null) q.add(p.left);
+                if (p.right != null) q.add(p.right);
+                n--;
+            }
+
+            pq.add(sum);
+        }
+
+        while (!pq.isEmpty()) {
+            long ans = pq.poll();
+            if (--k == 0) return ans;
+        }
+
+        return -1;
+    }
+
+
+    TreeMap<Integer, Integer> affectedPowers = new TreeMap<>();
+
+    public int findValidSplit(int[] nums) {
+        TreeMap<Integer, Integer> overallPowers = new TreeMap<>();
+
+        for (int n : nums) {
+            if (n > 0) {
+                while (n % 2 == 0) {
+                    overallPowers.put(2, overallPowers.getOrDefault(2, 0) + 1);
+                    n /= 2;
+                }
+
+                for (int i = 3; i <= Math.sqrt(n); i += 2) {
+                    while (n % i == 0) {
+                        overallPowers.put(i, overallPowers.getOrDefault(i, 0) + 1);
+                        n /= i;
+                    }
+                }
+                if (n > 2) {
+                    overallPowers.put(n, overallPowers.getOrDefault(n, 0) + 1);
+                }
+            }
+        }
+
+        for (int p = 0; p < nums.length - 1; p++) {
+            int n = nums[p];
+            TreeMap<Integer, Integer> tm = new TreeMap<>();
+
+            computePowers(n, tm);
+
+            // check if valid
+            if (valid(overallPowers, tm)) return p;
+        }
+        return -1;
+    }
+
+    private void computePowers(int n, TreeMap<Integer, Integer> tm) {
+        if (n > 0) {
+            while (n % 2 == 0) {
+                tm.put(2, tm.getOrDefault(2, 0) + 1);
+                n /= 2;
+            }
+
+            for (int i = 3; i <= Math.sqrt(n); i += 2) {
+                while (n % i == 0) {
+                    tm.put(i, tm.getOrDefault(i, 0) + 1);
+                    n /= i;
+                }
+            }
+            if (n > 2) {
+                tm.put(n, tm.getOrDefault(n, 0) + 1);
+            }
+        }
+    }
+
+    private boolean valid(TreeMap<Integer, Integer> overall, TreeMap<Integer, Integer> tm) {
+
+        for (Map.Entry<Integer, Integer> entry : tm.entrySet()) {
+            if (overall.containsKey(entry.getKey()) && overall.get(entry.getKey()) != entry.getValue()) {
+                // Put default power
+                if (!affectedPowers.containsKey(entry.getKey()))
+                    affectedPowers.put(entry.getKey(), overall.get(entry.getKey()));
+
+                affectedPowers.put(entry.getKey(), affectedPowers.getOrDefault(entry.getKey(), 0) - entry.getValue());
+                if (affectedPowers.get(entry.getKey()) <= 0) affectedPowers.remove(entry.getKey());
+            }
+        }
+
+
+        return affectedPowers.size() == 0;
+    }
 }
 
 
