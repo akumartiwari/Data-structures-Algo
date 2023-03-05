@@ -1489,4 +1489,37 @@ public class DP {
             }
         }
     }
+
+
+    //TLE
+    public int waysToReachTarget(int target, int[][] types) {
+        Map<String, Integer> dp = new HashMap<>();
+        return helper(target, types, new Pair<>(0, 0), dp);
+    }
+
+    private int helper(int target, int[][] types, Pair<Integer, Integer> pair, Map<String, Integer> dp) {
+        int ind = pair.getKey(); // current index
+        int times = pair.getValue(); // how many times current index has been taken
+        // base case
+        if (ind >= types.length) return 0;
+        if (target <= 0) return 1;
+
+        String key = target + "-" + ind + "-" + times;
+
+        if (dp.containsKey(key)) return dp.get(key);
+        int t = 0, nt = 0;
+        int cnt = types[ind][0];
+        int value = types[ind][1];
+
+        if ((times + 1) <= cnt && target - value >= 0) {
+            // take
+            t = (t + helper(target - value, types, new Pair<>(ind, times + 1), dp)) % mod;
+        }
+
+        // Escape
+        nt = (nt + helper(target, types, new Pair<>(ind + 1, 0), dp)) % mod;
+        int ans = (t + nt) % mod;
+        dp.put(key, ans);
+        return ans;
+    }
 }

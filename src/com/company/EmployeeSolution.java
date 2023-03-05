@@ -5740,6 +5740,8 @@ Output: [1,2,2,3,5,6]
 
     TreeMap<Integer, Integer> affectedPowers = new TreeMap<>();
 
+
+    //TC = O(NlogN)
     public int findValidSplit(int[] nums) {
         TreeMap<Integer, Integer> overallPowers = new TreeMap<>();
 
