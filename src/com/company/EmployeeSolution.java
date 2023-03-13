@@ -515,11 +515,6 @@ Output: [1,2,2,3,5,6]
         }
     }
 
-    // TC = O(n)
-    private boolean isVowel(char ch) {
-        return ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u';
-    }
-
     public long countVowels(String word) {
         long n = word.length();
         long ans = 0;
@@ -5811,6 +5806,38 @@ Output: [1,2,2,3,5,6]
 
         return affectedPowers.size() == 0;
     }
+
+
+    //is vowel function
+    public boolean isVowel(char c) {
+        return (c == 'a' || c == 'A' || c == 'e' || c == 'E' || c == 'i' || c == 'I' || c == 'o' || c == 'O' || c == 'u' || c == 'U');
+    }
+
+    public int vowelStrings(String[] words, int left, int right) {
+        int cnt = 0;
+        for (int i = left; i <= right; i++)
+            if (isVowel(words[i].charAt(0)) && isVowel(words[i].charAt(words[i].length() - 1))) cnt++;
+        return cnt;
+    }
+
+
+    public int maxScore(int[] nums) {
+        int cnt = 0;
+        List<Integer> integersList = Arrays.stream(nums).boxed().sorted(Collections.reverseOrder()).collect(Collectors.toList());
+
+        long[] ps = new long[nums.length];
+        for (int i = 0; i < integersList.size(); i++) {
+            ps[i] = (i == 0 ? 0 : ps[i - 1]) + integersList.get(i);
+        }
+
+        for (long p : ps) {
+            if (p > 0) cnt++;
+            else break;
+        }
+
+        return cnt;
+    }
+
 }
 
 
