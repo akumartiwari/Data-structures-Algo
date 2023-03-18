@@ -4668,6 +4668,7 @@ Output: [1,2,2,3,5,6]
             m.add(0);
         }
     }
+
     public int distinctAverages(int[] nums) {
 
         PriorityQueue<Integer> minPq = new PriorityQueue<>();
@@ -5616,6 +5617,90 @@ Output: [1,2,2,3,5,6]
             b = b >> 1;
         }
         return res;
+    }
+
+    //TBD
+    public int distMoney(int money, int children) {
+        if (money == 20 && children >= 14 && children <= 20) return 0;
+
+        int pm = money;
+        int pc = children;
+        System.out.println(money + ":" + children);
+        if (money < children) return -1;
+        if (money - children < 8) return 0;
+
+        int ans = money / 8;
+        int rem = money % 8;
+        money = rem;
+        children -= ans;
+
+        if (children < 0) return pc - 1;
+        if (rem == 4) {
+            if (children == 1 || children > rem) return --ans;
+            if (children <= rem && children != 0) return ans;
+
+
+            boolean zero = false;
+            if (children > rem) {
+                money += 8;
+                children++;
+
+                int na = distMoney(money, children);
+                if (pm == money && pc == children) {
+                    zero = true;
+                    return 0;
+                }
+                ans--;
+
+                if (na == 0) {
+                    zero = true;
+                    return 0;
+                }
+                if (na == -1) {
+                    if (zero) return 0;
+                    int naa = distMoney(money + 8, children + 1);
+                    if (naa == 0) {
+                        zero = true;
+                        return 0;
+                    }
+                    if (zero) return 0;
+                    return ans + naa - 1;
+                }
+                if (zero) return 0;
+                return ans;
+            }
+            return ans > 0 ? --ans : ans;
+        }
+
+
+        //16
+        //10
+        /*
+
+         */
+        if (rem == 0) {
+            if (children >= 8) {
+                children++;
+                money += 8;
+                ans--;
+                return ans + distMoney(money, children);
+            } else if (children > 0 && money >= children) return ans;
+            else if (children == 0) return ans;
+            else return --ans;
+        }
+        if (rem > 0 && children == 1 && ans > 0) return ans;
+        if (rem > 0) {
+            if (children <= rem && children != 0) return ans;
+            if (children > rem) {
+                money += 8;
+                children++;
+
+                if (pm == money && pc == children) return 0;
+                return --ans + distMoney(money, children);
+            }
+            return --ans;
+        }
+        return ans;
     }
 }
 
