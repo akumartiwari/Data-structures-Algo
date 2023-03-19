@@ -5731,33 +5731,44 @@ Output: [1,2,2,3,5,6]
     }
 
 
-    public int beautifulSubsets(int[] nums, int k) {
-        if (nums.length == 1) return 1;
-        Arrays.sort(nums);
-        return printCountSubsequences(nums, k, 0, -1);
-    }
+    public int solve(int index, int[] nums, int k, Set<Integer> hset) {
 
+        if (index == nums.length) {
 
-    private int printCountSubsequences(int[] nums, int k, int idx, int last) {
-        // base case
-        // Only can be done if array contains positive elements
-        if (idx >= nums.length) {
-            if (last != -1) return 1;
+            int size = hset.size();
+            if (size > 0) return 1;
             return 0;
+
+        }
+
+        int notPick = solve(index + 1, nums, k, hset);
+        int pick = 0;
+        if (!hset.contains(nums[index] - k)) {
+            hset.add(nums[index]);
+            pick = solve(index + 1, nums, k, hset);
+            hset.remove(nums[index]);
         }
 
 
-        // take
-        int take = 0, notTake = 0;
-        if (last != -1 && (nums[idx] - last) == k) {
-            take = 1 + printCountSubsequences(nums, k, idx + 1, nums[idx]);
-        } else if (last == -1) {
-            take = 1 + printCountSubsequences(nums, k, idx + 1, nums[idx]);
-        }
+        return pick + notPick;
 
-        notTake = printCountSubsequences(nums, k, idx + 1, last);
-        return take + notTake;
+
     }
+
+
+    public int beautifulSubsets(int[] nums, int k) {
+
+        Set<Integer> hset = new HashSet<>();
+
+        Arrays.sort(nums);
+
+
+        return solve(0, nums, k, hset);
+
+    }
+
+
+
 
     //TBD
     public int distMoney(int money, int children) {
