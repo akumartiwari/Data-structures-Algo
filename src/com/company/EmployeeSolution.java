@@ -5619,6 +5619,146 @@ Output: [1,2,2,3,5,6]
         return res;
     }
 
+    public int[] evenOddBit(int n) {
+
+        String binary = Integer.toBinaryString(n);
+        StringBuilder sb = new StringBuilder();
+        sb.append(binary).reverse();
+
+        int odd = 0, even = 0;
+        for (int i = 0; i < sb.length(); i++) {
+            if (i % 2 == 0 && sb.charAt(i) == '1') even++;
+            else if (i % 2 != 0 && sb.charAt(i) == '1') odd++;
+        }
+
+        return new int[]{even, odd};
+    }
+
+
+    class Solution {
+
+        int N = 8;
+
+        /* A utility function to check if i,j are
+           valid indexes for N*N chessboard */
+        boolean isSafe(int x, int y, int[][] sol) {
+            return (x >= 0 && x < N && y >= 0 && y < N
+                    && sol[x][y] == -1);
+        }
+
+        /* A utility function to print solution
+           matrix sol[N][N] */
+        void printSolution(int[][] sol) {
+            for (int x = 0; x < N; x++) {
+                for (int y = 0; y < N; y++)
+                    System.out.print(sol[x][y] + " ");
+                System.out.println();
+            }
+        }
+
+        /* This function solves the Knight Tour problem
+           using Backtracking.  This  function mainly
+           uses solveKTUtil() to solve the problem. It
+           returns false if no complete tour is possible,
+           otherwise return true and prints the tour.
+           Please note that there may be more than one
+           solutions, this function prints one of the
+           feasible solutions.  */
+        boolean solveKT() {
+            int[][] sol = new int[8][8];
+
+            /* Initialization of solution matrix */
+            for (int x = 0; x < N; x++)
+                for (int y = 0; y < N; y++)
+                    sol[x][y] = -1;
+
+        /* xMove[] and yMove[] define next move of Knight.
+           xMove[] is for next value of x coordinate
+           yMove[] is for next value of y coordinate */
+            int[] xMove = {2, 1, -1, -2, -2, -1, 1, 2};
+            int[] yMove = {1, 2, 2, 1, -1, -2, -2, -1};
+
+            // Since the Knight is initially at the first block
+            sol[0][0] = 0;
+
+        /* Start from 0,0 and explore all tours using
+           solveKTUtil() */
+            if (!solveKTUtil(0, 0, 1, sol, xMove, yMove)) {
+                System.out.println("Solution does not exist");
+                return false;
+            } else
+                printSolution(sol);
+
+            return true;
+        }
+
+        /* A recursive utility function to solve Knight
+           Tour problem */
+        boolean solveKTUtil(int x, int y, int movei,
+                            int[][] sol, int[] xMove,
+                            int[] yMove) {
+            int k, next_x, next_y;
+            if (movei == N * N)
+                return true;
+
+        /* Try all next moves from the current coordinate
+            x, y */
+            for (k = 0; k < 8; k++) {
+                next_x = x + xMove[k];
+                next_y = y + yMove[k];
+                if (isSafe(next_x, next_y, sol)) {
+                    sol[next_x][next_y] = movei;
+                    if (solveKTUtil(next_x, next_y, movei + 1,
+                            sol, xMove, yMove))
+                        return true;
+                    else
+                        sol[next_x][next_y]
+                                = -1; // backtracking
+                }
+            }
+
+            return false;
+        }
+
+
+        public boolean checkValidGrid(int[][] grid) {
+
+            this.N = grid.length;
+            // Function Call
+            return solveKT();
+
+        }
+    }
+
+
+    public int beautifulSubsets(int[] nums, int k) {
+        if (nums.length == 1) return 1;
+        Arrays.sort(nums);
+        return printCountSubsequences(nums, k, 0, -1);
+    }
+
+
+    private int printCountSubsequences(int[] nums, int k, int idx, int last) {
+        // base case
+        // Only can be done if array contains positive elements
+        if (idx >= nums.length) {
+            if (last != -1) return 1;
+            return 0;
+        }
+
+
+        // take
+        int take = 0, notTake = 0;
+        if (last != -1 && (nums[idx] - last) == k) {
+            take = 1 + printCountSubsequences(nums, k, idx + 1, nums[idx]);
+        } else if (last == -1) {
+            take = 1 + printCountSubsequences(nums, k, idx + 1, nums[idx]);
+        }
+
+        notTake = printCountSubsequences(nums, k, idx + 1, last);
+        return take + notTake;
+    }
+
     //TBD
     public int distMoney(int money, int children) {
         if (money == 20 && children >= 14 && children <= 20) return 0;
