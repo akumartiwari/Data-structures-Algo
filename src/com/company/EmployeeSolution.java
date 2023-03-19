@@ -5771,7 +5771,12 @@ Output: [1,2,2,3,5,6]
                 } else {
                     if (!set.contains(nv)) {
                         set.add(nv);
-                    } else set.add(num);
+                    } else {
+                        int nnv = nv;
+                        int cnt = 1;
+                        while (set.contains(nnv + value * cnt)) cnt++;
+                        set.add(nnv + value * cnt);
+                    }
                     gi = Math.max(nv, gi);
                 }
             }
@@ -5800,7 +5805,7 @@ Output: [1,2,2,3,5,6]
                     }
                 }
             }
-            return -1;
+            return list.get(list.size() - 1) + 1;
         }
     }
 
