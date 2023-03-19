@@ -3,6 +3,7 @@ package com.company;
 import javafx.util.Pair;
 
 import java.awt.*;
+import java.beans.IntrospectionException;
 import java.math.BigInteger;
 import java.nio.file.LinkOption;
 import java.util.List;
@@ -5730,45 +5731,78 @@ Output: [1,2,2,3,5,6]
         }
     }
 
-
-    public int solve(int index, int[] nums, int k, Set<Integer> hset) {
-
-        if (index == nums.length) {
-
-            int size = hset.size();
-            if (size > 0) return 1;
-            return 0;
-
-        }
-
-        int notPick = solve(index + 1, nums, k, hset);
-        int pick = 0;
-        if (!hset.contains(nums[index] - k)) {
-            hset.add(nums[index]);
-            pick = solve(index + 1, nums, k, hset);
-            hset.remove(nums[index]);
-        }
-
-
-        return pick + notPick;
-
-
-    }
-
-
     public int beautifulSubsets(int[] nums, int k) {
-
-        Set<Integer> hset = new HashSet<>();
-
         Arrays.sort(nums);
+        Set<Integer> hSet = new HashSet<>();
+        return solve(nums, k, 0, hSet);
+    }
 
+    private int solve(int[] nums, int k, int ind, Set<Integer> hSet) {
+        if (ind == nums.length) {
+            if (hSet.size() > 0) return 1;
+            return 0;
+        }
 
-        return solve(0, nums, k, hset);
+        int take = 0, nottake = 0;
+        nottake += solve(nums, k, ind + 1, hSet);
 
+        if (!hSet.contains(nums[ind] - k)) {
+            hSet.add(nums[ind]);
+            take += solve(nums, k, ind + 1, hSet);
+            hSet.remove(nums[ind]);
+        }
+
+        return take + nottake;
     }
 
 
+    //TBD
+    // You can add or subtract value any number of times
+    class Solution {
+        public int findSmallestInteger(int[] nums, int value) {
 
+            int gi = -1;
+            Set<Integer> set = new HashSet<>();
+            for (int num : nums) {
+                int nv = num % value;
+                if (set.size() == 0) {
+                    gi = num % value;
+                    set.add(nv);
+                } else {
+                    if (!set.contains(nv)) {
+                        set.add(nv);
+                    } else set.add(num);
+                    gi = Math.max(nv, gi);
+                }
+            }
+
+            List<Integer> list = new ArrayList<>();
+            list.addAll(set);
+            Collections.sort(list);
+            System.out.println(Arrays.toString(list.toArray()));
+
+            boolean consective = false;
+            int last = -1;
+            for (int l : list) {
+                if (last == -1) {
+                    last = l;
+                    continue;
+                }
+                if ((l - last) != 1 && consective) return last + 1;
+                if ((l - last) == 1) consective = true;
+                last = l;
+            }
+
+            if (!consective) {
+                for (int l : list) {
+                    if (l > 0) {
+                        return l - 1;
+                    }
+                }
+            }
+            return -1;
+        }
+    }
 
     //TBD
     public int distMoney(int money, int children) {
