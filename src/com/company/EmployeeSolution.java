@@ -5892,6 +5892,106 @@ Output: [1,2,2,3,5,6]
         }
         return ans;
     }
+
+
+    public int kItemsWithMaximumSum(int numOnes, int numZeros, int numNegOnes, int k) {
+        int sum = 0;
+        while (k > 0) {
+            if (numOnes > 0) {
+                numOnes--;
+                sum++;
+            } else if (numZeros > 0) numZeros--;
+            else {
+                numNegOnes--;
+                sum--;
+            }
+            k--;
+        }
+        return sum;
+    }
+
+
+    /*
+    Input: nums = [4,9,6,10]
+    Output: true
+    Explanation: In the first operation: Pick i = 0 and p = 3, and then subtract 3 from nums[0], so that nums becomes [1,9,6,10].
+    In the second operation: i = 1, p = 7, subtract 7 from nums[1], so nums becomes equal to [1,2,6,10].
+    After the second operation, nums is sorted in strictly increasing order, so the answer is true.
+     */
+    class Solution {
+
+        TreeMap<Integer, Boolean> primeNumbers = new TreeMap<>();
+
+        public void primeSieve(int n) {
+            BitSet bitset = new BitSet(n + 1);
+            for (long i = 0; i < n; i++) {
+                if (i == 0 || i == 1) {
+                    bitset.set((int) i);
+                    continue;
+                }
+                if (bitset.get((int) i)) continue;
+                primeNumbers.put((int) i, true);
+                for (long j = i; j <= n; j += i)
+                    bitset.set((int) j);
+            }
+        }
+
+        public boolean primeSubOperation(int[] nums) {
+
+            primeSieve(1000);
+
+            System.out.println(primeNumbers);
+            for (int i = 0; i < nums.length; i++) {
+                if (primeNumbers.firstKey() >= nums[i]) continue;
+                int prime = primeNumbers.lowerKey(nums[i]);
+                if (i == 0) {
+                    nums[i] -= prime;
+                    continue;
+                }
+
+                while (nums[i - 1] >= (nums[i] - prime)) {
+                    if (primeNumbers.firstKey() >= prime) break;
+                    prime = primeNumbers.lowerKey(prime);
+                }
+
+                if (nums[i - 1] < (nums[i] - prime)) nums[i] -= prime;
+            }
+
+
+            for (int i = 0; i < nums.length; i++) {
+                if (i == 0) continue;
+                if (nums[i - 1] >= nums[i]) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+
+
+    //TBD
+    class Solution {
+        public List<Long> minOperations(int[] nums, int[] queries) {
+            List<Long> ans = new ArrayList<>();
+            long[] prefixSum = new long[nums.length];
+            int idx = 0;
+            for (int num : nums) {
+                prefixSum[idx] = idx > 0 ? (prefixSum[idx - 1] + num) : num;
+                idx++;
+            }
+
+
+            long[] querySum = new long[nums.length];
+            idx = 0;
+            for (int query : queries) {
+                querySum[idx] = idx > 0 ? (querySum[idx - 1] + query) : query;
+                idx++;
+            }
+
+            return ans;
+        }
+    }
 }
 
 
