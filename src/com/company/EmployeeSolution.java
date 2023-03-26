@@ -5970,27 +5970,59 @@ Output: [1,2,2,3,5,6]
     }
 
 
-    //TBD
     class Solution {
         public List<Long> minOperations(int[] nums, int[] queries) {
             List<Long> ans = new ArrayList<>();
+            int[] sorted = nums;
+            Arrays.sort(sorted);
+            long as = Arrays.stream(nums).sum();
+
             long[] prefixSum = new long[nums.length];
             int idx = 0;
-            for (int num : nums) {
-                prefixSum[idx] = idx > 0 ? (prefixSum[idx - 1] + num) : num;
+            for (int sort : sorted) {
+                prefixSum[idx] = idx > 0 ? (prefixSum[idx - 1] + sort) : sort;
                 idx++;
             }
 
-
-            long[] querySum = new long[nums.length];
-            idx = 0;
             for (int query : queries) {
-                querySum[idx] = idx > 0 ? (querySum[idx - 1] + query) : query;
-                idx++;
+                int ind = bs(sorted, query);
+
+                System.out.println(ind);
+                long cnt = 0L, sum = 0L;
+                if (ind >= 0 && ind < (nums.length - 1)) {
+                    if (nums.length - 1 - ind > ind + 1) {
+                        cnt += (nums.length - 1 - ind) - (ind + 1);
+                    } else cnt += (ind + 1) - (nums.length - 1 - ind);
+                } else if (ind == (nums.length - 1)) {
+                    ans.add(Math.abs((long) query * nums.length - as));
+                    continue;
+                } else cnt += nums.length;
+
+                // sum of elements greater than query and less than query
+                if (ind >= 0) sum += Math.abs(Math.abs(prefixSum[ind] - (as - prefixSum[ind])) - cnt);
+                else sum += Math.abs(cnt - as);
+                ans.add(sum);
             }
 
             return ans;
         }
+
+
+        private int bs(int[] ps, int bus) {
+            int l = 0, h = ps.length - 1;
+            while (l <= h) {
+                int mid = l + (h - l) / 2;
+
+                if (ps[mid] < bus) {
+                    l = mid + 1;
+                } else if (ps[mid] == bus) return l - 1;
+                else h = mid;
+
+                if (l == h && l == mid) return l - 1;
+            }
+            return l - 1;
+        }
+
     }
 }
 
