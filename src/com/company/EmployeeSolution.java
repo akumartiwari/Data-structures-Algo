@@ -3,6 +3,7 @@ package com.company;
 import javafx.util.Pair;
 
 import java.awt.*;
+import java.beans.IntrospectionException;
 import java.math.BigInteger;
 import java.nio.file.LinkOption;
 import java.util.List;
@@ -4668,6 +4669,7 @@ Output: [1,2,2,3,5,6]
             m.add(0);
         }
     }
+
     public int distinctAverages(int[] nums) {
 
         PriorityQueue<Integer> minPq = new PriorityQueue<>();
@@ -5617,6 +5619,357 @@ Output: [1,2,2,3,5,6]
         }
         return res;
     }
+
+    public int[] evenOddBit(int n) {
+
+        String binary = Integer.toBinaryString(n);
+        StringBuilder sb = new StringBuilder();
+        sb.append(binary).reverse();
+
+        int odd = 0, even = 0;
+        for (int i = 0; i < sb.length(); i++) {
+            if (i % 2 == 0 && sb.charAt(i) == '1') even++;
+            else if (i % 2 != 0 && sb.charAt(i) == '1') odd++;
+        }
+
+        return new int[]{even, odd};
+    }
+
+
+    class Solution {
+
+        int N = 8;
+
+        /* A utility function to check if i,j are
+           valid indexes for N*N chessboard */
+        boolean isSafe(int x, int y, int[][] sol) {
+            return (x >= 0 && x < N && y >= 0 && y < N
+                    && sol[x][y] == -1);
+        }
+
+        /* A utility function to print solution
+           matrix sol[N][N] */
+        void printSolution(int[][] sol) {
+            for (int x = 0; x < N; x++) {
+                for (int y = 0; y < N; y++)
+                    System.out.print(sol[x][y] + " ");
+                System.out.println();
+            }
+        }
+
+        /* This function solves the Knight Tour problem
+           using Backtracking.  This  function mainly
+           uses solveKTUtil() to solve the problem. It
+           returns false if no complete tour is possible,
+           otherwise return true and prints the tour.
+           Please note that there may be more than one
+           solutions, this function prints one of the
+           feasible solutions.  */
+        boolean solveKT() {
+            int[][] sol = new int[8][8];
+
+            /* Initialization of solution matrix */
+            for (int x = 0; x < N; x++)
+                for (int y = 0; y < N; y++)
+                    sol[x][y] = -1;
+
+        /* xMove[] and yMove[] define next move of Knight.
+           xMove[] is for next value of x coordinate
+           yMove[] is for next value of y coordinate */
+            int[] xMove = {2, 1, -1, -2, -2, -1, 1, 2};
+            int[] yMove = {1, 2, 2, 1, -1, -2, -2, -1};
+
+            // Since the Knight is initially at the first block
+            sol[0][0] = 0;
+
+        /* Start from 0,0 and explore all tours using
+           solveKTUtil() */
+            if (!solveKTUtil(0, 0, 1, sol, xMove, yMove)) {
+                System.out.println("Solution does not exist");
+                return false;
+            } else
+                printSolution(sol);
+
+            return true;
+        }
+
+        /* A recursive utility function to solve Knight
+           Tour problem */
+        boolean solveKTUtil(int x, int y, int movei,
+                            int[][] sol, int[] xMove,
+                            int[] yMove) {
+            int k, next_x, next_y;
+            if (movei == N * N)
+                return true;
+
+        /* Try all next moves from the current coordinate
+            x, y */
+            for (k = 0; k < 8; k++) {
+                next_x = x + xMove[k];
+                next_y = y + yMove[k];
+                if (isSafe(next_x, next_y, sol)) {
+                    sol[next_x][next_y] = movei;
+                    if (solveKTUtil(next_x, next_y, movei + 1,
+                            sol, xMove, yMove))
+                        return true;
+                    else
+                        sol[next_x][next_y]
+                                = -1; // backtracking
+                }
+            }
+
+            return false;
+        }
+
+
+        public boolean checkValidGrid(int[][] grid) {
+
+            this.N = grid.length;
+            // Function Call
+            return solveKT();
+
+        }
+    }
+
+    public int beautifulSubsets(int[] nums, int k) {
+        Arrays.sort(nums);
+        Set<Integer> hSet = new HashSet<>();
+        return solve(nums, k, 0, hSet);
+    }
+
+    private int solve(int[] nums, int k, int ind, Set<Integer> hSet) {
+        if (ind == nums.length) {
+            if (hSet.size() > 0) return 1;
+            return 0;
+        }
+
+        int take = 0, nottake = 0;
+        nottake += solve(nums, k, ind + 1, hSet);
+
+        if (!hSet.contains(nums[ind] - k)) {
+            hSet.add(nums[ind]);
+            take += solve(nums, k, ind + 1, hSet);
+            hSet.remove(nums[ind]);
+        }
+
+        return take + nottake;
+    }
+
+
+    //TBD
+    // You can add or subtract value any number of times
+    class Solution {
+        public int findSmallestInteger(int[] nums, int value) {
+
+            int gi = -1;
+            Set<Integer> set = new HashSet<>();
+            for (int num : nums) {
+                int nv = num % value;
+                if (set.size() == 0) {
+                    gi = num % value;
+                    set.add(nv);
+                } else {
+                    if (!set.contains(nv)) {
+                        set.add(nv);
+                    } else {
+                        int nnv = nv;
+                        int cnt = 1;
+                        while (set.contains(nnv + value * cnt)) cnt++;
+                        set.add(nnv + value * cnt);
+                    }
+                    gi = Math.max(nv, gi);
+                }
+            }
+
+            List<Integer> list = new ArrayList<>();
+            list.addAll(set);
+            Collections.sort(list);
+            System.out.println(Arrays.toString(list.toArray()));
+
+            boolean consective = false;
+            int last = -1;
+            for (int l : list) {
+                if (last == -1) {
+                    last = l;
+                    continue;
+                }
+                if ((l - last) != 1 && consective) return last + 1;
+                if ((l - last) == 1) consective = true;
+                last = l;
+            }
+
+            if (!consective) {
+                for (int l : list) {
+                    if (l > 0) {
+                        return l - 1;
+                    }
+                }
+            }
+            return list.get(list.size() - 1) + 1;
+        }
+    }
+
+    //TBD
+    public int distMoney(int money, int children) {
+        if (money == 20 && children >= 14 && children <= 20) return 0;
+
+        int pm = money;
+        int pc = children;
+        System.out.println(money + ":" + children);
+        if (money < children) return -1;
+        if (money - children < 8) return 0;
+
+        int ans = money / 8;
+        int rem = money % 8;
+        money = rem;
+        children -= ans;
+
+        if (children < 0) return pc - 1;
+        if (rem == 4) {
+            if (children == 1 || children > rem) return --ans;
+            if (children <= rem && children != 0) return ans;
+
+
+            boolean zero = false;
+            if (children > rem) {
+                money += 8;
+                children++;
+
+                int na = distMoney(money, children);
+                if (pm == money && pc == children) {
+                    zero = true;
+                    return 0;
+                }
+                ans--;
+
+                if (na == 0) {
+                    zero = true;
+                    return 0;
+                }
+                if (na == -1) {
+                    if (zero) return 0;
+                    int naa = distMoney(money + 8, children + 1);
+                    if (naa == 0) {
+                        zero = true;
+                        return 0;
+                    }
+                    if (zero) return 0;
+                    return ans + naa - 1;
+                }
+                if (zero) return 0;
+                return ans;
+            }
+            return ans > 0 ? --ans : ans;
+        }
+
+
+        //16
+        //10
+        /*
+
+         */
+        if (rem == 0) {
+            if (children >= 8) {
+                children++;
+                money += 8;
+                ans--;
+                return ans + distMoney(money, children);
+            } else if (children > 0 && money >= children) return ans;
+            else if (children == 0) return ans;
+            else return --ans;
+        }
+        if (rem > 0 && children == 1 && ans > 0) return ans;
+        if (rem > 0) {
+            if (children <= rem && children != 0) return ans;
+            if (children > rem) {
+                money += 8;
+                children++;
+
+                if (pm == money && pc == children) return 0;
+                return --ans + distMoney(money, children);
+            }
+            return --ans;
+        }
+        return ans;
+    }
+
+
+    public int kItemsWithMaximumSum(int numOnes, int numZeros, int numNegOnes, int k) {
+        int sum = 0;
+        while (k > 0) {
+            if (numOnes > 0) {
+                numOnes--;
+                sum++;
+            } else if (numZeros > 0) numZeros--;
+            else {
+                numNegOnes--;
+                sum--;
+            }
+            k--;
+        }
+        return sum;
+    }
+
+
+    /*
+    Input: nums = [4,9,6,10]
+    Output: true
+    Explanation: In the first operation: Pick i = 0 and p = 3, and then subtract 3 from nums[0], so that nums becomes [1,9,6,10].
+    In the second operation: i = 1, p = 7, subtract 7 from nums[1], so nums becomes equal to [1,2,6,10].
+    After the second operation, nums is sorted in strictly increasing order, so the answer is true.
+     */
+    class Solution {
+
+        TreeMap<Integer, Boolean> primeNumbers = new TreeMap<>();
+
+        public void primeSieve(int n) {
+            BitSet bitset = new BitSet(n + 1);
+            for (long i = 0; i < n; i++) {
+                if (i == 0 || i == 1) {
+                    bitset.set((int) i);
+                    continue;
+                }
+                if (bitset.get((int) i)) continue;
+                primeNumbers.put((int) i, true);
+                for (long j = i; j <= n; j += i)
+                    bitset.set((int) j);
+            }
+        }
+
+        public boolean primeSubOperation(int[] nums) {
+
+            primeSieve(1000);
+
+            System.out.println(primeNumbers);
+            for (int i = 0; i < nums.length; i++) {
+                if (primeNumbers.firstKey() >= nums[i]) continue;
+                int prime = primeNumbers.lowerKey(nums[i]);
+                if (i == 0) {
+                    nums[i] -= prime;
+                    continue;
+                }
+
+                while (nums[i - 1] >= (nums[i] - prime)) {
+                    if (primeNumbers.firstKey() >= prime) break;
+                    prime = primeNumbers.lowerKey(prime);
+                }
+
+                if (nums[i - 1] < (nums[i] - prime)) nums[i] -= prime;
+            }
+
+
+            for (int i = 0; i < nums.length; i++) {
+                if (i == 0) continue;
+                if (nums[i - 1] >= nums[i]) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+
+
 }
 
 
