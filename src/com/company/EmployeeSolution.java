@@ -5918,7 +5918,7 @@ Output: [1,2,2,3,5,6]
     In the second operation: i = 1, p = 7, subtract 7 from nums[1], so nums becomes equal to [1,2,6,10].
     After the second operation, nums is sorted in strictly increasing order, so the answer is true.
      */
-    class Solution {
+    class PrimeStrctlyIncreasing {
 
         TreeMap<Integer, Boolean> primeNumbers = new TreeMap<>();
 
