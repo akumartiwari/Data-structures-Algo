@@ -6048,6 +6048,22 @@ Output: [1,2,2,3,5,6]
         }
     }
 
+    public int minNumber(int[] nums1, int[] nums2) {
+        List<Integer> list1 = new ArrayList<>();
+        List<Integer> list2 = new ArrayList<>();
+        for (int num : nums1) list1.add(num);
+        for (int num : nums2) list2.add(num);
+
+        Collections.sort(list1);
+        Collections.sort(list2);
+
+        for (int num : list1) if (list2.contains(num)) return num;
+
+        int d1 = list1.get(0);
+        int d2 = list2.get(0);
+        return d1 < d2 ? Integer.parseInt(d1 + "" + d2) : Integer.parseInt(d2 + "" + d1);
+    }
+
 }
 
 

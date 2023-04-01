@@ -1,9 +1,6 @@
 package com.company;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SlidingWindow {
     // Sliding window
@@ -198,5 +195,33 @@ public class SlidingWindow {
         }
 
         return maxSum;
+    }
+
+    //TBD- wrong answer
+    class Solution {
+        public int maximumCostSubstring(String s, String chars, int[] vals) {
+            int sum = 0;
+            int maxSum = 0;
+            Map<Character, Integer> cm = new HashMap<>();
+            for (int i = 0; i < chars.length(); i++) cm.put(chars.charAt(i), i + 1);
+
+            for (int i = 0; i < s.length(); i++) {
+                char c = s.charAt(i);
+                sum += cm.containsKey(c) ? cm.get(c) : vals[((c - 'a'))];
+                maxSum = Math.max(sum, maxSum);
+            }
+
+
+            sum = 0;
+            for (int i = 0; i < s.length(); i++) {
+                char c = s.charAt(i);
+                int cal = cm.containsKey(c) ? cm.get(c) : vals[((c - 'a'))];
+                if (cal < 0) maxSum = Math.max(maxSum, maxSum - cal);
+            }
+
+
+            return maxSum;
+
+        }
     }
 }
