@@ -203,19 +203,21 @@ public class SlidingWindow {
             int sum = 0;
             int maxSum = 0;
             Map<Character, Integer> cm = new HashMap<>();
-            for (int i = 0; i < chars.length(); i++) cm.put(chars.charAt(i), i + 1);
+            for (int i = 0; i < chars.length(); i++) cm.put(chars.charAt(i), i);
 
             for (int i = 0; i < s.length(); i++) {
                 char c = s.charAt(i);
-                sum += cm.containsKey(c) ? cm.get(c) : vals[((c - 'a'))];
+                sum += cm.containsKey(c) ? vals[cm.get(c)] : (int)(c - 'a') + 1 ;
                 maxSum = Math.max(sum, maxSum);
             }
 
 
+            System.out.println(maxSum);
+
             sum = 0;
             for (int i = 0; i < s.length(); i++) {
                 char c = s.charAt(i);
-                int cal = cm.containsKey(c) ? cm.get(c) : vals[((c - 'a'))];
+                int cal = cm.containsKey(c) ? vals[cm.get(c)] : (int)(c - 'a') + 1 ;
                 if (cal < 0) maxSum = Math.max(maxSum, maxSum - cal);
             }
 

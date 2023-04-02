@@ -6064,6 +6064,99 @@ Output: [1,2,2,3,5,6]
         return d1 < d2 ? Integer.parseInt(d1 + "" + d2) : Integer.parseInt(d2 + "" + d1);
     }
 
+
+    public int findTheLongestBalancedSubstring(String s) {
+
+        int max = 0;
+        for (int i = 0; i < s.length(); i++) {
+            for (int j = i + 1; j < s.length(); j++) {
+                String ss = s.substring(i, j + 1);
+                if (balanced(ss)) {
+                    max = Math.max(max, ss.length());
+                }
+            }
+        }
+
+        return max;
+    }
+
+    private boolean balanced(String ss) {
+
+
+        if (ss.length() % 2 != 0) return false;
+        for (int i = 0; i < ss.length() / 2; i++)
+            if (ss.charAt(i) != '0' || ss.charAt(ss.length() - 1 - i) != '1') return false;
+        return true;
+    }
+
+
+    public List<List<Integer>> findMatrix(int[] nums) {
+        Map<Integer, Set<Integer>> matrix = new ConcurrentHashMap<>();
+
+        for (int num : nums) {
+            if (matrix.size() == 0) {
+                Set<Integer> row = new HashSet<>();
+                row.add(num);
+                matrix.put(0, row);
+            } else {
+                boolean added = false;
+                for (Map.Entry<Integer, Set<Integer>> entry : matrix.entrySet()) {
+                    Set<Integer> s = entry.getValue();
+                    if (s.size() == 0 || !s.contains(num)) {
+                        added = true;
+                        matrix.remove(entry.getKey());
+                        s.add(num);
+                        matrix.put(entry.getKey(), s);
+                        break;
+                    }
+                }
+
+                if (!added) {
+                    Set<Integer> ns = new HashSet<>();
+                    ns.add(num);
+                    matrix.put(matrix.size(), ns);
+                }
+            }
+        }
+
+        List<List<Integer>> ans = new ArrayList<>();
+        for (Map.Entry<Integer, Set<Integer>> entry : matrix.entrySet())
+            ans.add(new ArrayList<>(entry.getValue()));
+        return ans;
+    }
+
+
+    //TLE
+    public int miceAndCheese(int[] reward1, int[] reward2, int k) {
+        return helper(reward1, reward2, k, 0, new ArrayList<>());
+    }
+
+    private int helper(int[] reward1, int[] reward2, int k, int ind, List<Integer> it) {
+        // base case
+        if (ind >= reward1.length && k > 0) return 0;
+
+        if (k <= 0) {
+            List<Integer> indexes = new ArrayList<>();
+            for (int i = 0; i < reward1.length; i++) indexes.add(i);
+            indexes.removeAll(it);
+
+            int sum = 0;
+            for (int i : indexes) sum += reward2[i];
+            return sum;
+        }
+
+        int take = 0, nt = 0;
+        // take
+        it.add(ind);
+        take += reward1[ind] + helper(reward1, reward2, k - 1, ind + 1, it);
+        //not take
+        it.remove(new Integer(ind));
+        nt += helper(reward1, reward2, k, ind + 1, it);
+        return Math.max(take, nt);
+    }
+
+
+
 }
 
 
