@@ -6183,6 +6183,245 @@ Output: [1,2,2,3,5,6]
         return true;
     }
 
+
+    public java.util.HashMap<Integer, Integer> sortByValue(java.util.HashMap<Integer, Integer> hm) {
+
+
+        List<Map.Entry<Integer, Integer>> list = new LinkedList<Map.Entry<Integer, Integer>>(hm.entrySet());
+
+        Collections.sort(list, new Comparator<Map.Entry<Integer, Integer>>() {
+            public int compare(Map.Entry<Integer, Integer> o1,
+                               Map.Entry<Integer, Integer> o2) {
+                return (o1.getValue()).compareTo(o2.getValue());
+            }
+        });
+
+        java.util.HashMap<Integer, Integer> temp = new LinkedHashMap<Integer, Integer>();
+        for (Map.Entry<Integer, Integer> aa : list) {
+            temp.put(aa.getKey(), aa.getValue());
+        }
+
+        return temp;
+    }
+
+    public int minimizeMax(int[] nums, int p) {
+        Map<Integer, Integer> freq = new ConcurrentHashMap<>();
+        for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
+        sortByValue((java.util.HashMap<Integer, Integer>) freq);
+
+        int ans = Integer.MAX_VALUE;
+        for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {
+
+            int values = entry.getValue();
+            while (values >= 2 && p > 0) {
+                p--;
+                values -= 2;
+            }
+
+            if (p <= 0) return 0;
+            if (values <= 0) freq.remove(entry.getKey());
+            freq.put(entry.getKey(), values);
+        }
+
+        System.out.println(freq);
+
+        // sort the map based on keys
+        TreeMap<Integer, Integer> tm = new TreeMap<>(freq);
+
+        int lastKey = -1;
+        for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {
+            int values = entry.getValue();
+            if (values == 1) {
+
+                if (p <= 0) return ans;
+                if (lastKey == -1) lastKey = entry.getKey();
+                ans = Math.min(Math.abs(lastKey - entry.getKey()), ans);
+                p--;
+            }
+        }
+
+
+        return ans;
+    }
+
+    //-----------------------------------------------------------------------------------------------------
+    // 15th april
+
+
+    public int[] findColumnWidth(int[][] grid) {
+        // Traverse columnwise 
+        int m = grid.length, n = grid[0].length;
+
+        int[] ans = new int[n];
+        for (int i = 0; i < n; i++) {
+            int max = -1;
+            for (int j = 0; j < m; j++) {
+                max = Math.max(len(grid[j][i]), max);
+            }
+
+            ans[i] = max;
+        }
+
+        return ans;
+    }
+
+    private int len(int num) {
+        int an = Math.abs(num);
+        int cnt = 0;
+        while (an > 0) {
+            an /= 10;
+            cnt++;
+        }
+
+        return num > 0 ? cnt : cnt + 1;
+    }
+
+
+    public long[] findPrefixScore(int[] nums) {
+
+        long[] conv = new long[nums.length];
+        int max = Integer.MIN_VALUE, ind = 0;
+        for (int num : nums) {
+            max = Math.max(max, num);
+            conv[ind++] = max + num;
+        }
+        long[] ps = new long[nums.length];
+
+        for (int i = 0; i < conv.length; i++) {
+            long num = conv[i];
+            ps[i] = i == 0 ? num : num + ps[i - 1];
+        }
+
+        return ps;
+
+    }
+
+
+    /**
+     * Definition for a binary tree node.
+     * public class TreeNode {
+     * int val;
+     * TreeNode left;
+     * TreeNode right;
+     * TreeNode() {}
+     * TreeNode(int val) { this.val = val; }
+     * TreeNode(int val, TreeNode left, TreeNode right) {
+     * this.val = val;
+     * this.left = left;
+     * this.right = right;
+     * }
+     * }
+     */
+    /**
+     * Definition for a binary tree node.
+     * public class TreeNode {
+     * int val;
+     * TreeNode left;
+     * TreeNode right;
+     * TreeNode() {}
+     * TreeNode(int val) { this.val = val; }
+     * TreeNode(int val, TreeNode left, TreeNode right) {
+     * this.val = val;
+     * this.left = left;
+     * this.right = right;
+     * }
+     * }
+     */
+    // This solution assumes no duplicate nodes
+    // Solve for duplicate nodes case
+    public TreeNode replaceValueInTree(TreeNode root) {
+        Map<Integer, Map<Integer, List<Integer>>> map = new TreeMap<>(); // {level, {parent -> childs}}
+        return lot(root, map);
+    }
+
+    public TreeNode lot(TreeNode root, Map<Integer, Map<Integer, List<Integer>>> map) {
+
+        if (root == null)
+            return new TreeNode(0);
+
+        Map<Integer, Integer> cp = new TreeMap<>();
+        int level = 0;
+        // Standard level order traversal code
+        // using queue
+        Queue<TreeNode> q = new LinkedList<>(); // Create a queue
+        q.add(root); // Enqueue root
+        while (!q.isEmpty()) {
+            int n = q.size();
+
+            Map<Integer, List<Integer>> pc = new java.util.HashMap<>();
+
+            // If this node has children
+            while (n > 0) {
+                // Dequeue an item from queue
+                TreeNode p = q.poll();
+                // Enqueue all children of
+                // the dequeued item
+                if (p.left != null) q.add(p.left);
+                if (p.right != null) q.add(p.right);
+                n--;
+
+
+                if (!pc.containsKey(p)) pc.put(p.val, new ArrayList<>());
+                if (p.left != null) {
+                    pc.get(p.val).add(p.left.val);
+                    cp.put(p.left.val, p.val);
+                }
+                if (p.right != null) {
+                    pc.get(p.val).add(p.right.val);
+                    cp.put(p.right.val, p.val);
+                }
+            }
+
+            map.put(level++, pc);
+        }
+        // map is ready
+        System.out.println(map);
+        System.out.println(cp);
+
+
+        // Standard level order traversal code
+        // using queue
+        level = 0;
+        Queue<TreeNode> nq = new LinkedList<>(); // Create a queue
+        nq.add(root); // Enqueue root
+        while (!nq.isEmpty()) {
+            int n = nq.size();
+
+            // If this node has children
+            while (n > 0) {
+                // Dequeue an item from queue
+                TreeNode p = nq.poll();
+                // Enqueue all children of
+                // the dequeued item
+                if (p.left != null) nq.add(p.left);
+                if (p.right != null) nq.add(p.right);
+
+
+                // Traversal to find node in quickest way possible
+                Set<Integer> possibleCousins = map.get(level).keySet();
+
+                System.out.println(possibleCousins);
+                List<Integer> actualCousins = new ArrayList<>();
+
+                // remove all nodes on current level wtih same parent
+                for (int pc : possibleCousins) {
+                    if (cp.containsKey(pc) && cp.containsKey(p.val) && (pc != p.val) && (cp.get(pc) != cp.get(p.val))) {
+                        actualCousins.add(pc);
+                    }
+                }
+                System.out.println(actualCousins);
+
+                p.val = actualCousins.stream().mapToInt(x -> x).sum();
+                n--;
+            }
+
+            level++;
+        }
+
+        return root;
+    }
+
+
 }
 
 

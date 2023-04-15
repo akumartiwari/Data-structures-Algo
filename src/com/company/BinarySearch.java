@@ -1,6 +1,7 @@
 package com.company;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class BinarySearch {
 
@@ -489,35 +490,6 @@ public class BinarySearch {
         }
 
         return ans;
-    }
-
-
-    //TBD
-
-    public int minimizeMax(int[] nums, int p) {
-        TreeMap<Integer, List<Integer>> freq = new TreeMap<>();// elem, indexes
-
-        for (int i = 0; i < nums.length; i++) {
-            int num = nums[i];
-            freq.putIfAbsent(num, new ArrayList<>());
-            freq.get(num).add(i);
-        }
-
-
-        // Sort the Map based on length of indexes and their element magniture
-        // Preferably use priorityQueue Comparator
-        for (Map.Entry<Integer, List<Integer>> entry : freq.entrySet()) {
-            List<Integer> indexes = entry.getValue();
-
-            if (indexes.size() % 2 == 0) {
-                p -= indexes.size() / 2;
-            }
-
-            if (p <= 0) return 0;
-        }
-
-
-        return 0;
     }
 
 }
