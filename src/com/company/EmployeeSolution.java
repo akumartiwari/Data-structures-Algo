@@ -5375,7 +5375,7 @@ Output: [1,2,2,3,5,6]
     }
 
 
-    //Author: Anand 
+    //Author: Anand
     public String categorizeBox(int length, int width, int height, int mass) {
         boolean bulky = false;
         long volume = (long) length * width * height;
@@ -6249,7 +6249,7 @@ Output: [1,2,2,3,5,6]
 
 
     public int[] findColumnWidth(int[][] grid) {
-        // Traverse columnwise 
+        // Traverse columnwise
         int m = grid.length, n = grid[0].length;
 
         int[] ans = new int[n];
@@ -6339,7 +6339,7 @@ Output: [1,2,2,3,5,6]
         if (root == null)
             return new TreeNode(0);
 
-        Map<Integer, Integer> cp = new TreeMap<>();
+        Map<int[], Boolean> cp = new TreeMap<>(); // node.val,level, parent -> true
         int level = 0;
         // Standard level order traversal code
         // using queue
@@ -6361,7 +6361,7 @@ Output: [1,2,2,3,5,6]
                 n--;
 
 
-                if (!pc.containsKey(p)) pc.put(p.val, new ArrayList<>());
+                if (!pc.containsKey(p.val)) pc.put(p.val, new ArrayList<>());
                 if (p.left != null) {
                     pc.get(p.val).add(p.left.val);
                     cp.put(p.left.val, p.val);
@@ -6400,6 +6400,7 @@ Output: [1,2,2,3,5,6]
                 // Traversal to find node in quickest way possible
                 Set<Integer> possibleCousins = map.get(level).keySet();
 
+                possibleCousins.remove(p.val);
                 System.out.println(possibleCousins);
                 List<Integer> actualCousins = new ArrayList<>();
 
@@ -6409,6 +6410,7 @@ Output: [1,2,2,3,5,6]
                         actualCousins.add(pc);
                     }
                 }
+
                 System.out.println(actualCousins);
 
                 p.val = actualCousins.stream().mapToInt(x -> x).sum();
@@ -6421,6 +6423,188 @@ Output: [1,2,2,3,5,6]
         return root;
     }
 
+
+    // 16th april
+
+    public int[] rowAndMaximumOnes(int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        int[] ans = new int[]{0, 0};
+        int max = 0;
+        for (int i = 0; i < m; i++) {
+            int cnt = 0;
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) cnt++;
+            }
+            if (cnt > max) {
+                max = cnt;
+                ans = new int[]{i, max};
+            }
+        }
+        return ans;
+    }
+
+    public int maxDivScore(int[] nums, int[] divisors) {
+
+        Arrays.sort(divisors);
+        int max = 0, ans = 0;
+        for (int d : divisors) {
+            int cnt = 0;
+            for (int num : nums) {
+                if (num % d == 0) cnt++;
+            }
+            if (cnt > max) {
+                max = cnt;
+                ans = d;
+            }
+        }
+
+        return ans == 0 ? divisors[0] : ans;
+    }
+
+
+    public int addMinimum(String word) {
+
+        int cnt = 0;
+        int ind = 0;
+        while (ind < word.length()) {
+            if (word.charAt(ind) == 'a') {
+                // check next 2 characters
+                if (ind + 1 < word.length() && ind + 2 < word.length()) {
+                    if (word.charAt(ind + 1) == 'b' && word.charAt(ind + 2) == 'c') {
+                        ind += 3;
+                        continue; // Already 'abc'
+                    } else if (word.charAt(ind + 1) == 'b' || word.charAt(ind + 1) == 'c') {
+                        ind += 2;
+                        cnt++; // add anyone b or c
+                    } else {
+                        cnt += 2; // add b,c
+                        ind++;
+                    }
+                } else if (ind + 1 < word.length()) {
+                    if (word.charAt(ind + 1) == 'b' || word.charAt(ind + 1) == 'c') {
+                        ind += 2;
+                        cnt++; // add c
+                    } else {
+                        ind++;
+                        cnt += 2; // add b,c
+                    }
+                } else {
+                    ind++;
+                    cnt += 2; // add b,c
+                }
+            } else if (word.charAt(ind) == 'b') {
+                // check 1 next
+                if ((ind + 1 < word.length())) {
+                    if (word.charAt(ind + 1) == 'c') {
+                        ind += 2;
+                        cnt++; // Add 'a'
+                    } else {
+                        ind++;
+                        cnt += 2; // add b,c
+                    }
+                } else {
+                    ind++;
+                    cnt += 2; // add b,c
+                }
+            } else {
+                ind++;
+                cnt += 2; // add b,c
+            }
+        }
+
+        return cnt;
+    }
+
+
+    class Solution {
+
+        // TOPOLOGICAL SORT
+        // Use toplogical sort for indegree and pq to minisnmise the time taken to complete the course
+        // TC = O(V+E) // As Simple DFS, SC = O(V) {Stack space}
+
+
+        // TOPO Sort algorithm using DFS
+        // The idea is to do dfs for all nodes after marking them visited,
+        // after returning from recursion calls add them to stack
+
+        public int[] topoSort(int N, List<List<Integer>> graph) {
+            Stack<Integer> stk = new Stack<>();
+            int[] vis = new int[N];
+
+            for (int i = 0; i < N; i++) {
+                if (vis[i] == 0) {
+                    findTopoSort(i, vis, graph, stk);
+                }
+            }
+
+            // Pop elements out of stack to get final result
+            int[] ans = new int[N];
+            int ind = 0;
+            while (!stk.empty()) {
+                ans[ind++] = stk.pop();
+            }
+
+            return ans;
+        }
+
+
+        //TC = O(N+E), SC = O(N), ASS = O(N)
+        private void findTopoSort(int node, int[] vis, List<List<Integer>> graph, Stack<Integer> stk) {
+            vis[node] = 1;
+
+            for (int e : graph.get(node)) {
+                if (vis[e] == 0)
+                    findTopoSort(e, vis, graph, stk);
+            }
+
+            stk.push(node);
+        }
+
+    /*
+      Steps:
+        Build the graph using rowConditions
+        Find topological sorting order for this graph
+        Build one more graph using colConditions
+        Find topological sorting order for this graph
+        fill the matrix using the sorting order given by topological sort.
+     */
+
+        //TC  = O(N+E), SC = O(N) + O(N)
+        // TOPO Sort using BFS algorithm
+        public List<Integer> generateTopoSort(int[][] conditions, int k) {
+            List<List<Integer>> graph = new ArrayList<>();
+            for (int i = 0; i < k; i++) graph.add(new ArrayList<>());
+
+            int[] indegree = new int[k];
+            List<Integer> ans = new ArrayList<>();
+
+
+            for (int[] condition : conditions) {
+                graph.get(condition[0] - 1).add(condition[1] - 1);
+                indegree[condition[1]]++;
+            }
+
+            Queue<Integer> queue = new LinkedList<>();
+            for (int i = 0; i < k; i++) {
+                if (indegree[i] == 0) queue.offer(i);
+            }
+
+            while (!queue.isEmpty()) {
+                int element = queue.poll();
+
+                ans.add(element + 1);
+                for (int e : graph.get(element)) {
+                    if (--indegree[e] == 0) queue.add(e);
+                }
+            }
+            return ans;
+        }
+        public int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
+
+
+
+        }
+    }
 
 }
 
