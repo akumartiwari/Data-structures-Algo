@@ -1,6 +1,7 @@
 package com.company;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class BinarySearch {
 
@@ -458,7 +459,6 @@ public class BinarySearch {
     }
 
 
-
     /*
     Approach
     To find smaller numbers than query[i] we can sort the array and use binary search
@@ -491,4 +491,5 @@ public class BinarySearch {
 
         return ans;
     }
+
 }
