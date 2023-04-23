@@ -6599,11 +6599,78 @@ Output: [1,2,2,3,5,6]
             }
             return ans;
         }
+
         public int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
-
-
-
+            return 0;
         }
+    }
+
+
+    //WIP
+    public int[] getSubarrayBeauty(int[] nums, int k, int x) {
+        TreeMap<Integer, Integer> tm = new TreeMap<>(Collections.reverseOrder());
+        int cntN = 0;
+        int ind = 0;
+
+        List<Integer> ans = new ArrayList<>();
+        int lastAns = Integer.MIN_VALUE;
+        List<Integer> keys = new ArrayList<>();
+
+        for (int num : nums) {
+
+            if (ind >= nums.length) break;
+            tm.put(num, tm.getOrDefault(num, 0) + 1);
+
+            if (num < 0) {
+                cntN++;
+            }
+
+            if (ind == k - 1) {
+                for (Map.Entry<Integer, Integer> entry : tm.entrySet()) {
+                    int times = entry.getValue();
+                    while (times-- > 0) keys.add(entry.getKey());
+                }
+
+                if (cntN >= x) {
+                    ans.add(keys.get(keys.size() - x));
+                    lastAns = keys.get(keys.size() - x);
+                } else {
+                    ans.add(0);
+                    lastAns = 0;
+                }
+                System.out.println(lastAns);
+
+            } else if (ind > k - 1) {
+                // Collections.sort(keys);
+                // ind > k-1
+                int elemToRem = nums[ind - k];
+                tm.put(elemToRem, tm.getOrDefault(elemToRem, 0) - 1);
+                if (tm.get(elemToRem) <= 0) tm.remove(elemToRem);
+
+                if (elemToRem < 0) cntN--;
+
+                keys.remove(new Integer(elemToRem));
+                System.out.println(keys);
+
+                int ns = keys.get(Math.max(keys.size() - x, 0));
+
+                if (nums[ind] < ns && nums[ind] < 0) {
+                    lastAns = nums[ind];
+                } else if (nums[ind] > ns) {
+                    lastAns = ns;
+                    cntN++;
+                }
+
+                keys.add(nums[ind]);
+
+                ans.add(lastAns);
+                System.out.println(lastAns);
+            }
+            ind++;
+        }
+
+        return ans.stream().mapToInt(e -> e).toArray();
+
     }
 
 }
