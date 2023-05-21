@@ -6599,13 +6599,11 @@ Output: [1,2,2,3,5,6]
             }
             return ans;
         }
+
         public int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
-
-
-
+            return 0;
         }
     }
-
 }
 
 
