@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static CF_Templates.B.gcd;
@@ -4668,6 +4669,7 @@ Output: [1,2,2,3,5,6]
             m.add(0);
         }
     }
+
     public int distinctAverages(int[] nums) {
 
         PriorityQueue<Integer> minPq = new PriorityQueue<>();
@@ -5756,54 +5758,54 @@ Output: [1,2,2,3,5,6]
 
     //TBD
     // You can add or subtract value any number of times
-        public int findSmallestInteger(int[] nums, int value) {
+    public int findSmallestInteger(int[] nums, int value) {
 
-            int gi = -1;
-            Set<Integer> set = new HashSet<>();
-            for (int num : nums) {
-                int nv = num % value;
-                if (set.size() == 0) {
-                    gi = num % value;
+        int gi = -1;
+        Set<Integer> set = new HashSet<>();
+        for (int num : nums) {
+            int nv = num % value;
+            if (set.size() == 0) {
+                gi = num % value;
+                set.add(nv);
+            } else {
+                if (!set.contains(nv)) {
                     set.add(nv);
                 } else {
-                    if (!set.contains(nv)) {
-                        set.add(nv);
-                    } else {
-                        int nnv = nv;
-                        int cnt = 1;
-                        while (set.contains(nnv + value * cnt)) cnt++;
-                        set.add(nnv + value * cnt);
-                    }
-                    gi = Math.max(nv, gi);
+                    int nnv = nv;
+                    int cnt = 1;
+                    while (set.contains(nnv + value * cnt)) cnt++;
+                    set.add(nnv + value * cnt);
                 }
+                gi = Math.max(nv, gi);
             }
-
-            List<Integer> list = new ArrayList<>();
-            list.addAll(set);
-            Collections.sort(list);
-            System.out.println(Arrays.toString(list.toArray()));
-
-            boolean consective = false;
-            int last = -1;
-            for (int l : list) {
-                if (last == -1) {
-                    last = l;
-                    continue;
-                }
-                if ((l - last) != 1 && consective) return last + 1;
-                if ((l - last) == 1) consective = true;
-                last = l;
-            }
-
-            if (!consective) {
-                for (int l : list) {
-                    if (l > 0) {
-                        return l - 1;
-                    }
-                }
-            }
-            return list.get(list.size() - 1) + 1;
         }
+
+        List<Integer> list = new ArrayList<>();
+        list.addAll(set);
+        Collections.sort(list);
+        System.out.println(Arrays.toString(list.toArray()));
+
+        boolean consective = false;
+        int last = -1;
+        for (int l : list) {
+            if (last == -1) {
+                last = l;
+                continue;
+            }
+            if ((l - last) != 1 && consective) return last + 1;
+            if ((l - last) == 1) consective = true;
+            last = l;
+        }
+
+        if (!consective) {
+            for (int l : list) {
+                if (l > 0) {
+                    return l - 1;
+                }
+            }
+        }
+        return list.get(list.size() - 1) + 1;
+    }
 
     //TBD
     public int distMoney(int money, int children) {
@@ -5967,81 +5969,81 @@ Output: [1,2,2,3,5,6]
 
 
     //TBD
-        public int collectTheCoins(int[] coins, int[][] edges) {
+    public int collectTheCoins(int[] coins, int[][] edges) {
 
-            // No of vertices
-            int v = coins.length;
-            ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>(v);
+        // No of vertices
+        int v = coins.length;
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>(v);
 
-            for (int i = 0; i < v; i++) adj.add(new ArrayList<Integer>());
-            addEdge(adj, 0, 1);
-            addEdge(adj, 0, 3);
-            addEdge(adj, 1, 2);
-            addEdge(adj, 3, 4);
-            addEdge(adj, 3, 7);
-            addEdge(adj, 4, 5);
-            addEdge(adj, 4, 6);
-            addEdge(adj, 4, 7);
-            addEdge(adj, 5, 6);
-            addEdge(adj, 6, 7);
-            int source = 0, dest = 7;
-            printShortestDistance(adj, source, dest, v);
-            return 0;
+        for (int i = 0; i < v; i++) adj.add(new ArrayList<Integer>());
+        addEdge(adj, 0, 1);
+        addEdge(adj, 0, 3);
+        addEdge(adj, 1, 2);
+        addEdge(adj, 3, 4);
+        addEdge(adj, 3, 7);
+        addEdge(adj, 4, 5);
+        addEdge(adj, 4, 6);
+        addEdge(adj, 4, 7);
+        addEdge(adj, 5, 6);
+        addEdge(adj, 6, 7);
+        int source = 0, dest = 7;
+        printShortestDistance(adj, source, dest, v);
+        return 0;
+    }
+
+    private void printShortestDistance(ArrayList<ArrayList<Integer>> adj, int source, int dest, int v) {
+        // predesessor array --> used to trace path in bfs
+        int[] pred = new int[v];
+        int[] dist = new int[v]; // to store min dist from source
+        if (!BFS(adj, source, dest, pred, dist, v)) {
+            System.out.println("Source and destination are not connected");
+            return;
         }
 
-        private void printShortestDistance(ArrayList<ArrayList<Integer>> adj, int source, int dest, int v) {
-            // predesessor array --> used to trace path in bfs
-            int[] pred = new int[v];
-            int[] dist = new int[v]; // to store min dist from source
-            if (!BFS(adj, source, dest, pred, dist, v)) {
-                System.out.println("Source and destination are not connected");
-                return;
+
+        // Fetch-path
+        // crwal in reverse direction
+        LinkedList<Integer> path = new LinkedList<>();
+        int crawl = dest;
+        while (pred[crawl] != -1) {
+            path.add(pred[crawl]);
+            crawl = pred[crawl];
+        }
+
+        // shortest distance
+        System.out.println(dist[dest]);
+        // print path
+        for (int i = path.size() - 1; i >= 0; i--) System.out.print(path.get(i) + " ");
+    }
+
+    private boolean BFS(ArrayList<ArrayList<Integer>> adj, int source, int dest, int[] pred, int[] dist, int v) {
+        Arrays.fill(pred, -1);
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        boolean[] visited = new boolean[v];
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(source);
+        visited[source] = true;
+        dist[source] = 0;
+
+        while (!queue.isEmpty()) {
+            int u = queue.poll();
+            for (int i = 0; i < adj.get(u).size(); i++) {
+                if (visited[adj.get(u).get(i)]) continue;
+                // if not visited then mark it visited and process it in queue
+                visited[adj.get(u).get(i)] = true;
+                queue.offer(adj.get(u).get(i));
+                dist[adj.get(u).get(i)] = 1 + dist[u];
+                pred[adj.get(u).get(i)] = u;
+                if (adj.get(u).get(i) == dest) return true;
             }
-
-
-            // Fetch-path
-            // crwal in reverse direction
-            LinkedList<Integer> path = new LinkedList<>();
-            int crawl = dest;
-            while (pred[crawl] != -1) {
-                path.add(pred[crawl]);
-                crawl = pred[crawl];
-            }
-
-            // shortest distance
-            System.out.println(dist[dest]);
-            // print path
-            for (int i = path.size() - 1; i >= 0; i--) System.out.print(path.get(i) + " ");
         }
+        return false;
+    }
 
-        private boolean BFS(ArrayList<ArrayList<Integer>> adj, int source, int dest, int[] pred, int[] dist, int v) {
-            Arrays.fill(pred, -1);
-            Arrays.fill(dist, Integer.MAX_VALUE);
-            boolean[] visited = new boolean[v];
-            Queue<Integer> queue = new LinkedList<>();
-            queue.add(source);
-            visited[source] = true;
-            dist[source] = 0;
-
-            while (!queue.isEmpty()) {
-                int u = queue.poll();
-                for (int i = 0; i < adj.get(u).size(); i++) {
-                    if (visited[adj.get(u).get(i)]) continue;
-                    // if not visited then mark it visited and process it in queue
-                    visited[adj.get(u).get(i)] = true;
-                    queue.offer(adj.get(u).get(i));
-                    dist[adj.get(u).get(i)] = 1 + dist[u];
-                    pred[adj.get(u).get(i)] = u;
-                    if (adj.get(u).get(i) == dest) return true;
-                }
-            }
-            return false;
-        }
-
-        private void addEdge(ArrayList<ArrayList<Integer>> adj, int vertex1, int vertex2) {
-            adj.get(vertex1).add(vertex2);
-            adj.get(vertex2).add(vertex1);
-        }
+    private void addEdge(ArrayList<ArrayList<Integer>> adj, int vertex1, int vertex2) {
+        adj.get(vertex1).add(vertex2);
+        adj.get(vertex2).add(vertex1);
+    }
 
     public int minNumber(int[] nums1, int[] nums2) {
         List<Integer> list1 = new ArrayList<>();
@@ -6478,62 +6480,62 @@ Output: [1,2,2,3,5,6]
         return Integer.parseInt(sb1.toString()) + Integer.parseInt(sb2.toString());
     }
 
-        // TC = O(mn), SC = O(mn)
-        // Author : Anand
-        // DFS on graph
-        public int countUnguarded(int m, int n, int[][] guards, int[][] walls) {
-            char[][] grid = new char[m][n];
-            Queue<int[]> queue = new LinkedList<>();
-            int[][] dirs = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
+    // TC = O(mn), SC = O(mn)
+    // Author : Anand
+    // DFS on graph
+    public int countUnguarded(int m, int n, int[][] guards, int[][] walls) {
+        char[][] grid = new char[m][n];
+        Queue<int[]> queue = new LinkedList<>();
+        int[][] dirs = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
 
-            for (int[] guard : guards) {
-                grid[guard[0]][guard[1]] = 'G';
-                queue.offer(new int[]{guard[0], guard[1]});
-            }
+        for (int[] guard : guards) {
+            grid[guard[0]][guard[1]] = 'G';
+            queue.offer(new int[]{guard[0], guard[1]});
+        }
 
-            for (int[] wall : walls) grid[wall[0]][wall[1]] = 'W';
+        for (int[] wall : walls) grid[wall[0]][wall[1]] = 'W';
 
-            // DFS for all guards and marked coordinate as 'P'
-            while (!queue.isEmpty()) {
-                int[] point = queue.poll();
-                for (int[] dir : dirs) {
-                    int x = point[0] + dir[0];
-                    int y = point[1] + dir[1];
-                    // check for boundary/obstacle condition
-                    while (safe(x, y, grid)) {
-                        grid[x][y] = 'P';
-                        x += dir[0];
-                        y += dir[1];
-                    }
+        // DFS for all guards and marked coordinate as 'P'
+        while (!queue.isEmpty()) {
+            int[] point = queue.poll();
+            for (int[] dir : dirs) {
+                int x = point[0] + dir[0];
+                int y = point[1] + dir[1];
+                // check for boundary/obstacle condition
+                while (safe(x, y, grid)) {
+                    grid[x][y] = 'P';
+                    x += dir[0];
+                    y += dir[1];
                 }
             }
-
-            int cnt = 0;
-            // count cells that are not blocker
-            for (int i = 0; i < grid.length; i++) {
-                for (int j = 0; j < grid[0].length; j++) {
-                    if (grid[i][j] != 'W' && grid[i][j] != 'G' && grid[i][j] != 'P') cnt++;
-                }
-            }
-            return cnt;
         }
 
-        private boolean safe(int x, int y, char[][] grid) {
-            return x >= 0 && x < grid.length && y >= 0 && y < grid[0].length && grid[x][y] != 'W' && grid[x][y] != 'G';
-        }
-
-
-        public long coloredCells(int n) {
-            long cnt = 0;
-            if (n == 1) return 1;
-            Queue<Double> queue = new LinkedList<>();
-            queue.add(Math.sqrt(2) / 2);
-            while (!queue.isEmpty() && n-- > 0) {
-                Double element = queue.poll();
-
-
+        int cnt = 0;
+        // count cells that are not blocker
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] != 'W' && grid[i][j] != 'G' && grid[i][j] != 'P') cnt++;
             }
         }
+        return cnt;
+    }
+
+    private boolean safe(int x, int y, char[][] grid) {
+        return x >= 0 && x < grid.length && y >= 0 && y < grid[0].length && grid[x][y] != 'W' && grid[x][y] != 'G';
+    }
+
+
+    public long coloredCells(int n) {
+        long cnt = 0;
+        if (n == 1) return 1;
+        Queue<Double> queue = new LinkedList<>();
+        queue.add(Math.sqrt(2) / 2);
+        while (!queue.isEmpty() && n-- > 0) {
+            Double element = queue.poll();
+
+
+        }
+    }
 
     public long kthLargestLevelSum(TreeNode root, int k) {
         if (root == null) return 0;
@@ -6729,47 +6731,47 @@ Output: [1,2,2,3,5,6]
     }
 
 
-        // TOPOLOGICAL SORT
-        // Use toplogical sort for indegree and pq to minisnmise the time taken to complete the course
-        // TC = O(V+E) // As Simple DFS, SC = O(V) {Stack space}
+    // TOPOLOGICAL SORT
+    // Use toplogical sort for indegree and pq to minisnmise the time taken to complete the course
+    // TC = O(V+E) // As Simple DFS, SC = O(V) {Stack space}
 
 
-        // TOPO Sort algorithm using DFS
-        // The idea is to do dfs for all nodes after marking them visited,
-        // after returning from recursion calls add them to stack
+    // TOPO Sort algorithm using DFS
+    // The idea is to do dfs for all nodes after marking them visited,
+    // after returning from recursion calls add them to stack
 
-        public int[] topoSort(int N, List<List<Integer>> graph) {
-            Stack<Integer> stk = new Stack<>();
-            int[] vis = new int[N];
+    public int[] topoSort(int N, List<List<Integer>> graph) {
+        Stack<Integer> stk = new Stack<>();
+        int[] vis = new int[N];
 
-            for (int i = 0; i < N; i++) {
-                if (vis[i] == 0) {
-                    findTopoSort(i, vis, graph, stk);
-                }
+        for (int i = 0; i < N; i++) {
+            if (vis[i] == 0) {
+                findTopoSort(i, vis, graph, stk);
             }
-
-            // Pop elements out of stack to get final result
-            int[] ans = new int[N];
-            int ind = 0;
-            while (!stk.empty()) {
-                ans[ind++] = stk.pop();
-            }
-
-            return ans;
         }
 
-
-        //TC = O(N+E), SC = O(N), ASS = O(N)
-        private void findTopoSort(int node, int[] vis, List<List<Integer>> graph, Stack<Integer> stk) {
-            vis[node] = 1;
-
-            for (int e : graph.get(node)) {
-                if (vis[e] == 0)
-                    findTopoSort(e, vis, graph, stk);
-            }
-
-            stk.push(node);
+        // Pop elements out of stack to get final result
+        int[] ans = new int[N];
+        int ind = 0;
+        while (!stk.empty()) {
+            ans[ind++] = stk.pop();
         }
+
+        return ans;
+    }
+
+
+    //TC = O(N+E), SC = O(N), ASS = O(N)
+    private void findTopoSort(int node, int[] vis, List<List<Integer>> graph, Stack<Integer> stk) {
+        vis[node] = 1;
+
+        for (int e : graph.get(node)) {
+            if (vis[e] == 0)
+                findTopoSort(e, vis, graph, stk);
+        }
+
+        stk.push(node);
+    }
 
     /*
       Steps:
@@ -6780,40 +6782,40 @@ Output: [1,2,2,3,5,6]
         fill the matrix using the sorting order given by topological sort.
      */
 
-        //TC  = O(N+E), SC = O(N) + O(N)
-        // TOPO Sort using BFS algorithm
-        public List<Integer> generateTopoSort(int[][] conditions, int k) {
-            List<List<Integer>> graph = new ArrayList<>();
-            for (int i = 0; i < k; i++) graph.add(new ArrayList<>());
+    //TC  = O(N+E), SC = O(N) + O(N)
+    // TOPO Sort using BFS algorithm
+    public List<Integer> generateTopoSort(int[][] conditions, int k) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < k; i++) graph.add(new ArrayList<>());
 
-            int[] indegree = new int[k];
-            List<Integer> ans = new ArrayList<>();
+        int[] indegree = new int[k];
+        List<Integer> ans = new ArrayList<>();
 
 
-            for (int[] condition : conditions) {
-                graph.get(condition[0] - 1).add(condition[1] - 1);
-                indegree[condition[1]]++;
-            }
-
-            Queue<Integer> queue = new LinkedList<>();
-            for (int i = 0; i < k; i++) {
-                if (indegree[i] == 0) queue.offer(i);
-            }
-
-            while (!queue.isEmpty()) {
-                int element = queue.poll();
-
-                ans.add(element + 1);
-                for (int e : graph.get(element)) {
-                    if (--indegree[e] == 0) queue.add(e);
-                }
-            }
-            return ans;
+        for (int[] condition : conditions) {
+            graph.get(condition[0] - 1).add(condition[1] - 1);
+            indegree[condition[1]]++;
         }
 
-        public int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
-            return 0;
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < k; i++) {
+            if (indegree[i] == 0) queue.offer(i);
         }
+
+        while (!queue.isEmpty()) {
+            int element = queue.poll();
+
+            ans.add(element + 1);
+            for (int e : graph.get(element)) {
+                if (--indegree[e] == 0) queue.add(e);
+            }
+        }
+        return ans;
+    }
+
+    public int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
+        return 0;
+    }
 
     public int[] separateDigits(int[] nums) {
         List<Integer> ans = new ArrayList<>();
@@ -7107,6 +7109,17 @@ Output: [1,2,2,3,5,6]
 
         return ans;
     }
+
+    // ----------------------------------------------------------------------------------------------------
+    // 21st May LC
+    public int minLength(String s) {
+        while (s.contains("AB") || s.contains("CD")) {
+            s = s.replaceAll("AB", "");
+            s = s.replaceAll("CD", "");
+        }
+        return s.length();
+    }
+
 }
 
 
