@@ -2,7 +2,7 @@ package com.company;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-
+import java.util.HashMap;
 public class BinarySearch {
 
     // Author: Anand

@@ -1,7 +1,7 @@
 package com.company;
 
 import javafx.util.Pair;
-
+import java.util.HashMap;
 import java.awt.*;
 import java.math.BigInteger;
 import java.nio.file.LinkOption;
@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import static CF_Templates.B.gcd;
 import static CF_Templates.B.sort;
+import java.util.HashMap;
 
 public class EmployeeSolution {
     String name;
@@ -6726,8 +6727,6 @@ Output: [1,2,2,3,5,6]
     }
 
 
-    class Solution {
-
         // TOPOLOGICAL SORT
         // Use toplogical sort for indegree and pq to minisnmise the time taken to complete the course
         // TC = O(V+E) // As Simple DFS, SC = O(V) {Stack space}
@@ -6813,7 +6812,6 @@ Output: [1,2,2,3,5,6]
         public int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
             return 0;
         }
-    }
 }
 
 
