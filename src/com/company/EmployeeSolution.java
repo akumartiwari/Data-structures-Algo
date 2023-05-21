@@ -1,19 +1,18 @@
 package com.company;
 
 import javafx.util.Pair;
-import java.util.HashMap;
+
 import java.awt.*;
 import java.math.BigInteger;
 import java.nio.file.LinkOption;
-import java.util.*;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static CF_Templates.B.gcd;
 import static CF_Templates.B.sort;
-import java.util.HashMap;
 
 public class EmployeeSolution {
     String name;
@@ -517,6 +516,9 @@ Output: [1,2,2,3,5,6]
     }
 
     // TC = O(n)
+    private boolean isVowel(char ch) {
+        return ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u';
+    }
 
     public long countVowels(String word) {
         long n = word.length();
@@ -6812,6 +6814,299 @@ Output: [1,2,2,3,5,6]
         public int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
             return 0;
         }
+
+    public int[] separateDigits(int[] nums) {
+        List<Integer> ans = new ArrayList<>();
+        for (int num : nums) ans.addAll(digits(num));
+        return ans.stream().mapToInt(x -> x).toArray();
+    }
+
+    private List<Integer> digits(int num) {
+        List<Integer> d = new ArrayList<>();
+        while (num > 0) {
+            d.add(num % 10);
+            num /= 10;
+        }
+        Collections.reverse(d);
+        return d;
+    }
+
+    public int maxCount(int[] banned, int n, int maxSum) {
+        long ms = 0L;
+        int cnt = 0;
+        Set<Integer> set = Arrays.stream(banned).boxed().collect(Collectors.toSet());
+
+        for (int i = 1; i <= n; i++) {
+            if (!set.contains(i)) {
+                ms += i;
+                if (ms > maxSum) return cnt;
+                cnt++;
+            }
+        }
+
+        return cnt;
+    }
+
+    // Solve for edge cases
+    //Author: Anand
+    // TC = O(N), SC=O(N)
+    public int maximizeWin(int[] prizePositions, int k) {
+
+        int ans = 0;
+        TreeMap<Integer, Integer> treeMap = new TreeMap<>();
+        for (int pp : prizePositions) treeMap.put(pp, treeMap.getOrDefault(pp, 0) + 1);
+
+
+        if (k == 0) {
+
+            int f = 0, s = 0;
+            for (Map.Entry<Integer, Integer> entry : treeMap.entrySet()) {
+                if (entry.getValue() >= f) {
+                    s = f;
+                    f = entry.getValue();
+                }
+            }
+            return f + s;
+        }
+
+
+        Set<Integer> keyset = treeMap.keySet();
+
+        List<Integer> segment1 = ptr(new ArrayList<>(keyset), k, treeMap);
+
+        System.out.println(segment1);
+        HashMap<Integer, Integer> nm = new HashMap<>();
+        nm.putAll(treeMap);
+
+
+        if (segment1.size() == 0) {
+            return treeMap.values().stream().mapToInt(x -> x).sum();
+        }
+        for (Map.Entry<Integer, Integer> entry : treeMap.entrySet()) {
+            if (entry.getKey() >= segment1.get(0) && entry.getKey() > segment1.get(1)) {
+                nm.remove(entry.getKey());
+                ans += entry.getValue();
+            }
+        }
+
+
+        treeMap = new TreeMap<>(nm);
+        keyset = treeMap.keySet();
+        // 2 ptr technique for optimal segment
+        List<Integer> segment2 = ptr(new ArrayList<>(keyset), k, treeMap);
+
+        nm = new HashMap<>();
+        nm.putAll(treeMap);
+
+        for (Map.Entry<Integer, Integer> entry : treeMap.entrySet()) {
+            if (entry.getKey() >= segment1.get(0) && entry.getKey() <= segment1.get(1)) {
+                nm.remove(entry.getKey());
+                ans += entry.getValue();
+            }
+        }
+
+        return ans;
+    }
+
+    // 2 ptr technique for optimal segment
+    private List<Integer> ptr(List<Integer> keyset, int k, TreeMap<Integer, Integer> treeMap) {
+        int i = 0, j = 0;
+        int curr = 0, max = 0;
+        List<Integer> ans = new ArrayList<>();
+
+        while (i < keyset.size() && j < keyset.size() && i <= j) {
+            int s = keyset.get(j);
+            if (keyset.get(j) - keyset.get(i) <= k) {
+                curr += treeMap.get(s);
+                j++;
+            } else {
+                max = Math.max(max, curr);
+                ans = new ArrayList<>(Arrays.asList(i, j));
+                i++;
+                curr -= treeMap.get(keyset.get(i));
+            }
+        }
+
+        return ans;
+    }
+
+
+    public long pickGifts(int[] gifts, int k) {
+        long ans = 0L;
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());//max pq
+        for (int gift : gifts) pq.add(gift);
+        while (k-- > 0) {
+            int gift = pq.poll();
+            pq.add((int) Math.floor(Math.sqrt(gift)));
+        }
+        while (!pq.isEmpty()) ans += pq.poll();
+        return ans;
+    }
+
+    public int[] vowelStrings(String[] words, int[][] queries) {
+
+        int[] ps = new int[words.length];
+        int[] ans = new int[queries.length];
+        Set<Character> vowel = new HashSet<>();
+        vowel.add('a');
+        vowel.add('e');
+        vowel.add('i');
+        vowel.add('o');
+        vowel.add('u');
+
+        for (int i = 0; i < words.length; i++) {
+            boolean valid = (vowel.contains(words[i].charAt(0)) && vowel.contains(words[i].charAt(words[i].length() - 1)));
+            if (i == 0) ps[i] += valid ? 1 : 0;
+            else ps[i] += ps[i - 1] + (valid ? 1 : 0);
+        }
+
+        int ind = 0;
+        for (int[] query : queries) {
+            ans[ind++] = ps[query[1]] - (query[0] > 0 ? ps[query[0] - 1] : 0);
+        }
+        return ans;
+    }
+
+    public long findTheArrayConcVal(int[] nums) {
+        long ans = 0L;
+        int last = nums.length % 2 != 0 ? (int) Math.ceil((double) nums.length / 2) : nums.length / 2;
+        for (int i = 0; i < last; i++) {
+            String eval = "";
+            if (i == last - 1 && nums.length % 2 != 0) eval += nums[i];
+            else eval = nums[i] + ((nums.length - 1 - i) >= 0 ? String.valueOf(nums[nums.length - 1 - i]) : "");
+            ans += eval.isEmpty() ? 0 : Long.parseLong(eval);
+        }
+        return ans;
+    }
+
+
+    public int minMaxDifference(int num) {
+        String nums = String.valueOf(num);
+
+        int maxi = -1, mini = -1;
+        for (int i = 0; i < nums.length(); i++) {
+            if (nums.charAt(i) != '9' && maxi == -1) maxi = i;
+            if (nums.charAt(i) != '0' && mini == -1) mini = i;
+        }
+
+        int max = maxi != -1 ? Integer.parseInt(nums.replaceAll(String.valueOf(nums.charAt(maxi)), "9")) : num;
+        int min = mini != -1 ? Integer.parseInt(nums.replaceAll(String.valueOf(nums.charAt(mini)), "0")) : 0;
+
+        return max - min;
+    }
+
+    // TODO: Complete for correct answer
+    public int minimizeSum(int[] nums) {
+        TreeMap<Integer, Integer> tm = new TreeMap<>();
+        for (int num : nums) tm.put(num, tm.getOrDefault(num, 0) + 1);
+        int avg = (int) Math.ceil((double) Arrays.stream(nums).sum() / nums.length);
+        Arrays.sort(nums);
+
+        boolean first = false;
+        if (Math.abs(avg - nums[0]) > Math.abs(avg - nums[nums.length - 1])) {
+            nums[0] = avg;
+            first = true;
+        } else nums[nums.length - 1] = avg;
+
+
+        if (first) {
+            if (Math.abs(avg - nums[1]) > Math.abs(avg - nums[nums.length - 1])) {
+                nums[1] = avg;
+            } else nums[nums.length - 1] = avg;
+        } else {
+            if (Math.abs(avg - nums[0]) > Math.abs(avg - nums[nums.length - 2])) {
+                nums[0] = avg;
+            } else nums[nums.length - 2] = avg;
+        }
+
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        PriorityQueue<Integer> maxpq = new PriorityQueue<>(Collections.reverseOrder());
+
+        for (int num : nums) {
+            pq.add(num);
+            maxpq.add(num);
+        }
+        System.out.println(Arrays.toString(nums));
+        int max = maxpq.poll();
+        int min = pq.poll();
+        System.out.println(max + ":" + min);
+        return Math.abs(max - min);
+    }
+
+
+    /*
+    Input: nums1 = [[1,2],[2,3],[4,5]], nums2 = [[1,4],[3,2],[4,1]]
+    Output: [[1,6],[2,3],[3,2],[4,6]]
+    Explanation: The resulting array contains the following:
+    - id = 1, the value of this id is 2 + 4 = 6.
+    - id = 2, the value of this id is 3.
+    - id = 3, the value of this id is 2.
+    - id = 4, the value of this id is 5 + 1 = 6.
+
+     */
+    public int[][] mergeArrays(int[][] nums1, int[][] nums2) {
+        TreeMap<Integer, Integer> tm = new TreeMap<>();
+
+        for (int i = 0; i < Math.max(nums1.length, nums2.length); i++) {
+            if (i < nums1.length) tm.put(nums1[i][0], tm.getOrDefault(nums1[i][0], 0) + nums1[i][1]);
+            if (i < nums2.length) tm.put(nums2[i][0], tm.getOrDefault(nums2[i][0], 0) + nums2[i][1]);
+        }
+        int[][] array = new int[tm.size()][2];
+        int count = 0;
+        for (Map.Entry<Integer, Integer> entry : tm.entrySet()) {
+            array[count][0] = entry.getKey();
+            array[count][1] = entry.getValue();
+            count++;
+        }
+
+        return array;
+    }
+
+
+    public int minOperations(int n) {
+        int op = 0;
+        while (n != 0) {
+            if (n == 1) {
+                op++;
+                break;
+            }
+            int num = 1;
+            while (num <= n) num *= 2;
+            num /= 2;
+            n = Math.min(n - num, num * 2 - n);
+            op++;
+        }
+        return op;
+    }
+
+    public int[] leftRigthDifference(int[] nums) {
+        int[] ls = new int[nums.length];
+        int[] rs = new int[nums.length];
+        for (int i = 0; i < nums.length; i++) {
+            ls[i] += nums[i] + (i == 0 ? 0 : ls[i - 1]);
+            rs[nums.length - 1 - i] += nums[nums.length - 1 - i] + (i == 0 ? 0 : rs[nums.length - i]);
+        }
+
+        int[] ans = new int[nums.length];
+        for (int i = 0; i < nums.length; i++) ans[i] = Math.abs(ls[i] - rs[i]);
+        return ans;
+    }
+
+
+    //TLE
+    public int[] divisibilityArray(String word, int m) {
+        int[] ans = new int[word.length()];
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < word.length(); i++) {
+            sb.append(word.charAt(i));
+            // Converting long to BigInteger
+            BigInteger b = new BigInteger(sb.toString());
+            ans[i] += b.remainder(new BigInteger(String.valueOf(m))).equals(new BigInteger(String.valueOf(0))) ? 1 : 0;
+        }
+
+        return ans;
+    }
 }
 
 

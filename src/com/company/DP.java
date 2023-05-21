@@ -3,7 +3,7 @@ package com.company;
 import javafx.util.Pair;
 
 import java.util.*;
-import java.util.HashMap;
+import  java.util.HashMap;
 
 public class DP {
 
@@ -1514,5 +1514,46 @@ public class DP {
             }
         }
         return dp[target][ind] = ans % mod;
+    }
+
+    //DP
+    public long countQuadruplets(int[] nums) {
+        Map<String, Long> dp = new HashMap<>();
+        return helper(nums, 0, new ArrayList<>(), dp);
+    }
+
+    private long helper(int[] nums, int ind, List<Integer> selected, Map<String, Long> dp) {
+
+        String key = String.valueOf(ind);
+        for (int s : selected) key += "-" + s;
+
+        if (selected.size() == 4) {
+            return 1;
+        }
+
+        if (ind >= nums.length || selected.size() > 4) return 0;
+
+        if (dp.containsKey(key)) return dp.get(key);
+
+        long cnt = 0L;
+        // take
+        if (selected.size() == 0
+                || (selected.size() == 1 && selected.get(0) + 1 < nums[ind])
+                || (selected.size() == 2 && selected.get(0) < nums[ind] && selected.get(1) > nums[ind])
+                || (selected.size() == 3
+                && selected.get(0) < nums[ind]
+                && selected.get(1) < nums[ind]
+                && selected.get(2) < nums[ind])
+        ) {
+            selected.add(nums[ind]);
+            cnt += helper(nums, ind + 1, selected, dp);
+            // bactrack
+            selected.remove(selected.size() - 1); // deleted last added element
+        }
+
+        //not-take
+        cnt += helper(nums, ind + 1, selected, dp);
+        dp.put(key, cnt);
+        return cnt;
     }
 }
