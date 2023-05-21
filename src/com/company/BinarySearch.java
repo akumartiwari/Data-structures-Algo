@@ -1,7 +1,8 @@
 package com.company;
 
 import java.util.*;
-
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashMap;
 public class BinarySearch {
 
     // Author: Anand
@@ -456,4 +457,39 @@ public class BinarySearch {
         if (n2 == 0) return n1;
         return gcd(n2, n1 % n2);
     }
+
+
+    /*
+    Approach
+    To find smaller numbers than query[i] we can sort the array and use binary search
+    Binary search over sorted nums to find index of query[i]
+    Then use prefix sums to find sum of number in smaller and larger segments
+    prefix[n] - prefix[i] is sum of numbers greater than or equal to query[i]
+    prefix[i] is sum of numbers smaller than query[i]
+    query[i] * i - prefix[i] is increments required
+    prefix[n] - prefix[i] - query[i] * (n - i) is decrements required
+    Total = query[i] * i - prefix[i] + prefix[n] - prefix[i] - query[i] * (n - i)
+    Can be simplified to query[i] * (2 * i - n) + prefix[n] - 2 * prefix[i]
+
+     */
+    public List<Long> minOperations(int[] nums, int[] queries) {
+        List<Long> ans = new ArrayList<>();
+        int n = nums.length;
+        Arrays.sort(nums);
+        long[] prefix = new long[n + 1];
+        for (int i = 1; i <= n; i++) prefix[i] = prefix[i - 1] + nums[i - 1];
+
+        for (int query : queries) {
+            int i = Arrays.binarySearch(nums, query);
+
+            if (i < 0) i = -(i + 1);
+            // insertion point in array, i.e. if target is not found in array
+            // then it retruns negative of insertion point
+
+            ans.add((long) query * (2 * i - n) + prefix[n] - 2 * prefix[i]);
+        }
+
+        return ans;
+    }
+
 }

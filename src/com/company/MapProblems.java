@@ -2,8 +2,48 @@ package com.company;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.HashMap;
 
 public class MapProblems {
+
+    /*
+        In question given -50 <= nums[i] <= 50 So, we have only -50 to -1 negative element
+        and we need to calculate xth smallest negative element so we only deal with negative element in k size of sliding window.
+       But one question like that How to calculate xth smallest negative element in current sliding windows bcz each time smallest element change?
+       This can acheived by storing freq of numbers from -50 to -1
+     */
+
+    public int[] getSubarrayBeauty(int[] nums, int k, int x) {
+        int n = nums.length;
+        List<Integer> ans = new ArrayList<>();
+        int[] freq = new int[51]; // to store freq of negative numbers from -50 to -1
+
+        for (int i = 0, j = 0; i < n; i++) {
+            // if number is -ve the update freq
+            if (nums[i] < 0) freq[Math.abs(nums[i])]++;
+
+            // current window of size=k
+            if (i - j + 1 >= k) {
+                int cnt = 0;
+                for (int L = 50; L >= 1; L--) {
+                    cnt += freq[L];
+                    if (cnt >= x) {
+                        ans.add(-L);
+                        break;
+                    }
+                }
+
+                // No xth smallest number was found in the window
+                if (cnt < x) ans.add(0);
+                if (nums[j] < 0) freq[Math.abs(nums[j])]--;
+                j++;
+            }
+        }
+
+        return ans.stream().mapToInt(Integer::intValue).toArray();
+
+    }
+
     /*
     Input: nums = [1,2,4,6], operations = [[1,3],[4,7],[6,1]]
     Output: [3,2,7,1]

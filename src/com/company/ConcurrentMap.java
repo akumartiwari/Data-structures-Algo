@@ -35,8 +35,7 @@ public class ConcurrentMap {
             while (it1.hasNext()) {
                 Integer person = it1.next();
                 System.out.println("Map Value:" + store.get(person));
-                int[] arr = Arrays.stream(store.get(person).split("-"))
-                        .mapToInt(Integer::parseInt).toArray();
+                int[] arr = Arrays.stream(store.get(person).split("-")).mapToInt(Integer::parseInt).toArray();
                 String nk = day + "-" + (day + delay) + "-" + (day + forget);
 
                 if (day >= arr[1] && day < arr[2]) {

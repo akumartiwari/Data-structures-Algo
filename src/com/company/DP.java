@@ -3,6 +3,7 @@ package com.company;
 import javafx.util.Pair;
 
 import java.util.*;
+import  java.util.HashMap;
 
 public class DP {
 
@@ -1488,6 +1489,31 @@ public class DP {
                 }
             }
         }
+    }
+
+    public int waysToReachTarget(int target, int[][] types) {
+        int[][] dp = new int[target + 1][types.length + 1];
+        for (int[] d : dp) Arrays.fill(d, -1);
+        return helper(target, types, 0, dp);
+    }
+
+    private int helper(int target, int[][] types, int ind, int[][] dp) {
+        // base case
+        if (target == 0) return 1;
+        if (ind >= types.length) return 0;
+
+        int ans = 0;
+        int cnt = types[ind][0];
+        int value = types[ind][1];
+
+        if (dp[target][ind] != -1) return dp[target][ind];
+        for (int i = 0; i <= cnt; i++) {
+            if (target - value * i >= 0) {
+                // take
+                ans = (ans + helper(target - value * i, types, ind + 1, dp)) % mod;
+            }
+        }
+        return dp[target][ind] = ans % mod;
     }
 
     //DP

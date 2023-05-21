@@ -3,6 +3,8 @@ package com.company;
 import javafx.util.Pair;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.HashMap;
 
 public class Dijisktra {
     // Author : Anand
@@ -296,4 +298,112 @@ public class Dijisktra {
         }
     }
 
+
+    /*
+    Input: n = 4, edges = [[0,1],[1,2],[1,3]], price = [2,2,10,6], trips = [[0,3],[2,1],[2,3]]
+    Output: 23
+    Explanation: The diagram above denotes the tree after rooting it at node 2. The first part shows the initial tree and the second part shows the tree after choosing nodes 0, 2, and 3, and making their price half.
+    For the 1st trip, we choose path [0,1,3]. The price sum of that path is 1 + 2 + 3 = 6.
+    For the 2nd trip, we choose path [2,1]. The price sum of that path is 2 + 5 = 7.
+    For the 3rd trip, we choose path [2,1,3]. The price sum of that path is 5 + 2 + 3 = 10.
+    The total price sum of all trips is 6 + 7 + 10 = 23.
+    It can be proven, that 23 is the minimum answer that we can achieve.
+     */
+
+    //TODO
+
+    class Solution {
+        // Author : Anand
+        List<int[]>[] nextgraph, pregraph;
+        int[] prices;
+        public int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
+            this.prices=price;
+            buildGraph(n, edges);
+            int element = 0;
+            // Before performing your first trip, you can choose some non-adjacent nodes and halve the prices.
+            for (List<int[]> node : nextgraph) {
+                for (int[] connections : node) {
+                    AtomicLong tp = new AtomicLong(0L);
+                    Arrays.stream(connections).forEach(conn -> {
+                        tp.addAndGet(price[conn]);
+                    });
+
+                    if ((int) tp.get() > price[element++]) {
+                        // reduce the prices of nodes by half
+                        Arrays.stream(connections).forEach(conn -> {
+                            price[conn] /= 2;
+                        });
+                    }
+                }
+            }
+
+            // To fetch the shortest path from all possible nodes
+            long[] src1To = new long[n], src2To = new long[n], destTo = new long[n];
+            Arrays.fill(src1To, -1);
+            Arrays.fill(src2To, -1);
+            Arrays.fill(destTo, -1);
+
+
+            for (int[] trip : trips) {
+                int src1 = trip[0];
+                int src2 = trip[1];
+                shortestPath(src1, src1To, nextgraph);
+                shortestPath(src2, src2To, nextgraph);
+            }
+
+            long res = -1;
+            for (int i = 0; i < n; i++) {
+                long d1 = src1To[i];
+                long d2 = src2To[i];
+                long d3 = destTo[i];
+
+                if (d1 >= 0 && d2 >= 0 && d3 >= 0) {
+                    long d = d1 + d2 + d3;
+                    if (res == -1 || d < res) {
+                        res = d;
+                    }
+                }
+            }
+
+            return (int) res;
+        }
+
+        // Dijkstra algorithm to find the shortest distance b/w each node
+        private void shortestPath(int src, long[] srcTo, List<int[]>[] graph) {
+            // min PQ to find SD b/w src, dest
+            PriorityQueue<long[]> queue = new PriorityQueue<>((a, b) -> Long.compare(a[1], b[1]));
+
+            queue.add(new long[]{src, 0});
+
+            while (!queue.isEmpty()) {
+                long[] node = queue.poll();
+
+                int to = (int) node[0];
+                long dist = node[1];
+                if (srcTo[to] != -1 && srcTo[to] <= dist) continue;
+                srcTo[to] = dist;
+                // For all adjacent nodes continue the process;
+                for (int[] next : graph[to]) {
+                    queue.offer(new long[]{next[0], dist + next[1]});
+                }
+            }
+        }
+
+        private void buildGraph(int n, int[][] edges) {
+            nextgraph = new ArrayList[n];
+            pregraph = new ArrayList[n];
+            for (int i = 0; i < n; i++) {
+                nextgraph[i] = new ArrayList<int[]>();
+                pregraph[i] = new ArrayList<int[]>();
+            }
+
+            for (int[] edge : edges) {
+                int from = edge[0];
+                int to = edge[1];
+                int wt = this.prices[from];
+                nextgraph[from].add(new int[]{to, wt});
+                pregraph[to].add(new int[]{from, wt});
+            }
+        }
+    }
 }
