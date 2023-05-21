@@ -1,6 +1,7 @@
 package com.company;
 
 import java.util.*;
+import java.util.HashMap;
 
 public class SlidingWindow {
     // Sliding window
@@ -60,6 +61,7 @@ public class SlidingWindow {
 
         return result;
     }
+
 
     // Author: Anand
     //    Sliding window approach

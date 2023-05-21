@@ -1,19 +1,19 @@
 package com.company;
 
 import javafx.util.Pair;
-
+import java.util.HashMap;
 import java.awt.*;
-import java.beans.IntrospectionException;
 import java.math.BigInteger;
 import java.nio.file.LinkOption;
-import java.util.List;
-import java.util.Queue;
 import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static CF_Templates.B.gcd;
 import static CF_Templates.B.sort;
+import java.util.HashMap;
 
 public class EmployeeSolution {
     String name;
@@ -517,9 +517,6 @@ Output: [1,2,2,3,5,6]
     }
 
     // TC = O(n)
-    private boolean isVowel(char ch) {
-        return ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u';
-    }
 
     public long countVowels(String word) {
         long n = word.length();
@@ -4669,7 +4666,6 @@ Output: [1,2,2,3,5,6]
             m.add(0);
         }
     }
-
     public int distinctAverages(int[] nums) {
 
         PriorityQueue<Integer> minPq = new PriorityQueue<>();
@@ -5375,7 +5371,7 @@ Output: [1,2,2,3,5,6]
     }
 
 
-    //Author: Anand
+    //Author: Anand 
     public String categorizeBox(int length, int width, int height, int mass) {
         boolean bulky = false;
         long volume = (long) length * width * height;
@@ -5758,7 +5754,6 @@ Output: [1,2,2,3,5,6]
 
     //TBD
     // You can add or subtract value any number of times
-    class Solution {
         public int findSmallestInteger(int[] nums, int value) {
 
             int gi = -1;
@@ -5807,7 +5802,6 @@ Output: [1,2,2,3,5,6]
             }
             return list.get(list.size() - 1) + 1;
         }
-    }
 
     //TBD
     public int distMoney(int money, int children) {
@@ -5971,7 +5965,6 @@ Output: [1,2,2,3,5,6]
 
 
     //TBD
-    class Solution {
         public int collectTheCoins(int[] coins, int[][] edges) {
 
             // No of vertices
@@ -5991,6 +5984,7 @@ Output: [1,2,2,3,5,6]
             addEdge(adj, 6, 7);
             int source = 0, dest = 7;
             printShortestDistance(adj, source, dest, v);
+            return 0;
         }
 
         private void printShortestDistance(ArrayList<ArrayList<Integer>> adj, int source, int dest, int v) {
@@ -6046,7 +6040,6 @@ Output: [1,2,2,3,5,6]
             adj.get(vertex1).add(vertex2);
             adj.get(vertex2).add(vertex1);
         }
-    }
 
     public int minNumber(int[] nums1, int[] nums2) {
         List<Integer> list1 = new ArrayList<>();
@@ -6462,6 +6455,224 @@ Output: [1,2,2,3,5,6]
     }
 
 
+    public int splitNum(int num) {
+        TreeMap<Integer, Integer> tm = new TreeMap<>();
+
+        while (num > 0) {
+            int r = num % 10;
+            tm.put(r, tm.getOrDefault(r, 0) + 1);
+            num /= 10;
+        }
+
+        StringBuilder sb1 = new StringBuilder(), sb2 = new StringBuilder();
+        for (Map.Entry<Integer, Integer> entry : tm.entrySet()) {
+            int cnt = entry.getValue();
+            while (cnt-- > 0) {
+                if (sb1.length() > sb2.length()) sb2.append(entry.getKey());
+                else sb1.append(entry.getKey());
+            }
+        }
+
+        return Integer.parseInt(sb1.toString()) + Integer.parseInt(sb2.toString());
+    }
+
+        // TC = O(mn), SC = O(mn)
+        // Author : Anand
+        // DFS on graph
+        public int countUnguarded(int m, int n, int[][] guards, int[][] walls) {
+            char[][] grid = new char[m][n];
+            Queue<int[]> queue = new LinkedList<>();
+            int[][] dirs = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
+
+            for (int[] guard : guards) {
+                grid[guard[0]][guard[1]] = 'G';
+                queue.offer(new int[]{guard[0], guard[1]});
+            }
+
+            for (int[] wall : walls) grid[wall[0]][wall[1]] = 'W';
+
+            // DFS for all guards and marked coordinate as 'P'
+            while (!queue.isEmpty()) {
+                int[] point = queue.poll();
+                for (int[] dir : dirs) {
+                    int x = point[0] + dir[0];
+                    int y = point[1] + dir[1];
+                    // check for boundary/obstacle condition
+                    while (safe(x, y, grid)) {
+                        grid[x][y] = 'P';
+                        x += dir[0];
+                        y += dir[1];
+                    }
+                }
+            }
+
+            int cnt = 0;
+            // count cells that are not blocker
+            for (int i = 0; i < grid.length; i++) {
+                for (int j = 0; j < grid[0].length; j++) {
+                    if (grid[i][j] != 'W' && grid[i][j] != 'G' && grid[i][j] != 'P') cnt++;
+                }
+            }
+            return cnt;
+        }
+
+        private boolean safe(int x, int y, char[][] grid) {
+            return x >= 0 && x < grid.length && y >= 0 && y < grid[0].length && grid[x][y] != 'W' && grid[x][y] != 'G';
+        }
+
+
+        public long coloredCells(int n) {
+            long cnt = 0;
+            if (n == 1) return 1;
+            Queue<Double> queue = new LinkedList<>();
+            queue.add(Math.sqrt(2) / 2);
+            while (!queue.isEmpty() && n-- > 0) {
+                Double element = queue.poll();
+
+
+            }
+        }
+
+    public long kthLargestLevelSum(TreeNode root, int k) {
+        if (root == null) return 0;
+        PriorityQueue<Long> pq = new PriorityQueue<>(Collections.reverseOrder()); // sum PQ
+        // Standard level order traversal code
+        // using queue
+        Queue<TreeNode> q = new LinkedList<>(); // Create a queue
+        q.add(root); // Enqueue root
+        while (!q.isEmpty()) {
+            int n = q.size();
+            long sum = 0L;
+            // If this node has children
+            while (n > 0) {
+                // Dequeue an item from queue
+                TreeNode p = q.peek();
+                q.remove();
+                sum += p.val;
+                // Enqueue all children of
+                // the dequeued item
+                if (p.left != null) q.add(p.left);
+                if (p.right != null) q.add(p.right);
+                n--;
+            }
+
+            pq.add(sum);
+        }
+
+        while (!pq.isEmpty()) {
+            long ans = pq.poll();
+            if (--k == 0) return ans;
+        }
+
+        return -1;
+    }
+
+
+    TreeMap<Integer, Integer> affectedPowers = new TreeMap<>();
+
+
+    //TC = O(NlogN)
+    public int findValidSplit(int[] nums) {
+        TreeMap<Integer, Integer> overallPowers = new TreeMap<>();
+
+        for (int n : nums) {
+            if (n > 0) {
+                while (n % 2 == 0) {
+                    overallPowers.put(2, overallPowers.getOrDefault(2, 0) + 1);
+                    n /= 2;
+                }
+
+                for (int i = 3; i <= Math.sqrt(n); i += 2) {
+                    while (n % i == 0) {
+                        overallPowers.put(i, overallPowers.getOrDefault(i, 0) + 1);
+                        n /= i;
+                    }
+                }
+                if (n > 2) {
+                    overallPowers.put(n, overallPowers.getOrDefault(n, 0) + 1);
+                }
+            }
+        }
+
+        for (int p = 0; p < nums.length - 1; p++) {
+            int n = nums[p];
+            TreeMap<Integer, Integer> tm = new TreeMap<>();
+
+            computePowers(n, tm);
+
+            // check if valid
+            if (valid(overallPowers, tm)) return p;
+        }
+        return -1;
+    }
+
+    private void computePowers(int n, TreeMap<Integer, Integer> tm) {
+        if (n > 0) {
+            while (n % 2 == 0) {
+                tm.put(2, tm.getOrDefault(2, 0) + 1);
+                n /= 2;
+            }
+
+            for (int i = 3; i <= Math.sqrt(n); i += 2) {
+                while (n % i == 0) {
+                    tm.put(i, tm.getOrDefault(i, 0) + 1);
+                    n /= i;
+                }
+            }
+            if (n > 2) {
+                tm.put(n, tm.getOrDefault(n, 0) + 1);
+            }
+        }
+    }
+
+    private boolean valid(TreeMap<Integer, Integer> overall, TreeMap<Integer, Integer> tm) {
+
+        for (Map.Entry<Integer, Integer> entry : tm.entrySet()) {
+            if (overall.containsKey(entry.getKey()) && overall.get(entry.getKey()) != entry.getValue()) {
+                // Put default power
+                if (!affectedPowers.containsKey(entry.getKey()))
+                    affectedPowers.put(entry.getKey(), overall.get(entry.getKey()));
+
+                affectedPowers.put(entry.getKey(), affectedPowers.getOrDefault(entry.getKey(), 0) - entry.getValue());
+                if (affectedPowers.get(entry.getKey()) <= 0) affectedPowers.remove(entry.getKey());
+            }
+        }
+
+
+        return affectedPowers.size() == 0;
+    }
+
+
+    //is vowel function
+    public boolean isVowel(char c) {
+        return (c == 'a' || c == 'A' || c == 'e' || c == 'E' || c == 'i' || c == 'I' || c == 'o' || c == 'O' || c == 'u' || c == 'U');
+    }
+
+    public int vowelStrings(String[] words, int left, int right) {
+        int cnt = 0;
+        for (int i = left; i <= right; i++)
+            if (isVowel(words[i].charAt(0)) && isVowel(words[i].charAt(words[i].length() - 1))) cnt++;
+        return cnt;
+    }
+
+
+    public int maxScore(int[] nums) {
+        int cnt = 0;
+        List<Integer> integersList = Arrays.stream(nums).boxed().sorted(Collections.reverseOrder()).collect(Collectors.toList());
+
+        long[] ps = new long[nums.length];
+        for (int i = 0; i < integersList.size(); i++) {
+            ps[i] = (i == 0 ? 0 : ps[i - 1]) + integersList.get(i);
+        }
+
+        for (long p : ps) {
+            if (p > 0) cnt++;
+            else break;
+        }
+
+        return cnt;
+    }
+
     public int addMinimum(String word) {
 
         int cnt = 0;
@@ -6515,8 +6726,6 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
-
-    class Solution {
 
         // TOPOLOGICAL SORT
         // Use toplogical sort for indegree and pq to minisnmise the time taken to complete the course
@@ -6603,7 +6812,6 @@ Output: [1,2,2,3,5,6]
         public int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
             return 0;
         }
-    }
 }
 
 
