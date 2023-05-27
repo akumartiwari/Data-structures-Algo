@@ -7110,15 +7110,6 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
-    // ----------------------------------------------------------------------------------------------------
-    // 21st May LC
-    public int minLength(String s) {
-        while (s.contains("AB") || s.contains("CD")) {
-            s = s.replaceAll("AB", "");
-            s = s.replaceAll("CD", "");
-        }
-        return s.length();
-    }
 
     public String makeSmallestPalindrome(String s) {
         StringBuilder ans = new StringBuilder();
