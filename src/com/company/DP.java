@@ -1594,4 +1594,82 @@ public class DP {
     }
 
 
+    //TODO: Correct the same
+    class Solution {
+        public long minimumCost(String s) {
+            TreeMap<Integer, Boolean> indZero = new TreeMap<>();
+
+            TreeMap<Integer, Boolean> indOne = new TreeMap<>();
+
+            int ind = 0;
+            for (char c : s.toCharArray()) {
+                if (c == '0') {
+                    indZero.put(ind, true);
+                } else {
+                    indOne.put(ind, true);
+                }
+
+                ind++;
+            }
+
+
+            return Math.min(helper(s.toCharArray(), indZero, indOne, 1, 0), helper(s.toCharArray(), indZero, indOne, 0, 0));
+        }
+
+        private long helper(char[] s, TreeMap<Integer, Boolean> indZero, TreeMap<Integer, Boolean> indOne, int target, int ind) {
+            int n = s.length;
+            // base case
+            if (ind >= n) return 0;
+
+            long cost = Long.MAX_VALUE;
+            for (int i = ind; i < s.length; i++) {
+                if (s[i] != target) {
+                    if (target == 1) {
+                        // update String also i.e make all character ot the left as 1
+                        for (Map.Entry<Integer, Boolean> entry : indZero.entrySet()) {
+                            if (entry.getKey() > i) break;
+                            s[i] = '1';
+                        }
+
+                        cost = Math.min(cost, i + 1 + helper(s, indZero, indOne, target, i + 1));
+
+                        // Do the same from right
+                        List<Integer> keys = new ArrayList<>(indZero.keySet());
+                        Collections.reverse(keys);
+                        // update String also i.e make all character to the right as 1
+                        for (int k : keys) {
+                            if (k <= i) break;
+                            s[i] = '1';
+                        }
+                        cost = Math.min(cost, n - i + helper(s, indZero, indOne, target, i + 1));
+
+
+                    } else {
+                        // update String also i.e make all character ot the left as 0
+                        for (Map.Entry<Integer, Boolean> entry : indOne.entrySet()) {
+                            if (entry.getKey() > i) break;
+                            s[i] = '0';
+                        }
+
+                        cost = Math.min(cost, i + 1 + helper(s, indZero, indOne, target, i + 1));
+
+                        // Do the same from right
+                        List<Integer> keys = new ArrayList<>(indOne.keySet());
+                        Collections.reverse(keys);
+                        // update String also i.e make all character to the right as 1
+                        for (int k : keys) {
+                            if (k <= i) break;
+                            s[i] = '0';
+                        }
+                        cost = Math.min(cost, n - i + helper(s, indZero, indOne, target, i + 1));
+                    }
+                }
+
+            }
+
+            return cost;
+        }
+    }
+
+
 }

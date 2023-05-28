@@ -7170,7 +7170,50 @@ Output: [1,2,2,3,5,6]
         return 0;
     }
 
+    public String removeTrailingZeros(String num) {
+        return num.replaceAll("0+$", "");
+    }
 
+    class Solution {
+        public long minimumCost(String s) {
+            int n = s.length();
+            int zeros = 0;
+            int ones = 0;
+
+            for (char c : s.toCharArray()) {
+                if (c == '0') {
+                    zeros++;
+                } else {
+                    ones++;
+                }
+            }
+
+
+            Pair<Integer, Integer>[] indZero = new Pair[s.length()];
+            Pair<Integer, Integer>[] indOne = new Pair[s.length()];
+
+            for (int i = 0; i < s.length(); i++) {
+
+                int left = indZero[i > 0 ? i - 1 : 0].getKey() + s.charAt(i) == '0' ? 1 : 0;
+                int right = zeros - left;
+                indZero[i] = new Pair(left, right);
+
+                int lo = indOne[i > 0 ? i - 1 : 0].getKey() + s.charAt(i) == '1' ? 1 : 0;
+                int ro = ones - lo;
+
+                indOne[i] = new Pair(lo, ro);
+            }
+
+            long m1 = 0, m0 = 0;
+            // Target to make all one
+            for (int i = 0; i < s.length(); i++) {
+
+
+            }
+
+
+        }
+    }
 }
 
 
