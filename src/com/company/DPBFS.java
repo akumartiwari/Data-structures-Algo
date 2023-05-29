@@ -63,4 +63,39 @@ public class DPBFS {
             }
         }
     }
+
+    public int maxIncreasingCells(int[][] mat) {
+        int m = mat.length, n = mat[0].length;
+
+        Map<Integer, List<int[]>> A = new TreeMap<>();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int val = mat[i][j];
+                A.computeIfAbsent(val, k -> new ArrayList<int[]>()).add(new int[]{i, j});
+            }
+        }
+
+        int[][] dp = new int[m][n];
+        int[] res = new int[m + n];
+
+        for (int a : A.keySet()) {
+            for (int[] pos : A.get(a)) {
+                int i = pos[0], j = pos[1];
+                dp[i][j] = Math.max(res[i], res[j + m]) + 1;
+            }
+
+            for (int[] pos : A.get(a)) {
+                int i = pos[0], j = pos[1];
+                res[m + j] = Math.max(res[m + j], dp[i][j]); // max nr of jumps on same column
+                res[i] = Math.max(res[i], dp[i][j]); // max nr of jumps on same row
+            }
+        }
+
+        int ans = 0;
+        for (int a : res) {
+            ans = Math.max(ans, a);
+        }
+
+        return ans;
+    }
 }

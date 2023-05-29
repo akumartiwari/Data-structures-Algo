@@ -7173,6 +7173,23 @@ Output: [1,2,2,3,5,6]
     public String removeTrailingZeros(String num) {
         return num.replaceAll("0+$", "");
     }
+
+    /*
+    Input: s = "0011"
+    Output: 2
+     Explanation: Apply the second operation with i = 2 to obtain s = "0000" for a cost of 2.
+     It can be shown that 2 is the minimum cost to make all characters equal.
+     */
+    public long minimumCost(String s) {
+        long ans = 0;
+        int n = s.length();
+        for (int i = 0; i < s.length() - 1; ++i) {
+            if (s.charAt(i) != s.charAt(i + 1)) ans += Math.min(i + 1, n - i - 1);
+        }
+        return ans;
+    }
+
+
 }
 
 

@@ -3,6 +3,7 @@ package com.company;
 import javafx.util.Pair;
 
 import java.util.*;
+import java.util.HashMap;
 
 public class MultisourceBFS {
     public static void main(String[] args) {
@@ -73,7 +74,6 @@ public class MultisourceBFS {
         public long minimumFuelCost(int[][] roads, int seats) {
             int n = roads.length;
             Map<Integer, List<Integer>> graph = new HashMap<>();
-
 
             for (int[] road : roads) {
                 if (!graph.containsKey(road[0])) graph.put(road[0], new ArrayList<>());
