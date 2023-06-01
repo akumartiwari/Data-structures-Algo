@@ -7120,6 +7120,73 @@ Output: [1,2,2,3,5,6]
         return s.length();
     }
 
+
+    public String makeSmallestPalindrome(String s) {
+        StringBuilder ans = new StringBuilder();
+        ans.append(s);
+        for (int i = 0; i < s.length() / 2; i++) {
+            if (s.charAt(i) != s.charAt(s.length() - 1 - i)) {
+                int min = Math.min(s.charAt(i) - 'a', s.charAt(s.length() - 1 - i) - 'a');
+                ans.replace(i, i + 1, String.valueOf((char) (min + 'a')));
+                ans.replace(s.length() - 1 - i, s.length() - i, String.valueOf((char) (min + 'a')));
+            }
+        }
+
+        return ans.toString();
+    }
+
+    //TODO: Correct solution
+    class Solution {
+        public int punishmentNumber(int n) {
+
+            int pn = 0;
+            for (int i = 1; i <= n; i++) {
+                int num = i * i;
+                if (helper(String.valueOf(num), 0, new StringBuilder(), 0)) {
+
+                    System.out.println(i);
+                    pn += num;
+                }
+            }
+
+            return pn;
+        }
+
+        //checks if square of number can be partioned such that sum of partioned is equal to number itself
+        private boolean helper(String num, int sum, StringBuilder sb, int ind) {
+
+            // base case
+            if (ind >= num.length()) {
+                try {
+                    sum += sb.length() > 0 ? Integer.parseInt(sb.toString()) : 0;
+                } catch (Throwable t) {
+                } finally {
+                    return sum == Math.sqrt(Integer.parseInt(num));
+                }
+            }
+
+
+            for (int i = ind; i < num.length(); i++) {
+                //partion
+                int add = 0;
+                try {
+                    add += sb.length() > 0 ? Integer.parseInt(sb.toString()) : 0;
+                } catch (Throwable t) {
+                }
+
+
+                if (helper(num, sum + add, sb.length() > 0 ? new StringBuilder().append(num.charAt(i)) : sb.append(num.charAt(i)), i + 1))
+                    return true;
+
+
+                // not partion
+                if (helper(num, sum, sb.append(num.charAt(i)), i + 1)) return true;
+            }
+
+            return false;
+        }
+    }
+
 }
 
 
