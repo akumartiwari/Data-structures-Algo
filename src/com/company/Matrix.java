@@ -1,6 +1,8 @@
 package com.company;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Matrix {
     //Author: Anand
@@ -113,5 +115,48 @@ public class Matrix {
             }
         }
         return ans;
+    }
+
+    public int[][] differenceOfDistinctValues(int[][] grid) {
+
+        int m = grid.length, n = grid[0].length;
+        int[][] ans = new int[m][n];
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                ans[i][j] = helper(i, j, grid);
+            }
+        }
+
+        return ans;
+    }
+
+    private int helper(int i, int j, int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+
+        int ci = i, cj = j;
+        Set<Integer> tl = new HashSet<>(), tr = new HashSet<>();
+        i--;
+        j--;
+
+        while (i >= 0 && i < m && j >= 0 && j < n) {
+            tl.add(grid[i][j]);
+            i--;
+            j--;
+        }
+
+
+        i = ci;
+        j = cj;
+        i++;
+        j++;
+
+        while (i >= 0 && i < m && j >= 0 && j < n) {
+            tr.add(grid[i][j]);
+            i++;
+            j++;
+        }
+
+        return Math.abs(tl.size() - tr.size());
     }
 }
