@@ -7190,6 +7190,60 @@ Output: [1,2,2,3,5,6]
     }
 
 
+    class Solution {
+        public boolean isFascinating(int n) {
+            String number = n + "" + 2 * n + "" + 3 * n;
+            Set<Integer> all = new HashSet<>();
+            for (int i = 1; i <= 9; i++) all.add(i);
+
+            for (int i = 0; i < number.length(); i++) {
+                if (all.contains((int) (number.charAt(i) - '0'))) all.remove(number.charAt(i) - '0');
+                else return false;
+            }
+            return all.isEmpty();
+        }
+    }
+
+
+    public int longestSemiRepetitiveSubstring(String s) {
+        int maxLen = 1;
+        Set<String> ss = new HashSet<>();
+
+        for (int i = 0; i < s.length(); i++) {
+            for (int j = i + 1; j <= s.length(); j++) {
+                String sub = s.substring(i, j);
+                ss.add(sub);
+            }
+        }
+
+        Collections.sort(new ArrayList<String>(ss), Comparator.comparingInt(String::length).reversed());
+        for (String str : ss) if (repetitive(str)) return str.length();
+
+        return maxLen;
+    }
+
+
+    // At most 1 consecutive pair
+
+    private boolean repetitive(String str) {
+        boolean flag = false;
+        for (int i = 1; i < str.length(); i++) {
+            char c = str.charAt(i);
+            int cd = c - '0';
+            int pd = str.charAt(i - 1) - '0';
+            if (cd == pd) {
+                if (!flag) flag = true;
+                else return false;
+            }
+        }
+
+        return true;
+    }
+
+    //TBD
+    public int sumDistance(int[] nums, String s, int d) {
+        return 0;
+    }
 }
 
 
