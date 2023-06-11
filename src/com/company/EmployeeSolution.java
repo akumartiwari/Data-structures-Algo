@@ -7258,6 +7258,74 @@ Output: [1,2,2,3,5,6]
 
         return (int) distance;
     }
+
+
+    public int findNonMinOrMax(int[] nums) {
+        if (nums.length <= 2) return -1;
+        Arrays.sort(nums);
+        return nums[1];
+    }
+
+    public String smallestString(String s) {
+        boolean operation = false;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == 'a') {
+                if (operation) {
+                    sb.append(s.substring(i));
+                    return sb.toString();
+                } else sb.append(c);
+            } else {
+                int cc = (c - 'a' - 1);
+                sb.append((char) ('a' + cc));
+                operation = true;
+            }
+        }
+
+        if (!operation) return s.substring(0, s.length() - 1) + 'z';
+        return sb.toString();
+    }
+
+    //TBD
+    class Solution {
+        public long minCost(int[] nums, int x) {
+            TreeMap<Integer, Integer> tm = new TreeMap<>();
+            int ind = 0;
+            int[] pos = new int[nums.length];
+            for (int num : nums) {
+                pos[ind] = ind;
+                tm.put(ind++, num);
+            }
+
+            return helper(nums, x, pos, tm);
+        }
+
+        private long helper(int[] nums, int x, int[] pos, TreeMap<Integer, Integer> tm) {
+            // base case
+            if (tm.size() == 0) return 0;
+
+            long b = 0, mo = 0;
+
+            for (Map.Entry<Integer, Integer> entry : tm.entrySet()) {
+                // buy
+                tm.remove(entry.getKey());
+                b += nums[entry.getKey()] + helper(nums, x, pos, tm);
+
+                // make operation
+                tm.put(entry.getKey(), entry.getValue());
+                for (int i = 0; i < pos.length; i++) {
+                    if (i == 0) pos[i] = pos[pos.length - 1];
+                    else pos[i] = pos[i - 1];
+                }
+
+                mo += x + helper(nums, x, pos, tm);
+            }
+
+            return Math.min(b, mo);
+        }
+    }
+
 }
 
 
