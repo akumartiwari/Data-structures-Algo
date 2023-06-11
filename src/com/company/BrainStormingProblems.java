@@ -52,6 +52,31 @@ public class BrainStormingProblems {
     }
 
     /*
+    If we do rotate operation k times,
+    we can use the min(A[i-k], .. , A[i - 1], A[i]) as the cost for type i.
+
+     */
+    public long minCost(int[] A, int x) {
+        int n = A.length;
+        long[] res = new long[n];
+        for (int i = 0; i < n; i++) {
+            res[i] += 1L * i * x;
+            int cur = A[i];
+            for (int k = 0; k < n; k++) {
+                cur = Math.min(cur, A[(i - k + n) % n]);
+                res[k] += cur;
+            }
+        }
+
+        long min_res = Long.MAX_VALUE;
+        for (long element : res) {
+            min_res = Math.min(min_res, element);
+        }
+
+        return min_res;
+    }
+
+    /*
 
 Input: word1 = "ac", word2 = "b"
 Output: false
