@@ -7207,6 +7207,36 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    public int distanceTraveled(int mainTank, int additionalTank) {
+
+        int distance = 0;
+        while (mainTank > 0) {
+            if (mainTank >= 5) {
+                mainTank -= 5;
+                distance += 50;
+                if (additionalTank > 0) {
+                    additionalTank--;
+                    mainTank++;
+                }
+            } else {
+                distance += mainTank * 10;
+                mainTank = 0;
+                additionalTank = 0;
+            }
+        }
+        return distance;
+    }
+
+    public int findValueOfPartition(int[] nums) {
+        int min = Integer.MAX_VALUE;
+        Arrays.sort(nums);
+        for (int i = 1; i < nums.length; i++) {
+            min = Math.min(Math.abs(nums[i - 1] - nums[i]), min);
+        }
+
+        return min;
+    }
+
     class Solution {
 
         int N = 8;
@@ -7359,7 +7389,6 @@ Output: [1,2,2,3,5,6]
             return true;
         }
     }
-
 }
 
 

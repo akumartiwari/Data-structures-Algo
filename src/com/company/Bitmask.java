@@ -17,6 +17,8 @@ public class Bitmask {
         and we can see that only those bits are off which we wanted to remove.
        */
 
+    int mod = (int) (Math.pow(10, 9) + 7);
+
     public int longestNiceSubarray(int[] nums) {
         int res = 0, j = 0, used = 0;
         for (int i = 0; i < nums.length; i++) {
@@ -104,6 +106,40 @@ public class Bitmask {
         return res;
     }
 
+    public int specialPerm(int[] nums) {
+        return countPerm(nums, 0, 0, -1, new HashSet<>());
+    }
+
+    private int countPerm(int[] arr, int len, int ind, int le, Set<Integer> taken) {
+        // base case
+        if (len == arr.length) return 1;
+        if (len > arr.length) return 0;
+        int take = 0, nt = 0;
+
+        for (int i = ind; i < arr.length; i++) {
+            // take
+            if (!taken.contains(arr[i])) taken.add(arr[i]);
+            else continue;
+
+            if (le == -1) le = arr[i];
+
+            for (int k : arr) {
+                if (arr[i] != k && (le % k == 0 || k % le == 0)) {
+                    taken.add(k);
+                    take = (take + countPerm(arr, (len == 0 ? len + 2 : len + 1), i + 1, k, taken) % mod);
+
+                    // // not take
+                    // taken.remove(k);
+                    // nt += countPerm(arr, len, i + 1, le, taken) % mod;
+                }
+
+                // not take
+                nt += countPerm(arr, len, i + 1, le, taken) % mod;
+            }
+        }
+
+        return (take + nt) % mod;
+    }
 
 }
 
