@@ -7389,7 +7389,71 @@ Output: [1,2,2,3,5,6]
             return true;
         }
     }
+
+        public int maximumNumberOfStringPairs(String[] words) {
+
+            int cnt = 0;
+            Set<String> seen = new HashSet<>();
+
+            for (String word : words) {
+                String rev = new StringBuilder(word).reverse().toString();
+                if (seen.contains(rev)) {
+                    cnt++;
+                    seen.remove(rev);
+                } else {
+                    seen.add(word);
+                }
+            }
+
+            return cnt;
+        }
+
+
+        //TBD
+    class Solution {
+        public int longestString(int x, int y, int z) {
+
+            return Math.max(Math.max(ml(new StringBuilder().append("AA"), x - 1, y, z, 2),
+                            ml(new StringBuilder().append("BB"), x, y - 1, z, 2)),
+                    ml(new StringBuilder().append("AB"), x, y, z - 1, 2));
+        }
+
+        private int ml(StringBuilder sb, int x, int y, int z, int maxLen) {
+            // base case
+            if (x <= 0 && y <= 0 && z <= 0) {
+                return maxLen;
+            }
+
+            // System.out.println(sb + ":" + x + ":" + y + ":" + z);
+
+            while (true) {
+
+                boolean lastStatus = false;
+                if (x > 0 && !sb.substring(sb.length() - 2, sb.length()).equals("AA")) {
+                    lastStatus = true;
+                    maxLen = Math.max(maxLen, ml(sb.append("AA"), x - 1, y, z, maxLen));
+                }
+
+                if (y > 0 && !sb.substring(sb.length() - 1, sb.length()).equals("B")) {
+                    lastStatus = true;
+                    maxLen = Math.max(maxLen, ml(sb.append("BB"), x, y - 1, z, maxLen));
+                }
+
+
+                if (z > 0 && !sb.substring(sb.length() - 2, sb.length()).equals("AA")) {
+                    lastStatus = true;
+                    maxLen = Math.max(maxLen, ml(sb.append("AB"), x, y, z - 1, maxLen));
+                }
+
+
+                if (!lastStatus) return maxLen;
+
+            }
+        }
+    }
 }
+
+
 
 
 

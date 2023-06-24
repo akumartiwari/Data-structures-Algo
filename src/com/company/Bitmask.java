@@ -41,9 +41,8 @@ public class Bitmask {
         // check for every bit and count numbers that share same bit
         for (int b = 1; b <= max; b <<= 1) {
             int count = 0;
-            for (int c : candidates) {
+            for (int c : candidates)
                 if ((c & b) > 0) count++;
-            }
             ans = Math.max(ans, count);
         }
         return ans;
