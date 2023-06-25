@@ -7390,65 +7390,120 @@ Output: [1,2,2,3,5,6]
         }
     }
 
-        public int maximumNumberOfStringPairs(String[] words) {
+    public int maximumNumberOfStringPairs(String[] words) {
+
+        int cnt = 0;
+        Set<String> seen = new HashSet<>();
+
+        for (String word : words) {
+            String rev = new StringBuilder(word).reverse().toString();
+            if (seen.contains(rev)) {
+                cnt++;
+                seen.remove(rev);
+            } else {
+                seen.add(word);
+            }
+        }
+
+        return cnt;
+    }
+
+
+    //TBD
+    public int longestString(int x, int y, int z) {
+
+        return Math.max(Math.max(ml(new StringBuilder().append("AA"), x - 1, y, z, 2),
+                        ml(new StringBuilder().append("BB"), x, y - 1, z, 2)),
+                ml(new StringBuilder().append("AB"), x, y, z - 1, 2));
+    }
+
+    private int ml(StringBuilder sb, int x, int y, int z, int maxLen) {
+        // base case
+        if (x <= 0 && y <= 0 && z <= 0) {
+            return maxLen;
+        }
+
+        // System.out.println(sb + ":" + x + ":" + y + ":" + z);
+
+        while (true) {
+
+            boolean lastStatus = false;
+            if (x > 0 && !sb.substring(sb.length() - 2, sb.length()).equals("AA")) {
+                lastStatus = true;
+                maxLen = Math.max(maxLen, ml(sb.append("AA"), x - 1, y, z, maxLen));
+            }
+
+            if (y > 0 && !sb.substring(sb.length() - 1, sb.length()).equals("B")) {
+                lastStatus = true;
+                maxLen = Math.max(maxLen, ml(sb.append("BB"), x, y - 1, z, maxLen));
+            }
+
+
+            if (z > 0 && !sb.substring(sb.length() - 2, sb.length()).equals("AA")) {
+                lastStatus = true;
+                maxLen = Math.max(maxLen, ml(sb.append("AB"), x, y, z - 1, maxLen));
+            }
+
+
+            if (!lastStatus) return maxLen;
+
+        }
+    }
+
+    class Solution {
+        public int countBeautifulPairs(int[] nums) {
 
             int cnt = 0;
-            Set<String> seen = new HashSet<>();
-
-            for (String word : words) {
-                String rev = new StringBuilder(word).reverse().toString();
-                if (seen.contains(rev)) {
-                    cnt++;
-                    seen.remove(rev);
-                } else {
-                    seen.add(word);
+            for (int i = 0; i < nums.length; i++) {
+                for (int j = i + 1; j < nums.length; j++) {
+                    int first = Integer.parseInt(String.valueOf(String.valueOf(nums[i]).charAt(0)));
+                    int last = Integer.parseInt(String.valueOf(String.valueOf(nums[j]).charAt(String.valueOf(nums[j]).length() - 1)));
+                    if (gcd(first, last) == 1) cnt++;
                 }
             }
 
+            System.out.println(gcd(72, 74));
             return cnt;
         }
 
+        //int version for gcd
+        public int gcd(int a, int b) {
+            if (b == 0)
+                return a;
 
-        //TBD
-    class Solution {
-        public int longestString(int x, int y, int z) {
-
-            return Math.max(Math.max(ml(new StringBuilder().append("AA"), x - 1, y, z, 2),
-                            ml(new StringBuilder().append("BB"), x, y - 1, z, 2)),
-                    ml(new StringBuilder().append("AB"), x, y, z - 1, 2));
+            return gcd(b, a % b);
         }
 
-        private int ml(StringBuilder sb, int x, int y, int z, int maxLen) {
+    }
+
+    class Solution {
+        public int makeTheIntegerZero(int num1, int num2) {
+            int ans = helper(num1, num2, 0, 0, new HashSet<Integer>());
+            return ans == Integer.MAX_VALUE ? -1 : ans;
+        }
+
+        /*
+            Return min operations to make num1 = 0
+         */
+        private int helper(int num1, int num2, int op, int ind, Set<Integer> vis) {
+
             // base case
-            if (x <= 0 && y <= 0 && z <= 0) {
-                return maxLen;
+            if (num1 == 0) return 0;
+            int min = Integer.MAX_VALUE;
+
+            if (vis.contains(num1)) return Integer.MAX_VALUE;
+
+            for (int i = ind; i < 60; i++) {
+                // take i
+                int subract = (int) Math.pow(2, i) + num2;
+                vis.add(num1 - subract);
+                min = Math.min(helper(num1 - subract, num2, op + 1, 0, vis), min);
+                vis.remove(num1 - subract); //backtrack
+                // not take i
+                min = Math.min(helper(num1, num2, op, i + 1, vis), min);
             }
 
-            // System.out.println(sb + ":" + x + ":" + y + ":" + z);
-
-            while (true) {
-
-                boolean lastStatus = false;
-                if (x > 0 && !sb.substring(sb.length() - 2, sb.length()).equals("AA")) {
-                    lastStatus = true;
-                    maxLen = Math.max(maxLen, ml(sb.append("AA"), x - 1, y, z, maxLen));
-                }
-
-                if (y > 0 && !sb.substring(sb.length() - 1, sb.length()).equals("B")) {
-                    lastStatus = true;
-                    maxLen = Math.max(maxLen, ml(sb.append("BB"), x, y - 1, z, maxLen));
-                }
-
-
-                if (z > 0 && !sb.substring(sb.length() - 2, sb.length()).equals("AA")) {
-                    lastStatus = true;
-                    maxLen = Math.max(maxLen, ml(sb.append("AB"), x, y, z - 1, maxLen));
-                }
-
-
-                if (!lastStatus) return maxLen;
-
-            }
+            return min;
         }
     }
 }
