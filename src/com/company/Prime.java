@@ -84,6 +84,69 @@ public class Prime {
         }
     }
 
+    class Solution {
+        public List<List<Integer>> findPrimePairs(int num) {
+            // smallest prime factor of i.
+            int[] s = new int[num + 1];
+
+            // Filling values in s[] using sieve
+            sieveOfEratosthenes(num, s);
+
+            Set<Integer> primeFac = new HashSet<>();
+            for (int sn : s) primeFac.add(sn);
+            List<Integer> primes = new ArrayList<>();
+            primes.addAll(primeFac);
+            Collections.sort(primes);
+            System.out.println(primes.size());
+            System.out.println(Arrays.toString(primes.toArray()));
+
+            List<List<Integer>> ans = new ArrayList<>();
+            for (int i = 0; i < primes.size(); i++) {
+                for (int j = i; j < primes.size(); j++) {
+                    if (i + j == num) ans.add(new ArrayList<>(Arrays.asList(i, j)));
+                }
+            }
+
+            return ans;
+        }
+
+        private void sieveOfEratosthenes(int num, int[] s) {
+            // Create a boolean array
+            // "prime[0..n]"  and initialize
+            // all entries in it as false.
+            boolean[] prime = new boolean[num + 1];
+
+            // Initializing smallest
+            // factor equal to 2
+            // for all the even numbers
+            for (int i = 2; i <= num; i += 2)
+                s[i] = 2;
+
+            // For odd numbers less
+            // then equal to n
+            for (int i = 3; i <= num; i += 2) {
+                if (!prime[i]) {
+                    // s(i) for a prime is
+                    // the number itself
+                    s[i] = i;
+
+                    // For all multiples of
+                    // current prime number
+                    for (int j = i; j * i <= num; j += 2) {
+                        System.out.println(i * j);
+                        if (!prime[(int) i * j]) {
+                            prime[(int) i * j] = true;
+
+                            // i is the smallest prime
+                            // factor for number "i*j".
+                            s[(int) i * j] = i;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
     // Function to generate prime
     // factors and its power
@@ -123,6 +186,39 @@ public class Prime {
             curr = s[num];
             cnt = 1;
         }
+    }
+
+    public List<List<Integer>> findPrimePairs(int num) {
+        // smallest prime factor of i.
+        int[] s = new int[num + 1];
+
+        // Filling values in s[] using sieve
+        sieveOfEratosthenes((long) num, s);
+
+        Set<Integer> primeFac = new HashSet<>();
+        for (int sn : s) primeFac.add(sn);
+        List<Integer> primes = new ArrayList<>();
+        primes.addAll(primeFac);
+        Collections.sort(primes);
+        List<List<Integer>> ans = new ArrayList<>();
+
+        int l = 1, r = primes.size() - 1;
+
+        while (l <= r) {
+            int sum = primes.get(l) + primes.get(r);
+            if (primes.get(l) + primes.get(l) == num) {
+                ans.add(new ArrayList<>(Arrays.asList(primes.get(l), primes.get(l))));
+                l++;
+                continue;
+            }
+            if (sum == num) {
+                ans.add(new ArrayList<>(Arrays.asList(primes.get(l), primes.get(r))));
+                l++;
+            } else if (sum < num) l++;
+            else r--;
+        }
+
+        return ans;
     }
 
 

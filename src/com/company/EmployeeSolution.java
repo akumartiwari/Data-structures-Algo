@@ -7506,6 +7506,71 @@ Output: [1,2,2,3,5,6]
             return min;
         }
     }
+
+    /*
+    Input: nums = [3,2,5,4], threshold = 5
+    Output: 3
+    Explanation: In this example, we can select the subarray that starts at l = 1 and ends at r = 3 => [2,5,4]. This subarray satisfies the conditions.
+    Hence, the answer is the length of the subarray, 3. We can show that 3 is the maximum possible achievable length.
+
+     */
+    public int longestAlternatingSubarray(int[] nums, int threshold) {
+
+        int max = 0;
+        for (int i = 0; i < nums.length; i++) {
+            int len = 0;
+            if (nums[i] % 2 == 0 && nums[i] <= threshold) len++;
+            else continue;
+            for (int j = i + 1; j < nums.length; j++) {
+                if ((nums[j - 1] % 2 != nums[j] % 2) && nums[j] <= threshold) len++;
+                else {
+                    max = Math.max(max, len);
+                    break;
+                }
+            }
+            max = Math.max(max, len);
+        }
+
+        return max;
+    }
+
+
+    private void sieveOfEratosthenes(long num, int[] s) {
+        // Create a boolean array
+        // "prime[0..n]"  and initialize
+        // all entries in it as false.
+        boolean[] prime = new boolean[(int) (num + 1L)];
+
+        // Initializing smallest
+        // factor equal to 2
+        // for all the even numbers
+        for (int i = 2; i <= num; i += 2)
+            s[i] = 2;
+
+        // For odd numbers less
+        // then equal to n
+        for (int i = 3; i <= num; i += 2) {
+            if (!prime[i]) {
+                // s(i) for a prime is
+                // the number itself
+                s[i] = i;
+
+                // For all multiples of
+                // current prime number
+                for (int j = i; (long) j * i <= num; j += 2) {
+                    if (!prime[i * j]) {
+                        prime[i * j] = true;
+
+                        // i is the smallest prime
+                        // factor for number "i*j".
+                        s[i * j] = i;
+                    }
+                }
+            }
+        }
+    }
+
+
 }
 
 

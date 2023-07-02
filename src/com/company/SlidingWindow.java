@@ -86,6 +86,38 @@ public class SlidingWindow {
         return cnt;
     }
 
+
+    //TODO:
+    /*
+    Use Sliding window approach and check when condition fails and the count total subarrays like (i-j+1);
+     */
+    class Solution {
+        public long continuousSubarrays(int[] nums) {
+            long cnt = 0L;
+            int smallest = Integer.MAX_VALUE, largest = Integer.MIN_VALUE;
+            for (int i = 0, j = 0; i < nums.length; ++i) {
+                smallest = Math.min(smallest, nums[i]);
+                largest = Math.max(largest, nums[i]);
+
+                System.out.println("Before:");
+                System.out.println(i + ":" + j);
+                System.out.println(smallest + ":" + largest);
+                while (Math.abs(smallest - largest) > 2) {
+                    j++;
+                    smallest = Math.min(smallest, nums[j]);
+                    largest = Math.max(largest, nums[j]);
+                }
+                System.out.println("After:");
+                System.out.println(i + ":" + j);
+                System.out.println(smallest + ":" + largest);
+                cnt += i - j + 1;
+                System.out.println("cnt=" + cnt);
+            }
+
+            return cnt;
+        }
+    }
+
     /*
     Input: nums = [2,1,4,3,5], k = 10
     Output: 6
@@ -209,7 +241,7 @@ public class SlidingWindow {
 
             for (int i = 0; i < s.length(); i++) {
                 char c = s.charAt(i);
-                sum += cm.containsKey(c) ? vals[cm.get(c)] : (int)(c - 'a') + 1 ;
+                sum += cm.containsKey(c) ? vals[cm.get(c)] : (int) (c - 'a') + 1;
                 maxSum = Math.max(sum, maxSum);
             }
 
@@ -219,7 +251,7 @@ public class SlidingWindow {
             sum = 0;
             for (int i = 0; i < s.length(); i++) {
                 char c = s.charAt(i);
-                int cal = cm.containsKey(c) ? vals[cm.get(c)] : (int)(c - 'a') + 1 ;
+                int cal = cm.containsKey(c) ? vals[cm.get(c)] : (int) (c - 'a') + 1;
                 if (cal < 0) maxSum = Math.max(maxSum, maxSum - cal);
             }
 
