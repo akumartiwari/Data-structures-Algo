@@ -90,27 +90,39 @@ public class SlidingWindow {
     //TODO:
     /*
     Use Sliding window approach and check when condition fails and the count total subarrays like (i-j+1);
+     Consider cases of duplicates ie. use a map to store freq of elements till index i
+     Update map while traversing j
      */
     class Solution {
         public long continuousSubarrays(int[] nums) {
             long cnt = 0L;
             int smallest = Integer.MAX_VALUE, largest = Integer.MIN_VALUE;
-            for (int i = 0, j = 0; i < nums.length; ++i) {
+            int i = 0, j = 0;
+            TreeMap<Integer, Integer> freq = new TreeMap<>();
+            for (i = 0, j = 0; i < nums.length; ++i) {
                 smallest = Math.min(smallest, nums[i]);
                 largest = Math.max(largest, nums[i]);
+                freq.put(nums[i], freq.getOrDefault(nums[i], 0) + 1);
 
                 System.out.println("Before:");
                 System.out.println(i + ":" + j);
                 System.out.println(smallest + ":" + largest);
-                while (Math.abs(smallest - largest) > 2) {
+                while (Math.abs(smallest - largest) > 2 && j <= i) {
                     j++;
-                    smallest = Math.min(smallest, nums[j]);
-                    largest = Math.max(largest, nums[j]);
+                    if (j < nums.length) {
+                        if (freq.get(nums[j - 1]) == 1) smallest = freq.floorKey(nums[j - 1]);
+                        if (freq.get(nums[j - 1]) == 1) largest = freq.ceilingKey(nums[j - 1]);
+
+                        freq.put(nums[j - 1], freq.getOrDefault(nums[j - 1], 0) - 1);
+                        if (freq.get(nums[j - 1]) <= 0) freq.remove(nums[j - 1]);
+
+                    }
+
                 }
                 System.out.println("After:");
                 System.out.println(i + ":" + j);
                 System.out.println(smallest + ":" + largest);
-                cnt += i - j + 1;
+                cnt += Math.abs(j - i) + 1;
                 System.out.println("cnt=" + cnt);
             }
 
