@@ -1,7 +1,6 @@
 package com.company;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class HashMap {
 

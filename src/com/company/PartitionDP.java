@@ -303,4 +303,29 @@ public class PartitionDP {
         }
         return false;
     }
+
+    //TBD
+    class Solution {
+        public int numberOfGoodSubarraySplits(int[] nums) {
+            return dfs(nums, 0, false);
+        }
+
+        private int dfs(int[] nums, int ind, boolean one) {
+            // base case
+            if (ind >= nums.length) {
+                if (one) return 1;
+                return 0;
+            }
+
+            int ways = 0;
+            for (int i = ind; i < nums.length; i++) {
+                // can do partition
+                if (one && nums[i] == 0) ways += dfs(nums, ind + 1, false);
+                // can't
+                ways += dfs(nums, ind + 1, nums[i] == 1);
+            }
+
+            return ways;
+        }
+    }
 }
