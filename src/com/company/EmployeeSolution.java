@@ -7571,6 +7571,50 @@ Output: [1,2,2,3,5,6]
     }
 
 
+    //TODO
+    class Solution {
+        public int sumImbalanceNumbers(int[] nums) {
+            int cnt = 0;
+            for (int i = 0; i < nums.length; i++) {
+                int start = 0;
+                System.out.println("nums[i]=" + nums[i]);
+                TreeMap<Integer, Integer> tm = new TreeMap<>(); // elements along with their count
+
+                tm.put(nums[i], tm.getOrDefault(nums[i], 0) + 1);
+                for (int j = i + 1; j < nums.length; j++) {
+                    System.out.println("nums[j]=" + nums[j]);
+                    tm.put(nums[j], tm.getOrDefault(nums[j], 0) + 1);
+                    System.out.println("Before=" + tm);
+
+                    if (tm.get(nums[j]) > 1 && j > (i + 1) && start >= 1) {
+                        cnt++;
+                        System.out.println(tm);
+                        System.out.println(cnt);
+                        continue;
+                    }
+
+                    if (tm.lastEntry().getValue() > 1) {
+                        cnt += start;
+                    } else {
+                        System.out.println("default");
+                        int lk = tm.lastKey();
+                        Map.Entry<Integer, Integer> last = tm.pollLastEntry();
+                        cnt += start + (lk - tm.lastKey() > 1 ? 1 : 0);
+                        start += (lk - tm.lastKey() > 1 ? 1 : 0);
+
+                        tm.put(last.getKey(), last.getValue());
+                        System.out.println("After=" + tm);
+                        System.out.println(tm);
+                    }
+
+                    System.out.println(cnt);
+                }
+
+            }
+
+            return cnt;
+        }
+    }
 }
 
 
