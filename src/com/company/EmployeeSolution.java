@@ -7570,49 +7570,92 @@ Output: [1,2,2,3,5,6]
         }
     }
 
-
-    //TODO
     public int sumImbalanceNumbers(int[] nums) {
         int cnt = 0;
         for (int i = 0; i < nums.length; i++) {
-            int start = 0;
             System.out.println("nums[i]=" + nums[i]);
             TreeMap<Integer, Integer> tm = new TreeMap<>(); // elements along with their count
+            int start = 0;
 
             tm.put(nums[i], tm.getOrDefault(nums[i], 0) + 1);
             for (int j = i + 1; j < nums.length; j++) {
                 System.out.println("nums[j]=" + nums[j]);
                 tm.put(nums[j], tm.getOrDefault(nums[j], 0) + 1);
+
                 System.out.println("Before=" + tm);
 
-                if (tm.get(nums[j]) > 1 && j > (i + 1) && start >= 1) {
-                    cnt++;
-                    System.out.println(tm);
-                    System.out.println(cnt);
-                    continue;
-                }
-
-                if (tm.lastEntry().getValue() > 1) {
+                if (nums[j] < tm.lastKey() && tm.size() > 2) {
+                    int f = tm.lowerKey(nums[j]) != null ? tm.lowerKey(nums[j]) : tm.floorKey(nums[j]);
+                    int c = tm.higherKey(nums[j]) != null ? tm.higherKey(nums[j]) : tm.ceilingKey(nums[j]);
                     cnt += start;
+                    if (c - f > 1) cnt--;
+                    if (nums[j] - f > 1) cnt++;
+                    if (c - nums[j] > 1) cnt++;
                 } else {
-                    System.out.println("default");
-                    int lk = tm.lastKey();
-                    Map.Entry<Integer, Integer> last = tm.pollLastEntry();
-                    cnt += start + (lk - tm.lastKey() > 1 ? 1 : 0);
-                    start += (lk - tm.lastKey() > 1 ? 1 : 0);
+                    if (tm.get(nums[j]) > 1 && j > (i + 1) && start >= 1) {
 
-                    tm.put(last.getKey(), last.getValue());
-                    System.out.println("After=" + tm);
-                    System.out.println(tm);
+                        if (nums[j] < tm.lastKey() && tm.size() > 2) {
+                            int f = tm.lowerKey(nums[j]) != null ? tm.lowerKey(nums[j]) : tm.floorKey(nums[j]);
+                            int c = tm.higherKey(nums[j]) != null ? tm.higherKey(nums[j]) : tm.ceilingKey(nums[j]);
+                            cnt += start;
+                            if (c - f > 1) cnt--;
+
+                            if (nums[j] - f > 1) cnt++;
+                            if (c - nums[j] > 1) cnt++;
+                        } else cnt++;
+
+
+                        System.out.println(tm);
+                        System.out.println(cnt);
+                        continue;
+                    }
+
+                    if (tm.lastEntry().getValue() > 1) {
+
+                        if (nums[j] >= tm.lastKey()) cnt += start;
+                        else {
+                            if (nums[j] < tm.lastKey() && tm.size() > 2) {
+                                int f = tm.lowerKey(nums[j]) != null ? tm.lowerKey(nums[j]) : tm.floorKey(nums[j]);
+                                int c = tm.higherKey(nums[j]) != null ? tm.higherKey(nums[j]) : tm.ceilingKey(nums[j]);
+
+                                cnt += start;
+                                if (c - f > 1) cnt--;
+                                if (nums[j] - f > 1) cnt++;
+                                if (c - nums[j] > 1) cnt++;
+                            } else {
+                                int c = tm.higherKey(nums[j]);
+                                System.out.println("higherKey=" + c);
+
+                                if (c - nums[j] > 1) cnt++;
+                            }
+
+                        }
+                    } else {
+
+                        System.out.println("default");
+                        System.out.println("start=" + start);
+
+                        int lk = tm.lastKey();
+                        Map.Entry<Integer, Integer> last = tm.pollLastEntry();
+                        System.out.println("After poll=" + tm);
+                        System.out.println("eq=" + (lk - tm.lastKey() > 1 ? 1 : 0));
+
+                        cnt += start + (lk - tm.lastKey() > 1 ? 1 : 0);
+                        start += (lk - tm.lastKey() > 1 ? 1 : 0);
+
+                        tm.put(last.getKey(), last.getValue());
+                        System.out.println("After=" + tm);
+                        System.out.println(tm);
+                    }
+                    System.out.println(cnt);
                 }
-
-                System.out.println(cnt);
             }
 
         }
 
-        return cnt;
+        return Math.max(cnt, 0);
     }
+
 }
 
 
