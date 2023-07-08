@@ -335,47 +335,48 @@ public class PartitionDP {
     - The string "1" does not contain leading zeros and is the binary representation of integer 50 = 1.
     It can be shown that 2 is the minimum number of beautiful substrings that s can be partitioned into.
      */
-    int min = Integer.MAX_VALUE;
+    class Solution {
+        int min = Integer.MAX_VALUE;
 
-    public int minimumBeautifulSubstrings(String s) {
-        partition(0, s, new StringBuilder(), 0);
-        return min == Integer.MAX_VALUE ? -1 : min;
-    }
-
-    private void partition(int ind, String s, StringBuilder sb, int steps) {
-        // base case
-        if (ind >= s.length()) {
-            if (steps > 0) {
-                min = Math.min(steps, min);
-            }
-            return;
+        public int minimumBeautifulSubstrings(String s) {
+            partition(0, s, new StringBuilder(), 0);
+            return min == Integer.MAX_VALUE ? -1 : min;
         }
 
-        for (int i = ind; i < s.length(); i++) {
-            sb.append(s.charAt(i));
-            int num = Integer.parseInt(sb.toString(), 2);
-
-            // dp partition
-            if ((int) (sb.charAt(0) - '0') != 0 && (isPower(5, num) || num == 1)) {
-                partition(i + 1, s, new StringBuilder(), steps + 1);
+        private void partition(int ind, String s, StringBuilder sb, int steps) {
+            // base case
+            if (ind >= s.length()) {
+                if (steps > 0) {
+                    min = Math.min(steps, min);
+                }
+                return;
             }
 
+            for (int i = ind; i < s.length(); i++) {
+                int num = Integer.parseInt(sb.append(s.charAt(i)).toString(), 2);
+
+                // dp partition
+                if (sb.charAt(0) != '0' && (isPower(5, num))) {
+                    partition(i + 1, s, new StringBuilder(), steps + 1);
+                }
+
+            }
         }
-    }
 
 
-    /* Returns true if y is a power of x */
-    public boolean isPower(int x, int y) {
-        // The only power of 1 is 1 itself
-        if (x == 1)
-            return (y == 1);
+        /* Returns true if y is a power of x */
+        public boolean isPower(int x, int y) {
+            // The only power of 1 is 1 itself
+            if (x == 1)
+                return (y == 1);
 
-        // Repeatedly compute power of x
-        int pow = 1;
-        while (pow < y)
-            pow = pow * x;
+            // Repeatedly compute power of x
+            int pow = 1;
+            while (pow < y)
+                pow = pow * x;
 
-        // Check if power of x becomes y
-        return (pow == y);
+            // Check if power of x becomes y
+            return (pow == y);
+        }
     }
 }
