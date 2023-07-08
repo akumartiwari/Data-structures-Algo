@@ -76,17 +76,24 @@ Output: [1,2,2,3,5,6]
         */
 
     public static void main(String[] args) {
-        List<EmployeeSolution> list = new ArrayList<>();
-        list.add(new EmployeeSolution("muksh", 10));
-        list.add(new EmployeeSolution("saksham", 50));
+//        List<EmployeeSolution> list = new ArrayList<>();
+//        list.add(new EmployeeSolution("muksh", 10));
+//        list.add(new EmployeeSolution("saksham", 50));
+//
+//        List<EmployeeSolution> salaries = list.stream().map(x -> new EmployeeSolution(x.name, x.salary * 2)).collect(Collectors.toList());
+//
+//        salaries.forEach(System.out::println);
+//
+//        int[] arr = new int[]{2, -1, -3, 6, 8, -4, -8, -5, 9, 3, -3, 4};
+//
+//        System.out.println(alternatingSubarray(new int[]{2, 3, 4, 3, 4}));
+//        int[] nums = new int[]{1, 6, 7, 8};
+//        int[] moveFrom = new int[]{1, 7, 2};
+//        int[] moveTo = new int[]{2, 9, 5};
+//
+//        System.out.println(relocateMarbles(nums, moveFrom, moveTo));
+        System.out.println(minimumBeautifulSubstrings("111"));
 
-        List<EmployeeSolution> salaries = list.stream().map(x -> new EmployeeSolution(x.name, x.salary * 2)).collect(Collectors.toList());
-
-        salaries.forEach(System.out::println);
-
-        int[] arr = new int[]{2, -1, -3, 6, 8, -4, -8, -5, 9, 3, -3, 4};
-
-        System.out.println(maxSum(arr));
     }
 
     // Thoughts:-
@@ -7450,61 +7457,56 @@ Output: [1,2,2,3,5,6]
         }
     }
 
-    class Solution {
-        public int countBeautifulPairs(int[] nums) {
+    public int countBeautifulPairs(int[] nums) {
 
-            int cnt = 0;
-            for (int i = 0; i < nums.length; i++) {
-                for (int j = i + 1; j < nums.length; j++) {
-                    int first = Integer.parseInt(String.valueOf(String.valueOf(nums[i]).charAt(0)));
-                    int last = Integer.parseInt(String.valueOf(String.valueOf(nums[j]).charAt(String.valueOf(nums[j]).length() - 1)));
-                    if (gcd(first, last) == 1) cnt++;
-                }
+        int cnt = 0;
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                int first = Integer.parseInt(String.valueOf(String.valueOf(nums[i]).charAt(0)));
+                int last = Integer.parseInt(String.valueOf(String.valueOf(nums[j]).charAt(String.valueOf(nums[j]).length() - 1)));
+                if (gcd(first, last) == 1) cnt++;
             }
-
-            System.out.println(gcd(72, 74));
-            return cnt;
         }
 
-        //int version for gcd
-        public int gcd(int a, int b) {
-            if (b == 0)
-                return a;
-
-            return gcd(b, a % b);
-        }
-
+        System.out.println(gcd(72, 74));
+        return cnt;
     }
 
-    class Solution {
-        public int makeTheIntegerZero(int num1, int num2) {
-            int ans = helper(num1, num2, 0, 0, new HashSet<Integer>());
-            return ans == Integer.MAX_VALUE ? -1 : ans;
+    //int version for gcd
+    public int gcd(int a, int b) {
+        if (b == 0)
+            return a;
+
+        return gcd(b, a % b);
+    }
+
+    public int makeTheIntegerZero(int num1, int num2) {
+        int ans = helper(num1, num2, 0, 0, new HashSet<Integer>());
+        return ans == Integer.MAX_VALUE ? -1 : ans;
+    }
+
+    /*
+        Return min operations to make num1 = 0
+     */
+    private int helper(int num1, int num2, int op, int ind, Set<Integer> vis) {
+
+        // base case
+        if (num1 == 0) return 0;
+        int min = Integer.MAX_VALUE;
+
+        if (vis.contains(num1)) return Integer.MAX_VALUE;
+
+        for (int i = ind; i < 60; i++) {
+            // take i
+            int subract = (int) Math.pow(2, i) + num2;
+            vis.add(num1 - subract);
+            min = Math.min(helper(num1 - subract, num2, op + 1, 0, vis), min);
+            vis.remove(num1 - subract); //backtrack
+            // not take i
+            min = Math.min(helper(num1, num2, op, i + 1, vis), min);
         }
 
-        /*
-            Return min operations to make num1 = 0
-         */
-        private int helper(int num1, int num2, int op, int ind, Set<Integer> vis) {
-
-            // base case
-            if (num1 == 0) return 0;
-            int min = Integer.MAX_VALUE;
-
-            if (vis.contains(num1)) return Integer.MAX_VALUE;
-
-            for (int i = ind; i < 60; i++) {
-                // take i
-                int subract = (int) Math.pow(2, i) + num2;
-                vis.add(num1 - subract);
-                min = Math.min(helper(num1 - subract, num2, op + 1, 0, vis), min);
-                vis.remove(num1 - subract); //backtrack
-                // not take i
-                min = Math.min(helper(num1, num2, op, i + 1, vis), min);
-            }
-
-            return min;
-        }
+        return min;
     }
 
     /*
@@ -7654,6 +7656,86 @@ Output: [1,2,2,3,5,6]
         }
 
         return Math.max(cnt, 0);
+    }
+
+    //----------------------------------------------------------------------------
+
+    public static int alternatingSubarray(int[] nums) {
+
+        int max = -1;
+        for (int i = 0; i < nums.length; i++) {
+            int len = 1;
+            int flag = 1;
+            for (int j = i + 1; j < nums.length; j++) {
+                if ((nums[j] - nums[j - 1] == flag)) {
+                    len++;
+                    flag = flag > 0 ? Math.negateExact(flag) : Math.abs(flag);
+                } else {
+                    max = Math.max(max, len);
+                    break;
+                }
+            }
+            max = Math.max(max, len);
+        }
+
+        return max == 1 ? Math.negateExact(max) : max;
+    }
+
+
+    public static List<Integer> relocateMarbles(int[] nums, int[] moveFrom, int[] moveTo) {
+        TreeMap<Integer, Integer> tm = new TreeMap();
+        for (int num : nums) tm.put(num, tm.getOrDefault(num, 0) + 1);
+        for (int i = 0; i < moveFrom.length; i++) {
+            int count = tm.get(moveFrom[i]);
+            tm.remove(moveFrom[i]);
+            tm.put(moveTo[i], count);
+        }
+        return new ArrayList<>(tm.keySet());
+    }
+
+    //TBD
+    class Solution {
+        int min = Integer.MAX_VALUE;
+        public int minimumBeautifulSubstrings(String s) {
+            partition(0, s, new StringBuilder(), 0);
+            return min == Integer.MAX_VALUE ? -1 : min;
+        }
+
+        private void partition(int ind, String s, StringBuilder sb, int steps) {
+            // base case
+            if (ind >= s.length()) {
+                if (steps > 0) {
+                    min = Math.min(steps, min);
+                }
+                return ;
+            }
+
+            for (int i = ind; i < s.length(); i++) {
+                sb.append(s.charAt(i));
+                int num = Integer.parseInt(sb.toString(), 2);
+
+                // dp partition
+                if (sb.charAt(0) != '0' && isPower(5, num) || num == 1) {
+                    partition(i + 1, s, new StringBuilder(), steps+1);
+                }
+            }
+        }
+
+
+        /* Returns true if y is a power of x */
+        public boolean isPower(int x, int y) {
+            // The only power of 1 is 1 itself
+            if (x == 1)
+                return (y == 1);
+
+            // Repeatedly compute power of x
+            int pow = 1;
+            while (pow < y)
+                pow = pow * x;
+
+            // Check if power of x becomes y
+            return (pow == y);
+        }
     }
 
 }
