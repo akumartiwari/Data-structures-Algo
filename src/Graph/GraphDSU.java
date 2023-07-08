@@ -25,7 +25,7 @@ public class GraphDSU {
                 char c = temp[j];
 
                 // set the (c - 'a')th digit to 1
-                x = x | (1 << (c - 'a'));
+                x |= (1 << (c - 'a'));
             }
             map.put(x, i);
             mask[i] = x;
@@ -41,7 +41,7 @@ public class GraphDSU {
                 char c = current.charAt(j);
 
                 // delete char at j -> set the (c - 'a')th digit to 0
-                x = x & (~(1 << (c - 'a')));
+                x &= (~(1 << (c - 'a')));
                 if (map.containsKey(x)) {
                     int next = map.get(x);
                     uf.join(i, next);

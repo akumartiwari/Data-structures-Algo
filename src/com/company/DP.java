@@ -1592,35 +1592,4 @@ public class DP {
         Set<String> st = new HashSet<>(Arrays.asList(dictionary));
         return func(0, s, st, dp);
     }
-
-      //TODO
-        public int makeTheIntegerZero(int num1, int num2) {
-            int ans = helper(num1, num2, 0, new HashSet<Integer>());
-            return ans == Integer.MAX_VALUE ? -1 : ans;
-        }
-
-        /*
-            Return min operations to make num1 = 0
-         */
-        private int helper(int num1, int num2, int op, Set<Integer> vis) {
-
-            // base case
-            if (num1 == 0) return 0;
-            int min = Integer.MAX_VALUE;
-
-            if (vis.contains(num1)) return Integer.MAX_VALUE;
-
-            for (int i = 0; i < 60; i++) {
-                // take i
-                int subract = (int) Math.pow(2, i) + num2;
-                vis.add(num1 - subract);
-                min = Math.min(helper(num1 - subract, num2, op + 1, vis), min);
-                vis.remove(num1 - subract); //backtrack
-                // not take i
-                min = Math.min(helper(num1, num2, op, vis), min);
-            }
-
-            return min;
-        }
-
 }
