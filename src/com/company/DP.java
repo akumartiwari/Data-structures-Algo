@@ -1592,4 +1592,46 @@ public class DP {
         Set<String> st = new HashSet<>(Arrays.asList(dictionary));
         return func(0, s, st, dp);
     }
+
+    /*
+    Input: nums = [1,3,6,4,1,2], target = 2
+    Output: 3
+    Explanation: To go from index 0 to index n - 1 with the maximum number of jumps, you can perform the following jumping sequence:
+    - Jump from index 0 to index 1.
+    - Jump from index 1 to index 3.
+    - Jump from index 3 to index 5.
+    It can be proven that there is no other jumping sequence that goes from 0 to n - 1 with more than 3 jumps. Hence, the answer is 3.
+     */
+
+    public int maximumJumps(int[] nums, int target) {
+        int[] dp = new int[nums.length];
+        Arrays.fill(dp, Integer.MIN_VALUE);
+        return mj(nums, target, 0, nums[0], dp);
+    }
+
+    private int mj(int[] nums, int target, int ind, int last, int[] dp) {
+
+        // base case
+        if (ind == nums.length - 1) {
+            return 0;
+        }
+
+        if (dp[ind] != Integer.MIN_VALUE) return dp[ind];
+
+        int res = -1;
+
+        for (int i = ind + 1; i < nums.length; i++) {
+
+            if (Math.abs(nums[i] - last) <= target) {
+
+                int solve = mj(nums, target, i, nums[i], dp);
+                if (solve != -1) {
+                    res = Math.max(res, 1 + solve);
+                }
+            }
+        }
+
+        return dp[ind] = res;
+    }
+
 }
