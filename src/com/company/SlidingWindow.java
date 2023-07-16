@@ -139,6 +139,26 @@ public class SlidingWindow {
         return cnt;
     }
 
+    //TODO: complete
+    class Solution {
+        public int maximumBeauty(int[] nums, int k) {
+            int maxLen = 0, len = 0;
+            Arrays.sort(nums);
+
+            int i = 0, j = 0;
+            int[] range = new int[]{nums[0] - k, nums[0] + k};
+
+            for (i = 0, j = 0; i < nums.length; ++i) {
+                // condition fails
+                while (nums[i] < range[0] || nums[i] < range[1]) {
+                    j++;
+                }
+            }
+
+            return len;
+        }
+    }
+
     public int subarrayLCM(int[] nums, int k) {
         int cnt = 0;
         int lcm = -1;
