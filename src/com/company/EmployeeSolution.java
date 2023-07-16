@@ -7755,6 +7755,128 @@ Output: [1,2,2,3,5,6]
         }
         return r;
     }
+
+    class Solution {
+        int max = 0;
+
+        public int maxNonDecreasingLength(int[] nums1, int[] nums2) {
+            lengthOfLIS(nums1, nums2, 0);
+            return max;
+        }
+
+        private void lengthOfLIS(int[] nums1, int[] nums2, int ind) {
+            List<Integer> lis = new ArrayList<>();
+            for (int i = ind; i < nums1.length; i++) {
+                int len = 0;
+                int a = Integer.MAX_VALUE;
+
+                System.out.println(lis);
+                if (lis.size() == 0) {
+                    lis.add(Math.min(nums1[i], nums2[i]));
+                    len++;
+                    continue;
+                }
+
+                int last = lis.get(lis.size() - 1);
+
+                if (nums1[i] >= last && nums2[i] >= last) {
+                    a = Math.min(nums1[i], nums2[i]);
+                } else {
+                    if (nums1[i] >= last) a = nums1[i];
+                    if (nums2[i] >= last) a = Math.min(a, nums2[i]);
+                }
+
+                if (a == Integer.MAX_VALUE) a = Math.min(nums1[i], nums2[i]);
+
+                if (a >= lis.get(lis.size() - 1)) {
+                    lis.add(a);
+                    len++;
+                } else {
+                    max = Math.max(len, max);
+                    lengthOfLIS(nums1, nums2, i);
+                }
+            }
+        }
+    }
+
+    public int sumOfSquares(int[] nums) {
+        int ind = 1, n = nums.length, ans = 0;
+        for (int num : nums) if (n % ind++ == 0) ans += num * num;
+        return ans;
+    }
+
+
+    //TODO: Find better approach
+    class Solution {
+        public int maximumBeauty(int[] nums, int k) {
+            Arrays.sort(nums);
+            int max = 0;
+            Map<Integer, Integer> freq = new HashMap<>();
+            for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
+
+            System.out.println(Arrays.toString(nums));
+
+            if (k == 0) {
+                for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {
+                    max = Math.max(max, entry.getValue());
+                }
+                return max;
+            }
+            boolean same = true;
+            for (int i = 1; i < nums.length; i++) {
+                if (nums[i - 1] != nums[i]) {
+                    same = false;
+                    break;
+                }
+            }
+
+            if (same) return nums.length;
+
+            for (int i = -100000; i <= 100000; i++) {
+                int ui = bs(nums, k + i, false);
+
+                while (ui >= 0 && ui < nums.length - 1 && nums[ui + 1] == nums[ui] && nums[ui] <= k + i) ui++;
+                while (ui >= 0 && ui < nums.length && nums[ui] > i + k) ui--;
+                while (ui >= 0 && ui < nums.length - 1 && nums[ui] < i + k) ui++;
+
+                int li = bs(nums, i - k, true);
+                while (li > 0 && li < nums.length && nums[li - 1] == nums[li] && nums[li - 1] >= i - k) li--;
+                while (li > 0 && li < nums.length && nums[li] < i - k) li++;
+
+                while (li > 0 && li < nums.length && nums[li] > i - k) li--;
+
+                ui = Math.min(nums.length - 1, ui);
+                li = Math.max(0, li);
+                // System.out.println(li + ":" + ui + ":" + i);
+                if (freq.containsKey(k + i) && freq.containsKey(i - k)
+                        && (freq.get(k + i) > 1 || freq.get(i - k) > 1)) {
+                    max = Math.max(Math.abs(ui - li) + 1, max);
+                } else max = Math.max(Math.abs(ui - li), max);
+            }
+            return Math.min(max, nums.length);
+        }
+
+        private int bs(int[] ps, int bus, boolean lower) {
+            int l = 0, h = ps.length - 1;
+            while (l <= h) {
+                int mid = l + (h - l) / 2;
+
+                if (ps[mid] < bus) {
+                    l = mid + 1;
+                } else if (ps[mid] > bus) h = mid;
+                else {
+                    if (lower) return mid;
+                    return mid + 1;
+                }
+
+                if (l == h && l == mid) {
+                    return l;
+                }
+
+            }
+            return l;
+        }
+    }
 }
 
 
