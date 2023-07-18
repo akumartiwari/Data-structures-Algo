@@ -1634,4 +1634,49 @@ public class DP {
         return dp[ind] = res;
     }
 
+
+    /*
+    Input: nums1 = [2,3,1], nums2 = [1,2,1]
+    Output: 2
+    Explanation: One way to construct nums3 is:
+    nums3 = [nums1[0], nums2[1], nums2[2]] => [2,2,1].
+    The subarray starting from index 0 and ending at index 1, [2,2], forms a non-decreasing subarray of length 2.
+    We can show that 2 is the maximum achievable length.
+
+     */
+    //TC = O(3N), SC = O(3n)
+    public int maxNonDecreasingLength(int[] nums1, int[] nums2) {
+
+        int[][] dp = new int[nums1.length][3];
+        for (int[] d : dp) Arrays.fill(d, -1);
+        return helper(0, nums1, nums2, 0, dp);
+    }
+
+    private int helper(int ind, int[] nums1, int[] nums2, int choice, int[][] dp) {
+        // base case
+        if (ind >= nums1.length) return 0;
+
+        int maxLen = 0;
+
+        if (dp[ind][choice] != -1) return dp[ind][choice];
+
+
+        //take
+        if (choice == 0) {
+            // not-take current guy
+            maxLen = Math.max(maxLen, helper(ind + 1, nums1, nums2, 0, dp));
+        }
+
+        int prev = choice == 0 ? -1 : choice == 1 ? nums1[ind - 1] : nums2[ind - 1];
+
+        if (nums1[ind] >= prev) {
+            maxLen = Math.max(maxLen, 1 + helper(ind + 1, nums1, nums2, 1, dp));
+        }
+        if (nums2[ind] >= prev) {
+            maxLen = Math.max(maxLen, 1 + helper(ind + 1, nums1, nums2, 2, dp));
+        }
+
+
+        return dp[ind][choice] = maxLen;
+    }
 }

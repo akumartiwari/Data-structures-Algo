@@ -7691,47 +7691,6 @@ Output: [1,2,2,3,5,6]
         return new ArrayList<>(tm.keySet());
     }
 
-    //Solve using sliding window technique
-    public int maxNonDecreasingLength(int[] nums1, int[] nums2) {
-        return lengthOfLIS(nums1, nums2);
-    }
-
-    private int lengthOfLIS(int[] nums1, int[] nums2) {
-        List<Integer> lis = new ArrayList<>();
-        int len = 0;
-        for (int i = 0; i < nums1.length; i++) {
-
-            int a = Integer.MAX_VALUE;
-
-            System.out.println(lis);
-            if (lis.size() == 0) {
-                lis.add(Math.min(nums1[i], nums2[i]));
-                len++;
-                continue;
-            }
-
-            int last = lis.get(lis.size() - 1);
-
-            if (nums1[i] >= last && nums2[i] >= last) {
-                a = Math.min(nums1[i], nums2[i]);
-            } else {
-                if (nums1[i] >= last) a = nums1[i];
-                if (nums2[i] >= last) a = Math.min(a, nums2[i]);
-            }
-
-            if (a == Integer.MAX_VALUE) a = Math.max(nums1[i], nums2[i]);
-
-            if (a >= lis.get(lis.size() - 1)) {
-                lis.add(a);
-                len++;
-            } else {
-                int idx = lower(lis.stream().mapToInt(x -> x).toArray(), a);
-                lis.set(idx, a);
-            }
-        }
-        return len;
-    }
-
     private int lower(int[] arr, int target) {
         if (arr == null || arr.length == 0) {
             return 0;
@@ -7756,48 +7715,6 @@ Output: [1,2,2,3,5,6]
         return r;
     }
 
-    class Solution {
-        int max = 0;
-
-        public int maxNonDecreasingLength(int[] nums1, int[] nums2) {
-            lengthOfLIS(nums1, nums2, 0);
-            return max;
-        }
-
-        private void lengthOfLIS(int[] nums1, int[] nums2, int ind) {
-            List<Integer> lis = new ArrayList<>();
-            for (int i = ind; i < nums1.length; i++) {
-                int len = 0;
-                int a = Integer.MAX_VALUE;
-
-                System.out.println(lis);
-                if (lis.size() == 0) {
-                    lis.add(Math.min(nums1[i], nums2[i]));
-                    len++;
-                    continue;
-                }
-
-                int last = lis.get(lis.size() - 1);
-
-                if (nums1[i] >= last && nums2[i] >= last) {
-                    a = Math.min(nums1[i], nums2[i]);
-                } else {
-                    if (nums1[i] >= last) a = nums1[i];
-                    if (nums2[i] >= last) a = Math.min(a, nums2[i]);
-                }
-
-                if (a == Integer.MAX_VALUE) a = Math.min(nums1[i], nums2[i]);
-
-                if (a >= lis.get(lis.size() - 1)) {
-                    lis.add(a);
-                    len++;
-                } else {
-                    max = Math.max(len, max);
-                    lengthOfLIS(nums1, nums2, i);
-                }
-            }
-        }
-    }
 
     public int sumOfSquares(int[] nums) {
         int ind = 1, n = nums.length, ans = 0;
