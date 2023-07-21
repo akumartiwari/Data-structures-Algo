@@ -1579,7 +1579,7 @@ It can be proven that there are no more than 3 square-free subsets in the given 
 
     private long helper(int[] nums, int ind, List<Integer> selected, Map<String, Long> dp) {
 
-        String key = String.valueOf(ind);de
+        String key = String.valueOf(ind);
         for (int s : selected) key += "-" + s;
 
         if (selected.size() == 4) {
