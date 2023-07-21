@@ -1410,6 +1410,61 @@ public class DP {
         return memob[i][j];
     }
 
+    /*
+Input: nums = [3,4,4,5]
+Output: 3
+Explanation: There are 3 square-free subsets in this example:
+        - The subset consisting of the 0th element [3]. The product of its elements is 3, which is a square-free integer.
+        - The subset consisting of the 3rd element [5]. The product of its elements is 5, which is a square-free integer.
+        - The subset consisting of 0th and 3rd elements [3,5]. The product of its elements is 15, which is a square-free integer.
+It can be proven that there are no more than 3 square-free subsets in the given array.
+*/
+    //DO with DP 6 bitmask
+
+    public int squareFreeSubsets(int[] nums) {
+        Map<String, Integer> dp = new HashMap<>();
+        return helper(nums, 0, 1L, dp);
+    }
+
+
+    private int helper(int[] nums, int ind, long prod, Map<String, Integer> dp) {
+        if (ind >= nums.length) return 0;
+        int t = 0, nt = 0;
+
+        String key = prod + "-" + ind;
+        if (dp.containsKey(key)) return dp.get(key);
+        // take
+        if (isSquareFree(prod * nums[ind])) {
+            t += (1 + helper(nums, ind + 1, prod * nums[ind], dp)) % MOD;
+        }
+        nt += helper(nums, ind + 1, prod, dp);
+        int ans = (t + nt) % MOD;
+        dp.put(key, ans);
+        return ans;
+    }
+
+    //function that checks if the given number is square free or not
+    private boolean isSquareFree(long num) {
+        //finds the remainder
+        if (num % 2 == 0)
+            //divides the given number by 2
+            num = num / 2;
+        //if the number again completely divisible by 2, the number is not a square free number
+        if (num % 2 == 0)
+            return false;
+        //num  must be odd at the moment, so we have increment i by 2
+        for (int i = 3; i <= Math.sqrt(num); i = i + 2) {
+            //checks i is a prime factor or not
+            if (num % i == 0) {
+                num = num / i;
+                //if the number again divides by i, it cannot be a square free number
+                if (num % i == 0)
+                    return false;
+            }
+        }
+        return true;
+    }
+
 
     // TODO
     class Solution {
@@ -1524,7 +1579,7 @@ public class DP {
 
     private long helper(int[] nums, int ind, List<Integer> selected, Map<String, Long> dp) {
 
-        String key = String.valueOf(ind);
+        String key = String.valueOf(ind);de
         for (int s : selected) key += "-" + s;
 
         if (selected.size() == 4) {
