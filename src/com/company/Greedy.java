@@ -4,7 +4,27 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 import java.util.HashMap;
+
 public class Greedy {
+
+    /*
+    Input: nums = [2,3,7,9,3]
+    Output: 21
+    Explanation: We can apply the following operations on the array:
+    - Choose i = 0. The resulting array will be nums = [5,7,9,3].
+    - Choose i = 1. The resulting array will be nums = [5,16,3].
+    - Choose i = 0. The resulting array will be nums = [21,3].
+    The largest element in the final array is 21. It can be shown that we cannot obtain a larger element.
+     */
+    public long maxArrayValue(int[] nums) {
+        long sum = 0;
+        for (int i = nums.length - 1; i >= 0; i--) {
+            if (nums[i] <= sum) sum += nums[i];
+            else sum = nums[i];
+        }
+        return sum;
+    }
+
 
     // TC = O(n)
     // Author: Anand

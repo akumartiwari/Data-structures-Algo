@@ -4,6 +4,7 @@ import javafx.util.Pair;
 
 import java.util.*;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 public class DP {
 
@@ -1734,4 +1735,55 @@ It can be proven that there are no more than 3 square-free subsets in the given 
 
         return dp[ind][choice] = maxLen;
     }
+
+
+    public long maxScore(int[] nums, int x) {
+        long[][] dp = new long[nums.length][2];
+        for (long[] d : dp) Arrays.fill(d, -1L);
+
+        return nums[0] + helper(nums, x, 0, nums[0] % 2, dp);
+    }
+
+    private long helper(int[] nums, int x, int ind, int parity, long[][] dp) {
+
+        // base case
+        if (ind >= nums.length - 1) return 0;
+        if (dp[ind][parity] != -1) return dp[ind][parity];
+        long max = 0;
+        int i = ind + 1;
+        //take
+        if (parity == nums[i] % 2) {
+            max = Math.max(max, nums[i] + helper(nums, x, i, parity, dp));
+        } else {
+            max = Math.max(max, nums[i] + helper(nums, x, i, nums[i] % 2, dp) - x);
+        }
+
+        //not-take
+        max = Math.max(max, helper(nums, x, i, parity, dp));
+        return dp[ind][parity] = max;
+    }
+
+    public int rob(int[] nums) {
+        int[] dp = new int[nums.length];
+        Arrays.fill(dp, -1);
+        return Math.max(nums[0] + helper(nums, 0, dp),
+                nums.length > 1 ? nums[1] + helper(nums, 1, dp) : 0);
+    }
+
+    private int helper(int[] nums, int ind, int[] dp) {
+
+        // base case
+        if (ind >= nums.length - 2) return 0;
+        if (dp[ind] != -1) return dp[ind];
+        int max = 0;
+        int i = ind + 2;
+        //take
+        max = Math.max(max, nums[i] + helper(nums, i, dp));
+
+        //not-take
+        max = Math.max(max, helper(nums, i - 1, dp));
+        return dp[ind] = max;
+    }
+
+
 }

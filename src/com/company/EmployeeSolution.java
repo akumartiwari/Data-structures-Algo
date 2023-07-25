@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static CF_Templates.B.gcd;
@@ -7793,6 +7794,86 @@ Output: [1,2,2,3,5,6]
             }
             return l;
         }
+    }
+
+
+    public boolean isGood(int[] nums) {
+        Arrays.sort(nums);
+        int n = nums.length;
+        if (n == 1) return false;
+        if (n == 2) {
+            return nums[0] == 1 && nums[1] == 1;
+        }
+        for (int i = 0; i < n; i++) {
+            if (i == 0) continue;
+            else if (i == n - 1) {
+                if (nums[n - 2] != nums[n - 1]) return false;
+            } else if (nums[i - 1] + 1 != nums[i]) return false;
+        }
+
+        return true;
+    }
+
+    public String sortVowels(String s) {
+
+
+        StringBuilder sb = new StringBuilder();
+        List<Character> list = new ArrayList<>();
+        Set<Character> vowels = new HashSet<>();
+        vowels.add('a');
+        vowels.add('A');
+        vowels.add('e');
+        vowels.add('E');
+        vowels.add('i');
+        vowels.add('I');
+        vowels.add('o');
+        vowels.add('O');
+        vowels.add('u');
+        vowels.add('U');
+
+        //Extract the vowels
+        for (int i = 0; i < s.length(); i++) {
+            if (vowels.contains(s.charAt(i))) {
+                list.add(s.charAt(i));
+            }
+        }
+
+        Collections.sort(list);
+
+        int ind = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (vowels.contains(s.charAt(i))) {
+                sb.append(list.get(ind++));
+            } else sb.append(s.charAt(i));
+        }
+
+        return sb.toString();
+    }
+
+
+    // 23rd  july
+
+    public List<String> splitWordsBySeparator(List<String> words, char separator) {
+        List<String> ans = new ArrayList<>();
+        for (String word : words) {
+            List<String> arr = new ArrayList<>();
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < word.length(); i++) {
+                if (word.charAt(i) == separator) {
+                    if (sb.length() > 0) {
+                        arr.add(sb.toString());
+                        sb = new StringBuilder();
+                    }
+                } else sb.append(word.charAt(i));
+            }
+
+            if (sb.length() > 0) arr.add(sb.toString());
+
+            System.out.println(arr);
+            ans.addAll(arr);
+        }
+
+        return ans;
     }
 }
 
