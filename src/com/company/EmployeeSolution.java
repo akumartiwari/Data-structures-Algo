@@ -9,10 +9,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import static CF_Templates.B.gcd;
 
 public class EmployeeSolution {
     String name;
@@ -7798,19 +7795,13 @@ Output: [1,2,2,3,5,6]
 
 
     public boolean isGood(int[] nums) {
-        Arrays.sort(nums);
-        int n = nums.length;
-        if (n == 1) return false;
-        if (n == 2) {
-            return nums[0] == 1 && nums[1] == 1;
+        int[] counter = new int[201];
+        if (nums.length == 1) return false;
+        for (int num : nums) counter[num - 1] += num;
+        for (int i = 0; i < nums.length - 1; i++) {
+            if (counter[i] == 0) return false;
+            if (i == nums.length - 2 && counter[i] != (2 * (nums.length - 1))) return false;
         }
-        for (int i = 0; i < n; i++) {
-            if (i == 0) continue;
-            else if (i == n - 1) {
-                if (nums[n - 2] != nums[n - 1]) return false;
-            } else if (nums[i - 1] + 1 != nums[i]) return false;
-        }
-
         return true;
     }
 
@@ -7875,10 +7866,99 @@ Output: [1,2,2,3,5,6]
 
         return ans;
     }
+
+    public int makePrefSumNonNegative(int[] nums) {
+        int cnt = 0;
+
+        while (true) {
+            long ps = 0L;
+            List<Integer> displaced = new ArrayList<>();
+            List<Integer> queue = new ArrayList<>(); // insertion-deletion takes place at both ends
+
+            TreeMap<Integer, Integer> neg = new TreeMap();
+
+            System.out.println(Arrays.toString(nums));
+            boolean dis = false;
+            for (int num : nums) {
+
+                if (num < 0) neg.put(num, neg.getOrDefault(num, 0) + 1);
+                if (num + ps < 0) {
+                    int removed = neg.firstKey();
+                    ps -= removed;
+                    queue.remove(new Integer(removed));
+                    displaced.add(removed);
+                    dis = true;
+                    neg.put(removed, neg.get(removed) - 1);
+                    if (neg.get(removed) <= 0) neg.remove(removed);
+                    cnt++;
+                } else {
+                    queue.add(num);
+                    ps += num;
+                }
+                System.out.println("ps=" + ps);
+            }
+            queue.addAll(displaced);
+            if (!dis) break;
+            nums = queue.stream().mapToInt(x -> x).toArray();
+        }
+        return cnt;
+    }
+
+    public int countCompleteSubarrays(int[] nums) {
+
+        int cnt = 0;
+        int total = Arrays.stream(nums).distinct().toArray().length;
+        for (int i = 0; i < nums.length; i++) {
+            Set<Integer> set = new HashSet<>();
+            set.add(nums[i]);
+            for (int j = i + 1; j < nums.length; j++) {
+                set.add(nums[j]);
+                if (set.size() == total) cnt++;
+            }
+        }
+        return cnt;
+    }
+
+    //TODO:Edge cases
+    public String minimumString(String a, String b, String c) {
+
+        List<String> order = new ArrayList<>();
+        order.add(a);
+        order.add(b);
+        order.add(c);
+        Collections.sort(order);
+
+        StringBuilder sb = new StringBuilder();
+        for (String s : order) {
+            if (sb.length() == 0) sb.append(s);
+            else {
+                System.out.println(sb);
+                System.out.println(s);
+
+                if (sb.toString().contains(s)) continue;
+
+                int ind = 0;
+                int ni = -1;
+                // check if suffix matches with prefix
+                for (ind = 0; ind < s.length(); ind++) {
+                    if (sb.toString().endsWith(s.substring(0, ind))) ni = ind;
+                }
+
+                if (ni != -1) {
+                    String append = s.substring(ni, s.length());
+                    System.out.println("append=" + append);
+                    sb.append(append);
+                } else if (s.contains(sb.toString())) {
+                    sb = new StringBuilder();
+                    sb.append(s);
+                } else sb.append(s);
+            }
+        }
+
+        return sb.toString();
+    }
+
 }
-
-
-
 
 
 
