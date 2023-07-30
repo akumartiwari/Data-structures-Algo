@@ -7904,61 +7904,68 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
-    public int countCompleteSubarrays(int[] nums) {
-
+    public int numberOfEmployeesWhoMetTarget(int[] hours, int target) {
         int cnt = 0;
-        int total = Arrays.stream(nums).distinct().toArray().length;
-        for (int i = 0; i < nums.length; i++) {
-            Set<Integer> set = new HashSet<>();
-            set.add(nums[i]);
-            for (int j = i + 1; j < nums.length; j++) {
-                set.add(nums[j]);
-                if (set.size() == total) cnt++;
-            }
-        }
+        for (int hour : hours) if (hour >= target) cnt++;
         return cnt;
     }
 
-    //TODO:Edge cases
-    public String minimumString(String a, String b, String c) {
+    class Solution {
+        public int countCompleteSubarrays(int[] nums) {
 
-        List<String> order = new ArrayList<>();
-        order.add(a);
-        order.add(b);
-        order.add(c);
-        Collections.sort(order);
-
-        StringBuilder sb = new StringBuilder();
-        for (String s : order) {
-            if (sb.length() == 0) sb.append(s);
-            else {
-                System.out.println(sb);
-                System.out.println(s);
-
-                if (sb.toString().contains(s)) continue;
-
-                int ind = 0;
-                int ni = -1;
-                // check if suffix matches with prefix
-                for (ind = 0; ind < s.length(); ind++) {
-                    if (sb.toString().endsWith(s.substring(0, ind))) ni = ind;
+            int cnt = 0;
+            int total = Arrays.stream(nums).distinct().toArray().length;
+            for (int i = 0; i < nums.length; i++) {
+                Set<Integer> set = new HashSet<>();
+                set.add(nums[i]);
+                for (int j = i + 1; j < nums.length; j++) {
+                    set.add(nums[j]);
+                    if (set.size() == total) cnt++;
                 }
-
-                if (ni != -1) {
-                    String append = s.substring(ni, s.length());
-                    System.out.println("append=" + append);
-                    sb.append(append);
-                } else if (s.contains(sb.toString())) {
-                    sb = new StringBuilder();
-                    sb.append(s);
-                } else sb.append(s);
             }
+            return cnt;
         }
 
-        return sb.toString();
-    }
+        //TODO:Edge cases
+        public String minimumString(String a, String b, String c) {
 
-}
+            List<String> order = new ArrayList<>();
+            order.add(a);
+            order.add(b);
+            order.add(c);
+            Collections.sort(order);
+
+            StringBuilder sb = new StringBuilder();
+            for (String s : order) {
+                if (sb.length() == 0) sb.append(s);
+                else {
+                    System.out.println(sb);
+                    System.out.println(s);
+
+                    if (sb.toString().contains(s)) continue;
+
+                    int ind = 0;
+                    int ni = -1;
+                    // check if suffix matches with prefix
+                    for (ind = 0; ind < s.length(); ind++) {
+                        if (sb.toString().endsWith(s.substring(0, ind))) ni = ind;
+                    }
+
+                    if (ni != -1) {
+                        String append = s.substring(ni, s.length());
+                        System.out.println("append=" + append);
+                        sb.append(append);
+                    } else if (s.contains(sb.toString())) {
+                        sb = new StringBuilder();
+                        sb.append(s);
+                    } else sb.append(s);
+                }
+            }
+
+            return sb.toString();
+        }
+
+    }
 
 
 
