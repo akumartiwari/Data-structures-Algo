@@ -25,6 +25,12 @@ public class Greedy {
         return sum;
     }
 
+    //Solved via recursion
+
+    public long maxArrayValueRec(int[] nums) {
+
+        return 0;
+    }
 
     // TC = O(n)
     // Author: Anand
@@ -48,7 +54,6 @@ public class Greedy {
                 // update farthest index reachable
                 curEnd = curFarthest;
             }
-
         }
         return minJump;
     }

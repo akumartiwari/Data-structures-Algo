@@ -7,7 +7,7 @@ import java.util.HashMap;
 public class TopologicalSort {
 
     // TOPOLOGICAL SORT
-    // Use toplogical sort for indegree and pq to minisnmise the time taken to complete the course
+    // Use toplogical sort for indegree and pq to minimise the time taken to complete the course
     // TC = O(V+E) // As Simple DFS, SC = O(V) {Stack space}
 
 

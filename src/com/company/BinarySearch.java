@@ -1,9 +1,136 @@
 package com.company;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.HashMap;
+import java.util.*;
+
 public class BinarySearch {
+
+    class Solution {
+
+        class Tuple2 {
+            boolean result;
+            boolean suffcient;
+
+            Tuple2(boolean result, boolean suffcient) {
+                this.result = result;
+                this.suffcient = suffcient;
+            }
+
+            Tuple2() {
+            }
+        }
+
+        class P {
+            boolean res;
+            int op;
+
+            P(boolean res, int op) {
+                this.res = res;
+                this.op = op;
+            }
+
+            P() {
+            }
+        }
+
+        public int minimumSize(int[] nums, int maxOperations) {
+            int l = 1, h = Arrays.stream(nums).max().getAsInt();
+
+            int ans = Integer.MAX_VALUE;
+            while (l < h) {
+                int mid = (l + h) / 2;
+                Tuple2 tuple2 = minG(nums, maxOperations, mid);
+                System.out.println(tuple2.result + ":" + tuple2.suffcient);
+                if (tuple2.suffcient && mid > 2) {
+                    h = mid - 1;
+                    if (tuple2.result) ans = Math.min(ans, mid);
+                } else if (tuple2.result) {
+                    h = mid - 1;
+                    ans = Math.min(ans, mid);
+                } else if (!tuple2.suffcient && !tuple2.result) h = mid - 1;
+                else l = mid + 1;
+            }
+            return ans;
+        }
+
+        private Tuple2 minG(int[] nums, int maxOperations, int target) {
+
+            boolean success = true;
+            for (int num : nums) {
+                P pow = pow(num, target);
+                maxOperations -= pow.op;
+                if (target > num) return new Tuple2(false, false);
+                if (!pow.res) success = false;
+                if (maxOperations < 0) return new Tuple2(false, false);
+            }
+
+            return new Tuple2(success, maxOperations >= 0);
+        }
+
+        private P pow(int num, int target) {
+            int cnt = 0;
+            while (target < num) {
+                target *= target;
+                cnt++;
+            }
+
+            return new P(target == num, target == num ? cnt + 1 : cnt);
+        }
+
+
+    }
+
+
+    // [4,2,7,6,9,14,12]
+    /*
+    Intuition
+    BS:-
+    The Aim is to find max index reachable. Consider any random index b/w { 0 to n-1} and check if it's reachable.
+    if yes all index before that random-index must also be rechable and try the same in other half.
+
+    To check reachability used greedy approach below-
+    Greedy:-
+    The idea is to use ladder whenever you have to make max height jump i.e. h[i+1]-h[i] is largest as possible untill all ladders exhausted.
+    After that start using bricks and check if that index is reachable.
+
+    Complexity:-
+    Time complexity: O(KlogNlogK)
+    Space complexity: O(N) -> max-heap
+     */
+    public int furthestBuilding(int[] heights, int bricks, int ladders) {
+        int l = 0, h = heights.length - 1;
+        int ans = 0;
+        while (l <= h) {
+            int mid = l + (h - l) / 2;
+            if (canReach(heights, bricks, ladders, mid)) {
+                l = mid + 1;
+                ans = Math.max(ans, mid);
+            } else h = mid - 1;
+        }
+        return ans;
+    }
+
+    private boolean canReach(int[] heights, int bricks, int ladders, int ind) {
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder()); // maxPQ
+        for (int i = 0; i < ind; i++)
+            if (heights[i + 1] - heights[i] > 0) pq.add(heights[i + 1] - heights[i]);
+
+        while (!pq.isEmpty()) {
+            int diff = pq.poll();
+            if (ladders > 0) {
+                ladders--;
+                continue;
+            }
+
+            if (bricks > 0 && diff <= bricks) {
+                bricks -= diff;
+                continue;
+            }
+            return false;
+        }
+
+        return true;
+    }
 
     // Author: Anand
     // TC = O(nlogn)
@@ -45,12 +172,10 @@ public class BinarySearch {
     }
 
     public static boolean canDistribute(long val, int n, long k, long[] arr) {
-        if (k == 1) {
-            return true;
-        }
+        if (k == 1) return true;
         long peopleServed = 0;
         for (int i = n - 1; i >= 0; i--) {
-//this is the number of people who can get candy
+            //this is the number of people who can get candy
             peopleServed += arr[i] / val;
         }
         return peopleServed >= k;

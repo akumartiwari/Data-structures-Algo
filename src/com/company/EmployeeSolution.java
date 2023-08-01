@@ -7910,62 +7910,111 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
-    class Solution {
-        public int countCompleteSubarrays(int[] nums) {
+    public int countCompleteSubarrays(int[] nums) {
 
-            int cnt = 0;
-            int total = Arrays.stream(nums).distinct().toArray().length;
-            for (int i = 0; i < nums.length; i++) {
-                Set<Integer> set = new HashSet<>();
-                set.add(nums[i]);
-                for (int j = i + 1; j < nums.length; j++) {
-                    set.add(nums[j]);
-                    if (set.size() == total) cnt++;
-                }
+        int cnt = 0;
+        int total = Arrays.stream(nums).distinct().toArray().length;
+        for (int i = 0; i < nums.length; i++) {
+            Set<Integer> set = new HashSet<>();
+            set.add(nums[i]);
+            for (int j = i + 1; j < nums.length; j++) {
+                set.add(nums[j]);
+                if (set.size() == total) cnt++;
             }
-            return cnt;
         }
+        return cnt;
+    }
 
-        //TODO:Edge cases
-        public String minimumString(String a, String b, String c) {
 
-            List<String> order = new ArrayList<>();
-            order.add(a);
-            order.add(b);
-            order.add(c);
-            Collections.sort(order);
+    public String minimumString(String a, String b, String c) {
 
+        List<List<String>> order = new ArrayList<>();
+
+        List<String> pos = new ArrayList<>();
+        pos.add(a);
+        pos.add(b);
+        pos.add(c);
+
+        order.add(pos);
+
+        pos = new ArrayList<>();
+        pos.add(a);
+        pos.add(c);
+        pos.add(b);
+
+        order.add(pos);
+
+        pos = new ArrayList<>();
+        pos.add(b);
+        pos.add(a);
+        pos.add(c);
+
+        order.add(pos);
+        pos = new ArrayList<>();
+        pos.add(b);
+        pos.add(c);
+        pos.add(a);
+
+        order.add(pos);
+
+        pos = new ArrayList<>();
+        pos.add(c);
+        pos.add(a);
+        pos.add(b);
+
+        order.add(pos);
+
+        pos = new ArrayList<>();
+        pos.add(c);
+        pos.add(b);
+        pos.add(a);
+        order.add(pos);
+
+        List<String> ans = new ArrayList<>();
+
+        for (List<String> seq : order) {
+            a = seq.get(0);
+            b = seq.get(1);
+            c = seq.get(2);
             StringBuilder sb = new StringBuilder();
-            for (String s : order) {
+
+            for (String s : seq) {
                 if (sb.length() == 0) sb.append(s);
                 else {
-                    System.out.println(sb);
-                    System.out.println(s);
-
                     if (sb.toString().contains(s)) continue;
-
-                    int ind = 0;
+                    int ind;
                     int ni = -1;
                     // check if suffix matches with prefix
                     for (ind = 0; ind < s.length(); ind++) {
                         if (sb.toString().endsWith(s.substring(0, ind))) ni = ind;
                     }
 
-                    if (ni != -1) {
-                        String append = s.substring(ni, s.length());
-                        System.out.println("append=" + append);
-                        sb.append(append);
-                    } else if (s.contains(sb.toString())) {
+                    if (s.contains(sb.toString())) {
                         sb = new StringBuilder();
                         sb.append(s);
-                    } else sb.append(s);
+                    } else if (s.equals(c) && s.contains(b) && s.contains(a)) {
+                        sb = new StringBuilder();
+                        sb.append(s);
+                    } else {
+                        String append = s.substring(ni);
+                        sb.append(append);
+                    }
                 }
             }
-
-            return sb.toString();
+            ans.add(sb.toString());
         }
 
+        ans.sort((o1, o2) -> {
+            if (o1.length() < o2.length()) return -1;
+            if (o2.length() < o1.length()) return 1;
+            return o1.compareTo(o2);
+        });
+        return ans.get(0);
     }
+
+}
+
+
 
 
 
