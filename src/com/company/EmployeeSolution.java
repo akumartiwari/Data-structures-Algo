@@ -11,8 +11,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import static CF_Templates.B.gcd;
-
 public class EmployeeSolution {
     String name;
     Integer salary;
@@ -76,17 +74,22 @@ Output: [1,2,2,3,5,6]
         */
 
     public static void main(String[] args) {
-        List<EmployeeSolution> list = new ArrayList<>();
-        list.add(new EmployeeSolution("muksh", 10));
-        list.add(new EmployeeSolution("saksham", 50));
-
-        List<EmployeeSolution> salaries = list.stream().map(x -> new EmployeeSolution(x.name, x.salary * 2)).collect(Collectors.toList());
-
-        salaries.forEach(System.out::println);
-
-        int[] arr = new int[]{2, -1, -3, 6, 8, -4, -8, -5, 9, 3, -3, 4};
-
-        System.out.println(maxSum(arr));
+//        List<EmployeeSolution> list = new ArrayList<>();
+//        list.add(new EmployeeSolution("muksh", 10));
+//        list.add(new EmployeeSolution("saksham", 50));
+//
+//        List<EmployeeSolution> salaries = list.stream().map(x -> new EmployeeSolution(x.name, x.salary * 2)).collect(Collectors.toList());
+//
+//        salaries.forEach(System.out::println);
+//
+//        int[] arr = new int[]{2, -1, -3, 6, 8, -4, -8, -5, 9, 3, -3, 4};
+//
+//        System.out.println(alternatingSubarray(new int[]{2, 3, 4, 3, 4}));
+//        int[] nums = new int[]{1, 6, 7, 8};
+//        int[] moveFrom = new int[]{1, 7, 2};
+//        int[] moveTo = new int[]{2, 9, 5};
+//
+//        System.out.println(relocateMarbles(nums, moveFrom, moveTo));
     }
 
     // Thoughts:-
@@ -7450,61 +7453,56 @@ Output: [1,2,2,3,5,6]
         }
     }
 
-    class Solution {
-        public int countBeautifulPairs(int[] nums) {
+    public int countBeautifulPairs(int[] nums) {
 
-            int cnt = 0;
-            for (int i = 0; i < nums.length; i++) {
-                for (int j = i + 1; j < nums.length; j++) {
-                    int first = Integer.parseInt(String.valueOf(String.valueOf(nums[i]).charAt(0)));
-                    int last = Integer.parseInt(String.valueOf(String.valueOf(nums[j]).charAt(String.valueOf(nums[j]).length() - 1)));
-                    if (gcd(first, last) == 1) cnt++;
-                }
+        int cnt = 0;
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                int first = Integer.parseInt(String.valueOf(String.valueOf(nums[i]).charAt(0)));
+                int last = Integer.parseInt(String.valueOf(String.valueOf(nums[j]).charAt(String.valueOf(nums[j]).length() - 1)));
+                if (gcd(first, last) == 1) cnt++;
             }
-
-            System.out.println(gcd(72, 74));
-            return cnt;
         }
 
-        //int version for gcd
-        public int gcd(int a, int b) {
-            if (b == 0)
-                return a;
-
-            return gcd(b, a % b);
-        }
-
+        System.out.println(gcd(72, 74));
+        return cnt;
     }
 
-    class Solution {
-        public int makeTheIntegerZero(int num1, int num2) {
-            int ans = helper(num1, num2, 0, 0, new HashSet<Integer>());
-            return ans == Integer.MAX_VALUE ? -1 : ans;
+    //int version for gcd
+    public int gcd(int a, int b) {
+        if (b == 0)
+            return a;
+
+        return gcd(b, a % b);
+    }
+
+    public int makeTheIntegerZero(int num1, int num2) {
+        int ans = helper(num1, num2, 0, 0, new HashSet<Integer>());
+        return ans == Integer.MAX_VALUE ? -1 : ans;
+    }
+
+    /*
+        Return min operations to make num1 = 0
+     */
+    private int helper(int num1, int num2, int op, int ind, Set<Integer> vis) {
+
+        // base case
+        if (num1 == 0) return 0;
+        int min = Integer.MAX_VALUE;
+
+        if (vis.contains(num1)) return Integer.MAX_VALUE;
+
+        for (int i = ind; i < 60; i++) {
+            // take i
+            int subract = (int) Math.pow(2, i) + num2;
+            vis.add(num1 - subract);
+            min = Math.min(helper(num1 - subract, num2, op + 1, 0, vis), min);
+            vis.remove(num1 - subract); //backtrack
+            // not take i
+            min = Math.min(helper(num1, num2, op, i + 1, vis), min);
         }
 
-        /*
-            Return min operations to make num1 = 0
-         */
-        private int helper(int num1, int num2, int op, int ind, Set<Integer> vis) {
-
-            // base case
-            if (num1 == 0) return 0;
-            int min = Integer.MAX_VALUE;
-
-            if (vis.contains(num1)) return Integer.MAX_VALUE;
-
-            for (int i = ind; i < 60; i++) {
-                // take i
-                int subract = (int) Math.pow(2, i) + num2;
-                vis.add(num1 - subract);
-                min = Math.min(helper(num1 - subract, num2, op + 1, 0, vis), min);
-                vis.remove(num1 - subract); //backtrack
-                // not take i
-                min = Math.min(helper(num1, num2, op, i + 1, vis), min);
-            }
-
-            return min;
-        }
+        return min;
     }
 
     /*
@@ -7656,8 +7654,365 @@ Output: [1,2,2,3,5,6]
         return Math.max(cnt, 0);
     }
 
-}
+    //----------------------------------------------------------------------------
 
+    public static int alternatingSubarray(int[] nums) {
+
+        int max = -1;
+        for (int i = 0; i < nums.length; i++) {
+            int len = 1;
+            int flag = 1;
+            for (int j = i + 1; j < nums.length; j++) {
+                if ((nums[j] - nums[j - 1] == flag)) {
+                    len++;
+                    flag = flag > 0 ? Math.negateExact(flag) : Math.abs(flag);
+                } else {
+                    max = Math.max(max, len);
+                    break;
+                }
+            }
+            max = Math.max(max, len);
+        }
+
+        return max == 1 ? Math.negateExact(max) : max;
+    }
+
+
+    public static List<Integer> relocateMarbles(int[] nums, int[] moveFrom, int[] moveTo) {
+        TreeMap<Integer, Integer> tm = new TreeMap();
+        for (int num : nums) tm.put(num, tm.getOrDefault(num, 0) + 1);
+        for (int i = 0; i < moveFrom.length; i++) {
+            int count = tm.get(moveFrom[i]);
+            tm.remove(moveFrom[i]);
+            tm.put(moveTo[i], count);
+        }
+        return new ArrayList<>(tm.keySet());
+    }
+
+    private int lower(int[] arr, int target) {
+        if (arr == null || arr.length == 0) {
+            return 0;
+        }
+        int l = 0;
+        int r = arr.length - 1;
+        if (target <= arr[0]) {
+            return 0;
+        }
+        if (target > arr[r]) {
+            return -1;
+        }
+        while (l < r) {
+            int m = l + (r - l) / 2;
+
+            if (arr[m] >= target) {
+                r = m;
+            } else {
+                l = m + 1;
+            }
+        }
+        return r;
+    }
+
+
+    public int sumOfSquares(int[] nums) {
+        int ind = 1, n = nums.length, ans = 0;
+        for (int num : nums) if (n % ind++ == 0) ans += num * num;
+        return ans;
+    }
+
+
+    //TODO: Find better approach
+    class Solution {
+        public int maximumBeauty(int[] nums, int k) {
+            Arrays.sort(nums);
+            int max = 0;
+            Map<Integer, Integer> freq = new HashMap<>();
+            for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
+
+            System.out.println(Arrays.toString(nums));
+
+            if (k == 0) {
+                for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {
+                    max = Math.max(max, entry.getValue());
+                }
+                return max;
+            }
+            boolean same = true;
+            for (int i = 1; i < nums.length; i++) {
+                if (nums[i - 1] != nums[i]) {
+                    same = false;
+                    break;
+                }
+            }
+
+            if (same) return nums.length;
+
+            for (int i = -100000; i <= 100000; i++) {
+                int ui = bs(nums, k + i, false);
+
+                while (ui >= 0 && ui < nums.length - 1 && nums[ui + 1] == nums[ui] && nums[ui] <= k + i) ui++;
+                while (ui >= 0 && ui < nums.length && nums[ui] > i + k) ui--;
+                while (ui >= 0 && ui < nums.length - 1 && nums[ui] < i + k) ui++;
+
+                int li = bs(nums, i - k, true);
+                while (li > 0 && li < nums.length && nums[li - 1] == nums[li] && nums[li - 1] >= i - k) li--;
+                while (li > 0 && li < nums.length && nums[li] < i - k) li++;
+
+                while (li > 0 && li < nums.length && nums[li] > i - k) li--;
+
+                ui = Math.min(nums.length - 1, ui);
+                li = Math.max(0, li);
+                // System.out.println(li + ":" + ui + ":" + i);
+                if (freq.containsKey(k + i) && freq.containsKey(i - k)
+                        && (freq.get(k + i) > 1 || freq.get(i - k) > 1)) {
+                    max = Math.max(Math.abs(ui - li) + 1, max);
+                } else max = Math.max(Math.abs(ui - li), max);
+            }
+            return Math.min(max, nums.length);
+        }
+
+        private int bs(int[] ps, int bus, boolean lower) {
+            int l = 0, h = ps.length - 1;
+            while (l <= h) {
+                int mid = l + (h - l) / 2;
+
+                if (ps[mid] < bus) {
+                    l = mid + 1;
+                } else if (ps[mid] > bus) h = mid;
+                else {
+                    if (lower) return mid;
+                    return mid + 1;
+                }
+
+                if (l == h && l == mid) {
+                    return l;
+                }
+
+            }
+            return l;
+        }
+    }
+
+
+    public boolean isGood(int[] nums) {
+        int[] counter = new int[201];
+        if (nums.length == 1) return false;
+        for (int num : nums) counter[num - 1] += num;
+        for (int i = 0; i < nums.length - 1; i++) {
+            if (counter[i] == 0) return false;
+            if (i == nums.length - 2 && counter[i] != (2 * (nums.length - 1))) return false;
+        }
+        return true;
+    }
+
+    public String sortVowels(String s) {
+
+
+        StringBuilder sb = new StringBuilder();
+        List<Character> list = new ArrayList<>();
+        Set<Character> vowels = new HashSet<>();
+        vowels.add('a');
+        vowels.add('A');
+        vowels.add('e');
+        vowels.add('E');
+        vowels.add('i');
+        vowels.add('I');
+        vowels.add('o');
+        vowels.add('O');
+        vowels.add('u');
+        vowels.add('U');
+
+        //Extract the vowels
+        for (int i = 0; i < s.length(); i++) {
+            if (vowels.contains(s.charAt(i))) {
+                list.add(s.charAt(i));
+            }
+        }
+
+        Collections.sort(list);
+
+        int ind = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (vowels.contains(s.charAt(i))) {
+                sb.append(list.get(ind++));
+            } else sb.append(s.charAt(i));
+        }
+
+        return sb.toString();
+    }
+
+
+    // 23rd  july
+
+    public List<String> splitWordsBySeparator(List<String> words, char separator) {
+        List<String> ans = new ArrayList<>();
+        for (String word : words) {
+            List<String> arr = new ArrayList<>();
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < word.length(); i++) {
+                if (word.charAt(i) == separator) {
+                    if (sb.length() > 0) {
+                        arr.add(sb.toString());
+                        sb = new StringBuilder();
+                    }
+                } else sb.append(word.charAt(i));
+            }
+
+            if (sb.length() > 0) arr.add(sb.toString());
+
+            System.out.println(arr);
+            ans.addAll(arr);
+        }
+
+        return ans;
+    }
+
+    public int makePrefSumNonNegative(int[] nums) {
+        int cnt = 0;
+
+        while (true) {
+            long ps = 0L;
+            List<Integer> displaced = new ArrayList<>();
+            List<Integer> queue = new ArrayList<>(); // insertion-deletion takes place at both ends
+
+            TreeMap<Integer, Integer> neg = new TreeMap();
+
+            System.out.println(Arrays.toString(nums));
+            boolean dis = false;
+            for (int num : nums) {
+
+                if (num < 0) neg.put(num, neg.getOrDefault(num, 0) + 1);
+                if (num + ps < 0) {
+                    int removed = neg.firstKey();
+                    ps -= removed;
+                    queue.remove(new Integer(removed));
+                    displaced.add(removed);
+                    dis = true;
+                    neg.put(removed, neg.get(removed) - 1);
+                    if (neg.get(removed) <= 0) neg.remove(removed);
+                    cnt++;
+                } else {
+                    queue.add(num);
+                    ps += num;
+                }
+                System.out.println("ps=" + ps);
+            }
+            queue.addAll(displaced);
+            if (!dis) break;
+            nums = queue.stream().mapToInt(x -> x).toArray();
+        }
+        return cnt;
+    }
+
+    public int numberOfEmployeesWhoMetTarget(int[] hours, int target) {
+        int cnt = 0;
+        for (int hour : hours) if (hour >= target) cnt++;
+        return cnt;
+    }
+
+    public int countCompleteSubarrays(int[] nums) {
+
+        int cnt = 0;
+        int total = Arrays.stream(nums).distinct().toArray().length;
+        for (int i = 0; i < nums.length; i++) {
+            Set<Integer> set = new HashSet<>();
+            set.add(nums[i]);
+            for (int j = i + 1; j < nums.length; j++) {
+                set.add(nums[j]);
+                if (set.size() == total) cnt++;
+            }
+        }
+        return cnt;
+    }
+
+
+    public String minimumString(String a, String b, String c) {
+
+        List<List<String>> order = new ArrayList<>();
+
+        List<String> pos = new ArrayList<>();
+        pos.add(a);
+        pos.add(b);
+        pos.add(c);
+
+        order.add(pos);
+
+        pos = new ArrayList<>();
+        pos.add(a);
+        pos.add(c);
+        pos.add(b);
+
+        order.add(pos);
+
+        pos = new ArrayList<>();
+        pos.add(b);
+        pos.add(a);
+        pos.add(c);
+
+        order.add(pos);
+        pos = new ArrayList<>();
+        pos.add(b);
+        pos.add(c);
+        pos.add(a);
+
+        order.add(pos);
+
+        pos = new ArrayList<>();
+        pos.add(c);
+        pos.add(a);
+        pos.add(b);
+
+        order.add(pos);
+
+        pos = new ArrayList<>();
+        pos.add(c);
+        pos.add(b);
+        pos.add(a);
+        order.add(pos);
+
+        List<String> ans = new ArrayList<>();
+
+        for (List<String> seq : order) {
+            a = seq.get(0);
+            b = seq.get(1);
+            c = seq.get(2);
+            StringBuilder sb = new StringBuilder();
+
+            for (String s : seq) {
+                if (sb.length() == 0) sb.append(s);
+                else {
+                    if (sb.toString().contains(s)) continue;
+                    int ind;
+                    int ni = -1;
+                    // check if suffix matches with prefix
+                    for (ind = 0; ind < s.length(); ind++) {
+                        if (sb.toString().endsWith(s.substring(0, ind))) ni = ind;
+                    }
+
+                    if (s.contains(sb.toString())) {
+                        sb = new StringBuilder();
+                        sb.append(s);
+                    } else if (s.equals(c) && s.contains(b) && s.contains(a)) {
+                        sb = new StringBuilder();
+                        sb.append(s);
+                    } else {
+                        String append = s.substring(ni);
+                        sb.append(append);
+                    }
+                }
+            }
+            ans.add(sb.toString());
+        }
+
+        ans.sort((o1, o2) -> {
+            if (o1.length() < o2.length()) return -1;
+            if (o2.length() < o1.length()) return 1;
+            return o1.compareTo(o2);
+        });
+        return ans.get(0);
+    }
+
+}
 
 
 

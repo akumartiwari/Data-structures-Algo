@@ -4,6 +4,7 @@ import javafx.util.Pair;
 
 import java.util.*;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 public class DP {
 
@@ -1410,6 +1411,61 @@ public class DP {
         return memob[i][j];
     }
 
+    /*
+Input: nums = [3,4,4,5]
+Output: 3
+Explanation: There are 3 square-free subsets in this example:
+        - The subset consisting of the 0th element [3]. The product of its elements is 3, which is a square-free integer.
+        - The subset consisting of the 3rd element [5]. The product of its elements is 5, which is a square-free integer.
+        - The subset consisting of 0th and 3rd elements [3,5]. The product of its elements is 15, which is a square-free integer.
+It can be proven that there are no more than 3 square-free subsets in the given array.
+*/
+    //DO with DP 6 bitmask
+
+    public int squareFreeSubsets(int[] nums) {
+        Map<String, Integer> dp = new HashMap<>();
+        return helper(nums, 0, 1L, dp);
+    }
+
+
+    private int helper(int[] nums, int ind, long prod, Map<String, Integer> dp) {
+        if (ind >= nums.length) return 0;
+        int t = 0, nt = 0;
+
+        String key = prod + "-" + ind;
+        if (dp.containsKey(key)) return dp.get(key);
+        // take
+        if (isSquareFree(prod * nums[ind])) {
+            t += (1 + helper(nums, ind + 1, prod * nums[ind], dp)) % MOD;
+        }
+        nt += helper(nums, ind + 1, prod, dp);
+        int ans = (t + nt) % MOD;
+        dp.put(key, ans);
+        return ans;
+    }
+
+    //function that checks if the given number is square free or not
+    private boolean isSquareFree(long num) {
+        //finds the remainder
+        if (num % 2 == 0)
+            //divides the given number by 2
+            num = num / 2;
+        //if the number again completely divisible by 2, the number is not a square free number
+        if (num % 2 == 0)
+            return false;
+        //num  must be odd at the moment, so we have increment i by 2
+        for (int i = 3; i <= Math.sqrt(num); i = i + 2) {
+            //checks i is a prime factor or not
+            if (num % i == 0) {
+                num = num / i;
+                //if the number again divides by i, it cannot be a square free number
+                if (num % i == 0)
+                    return false;
+            }
+        }
+        return true;
+    }
+
 
     // TODO
     class Solution {
@@ -1592,4 +1648,142 @@ public class DP {
         Set<String> st = new HashSet<>(Arrays.asList(dictionary));
         return func(0, s, st, dp);
     }
+
+    /*
+    Input: nums = [1,3,6,4,1,2], target = 2
+    Output: 3
+    Explanation: To go from index 0 to index n - 1 with the maximum number of jumps, you can perform the following jumping sequence:
+    - Jump from index 0 to index 1.
+    - Jump from index 1 to index 3.
+    - Jump from index 3 to index 5.
+    It can be proven that there is no other jumping sequence that goes from 0 to n - 1 with more than 3 jumps. Hence, the answer is 3.
+     */
+
+    public int maximumJumps(int[] nums, int target) {
+        int[] dp = new int[nums.length];
+        Arrays.fill(dp, Integer.MIN_VALUE);
+        return mj(nums, target, 0, nums[0], dp);
+    }
+
+    private int mj(int[] nums, int target, int ind, int last, int[] dp) {
+
+        // base case
+        if (ind == nums.length - 1) {
+            return 0;
+        }
+
+        if (dp[ind] != Integer.MIN_VALUE) return dp[ind];
+
+        int res = -1;
+
+        for (int i = ind + 1; i < nums.length; i++) {
+
+            if (Math.abs(nums[i] - last) <= target) {
+
+                int solve = mj(nums, target, i, nums[i], dp);
+                if (solve != -1) {
+                    res = Math.max(res, 1 + solve);
+                }
+            }
+        }
+
+        return dp[ind] = res;
+    }
+
+
+    /*
+    Input: nums1 = [2,3,1], nums2 = [1,2,1]
+    Output: 2
+    Explanation: One way to construct nums3 is:
+    nums3 = [nums1[0], nums2[1], nums2[2]] => [2,2,1].
+    The subarray starting from index 0 and ending at index 1, [2,2], forms a non-decreasing subarray of length 2.
+    We can show that 2 is the maximum achievable length.
+
+     */
+    //TC = O(3N), SC = O(3n)
+    public int maxNonDecreasingLength(int[] nums1, int[] nums2) {
+
+        int[][] dp = new int[nums1.length][3];
+        for (int[] d : dp) Arrays.fill(d, -1);
+        return helper(0, nums1, nums2, 0, dp);
+    }
+
+    private int helper(int ind, int[] nums1, int[] nums2, int choice, int[][] dp) {
+        // base case
+        if (ind >= nums1.length) return 0;
+
+        int maxLen = 0;
+
+        if (dp[ind][choice] != -1) return dp[ind][choice];
+
+
+        //take
+        if (choice == 0) {
+            // not-take current guy
+            maxLen = Math.max(maxLen, helper(ind + 1, nums1, nums2, 0, dp));
+        }
+
+        int prev = choice == 0 ? -1 : choice == 1 ? nums1[ind - 1] : nums2[ind - 1];
+
+        if (nums1[ind] >= prev) {
+            maxLen = Math.max(maxLen, 1 + helper(ind + 1, nums1, nums2, 1, dp));
+        }
+        if (nums2[ind] >= prev) {
+            maxLen = Math.max(maxLen, 1 + helper(ind + 1, nums1, nums2, 2, dp));
+        }
+
+
+        return dp[ind][choice] = maxLen;
+    }
+
+
+    public long maxScore(int[] nums, int x) {
+        long[][] dp = new long[nums.length][2];
+        for (long[] d : dp) Arrays.fill(d, -1L);
+
+        return nums[0] + helper(nums, x, 0, nums[0] % 2, dp);
+    }
+
+    private long helper(int[] nums, int x, int ind, int parity, long[][] dp) {
+
+        // base case
+        if (ind >= nums.length - 1) return 0;
+        if (dp[ind][parity] != -1) return dp[ind][parity];
+        long max = 0;
+        int i = ind + 1;
+        //take
+        if (parity == nums[i] % 2) {
+            max = Math.max(max, nums[i] + helper(nums, x, i, parity, dp));
+        } else {
+            max = Math.max(max, nums[i] + helper(nums, x, i, nums[i] % 2, dp) - x);
+        }
+
+        //not-take
+        max = Math.max(max, helper(nums, x, i, parity, dp));
+        return dp[ind][parity] = max;
+    }
+
+    public int rob(int[] nums) {
+        int[] dp = new int[nums.length];
+        Arrays.fill(dp, -1);
+        return Math.max(nums[0] + helper(nums, 0, dp),
+                nums.length > 1 ? nums[1] + helper(nums, 1, dp) : 0);
+    }
+
+    private int helper(int[] nums, int ind, int[] dp) {
+
+        // base case
+        if (ind >= nums.length - 2) return 0;
+        if (dp[ind] != -1) return dp[ind];
+        int max = 0;
+        int i = ind + 2;
+        //take
+        max = Math.max(max, nums[i] + helper(nums, i, dp));
+
+        //not-take
+        max = Math.max(max, helper(nums, i - 1, dp));
+        return dp[ind] = max;
+    }
+
+
 }

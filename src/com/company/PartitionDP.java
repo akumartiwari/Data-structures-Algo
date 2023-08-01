@@ -305,27 +305,80 @@ public class PartitionDP {
     }
 
     //TBD
-    class Solution {
-        public int numberOfGoodSubarraySplits(int[] nums) {
-            return dfs(nums, 0, false);
+    public int numberOfGoodSubarraySplits(int[] nums) {
+        return dfs(nums, 0, false);
+    }
+
+    private int dfs(int[] nums, int ind, boolean one) {
+        // base case
+        if (ind >= nums.length) {
+            if (one) return 1;
+            return 0;
         }
 
-        private int dfs(int[] nums, int ind, boolean one) {
+        int ways = 0;
+        for (int i = ind; i < nums.length; i++) {
+            // can do partition
+            if (one && nums[i] == 0) ways += dfs(nums, ind + 1, false);
+            // can't
+            ways += dfs(nums, ind + 1, nums[i] == 1);
+        }
+
+        return ways;
+    }
+
+    /*
+    Input: s = "1011"
+    Output: 2
+    Explanation: We can paritition the given string into ["101", "1"].
+    - The string "101" does not contain leading zeros and is the binary representation of integer 51 = 5.
+    - The string "1" does not contain leading zeros and is the binary representation of integer 50 = 1.
+    It can be shown that 2 is the minimum number of beautiful substrings that s can be partitioned into.
+     */
+    class Solution {
+        int min = Integer.MAX_VALUE;
+
+        public int minimumBeautifulSubstrings(String s) {
+            partition(0, s, new StringBuilder(), 0);
+            return min == Integer.MAX_VALUE ? -1 : min;
+        }
+
+        private void partition(int ind, String s, StringBuilder sb, int steps) {
             // base case
-            if (ind >= nums.length) {
-                if (one) return 1;
-                return 0;
+            if (ind >= s.length()) {
+                if (steps > 0) {
+                    min = Math.min(steps, min);
+                }
+                return;
             }
 
-            int ways = 0;
-            for (int i = ind; i < nums.length; i++) {
-                // can do partition
-                if (one && nums[i] == 0) ways += dfs(nums, ind + 1, false);
-                // can't
-                ways += dfs(nums, ind + 1, nums[i] == 1);
-            }
+            for (int i = ind; i < s.length(); i++) {
+                int num = Integer.parseInt(sb.append(s.charAt(i)).toString(), 2);
 
-            return ways;
+                // dp partition
+                if (sb.charAt(0) != '0' && (isPower(5, num))) {
+                    partition(i + 1, s, new StringBuilder(), steps + 1);
+                }
+
+            }
+        }
+
+
+        /* Returns true if y is a power of x */
+        public boolean isPower(int x, int y) {
+            // The only power of 1 is 1 itself
+            if (x == 1)
+                return (y == 1);
+
+            // Repeatedly compute power of x
+            int pow = 1;
+            while (pow < y)
+                pow = pow * x;
+
+            // Check if power of x becomes y
+            return (pow == y);
         }
     }
+
+
 }

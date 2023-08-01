@@ -1,6 +1,7 @@
 package com.company;
 
 import java.util.*;
+import java.util.HashMap;
 
 class SolutionHasPath {
     int rows;
@@ -329,8 +330,8 @@ class SolutionHasPath {
 
     /*
     "abcd"
-"aaaaa"
-"aabcaabdaab"
+    "aaaaa"
+    "aabcaabdaab"
      */
 
 
@@ -352,14 +353,14 @@ class SolutionHasPath {
     List<String> ansStr = new ArrayList<>();
 
     /*
-"hello"
-"ooolleoooleh"
-"prosperity"
-"properties"
-"ab"
-"eidbaooo"
-"ab"
-"eidboaoo"
+    "hello"
+    "ooolleoooleh"
+    "prosperity"
+    "properties"
+    "ab"
+    "eidbaooo"
+    "ab"
+    "eidboaoo"
  */
     // TC = O(N^2)
     public boolean checkInclusion(String s1, String s2) {
