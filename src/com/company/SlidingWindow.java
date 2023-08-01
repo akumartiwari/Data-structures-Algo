@@ -1,7 +1,7 @@
 package com.company;
 
-import java.util.*;
 import java.util.HashMap;
+import java.util.*;
 
 public class SlidingWindow {
     // Sliding window
@@ -244,32 +244,30 @@ public class SlidingWindow {
     }
 
     //TBD- wrong answer
-    class Solution {
-        public int maximumCostSubstring(String s, String chars, int[] vals) {
-            int sum = 0;
-            int maxSum = 0;
-            Map<Character, Integer> cm = new HashMap<>();
-            for (int i = 0; i < chars.length(); i++) cm.put(chars.charAt(i), i);
+    public int maximumCostSubstring(String s, String chars, int[] vals) {
+        int sum = 0;
+        int maxSum = 0;
+        Map<Character, Integer> cm = new HashMap<>();
+        for (int i = 0; i < chars.length(); i++) cm.put(chars.charAt(i), i);
 
-            for (int i = 0; i < s.length(); i++) {
-                char c = s.charAt(i);
-                sum += cm.containsKey(c) ? vals[cm.get(c)] : (int) (c - 'a') + 1;
-                maxSum = Math.max(sum, maxSum);
-            }
-
-
-            System.out.println(maxSum);
-
-            sum = 0;
-            for (int i = 0; i < s.length(); i++) {
-                char c = s.charAt(i);
-                int cal = cm.containsKey(c) ? vals[cm.get(c)] : (int) (c - 'a') + 1;
-                if (cal < 0) maxSum = Math.max(maxSum, maxSum - cal);
-            }
-
-
-            return maxSum;
-
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            sum += cm.containsKey(c) ? vals[cm.get(c)] : (int) (c - 'a') + 1;
+            maxSum = Math.max(sum, maxSum);
         }
+
+
+        System.out.println(maxSum);
+
+        sum = 0;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            int cal = cm.containsKey(c) ? vals[cm.get(c)] : (int) (c - 'a') + 1;
+            if (cal < 0) maxSum = Math.max(maxSum, maxSum - cal);
+        }
+
+
+        return maxSum;
+
     }
 }

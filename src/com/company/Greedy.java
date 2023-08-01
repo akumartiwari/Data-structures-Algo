@@ -2,7 +2,7 @@ package com.company;
 
 import java.awt.*;
 import java.util.List;
-import java.util.*;
+import java.util.HashMap;import java.util.*;
 import java.util.HashMap;
 
 public class Greedy {

@@ -1,7 +1,7 @@
 package CF_Templates;//some updates in import stuff
 
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;import java.util.*;
 
 //-----CURRENTLY PRESENT-------//
 //Graph

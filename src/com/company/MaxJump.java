@@ -1,6 +1,6 @@
 package com.company;
 
-import java.util.*;
+import java.util.HashMap;import java.util.*;
 
 /**
  * Your WordFilter object will be instantiated and called as such:

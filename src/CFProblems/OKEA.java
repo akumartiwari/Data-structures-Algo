@@ -1,7 +1,7 @@
 package CFProblems;
 
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;import java.util.*;
 
 public class OKEA {
     //-----------PrintWriter for faster output---------------------------------

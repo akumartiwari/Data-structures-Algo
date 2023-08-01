@@ -7,6 +7,7 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
+import java.util.HashMap;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -74,22 +75,22 @@ Output: [1,2,2,3,5,6]
         */
 
     public static void main(String[] args) {
-//        List<EmployeeSolution> list = new ArrayList<>();
-//        list.add(new EmployeeSolution("muksh", 10));
-//        list.add(new EmployeeSolution("saksham", 50));
-//
-//        List<EmployeeSolution> salaries = list.stream().map(x -> new EmployeeSolution(x.name, x.salary * 2)).collect(Collectors.toList());
-//
-//        salaries.forEach(System.out::println);
-//
-//        int[] arr = new int[]{2, -1, -3, 6, 8, -4, -8, -5, 9, 3, -3, 4};
-//
-//        System.out.println(alternatingSubarray(new int[]{2, 3, 4, 3, 4}));
-//        int[] nums = new int[]{1, 6, 7, 8};
-//        int[] moveFrom = new int[]{1, 7, 2};
-//        int[] moveTo = new int[]{2, 9, 5};
-//
-//        System.out.println(relocateMarbles(nums, moveFrom, moveTo));
+        List<EmployeeSolution> list = new ArrayList<>();
+        list.add(new EmployeeSolution("muksh", 10));
+        list.add(new EmployeeSolution("saksham", 50));
+
+        List<EmployeeSolution> salaries = list.stream().map(x -> new EmployeeSolution(x.name, x.salary * 2)).collect(Collectors.toList());
+
+        salaries.forEach(System.out::println);
+
+        int[] arr = new int[]{2, -1, -3, 6, 8, -4, -8, -5, 9, 3, -3, 4};
+
+        System.out.println(alternatingSubarray(new int[]{2, 3, 4, 3, 4}));
+        int[] nums = new int[]{1, 6, 7, 8};
+        int[] moveFrom = new int[]{1, 7, 2};
+        int[] moveTo = new int[]{2, 9, 5};
+
+        System.out.println(relocateMarbles(nums, moveFrom, moveTo));
     }
 
     // Thoughts:-
@@ -220,6 +221,38 @@ Output: [1,2,2,3,5,6]
         return _gcd(b, a % b);
     }
 
+    public static int alternatingSubarray(int[] nums) {
+
+        int max = -1;
+        for (int i = 0; i < nums.length; i++) {
+            int len = 1;
+            int flag = 1;
+            for (int j = i + 1; j < nums.length; j++) {
+                if ((nums[j] - nums[j - 1] == flag)) {
+                    len++;
+                    flag = flag > 0 ? Math.negateExact(flag) : Math.abs(flag);
+                } else {
+                    max = Math.max(max, len);
+                    break;
+                }
+            }
+            max = Math.max(max, len);
+        }
+
+        return max == 1 ? Math.negateExact(max) : max;
+    }
+
+    public static List<Integer> relocateMarbles(int[] nums, int[] moveFrom, int[] moveTo) {
+        TreeMap<Integer, Integer> tm = new TreeMap();
+        for (int num : nums) tm.put(num, tm.getOrDefault(num, 0) + 1);
+        for (int i = 0; i < moveFrom.length; i++) {
+            int count = tm.get(moveFrom[i]);
+            tm.remove(moveFrom[i]);
+            tm.put(moveTo[i], count);
+        }
+        return new ArrayList<>(tm.keySet());
+    }
+
     public List<String> addOperators(String num, int target) {
         calculate(num, 0, target, "");
         return new ArrayList<>(result);
@@ -347,6 +380,16 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+     /*
+         arr = [3,4,3,3]
+         k = 2
+
+        pq = {4, 3, 3, 3}
+        map = { (3, (0, 2,3), (4,1))}
+        ans = {1,0,2,3}
+        result = [4, 3]
+     */
+
     // KADAN's ALGO
     public int maxSubArray(int[] nums) {
         int n = nums.length;
@@ -372,16 +415,6 @@ Output: [1,2,2,3,5,6]
         }
         return false;
     }
-
-     /*
-         arr = [3,4,3,3]
-         k = 2
-
-        pq = {4, 3, 3, 3}
-        map = { (3, (0, 2,3), (4,1))}
-        ans = {1,0,2,3}
-        result = [4, 3]
-     */
 
     private boolean isPossible(int[] nums, int ind, int len, int sum, HashMap<String, Boolean> map) {
         int n = nums.length;
@@ -614,6 +647,23 @@ Output: [1,2,2,3,5,6]
         return maxVal;
     }
 
+    /*
+    Input: nums = [2,10,6,4,8,12]
+    Output: [3,7,11]
+    Explanation:
+    If arr = [3,7,11] and k = 1, we get lower = [2,6,10] and higher = [4,8,12].
+    Combining lower and higher gives us [2,6,10,4,8,12], which is a permutation of nums.
+    Another valid possibility is that arr = [5,7,9] and k = 3. In that case, lower = [2,4,6] and higher = [8,10,12].
+
+    Input: nums = [1,1,3,3]
+    Output: [2,2]
+    Explanation:
+    If arr = [2,2] and k = 1, we get lower = [1,1] and higher = [3,3].
+    Combining lower and higher gives us [1,1,3,3], which is equal to nums.
+    Note that arr cannot be [1,3] because in that case, the only possible way to obtain [1,1,3,3] is with k = 0.
+    This is invalid since k must be positive.
+     */
+
     private void f(int node, int val, int[] values, HashMap<Integer, List<Pair<Integer, Integer>>> adj, int[] vis, int maxTime) {
         // base case
         if (maxTime < 0) return;
@@ -696,23 +746,6 @@ Output: [1,2,2,3,5,6]
         return result;
     }
 
-    /*
-    Input: nums = [2,10,6,4,8,12]
-    Output: [3,7,11]
-    Explanation:
-    If arr = [3,7,11] and k = 1, we get lower = [2,6,10] and higher = [4,8,12].
-    Combining lower and higher gives us [2,6,10,4,8,12], which is a permutation of nums.
-    Another valid possibility is that arr = [5,7,9] and k = 3. In that case, lower = [2,4,6] and higher = [8,10,12].
-
-    Input: nums = [1,1,3,3]
-    Output: [2,2]
-    Explanation:
-    If arr = [2,2] and k = 1, we get lower = [1,1] and higher = [3,3].
-    Combining lower and higher gives us [1,1,3,3], which is equal to nums.
-    Note that arr cannot be [1,3] because in that case, the only possible way to obtain [1,1,3,3] is with k = 0.
-    This is invalid since k must be positive.
-     */
-
     // Sliding window
     // TC = O(n)
     public List<Integer> goodDaysToRobBank(int[] security, int time) {
@@ -737,24 +770,6 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
-    // TC = O(n*n), SC = O(1)
-    // Solution by Anand
-    public String firstPalindrome(String[] words) {
-        int n = words.length;
-        for (String word : words) {
-            if (isPalidrome(word)) return word;
-        }
-        return "";
-    }
-
-    private boolean isPalidrome(String word) {
-        int n = word.length();
-        for (int i = 0; i < Math.abs(n / 2); i++) {
-            if (word.charAt(i) != word.charAt(n - i - 1)) return false;
-        }
-        return true;
-    }
-
     /*
     recipe = ["bread","sandwich"]
     Ig = [["yeast","flour"],["bread","meat"]]
@@ -773,6 +788,24 @@ Output: [1,2,2,3,5,6]
     if yes then add recipe to supply chain and result list
     Finally return result list
      */
+
+    // TC = O(n*n), SC = O(1)
+    // Solution by Anand
+    public String firstPalindrome(String[] words) {
+        int n = words.length;
+        for (String word : words) {
+            if (isPalidrome(word)) return word;
+        }
+        return "";
+    }
+
+    private boolean isPalidrome(String word) {
+        int n = word.length();
+        for (int i = 0; i < Math.abs(n / 2); i++) {
+            if (word.charAt(i) != word.charAt(n - i - 1)) return false;
+        }
+        return true;
+    }
 
     // TC = O(n), SC = O(1)
     public String addSpaces(String s, int[] spaces) {
@@ -925,6 +958,9 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    // TC = O(MLogM)
+    // Author : Anand
+
     // Author : Anand
     // Simple BFS travesal must solve the problem
     // Brute-Force
@@ -958,9 +994,6 @@ Output: [1,2,2,3,5,6]
     private boolean isValidPos(int i, int j, int n) {
         return (i >= 0 && j >= 0 && i < n && j < n);
     }
-
-    // TC = O(MLogM)
-    // Author : Anand
 
     // Author: Anand
     // Approach:-
@@ -1000,6 +1033,7 @@ Output: [1,2,2,3,5,6]
         }
         return new int[]{};
     }
+    //--------------------------------------------------------
 
     // Author : Anand
     // TC = O(n), SC = O(1)
@@ -1042,7 +1076,6 @@ Output: [1,2,2,3,5,6]
 
         return maxi * maxi;
     }
-    //--------------------------------------------------------
 
     public List<String> findAllRecipes(String[] recipes, List<List<String>> ingredients, String[] supplies) {
         if (recipes == null || recipes.length == 0 || ingredients == null || ingredients.size() == 0 || supplies == null || supplies.length == 0 || recipes.length != ingredients.size())
@@ -1360,6 +1393,20 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
+    Input: beans = [4,1,6,5]
+    Output: 4
+    Explanation:
+    - We remove 1 bean from the bag with only 1 bean.
+      This results in the remaining bags: [4,0,6,5]
+    - Then we remove 2 beans from the bag with 6 beans.
+      This results in the remaining bags: [4,0,4,5]
+    - Then we remove 1 bean from the bag with 5 beans.
+      This results in the remaining bags: [4,0,4,4]
+    We removed a total of 1 + 2 + 1 = 4 beans to make the remaining non-empty bags have an equal number of beans.
+    There are no other solutions that remove 4 beans or fewer.
+     */
+
+    /*
       2, if nums[j] < nums[i] < nums[k], for all 0 <= j < i and for all i < k <= nums.length - 1.
       1, if nums[i - 1] < nums[i] < nums[i + 1], and the previous condition is not satisfied.
       0, if none of the previous conditions holds.
@@ -1441,20 +1488,6 @@ Output: [1,2,2,3,5,6]
 
         return num1 + num2;
     }
-
-    /*
-    Input: beans = [4,1,6,5]
-    Output: 4
-    Explanation:
-    - We remove 1 bean from the bag with only 1 bean.
-      This results in the remaining bags: [4,0,6,5]
-    - Then we remove 2 beans from the bag with 6 beans.
-      This results in the remaining bags: [4,0,4,5]
-    - Then we remove 1 bean from the bag with 5 beans.
-      This results in the remaining bags: [4,0,4,4]
-    We removed a total of 1 + 2 + 1 = 4 beans to make the remaining non-empty bags have an equal number of beans.
-    There are no other solutions that remove 4 beans or fewer.
-     */
 
     public int[] pivotArray(int[] nums, int pivot) {
         List<Integer> list1 = new ArrayList<>();
@@ -2085,6 +2118,8 @@ Output: [1,2,2,3,5,6]
         return sumK;
     }
 
+    // Author : Anand
+
     // Author: Anand
     // TODO :- Use factor based approach
     public List<Integer> replaceNonCoprimes(int[] nums) {
@@ -2149,8 +2184,6 @@ Output: [1,2,2,3,5,6]
         Collections.sort(sortedList);
         return sortedList;
     }
-
-    // Author : Anand
 
     // Author : Anand
     public int maximumTop(int[] nums, int k) {
@@ -2680,6 +2713,15 @@ Output: [1,2,2,3,5,6]
         return sb.toString().trim();
     }
 
+    /*
+    Input: root = [2,1,3,null,null,0,1]
+    Output: true
+    Explanation: The above diagram illustrates the evaluation process.
+    The AND node evaluates to False AND True = False.
+    The OR node evaluates to True OR False = True.
+    The root node evaluates to True, so we return true.
+     */
+
     //Author: Anand
     public int minMaxGame(int[] nums) {
         while (nums.length > 1) {
@@ -2718,15 +2760,6 @@ Output: [1,2,2,3,5,6]
 
         return ans;
     }
-
-    /*
-    Input: root = [2,1,3,null,null,0,1]
-    Output: true
-    Explanation: The above diagram illustrates the evaluation process.
-    The AND node evaluates to False AND True = False.
-    The OR node evaluates to True OR False = True.
-    The root node evaluates to True, so we return true.
-     */
 
     /*
     A password is said to be strong if it satisfies all the following criteria:
@@ -2821,6 +2854,18 @@ Output: [1,2,2,3,5,6]
         return false;
     }
 
+        /*
+    Input: n = 6, delay = 2, forget = 4
+    Output: 5
+    Explanation:
+    Day 1: Suppose the first person is named A. (1 person)
+    Day 2: A is the only person who knows the secret. (1 person)
+    Day 3: A shares the secret with a new person, B. (2 people)
+    Day 4: A shares the secret with a new person, C. (3 people)
+    Day 5: A forgets the secret, and B shares the secret with a new person, D. (3 people)
+    Day 6: B shares the secret with E, and C shares the secret with F. (5 people)
+     */
+
     /*
     Input: s = "arRAzFif"
     Output: "R"
@@ -2846,6 +2891,8 @@ Output: [1,2,2,3,5,6]
         }
         return ans;
     }
+
+//23/07/2022    -----------------------------------------------------------------------------------------
 
     // Author: Anand
     // Similar to Div-2 codeforces
@@ -2876,18 +2923,6 @@ Output: [1,2,2,3,5,6]
         return binary;
     }
 
-        /*
-    Input: n = 6, delay = 2, forget = 4
-    Output: 5
-    Explanation:
-    Day 1: Suppose the first person is named A. (1 person)
-    Day 2: A is the only person who knows the secret. (1 person)
-    Day 3: A shares the secret with a new person, B. (2 people)
-    Day 4: A shares the secret with a new person, C. (3 people)
-    Day 5: A forgets the secret, and B shares the secret with a new person, D. (3 people)
-    Day 6: B shares the secret with E, and C shares the secret with F. (5 people)
-     */
-
     //Author: Anand
     /*
     Input: s = "yo|uar|e**|b|e***au|tifu|l"
@@ -2902,8 +2937,6 @@ Output: [1,2,2,3,5,6]
         for (int i = 0; i < cntStar.size(); i += 2) ans += cntStar.get(i);
         return ans;
     }
-
-//23/07/2022    -----------------------------------------------------------------------------------------
 
     //Author: Anand
     public String decodeMessage(String key, String message) {
@@ -2978,6 +3011,17 @@ Output: [1,2,2,3,5,6]
         return flag ? max : -1;
     }
 
+    /*
+    Input: nums = [4,1,3,3]
+    Output: 5
+    Explanation: The pair (0, 1) is a bad pair since 1 - 0 != 1 - 4.
+    The pair (0, 2) is a bad pair since 2 - 0 != 3 - 4, 2 != -1.
+    The pair (0, 3) is a bad pair since 3 - 0 != 3 - 4, 3 != -1.
+    The pair (1, 2) is a bad pair since 2 - 1 != 3 - 1, 1 != 2.
+    The pair (2, 3) is a bad pair since 3 - 2 != 3 - 3, 1 != 0.
+    There are a total of 5 bad pairs, so we return 5.
+     */
+
     private long sod(int num) {
         long cnt = 0L;
         while (num > 0) {
@@ -3021,17 +3065,6 @@ Output: [1,2,2,3,5,6]
         }
         return ans;
     }
-
-    /*
-    Input: nums = [4,1,3,3]
-    Output: 5
-    Explanation: The pair (0, 1) is a bad pair since 1 - 0 != 1 - 4.
-    The pair (0, 2) is a bad pair since 2 - 0 != 3 - 4, 2 != -1.
-    The pair (0, 3) is a bad pair since 3 - 0 != 3 - 4, 3 != -1.
-    The pair (1, 2) is a bad pair since 2 - 1 != 3 - 1, 1 != 2.
-    The pair (2, 3) is a bad pair since 3 - 2 != 3 - 3, 1 != 0.
-    There are a total of 5 bad pairs, so we return 5.
-     */
 
     //Author: Anand
     public boolean evaluateTree(TreeNode root) {
@@ -3261,6 +3294,16 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
+    Input: blocks = "WBBWWBBWBW", k = 7
+    Output: 3
+    Explanation:
+    One way to achieve 7 consecutive black blocks is to recolor the 0th, 3rd, and 4th blocks
+    so that blocks = "BBBBBBBWBW".
+    It can be shown that there is no way to achieve 7 consecutive black blocks in less than 3 operations.
+    Therefore, we return 3.
+     */
+
+    /*
     Input: tasks = [1,2,1,2,3,1], space = 3
     Output: 9
     Explanation:
@@ -3314,16 +3357,6 @@ Output: [1,2,2,3,5,6]
         return cnt;
 
     }
-
-    /*
-    Input: blocks = "WBBWWBBWBW", k = 7
-    Output: 3
-    Explanation:
-    One way to achieve 7 consecutive black blocks is to recolor the 0th, 3rd, and 4th blocks
-    so that blocks = "BBBBBBBWBW".
-    It can be shown that there is no way to achieve 7 consecutive black blocks in less than 3 operations.
-    Therefore, we return 3.
-     */
 
     /*
     Input: n = 7, edges = [[0,1],[1,2],[3,1],[4,0],[0,5],[5,6]], restricted = [4,5]
@@ -3716,6 +3749,19 @@ Output: [1,2,2,3,5,6]
         return sb.toString();
     }
 
+    /*
+    Input: n = 2, meetings = [[0,10],[1,5],[2,7],[3,4]]
+    Output: 0
+    Explanation:
+    - At time 0, both rooms are not being used. The first meeting starts in room 0.
+    - At time 1, only room 1 is not being used. The second meeting starts in room 1.
+    - At time 2, both rooms are being used. The third meeting is delayed.
+    - At time 3, both rooms are being used. The fourth meeting is delayed.
+    - At time 5, the meeting in room 1 finishes. The third meeting starts in room 1 for the time period [5,10).
+    - At time 10, the meetings in both rooms finish. The fourth meeting starts in room 0 for the time period [10,11).
+    Both rooms 0 and 1 held 2 meetings, so we return 0.
+     */
+
     //Author: Anand
     public int garbageCollection(String[] garbage, int[] travel) {
         Map<Character, Integer> map = new HashMap<>();
@@ -3742,19 +3788,6 @@ Output: [1,2,2,3,5,6]
         }
         return false;
     }
-
-    /*
-    Input: n = 2, meetings = [[0,10],[1,5],[2,7],[3,4]]
-    Output: 0
-    Explanation:
-    - At time 0, both rooms are not being used. The first meeting starts in room 0.
-    - At time 1, only room 1 is not being used. The second meeting starts in room 1.
-    - At time 2, both rooms are being used. The third meeting is delayed.
-    - At time 3, both rooms are being used. The fourth meeting is delayed.
-    - At time 5, the meeting in room 1 finishes. The third meeting starts in room 1 for the time period [5,10).
-    - At time 10, the meetings in both rooms finish. The fourth meeting starts in room 0 for the time period [10,11).
-    Both rooms 0 and 1 held 2 meetings, so we return 0.
-     */
 
     public int maximumRows(int[][] mat, int cols) {
 
@@ -5636,7 +5669,6 @@ Output: [1,2,2,3,5,6]
         return take + nottake;
     }
 
-
     //TBD
     // You can add or subtract value any number of times
     public int findSmallestInteger(int[] nums, int value) {
@@ -5771,7 +5803,6 @@ Output: [1,2,2,3,5,6]
         }
         return ans;
     }
-
 
     public int kItemsWithMaximumSum(int numOnes, int numZeros, int numNegOnes, int k) {
         int sum = 0;
@@ -6017,6 +6048,9 @@ Output: [1,2,2,3,5,6]
         return temp;
     }
 
+    //-----------------------------------------------------------------------------------------------------
+    // 15th april
+
     public int minimizeMax(int[] nums, int p) {
         Map<Integer, Integer> freq = new ConcurrentHashMap<>();
         for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
@@ -6074,9 +6108,6 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
-    //-----------------------------------------------------------------------------------------------------
-    // 15th april
-
     private int len(int num) {
         int an = Math.abs(num);
         int cnt = 0;
@@ -6129,6 +6160,8 @@ Output: [1,2,2,3,5,6]
         return lot(root, map);
     }
 
+
+    // 16th april
 
     /**
      * Definition for a binary tree node.
@@ -6251,9 +6284,6 @@ Output: [1,2,2,3,5,6]
         }
         return ans;
     }
-
-
-    // 16th april
 
     public int maxDivScore(int[] nums, int[] divisors) {
 
@@ -6525,6 +6555,16 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+
+    // TOPOLOGICAL SORT
+    // Use toplogical sort for indegree and pq to minisnmise the time taken to complete the course
+    // TC = O(V+E) // As Simple DFS, SC = O(V) {Stack space}
+
+
+    // TOPO Sort algorithm using DFS
+    // The idea is to do dfs for all nodes after marking them visited,
+    // after returning from recursion calls add them to stack
+
     public int[] topoSort(int N, List<List<Integer>> graph) {
         Stack<Integer> stk = new Stack<>();
         int[] vis = new int[N];
@@ -6557,15 +6597,14 @@ Output: [1,2,2,3,5,6]
         stk.push(node);
     }
 
-
-    // TOPOLOGICAL SORT
-    // Use toplogical sort for indegree and pq to minisnmise the time taken to complete the course
-    // TC = O(V+E) // As Simple DFS, SC = O(V) {Stack space}
-
-
-    // TOPO Sort algorithm using DFS
-    // The idea is to do dfs for all nodes after marking them visited,
-    // after returning from recursion calls add them to stack
+    /*
+      Steps:
+        Build the graph using rowConditions
+        Find topological sorting order for this graph
+        Build one more graph using colConditions
+        Find topological sorting order for this graph
+        fill the matrix using the sorting order given by topological sort.
+     */
 
     //TC  = O(N+E), SC = O(N) + O(N)
     // TOPO Sort using BFS algorithm
@@ -6601,15 +6640,6 @@ Output: [1,2,2,3,5,6]
     public int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
         return 0;
     }
-
-    /*
-      Steps:
-        Build the graph using rowConditions
-        Find topological sorting order for this graph
-        Build one more graph using colConditions
-        Find topological sorting order for this graph
-        fill the matrix using the sorting order given by topological sort.
-     */
 
     public int[] separateDigits(int[] nums) {
         List<Integer> ans = new ArrayList<>();
@@ -7006,6 +7036,9 @@ Output: [1,2,2,3,5,6]
         return maxLen;
     }
 
+
+    // At most 1 consecutive pair
+
     private boolean repetitive(String str) {
         boolean flag = false;
         for (int i = 1; i < str.length(); i++) {
@@ -7039,9 +7072,6 @@ Output: [1,2,2,3,5,6]
 
         return (int) distance;
     }
-
-
-    // At most 1 consecutive pair
 
     public int findNonMinOrMax(int[] nums) {
         if (nums.length <= 2) return -1;
@@ -7238,159 +7268,6 @@ Output: [1,2,2,3,5,6]
         }
 
         return min;
-    }
-
-    class Solution {
-
-        int N = 8;
-
-        /* A utility function to check if i,j are
-           valid indexes for N*N chessboard */
-        boolean isSafe(int x, int y, int[][] sol) {
-            return (x >= 0 && x < N && y >= 0 && y < N
-                    && sol[x][y] == -1);
-        }
-
-        /* A utility function to print solution
-           matrix sol[N][N] */
-        void printSolution(int[][] sol) {
-            for (int x = 0; x < N; x++) {
-                for (int y = 0; y < N; y++)
-                    System.out.print(sol[x][y] + " ");
-                System.out.println();
-            }
-        }
-
-        /* This function solves the Knight Tour problem
-           using Backtracking.  This  function mainly
-           uses solveKTUtil() to solve the problem. It
-           returns false if no complete tour is possible,
-           otherwise return true and prints the tour.
-           Please note that there may be more than one
-           solutions, this function prints one of the
-           feasible solutions.  */
-        boolean solveKT() {
-            int[][] sol = new int[8][8];
-
-            /* Initialization of solution matrix */
-            for (int x = 0; x < N; x++)
-                for (int y = 0; y < N; y++)
-                    sol[x][y] = -1;
-
-        /* xMove[] and yMove[] define next move of Knight.
-           xMove[] is for next value of x coordinate
-           yMove[] is for next value of y coordinate */
-            int[] xMove = {2, 1, -1, -2, -2, -1, 1, 2};
-            int[] yMove = {1, 2, 2, 1, -1, -2, -2, -1};
-
-            // Since the Knight is initially at the first block
-            sol[0][0] = 0;
-
-        /* Start from 0,0 and explore all tours using
-           solveKTUtil() */
-            if (!solveKTUtil(0, 0, 1, sol, xMove, yMove)) {
-                System.out.println("Solution does not exist");
-                return false;
-            } else
-                printSolution(sol);
-
-            return true;
-        }
-
-        /* A recursive utility function to solve Knight
-           Tour problem */
-        boolean solveKTUtil(int x, int y, int movei,
-                            int[][] sol, int[] xMove,
-                            int[] yMove) {
-            int k, next_x, next_y;
-            if (movei == N * N)
-                return true;
-
-        /* Try all next moves from the current coordinate
-            x, y */
-            for (k = 0; k < 8; k++) {
-                next_x = x + xMove[k];
-                next_y = y + yMove[k];
-                if (isSafe(next_x, next_y, sol)) {
-                    sol[next_x][next_y] = movei;
-                    if (solveKTUtil(next_x, next_y, movei + 1,
-                            sol, xMove, yMove))
-                        return true;
-                    else
-                        sol[next_x][next_y]
-                                = -1; // backtracking
-                }
-            }
-
-            return false;
-        }
-
-
-        public boolean checkValidGrid(int[][] grid) {
-
-            this.N = grid.length;
-            // Function Call
-            return solveKT();
-
-        }
-    }
-
-    /*
-    Input: nums = [4,9,6,10]
-    Output: true
-    Explanation: In the first operation: Pick i = 0 and p = 3, and then subtract 3 from nums[0], so that nums becomes [1,9,6,10].
-    In the second operation: i = 1, p = 7, subtract 7 from nums[1], so nums becomes equal to [1,2,6,10].
-    After the second operation, nums is sorted in strictly increasing order, so the answer is true.
-     */
-    class PrimeStrctlyIncreasing {
-
-        TreeMap<Integer, Boolean> primeNumbers = new TreeMap<>();
-
-        public void primeSieve(int n) {
-            BitSet bitset = new BitSet(n + 1);
-            for (long i = 0; i < n; i++) {
-                if (i == 0 || i == 1) {
-                    bitset.set((int) i);
-                    continue;
-                }
-                if (bitset.get((int) i)) continue;
-                primeNumbers.put((int) i, true);
-                for (long j = i; j <= n; j += i)
-                    bitset.set((int) j);
-            }
-        }
-
-        public boolean primeSubOperation(int[] nums) {
-
-            primeSieve(1000);
-
-            System.out.println(primeNumbers);
-            for (int i = 0; i < nums.length; i++) {
-                if (primeNumbers.firstKey() >= nums[i]) continue;
-                int prime = primeNumbers.lowerKey(nums[i]);
-                if (i == 0) {
-                    nums[i] -= prime;
-                    continue;
-                }
-
-                while (nums[i - 1] >= (nums[i] - prime)) {
-                    if (primeNumbers.firstKey() >= prime) break;
-                    prime = primeNumbers.lowerKey(prime);
-                }
-
-                if (nums[i - 1] < (nums[i] - prime)) nums[i] -= prime;
-            }
-
-
-            for (int i = 0; i < nums.length; i++) {
-                if (i == 0) continue;
-                if (nums[i - 1] >= nums[i]) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
     }
 
     public int maximumNumberOfStringPairs(String[] words) {
@@ -7656,39 +7533,6 @@ Output: [1,2,2,3,5,6]
 
     //----------------------------------------------------------------------------
 
-    public static int alternatingSubarray(int[] nums) {
-
-        int max = -1;
-        for (int i = 0; i < nums.length; i++) {
-            int len = 1;
-            int flag = 1;
-            for (int j = i + 1; j < nums.length; j++) {
-                if ((nums[j] - nums[j - 1] == flag)) {
-                    len++;
-                    flag = flag > 0 ? Math.negateExact(flag) : Math.abs(flag);
-                } else {
-                    max = Math.max(max, len);
-                    break;
-                }
-            }
-            max = Math.max(max, len);
-        }
-
-        return max == 1 ? Math.negateExact(max) : max;
-    }
-
-
-    public static List<Integer> relocateMarbles(int[] nums, int[] moveFrom, int[] moveTo) {
-        TreeMap<Integer, Integer> tm = new TreeMap();
-        for (int num : nums) tm.put(num, tm.getOrDefault(num, 0) + 1);
-        for (int i = 0; i < moveFrom.length; i++) {
-            int count = tm.get(moveFrom[i]);
-            tm.remove(moveFrom[i]);
-            tm.put(moveTo[i], count);
-        }
-        return new ArrayList<>(tm.keySet());
-    }
-
     private int lower(int[] arr, int target) {
         if (arr == null || arr.length == 0) {
             return 0;
@@ -7713,86 +7557,11 @@ Output: [1,2,2,3,5,6]
         return r;
     }
 
-
     public int sumOfSquares(int[] nums) {
         int ind = 1, n = nums.length, ans = 0;
         for (int num : nums) if (n % ind++ == 0) ans += num * num;
         return ans;
     }
-
-
-    //TODO: Find better approach
-    class Solution {
-        public int maximumBeauty(int[] nums, int k) {
-            Arrays.sort(nums);
-            int max = 0;
-            Map<Integer, Integer> freq = new HashMap<>();
-            for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
-
-            System.out.println(Arrays.toString(nums));
-
-            if (k == 0) {
-                for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {
-                    max = Math.max(max, entry.getValue());
-                }
-                return max;
-            }
-            boolean same = true;
-            for (int i = 1; i < nums.length; i++) {
-                if (nums[i - 1] != nums[i]) {
-                    same = false;
-                    break;
-                }
-            }
-
-            if (same) return nums.length;
-
-            for (int i = -100000; i <= 100000; i++) {
-                int ui = bs(nums, k + i, false);
-
-                while (ui >= 0 && ui < nums.length - 1 && nums[ui + 1] == nums[ui] && nums[ui] <= k + i) ui++;
-                while (ui >= 0 && ui < nums.length && nums[ui] > i + k) ui--;
-                while (ui >= 0 && ui < nums.length - 1 && nums[ui] < i + k) ui++;
-
-                int li = bs(nums, i - k, true);
-                while (li > 0 && li < nums.length && nums[li - 1] == nums[li] && nums[li - 1] >= i - k) li--;
-                while (li > 0 && li < nums.length && nums[li] < i - k) li++;
-
-                while (li > 0 && li < nums.length && nums[li] > i - k) li--;
-
-                ui = Math.min(nums.length - 1, ui);
-                li = Math.max(0, li);
-                // System.out.println(li + ":" + ui + ":" + i);
-                if (freq.containsKey(k + i) && freq.containsKey(i - k)
-                        && (freq.get(k + i) > 1 || freq.get(i - k) > 1)) {
-                    max = Math.max(Math.abs(ui - li) + 1, max);
-                } else max = Math.max(Math.abs(ui - li), max);
-            }
-            return Math.min(max, nums.length);
-        }
-
-        private int bs(int[] ps, int bus, boolean lower) {
-            int l = 0, h = ps.length - 1;
-            while (l <= h) {
-                int mid = l + (h - l) / 2;
-
-                if (ps[mid] < bus) {
-                    l = mid + 1;
-                } else if (ps[mid] > bus) h = mid;
-                else {
-                    if (lower) return mid;
-                    return mid + 1;
-                }
-
-                if (l == h && l == mid) {
-                    return l;
-                }
-
-            }
-            return l;
-        }
-    }
-
 
     public boolean isGood(int[] nums) {
         int[] counter = new int[201];
@@ -7840,9 +7609,6 @@ Output: [1,2,2,3,5,6]
 
         return sb.toString();
     }
-
-
-    // 23rd  july
 
     public List<String> splitWordsBySeparator(List<String> words, char separator) {
         List<String> ans = new ArrayList<>();
@@ -7910,6 +7676,9 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+
+    // 23rd  july
+
     public int countCompleteSubarrays(int[] nums) {
 
         int cnt = 0;
@@ -7924,7 +7693,6 @@ Output: [1,2,2,3,5,6]
         }
         return cnt;
     }
-
 
     public String minimumString(String a, String b, String c) {
 
@@ -8010,6 +7778,229 @@ Output: [1,2,2,3,5,6]
             return o1.compareTo(o2);
         });
         return ans.get(0);
+    }
+
+    //TODO: Find better approach
+    public int maximumBeauty(int[] nums, int k) {
+        Arrays.sort(nums);
+        int max = 0;
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
+
+        System.out.println(Arrays.toString(nums));
+
+        if (k == 0) {
+            for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {
+                max = Math.max(max, entry.getValue());
+            }
+            return max;
+        }
+        boolean same = true;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i - 1] != nums[i]) {
+                same = false;
+                break;
+            }
+        }
+
+        if (same) return nums.length;
+
+        for (int i = -100000; i <= 100000; i++) {
+            int ui = bs(nums, k + i, false);
+
+            while (ui >= 0 && ui < nums.length - 1 && nums[ui + 1] == nums[ui] && nums[ui] <= k + i) ui++;
+            while (ui >= 0 && ui < nums.length && nums[ui] > i + k) ui--;
+            while (ui >= 0 && ui < nums.length - 1 && nums[ui] < i + k) ui++;
+
+            int li = bs(nums, i - k, true);
+            while (li > 0 && li < nums.length && nums[li - 1] == nums[li] && nums[li - 1] >= i - k) li--;
+            while (li > 0 && li < nums.length && nums[li] < i - k) li++;
+
+            while (li > 0 && li < nums.length && nums[li] > i - k) li--;
+
+            ui = Math.min(nums.length - 1, ui);
+            li = Math.max(0, li);
+            // System.out.println(li + ":" + ui + ":" + i);
+            if (freq.containsKey(k + i) && freq.containsKey(i - k)
+                    && (freq.get(k + i) > 1 || freq.get(i - k) > 1)) {
+                max = Math.max(Math.abs(ui - li) + 1, max);
+            } else max = Math.max(Math.abs(ui - li), max);
+        }
+        return Math.min(max, nums.length);
+    }
+
+    private int bs(int[] ps, int bus, boolean lower) {
+        int l = 0, h = ps.length - 1;
+        while (l <= h) {
+            int mid = l + (h - l) / 2;
+
+            if (ps[mid] < bus) {
+                l = mid + 1;
+            } else if (ps[mid] > bus) h = mid;
+            else {
+                if (lower) return mid;
+                return mid + 1;
+            }
+
+            if (l == h && l == mid) {
+                return l;
+            }
+
+        }
+        return l;
+    }
+
+    class Solution {
+
+        int N = 8;
+
+        /* A utility function to check if i,j are
+           valid indexes for N*N chessboard */
+        boolean isSafe(int x, int y, int[][] sol) {
+            return (x >= 0 && x < N && y >= 0 && y < N
+                    && sol[x][y] == -1);
+        }
+
+        /* A utility function to print solution
+           matrix sol[N][N] */
+        void printSolution(int[][] sol) {
+            for (int x = 0; x < N; x++) {
+                for (int y = 0; y < N; y++)
+                    System.out.print(sol[x][y] + " ");
+                System.out.println();
+            }
+        }
+
+        /* This function solves the Knight Tour problem
+           using Backtracking.  This  function mainly
+           uses solveKTUtil() to solve the problem. It
+           returns false if no complete tour is possible,
+           otherwise return true and prints the tour.
+           Please note that there may be more than one
+           solutions, this function prints one of the
+           feasible solutions.  */
+        boolean solveKT() {
+            int[][] sol = new int[8][8];
+
+            /* Initialization of solution matrix */
+            for (int x = 0; x < N; x++)
+                for (int y = 0; y < N; y++)
+                    sol[x][y] = -1;
+
+        /* xMove[] and yMove[] define next move of Knight.
+           xMove[] is for next value of x coordinate
+           yMove[] is for next value of y coordinate */
+            int[] xMove = {2, 1, -1, -2, -2, -1, 1, 2};
+            int[] yMove = {1, 2, 2, 1, -1, -2, -2, -1};
+
+            // Since the Knight is initially at the first block
+            sol[0][0] = 0;
+
+        /* Start from 0,0 and explore all tours using
+           solveKTUtil() */
+            if (!solveKTUtil(0, 0, 1, sol, xMove, yMove)) {
+                System.out.println("Solution does not exist");
+                return false;
+            } else
+                printSolution(sol);
+
+            return true;
+        }
+
+        /* A recursive utility function to solve Knight
+           Tour problem */
+        boolean solveKTUtil(int x, int y, int movei,
+                            int[][] sol, int[] xMove,
+                            int[] yMove) {
+            int k, next_x, next_y;
+            if (movei == N * N)
+                return true;
+
+        /* Try all next moves from the current coordinate
+            x, y */
+            for (k = 0; k < 8; k++) {
+                next_x = x + xMove[k];
+                next_y = y + yMove[k];
+                if (isSafe(next_x, next_y, sol)) {
+                    sol[next_x][next_y] = movei;
+                    if (solveKTUtil(next_x, next_y, movei + 1,
+                            sol, xMove, yMove))
+                        return true;
+                    else
+                        sol[next_x][next_y]
+                                = -1; // backtracking
+                }
+            }
+
+            return false;
+        }
+
+
+        public boolean checkValidGrid(int[][] grid) {
+
+            this.N = grid.length;
+            // Function Call
+            return solveKT();
+
+        }
+    }
+
+    /*
+    Input: nums = [4,9,6,10]
+    Output: true
+    Explanation: In the first operation: Pick i = 0 and p = 3, and then subtract 3 from nums[0], so that nums becomes [1,9,6,10].
+    In the second operation: i = 1, p = 7, subtract 7 from nums[1], so nums becomes equal to [1,2,6,10].
+    After the second operation, nums is sorted in strictly increasing order, so the answer is true.
+     */
+    class PrimeStrctlyIncreasing {
+
+        TreeMap<Integer, Boolean> primeNumbers = new TreeMap<>();
+
+        public void primeSieve(int n) {
+            BitSet bitset = new BitSet(n + 1);
+            for (long i = 0; i < n; i++) {
+                if (i == 0 || i == 1) {
+                    bitset.set((int) i);
+                    continue;
+                }
+                if (bitset.get((int) i)) continue;
+                primeNumbers.put((int) i, true);
+                for (long j = i; j <= n; j += i)
+                    bitset.set((int) j);
+            }
+        }
+
+        public boolean primeSubOperation(int[] nums) {
+
+            primeSieve(1000);
+
+            System.out.println(primeNumbers);
+            for (int i = 0; i < nums.length; i++) {
+                if (primeNumbers.firstKey() >= nums[i]) continue;
+                int prime = primeNumbers.lowerKey(nums[i]);
+                if (i == 0) {
+                    nums[i] -= prime;
+                    continue;
+                }
+
+                while (nums[i - 1] >= (nums[i] - prime)) {
+                    if (primeNumbers.firstKey() >= prime) break;
+                    prime = primeNumbers.lowerKey(prime);
+                }
+
+                if (nums[i - 1] < (nums[i] - prime)) nums[i] -= prime;
+            }
+
+
+            for (int i = 0; i < nums.length; i++) {
+                if (i == 0) continue;
+                if (nums[i - 1] >= nums[i]) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 
 }

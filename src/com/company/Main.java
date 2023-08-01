@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.HashMap;import java.util.*;
 
 public class Main {
     /*These are one of the fast methods of reading input and writing output*/

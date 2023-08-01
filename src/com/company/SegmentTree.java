@@ -2,7 +2,7 @@ package com.company;
 
 import javafx.util.Pair;
 
-import java.util.*;
+import java.util.HashMap;import java.util.*;
 
 // Implementation of segment tree
 public class SegmentTree {

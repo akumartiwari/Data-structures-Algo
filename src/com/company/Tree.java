@@ -1,7 +1,7 @@
 package com.company;
 
-import java.util.*;
 import java.util.HashMap;
+import java.util.*;
 
 public class Tree {
     int res = 0;

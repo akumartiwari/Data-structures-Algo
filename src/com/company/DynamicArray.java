@@ -1,6 +1,6 @@
 package com.company;
 
-import java.util.*;
+import java.util.HashMap;import java.util.*;
 
 //import for Scanner and other utility classes
 public class DynamicArray {

@@ -1,7 +1,7 @@
 package com.company;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;import java.util.*;
 
 class GFG {
 

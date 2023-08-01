@@ -3,10 +3,10 @@ package com.company;
 import java.awt.*;
 import java.math.BigInteger;
 import java.util.List;
-import java.util.*;
+import java.util.HashMap;import java.util.*;
 import java.util.Map.Entry;
-import java.util.*;
-
+import java.util.HashMap;import java.util.*;
+import java.util.HashMap;
 // Java program for implementation of
 // Aho Corasick algorithm for String
 // matching

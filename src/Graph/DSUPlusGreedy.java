@@ -1,6 +1,6 @@
 package Graph;
 
-import java.util.*;
+import java.util.HashMap;import java.util.*;
 
 public class DSUPlusGreedy {
     public int componentValue(int[] nums, int[][] edges) {
