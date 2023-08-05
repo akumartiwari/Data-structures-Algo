@@ -55,12 +55,7 @@ public class EmployeeSolution {
     // The approach to traverse through the array and check if we get a n 'X'  character then move 3 steps ahead
     //  else move only 1 step (normal pace)
     TreeMap<Integer, Integer> affectedPowers = new TreeMap<>();
-
-    EmployeeSolution(String n, Integer s) {
-        this.name = n;
-        this.salary = s;
-        this.salary = s;
-    }
+    TreeMap<Integer, Boolean> primeNumbers = new TreeMap<>();
 
     // O(n+m), O(1)
 	/*
@@ -74,23 +69,10 @@ Output: [1,2,2,3,5,6]
 
         */
 
-    public static void main(String[] args) {
-        List<EmployeeSolution> list = new ArrayList<>();
-        list.add(new EmployeeSolution("muksh", 10));
-        list.add(new EmployeeSolution("saksham", 50));
-
-        List<EmployeeSolution> salaries = list.stream().map(x -> new EmployeeSolution(x.name, x.salary * 2)).collect(Collectors.toList());
-
-        salaries.forEach(System.out::println);
-
-        int[] arr = new int[]{2, -1, -3, 6, 8, -4, -8, -5, 9, 3, -3, 4};
-
-        System.out.println(alternatingSubarray(new int[]{2, 3, 4, 3, 4}));
-        int[] nums = new int[]{1, 6, 7, 8};
-        int[] moveFrom = new int[]{1, 7, 2};
-        int[] moveTo = new int[]{2, 9, 5};
-
-        System.out.println(relocateMarbles(nums, moveFrom, moveTo));
+    EmployeeSolution(String n, Integer s) {
+        this.name = n;
+        this.salary = s;
+        this.salary = s;
     }
 
     // Thoughts:-
@@ -132,6 +114,25 @@ Output: [1,2,2,3,5,6]
 	  problem boils down to finding a subsequence of length len1
 	  with sum equals sumA
 	*/
+
+    public static void main(String[] args) {
+        List<EmployeeSolution> list = new ArrayList<>();
+        list.add(new EmployeeSolution("muksh", 10));
+        list.add(new EmployeeSolution("saksham", 50));
+
+        List<EmployeeSolution> salaries = list.stream().map(x -> new EmployeeSolution(x.name, x.salary * 2)).collect(Collectors.toList());
+
+        salaries.forEach(System.out::println);
+
+        int[] arr = new int[]{2, -1, -3, 6, 8, -4, -8, -5, 9, 3, -3, 4};
+
+        System.out.println(alternatingSubarray(new int[]{2, 3, 4, 3, 4}));
+        int[] nums = new int[]{1, 6, 7, 8};
+        int[] moveFrom = new int[]{1, 7, 2};
+        int[] moveTo = new int[]{2, 9, 5};
+
+        System.out.println(relocateMarbles(nums, moveFrom, moveTo));
+    }
 
     public static int maxSum(int[] arr) {
         int n = arr.length;
@@ -369,6 +370,16 @@ Output: [1,2,2,3,5,6]
         return (c >= zero && c <= nine) || c == '.';
     }
 
+     /*
+         arr = [3,4,3,3]
+         k = 2
+
+        pq = {4, 3, 3, 3}
+        map = { (3, (0, 2,3), (4,1))}
+        ans = {1,0,2,3}
+        result = [4, 3]
+     */
+
     public int minimumMoves(String s) {
         int n = s.length(), cnt = 0;
         for (int i = 0; i < n; ) {
@@ -379,16 +390,6 @@ Output: [1,2,2,3,5,6]
         }
         return cnt;
     }
-
-     /*
-         arr = [3,4,3,3]
-         k = 2
-
-        pq = {4, 3, 3, 3}
-        map = { (3, (0, 2,3), (4,1))}
-        ans = {1,0,2,3}
-        result = [4, 3]
-     */
 
     // KADAN's ALGO
     public int maxSubArray(int[] nums) {
@@ -597,6 +598,23 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+    /*
+    Input: nums = [2,10,6,4,8,12]
+    Output: [3,7,11]
+    Explanation:
+    If arr = [3,7,11] and k = 1, we get lower = [2,6,10] and higher = [4,8,12].
+    Combining lower and higher gives us [2,6,10,4,8,12], which is a permutation of nums.
+    Another valid possibility is that arr = [5,7,9] and k = 3. In that case, lower = [2,4,6] and higher = [8,10,12].
+
+    Input: nums = [1,1,3,3]
+    Output: [2,2]
+    Explanation:
+    If arr = [2,2] and k = 1, we get lower = [1,1] and higher = [3,3].
+    Combining lower and higher gives us [1,1,3,3], which is equal to nums.
+    Note that arr cannot be [1,3] because in that case, the only possible way to obtain [1,1,3,3] is with k = 0.
+    This is invalid since k must be positive.
+     */
+
     public int maximalPathQuality(int[] values, int[][] edges, int maxTime) {
         int n = values.length;
         int[] vis = new int[n];
@@ -646,23 +664,6 @@ Output: [1,2,2,3,5,6]
         // return maxVal
         return maxVal;
     }
-
-    /*
-    Input: nums = [2,10,6,4,8,12]
-    Output: [3,7,11]
-    Explanation:
-    If arr = [3,7,11] and k = 1, we get lower = [2,6,10] and higher = [4,8,12].
-    Combining lower and higher gives us [2,6,10,4,8,12], which is a permutation of nums.
-    Another valid possibility is that arr = [5,7,9] and k = 3. In that case, lower = [2,4,6] and higher = [8,10,12].
-
-    Input: nums = [1,1,3,3]
-    Output: [2,2]
-    Explanation:
-    If arr = [2,2] and k = 1, we get lower = [1,1] and higher = [3,3].
-    Combining lower and higher gives us [1,1,3,3], which is equal to nums.
-    Note that arr cannot be [1,3] because in that case, the only possible way to obtain [1,1,3,3] is with k = 0.
-    This is invalid since k must be positive.
-     */
 
     private void f(int node, int val, int[] values, HashMap<Integer, List<Pair<Integer, Integer>>> adj, int[] vis, int maxTime) {
         // base case
@@ -746,6 +747,25 @@ Output: [1,2,2,3,5,6]
         return result;
     }
 
+    /*
+    recipe = ["bread","sandwich"]
+    Ig = [["yeast","flour"],["bread","meat"]]
+    sm = ["yeast","flour","meat"]
+
+    ans = ["bread", "sandwich"]
+     // Author: Anand
+     // TC = O(mn) where m = # rows, n = # cols of ingredients
+    Instead of thinking the solution from left to right data
+    Think it from right to left so basically we will create list of indexes that can be formed
+    from ingredients via map DS.
+    Maintain a ingredientRecipeCount -> Used to check if recipe is ready to be formed
+    Create a supplyQueue and iterate for all supplies.
+    Suplly will act as an ingredient for the recipe, if ingredient is mapped with some recipes
+    then update its ingredientRecipeCount and check if recipe is ready to me made
+    if yes then add recipe to supply chain and result list
+    Finally return result list
+     */
+
     // Sliding window
     // TC = O(n)
     public List<Integer> goodDaysToRobBank(int[] security, int time) {
@@ -769,25 +789,6 @@ Output: [1,2,2,3,5,6]
         }
         return ans;
     }
-
-    /*
-    recipe = ["bread","sandwich"]
-    Ig = [["yeast","flour"],["bread","meat"]]
-    sm = ["yeast","flour","meat"]
-
-    ans = ["bread", "sandwich"]
-     // Author: Anand
-     // TC = O(mn) where m = # rows, n = # cols of ingredients
-    Instead of thinking the solution from left to right data
-    Think it from right to left so basically we will create list of indexes that can be formed
-    from ingredients via map DS.
-    Maintain a ingredientRecipeCount -> Used to check if recipe is ready to be formed
-    Create a supplyQueue and iterate for all supplies.
-    Suplly will act as an ingredient for the recipe, if ingredient is mapped with some recipes
-    then update its ingredientRecipeCount and check if recipe is ready to me made
-    if yes then add recipe to supply chain and result list
-    Finally return result list
-     */
 
     // TC = O(n*n), SC = O(1)
     // Solution by Anand
@@ -932,6 +933,9 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+    // TC = O(MLogM)
+    // Author : Anand
+
     // Author : Anand
     // TC = O(2n), SC=O(n)
     public long[] getDistances(int[] arr) {
@@ -957,9 +961,6 @@ Output: [1,2,2,3,5,6]
         }
         return ans;
     }
-
-    // TC = O(MLogM)
-    // Author : Anand
 
     // Author : Anand
     // Simple BFS travesal must solve the problem
@@ -994,6 +995,7 @@ Output: [1,2,2,3,5,6]
     private boolean isValidPos(int i, int j, int n) {
         return (i >= 0 && j >= 0 && i < n && j < n);
     }
+    //--------------------------------------------------------
 
     // Author: Anand
     // Approach:-
@@ -1033,7 +1035,6 @@ Output: [1,2,2,3,5,6]
         }
         return new int[]{};
     }
-    //--------------------------------------------------------
 
     // Author : Anand
     // TC = O(n), SC = O(1)
@@ -1375,6 +1376,20 @@ Output: [1,2,2,3,5,6]
         return res;
     }
 
+    /*
+    Input: beans = [4,1,6,5]
+    Output: 4
+    Explanation:
+    - We remove 1 bean from the bag with only 1 bean.
+      This results in the remaining bags: [4,0,6,5]
+    - Then we remove 2 beans from the bag with 6 beans.
+      This results in the remaining bags: [4,0,4,5]
+    - Then we remove 1 bean from the bag with 5 beans.
+      This results in the remaining bags: [4,0,4,4]
+    We removed a total of 1 + 2 + 1 = 4 beans to make the remaining non-empty bags have an equal number of beans.
+    There are no other solutions that remove 4 beans or fewer.
+     */
+
     public int finalValueAfterOperations(String[] operations) {
 
         Set<String> plus = new HashSet<>();
@@ -1391,20 +1406,6 @@ Output: [1,2,2,3,5,6]
         }
         return ans;
     }
-
-    /*
-    Input: beans = [4,1,6,5]
-    Output: 4
-    Explanation:
-    - We remove 1 bean from the bag with only 1 bean.
-      This results in the remaining bags: [4,0,6,5]
-    - Then we remove 2 beans from the bag with 6 beans.
-      This results in the remaining bags: [4,0,4,5]
-    - Then we remove 1 bean from the bag with 5 beans.
-      This results in the remaining bags: [4,0,4,4]
-    We removed a total of 1 + 2 + 1 = 4 beans to make the remaining non-empty bags have an equal number of beans.
-    There are no other solutions that remove 4 beans or fewer.
-     */
 
     /*
       2, if nums[j] < nums[i] < nums[k], for all 0 <= j < i and for all i < k <= nums.length - 1.
@@ -2101,6 +2102,8 @@ Output: [1,2,2,3,5,6]
     }
 
     // Author : Anand
+
+    // Author : Anand
     public long minimalKSum(int[] nums, int k) {
         int len = nums.length;
         Arrays.sort(nums);
@@ -2117,8 +2120,6 @@ Output: [1,2,2,3,5,6]
         }
         return sumK;
     }
-
-    // Author : Anand
 
     // Author: Anand
     // TODO :- Use factor based approach
@@ -2694,6 +2695,15 @@ Output: [1,2,2,3,5,6]
         return result;
     }
 
+    /*
+    Input: root = [2,1,3,null,null,0,1]
+    Output: true
+    Explanation: The above diagram illustrates the evaluation process.
+    The AND node evaluates to False AND True = False.
+    The OR node evaluates to True OR False = True.
+    The root node evaluates to True, so we return true.
+     */
+
     //Author: Anand
     public String discountPrices(String sentence, int discount) {
         String[] words = sentence.split(" ");
@@ -2712,15 +2722,6 @@ Output: [1,2,2,3,5,6]
         }
         return sb.toString().trim();
     }
-
-    /*
-    Input: root = [2,1,3,null,null,0,1]
-    Output: true
-    Explanation: The above diagram illustrates the evaluation process.
-    The AND node evaluates to False AND True = False.
-    The OR node evaluates to True OR False = True.
-    The root node evaluates to True, so we return true.
-     */
 
     //Author: Anand
     public int minMaxGame(int[] nums) {
@@ -2808,6 +2809,18 @@ Output: [1,2,2,3,5,6]
 
     }
 
+        /*
+    Input: n = 6, delay = 2, forget = 4
+    Output: 5
+    Explanation:
+    Day 1: Suppose the first person is named A. (1 person)
+    Day 2: A is the only person who knows the secret. (1 person)
+    Day 3: A shares the secret with a new person, B. (2 people)
+    Day 4: A shares the secret with a new person, C. (3 people)
+    Day 5: A forgets the secret, and B shares the secret with a new person, D. (3 people)
+    Day 6: B shares the secret with E, and C shares the secret with F. (5 people)
+     */
+
     /*
     Input: s = "fool3e7bar", sub = "leet", mappings = [["e","3"],["t","7"],["t","8"]]
     Output: true
@@ -2854,17 +2867,7 @@ Output: [1,2,2,3,5,6]
         return false;
     }
 
-        /*
-    Input: n = 6, delay = 2, forget = 4
-    Output: 5
-    Explanation:
-    Day 1: Suppose the first person is named A. (1 person)
-    Day 2: A is the only person who knows the secret. (1 person)
-    Day 3: A shares the secret with a new person, B. (2 people)
-    Day 4: A shares the secret with a new person, C. (3 people)
-    Day 5: A forgets the secret, and B shares the secret with a new person, D. (3 people)
-    Day 6: B shares the secret with E, and C shares the secret with F. (5 people)
-     */
+//23/07/2022    -----------------------------------------------------------------------------------------
 
     /*
     Input: s = "arRAzFif"
@@ -2891,8 +2894,6 @@ Output: [1,2,2,3,5,6]
         }
         return ans;
     }
-
-//23/07/2022    -----------------------------------------------------------------------------------------
 
     // Author: Anand
     // Similar to Div-2 codeforces
@@ -2973,6 +2974,17 @@ Output: [1,2,2,3,5,6]
         return sb.toString();
     }
 
+    /*
+    Input: nums = [4,1,3,3]
+    Output: 5
+    Explanation: The pair (0, 1) is a bad pair since 1 - 0 != 1 - 4.
+    The pair (0, 2) is a bad pair since 2 - 0 != 3 - 4, 2 != -1.
+    The pair (0, 3) is a bad pair since 3 - 0 != 3 - 4, 3 != -1.
+    The pair (1, 2) is a bad pair since 2 - 1 != 3 - 1, 1 != 2.
+    The pair (2, 3) is a bad pair since 3 - 2 != 3 - 3, 1 != 0.
+    There are a total of 5 bad pairs, so we return 5.
+     */
+
     //Author: Anand
     /*
     Input: nums = [18,43,36,13,7]
@@ -3010,17 +3022,6 @@ Output: [1,2,2,3,5,6]
 
         return flag ? max : -1;
     }
-
-    /*
-    Input: nums = [4,1,3,3]
-    Output: 5
-    Explanation: The pair (0, 1) is a bad pair since 1 - 0 != 1 - 4.
-    The pair (0, 2) is a bad pair since 2 - 0 != 3 - 4, 2 != -1.
-    The pair (0, 3) is a bad pair since 3 - 0 != 3 - 4, 3 != -1.
-    The pair (1, 2) is a bad pair since 2 - 1 != 3 - 1, 1 != 2.
-    The pair (2, 3) is a bad pair since 3 - 2 != 3 - 3, 1 != 0.
-    There are a total of 5 bad pairs, so we return 5.
-     */
 
     private long sod(int num) {
         long cnt = 0L;
@@ -3271,6 +3272,16 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+    Input: blocks = "WBBWWBBWBW", k = 7
+    Output: 3
+    Explanation:
+    One way to achieve 7 consecutive black blocks is to recolor the 0th, 3rd, and 4th blocks
+    so that blocks = "BBBBBBBWBW".
+    It can be shown that there is no way to achieve 7 consecutive black blocks in less than 3 operations.
+    Therefore, we return 3.
+     */
+
     public long countBadPairs(int[] nums) {
         long cnt = 0L;
         TreeMap<Integer, Integer> diffMap = new TreeMap<>();
@@ -3292,16 +3303,6 @@ Output: [1,2,2,3,5,6]
 
         return cnt;
     }
-
-    /*
-    Input: blocks = "WBBWWBBWBW", k = 7
-    Output: 3
-    Explanation:
-    One way to achieve 7 consecutive black blocks is to recolor the 0th, 3rd, and 4th blocks
-    so that blocks = "BBBBBBBWBW".
-    It can be shown that there is no way to achieve 7 consecutive black blocks in less than 3 operations.
-    Therefore, we return 3.
-     */
 
     /*
     Input: tasks = [1,2,1,2,3,1], space = 3
@@ -3696,6 +3697,19 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
+    Input: n = 2, meetings = [[0,10],[1,5],[2,7],[3,4]]
+    Output: 0
+    Explanation:
+    - At time 0, both rooms are not being used. The first meeting starts in room 0.
+    - At time 1, only room 1 is not being used. The second meeting starts in room 1.
+    - At time 2, both rooms are being used. The third meeting is delayed.
+    - At time 3, both rooms are being used. The fourth meeting is delayed.
+    - At time 5, the meeting in room 1 finishes. The third meeting starts in room 1 for the time period [5,10).
+    - At time 10, the meetings in both rooms finish. The fourth meeting starts in room 0 for the time period [10,11).
+    Both rooms 0 and 1 held 2 meetings, so we return 0.
+     */
+
+    /*
     Input: num = "444947137"
     Output: "7449447"
     Explanation:
@@ -3748,19 +3762,6 @@ Output: [1,2,2,3,5,6]
         if (sb.length() == 0) return String.valueOf(num.charAt(0));
         return sb.toString();
     }
-
-    /*
-    Input: n = 2, meetings = [[0,10],[1,5],[2,7],[3,4]]
-    Output: 0
-    Explanation:
-    - At time 0, both rooms are not being used. The first meeting starts in room 0.
-    - At time 1, only room 1 is not being used. The second meeting starts in room 1.
-    - At time 2, both rooms are being used. The third meeting is delayed.
-    - At time 3, both rooms are being used. The fourth meeting is delayed.
-    - At time 5, the meeting in room 1 finishes. The third meeting starts in room 1 for the time period [5,10).
-    - At time 10, the meetings in both rooms finish. The fourth meeting starts in room 0 for the time period [10,11).
-    Both rooms 0 and 1 held 2 meetings, so we return 0.
-     */
 
     //Author: Anand
     public int garbageCollection(String[] garbage, int[] travel) {
@@ -6028,6 +6029,9 @@ Output: [1,2,2,3,5,6]
         return true;
     }
 
+    //-----------------------------------------------------------------------------------------------------
+    // 15th april
+
     public java.util.HashMap<Integer, Integer> sortByValue(java.util.HashMap<Integer, Integer> hm) {
 
 
@@ -6047,9 +6051,6 @@ Output: [1,2,2,3,5,6]
 
         return temp;
     }
-
-    //-----------------------------------------------------------------------------------------------------
-    // 15th april
 
     public int minimizeMax(int[] nums, int p) {
         Map<Integer, Integer> freq = new ConcurrentHashMap<>();
@@ -6138,6 +6139,9 @@ Output: [1,2,2,3,5,6]
 
     }
 
+
+    // 16th april
+
     /**
      * Definition for a binary tree node.
      * public class TreeNode {
@@ -6159,9 +6163,6 @@ Output: [1,2,2,3,5,6]
         Map<Integer, Map<Integer, List<Integer>>> map = new TreeMap<>(); // {level, {parent -> childs}}
         return lot(root, map);
     }
-
-
-    // 16th april
 
     /**
      * Definition for a binary tree node.
@@ -6502,6 +6503,16 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+
+    // TOPOLOGICAL SORT
+    // Use toplogical sort for indegree and pq to minisnmise the time taken to complete the course
+    // TC = O(V+E) // As Simple DFS, SC = O(V) {Stack space}
+
+
+    // TOPO Sort algorithm using DFS
+    // The idea is to do dfs for all nodes after marking them visited,
+    // after returning from recursion calls add them to stack
+
     public int addMinimum(String word) {
 
         int cnt = 0;
@@ -6555,16 +6566,6 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
-
-    // TOPOLOGICAL SORT
-    // Use toplogical sort for indegree and pq to minisnmise the time taken to complete the course
-    // TC = O(V+E) // As Simple DFS, SC = O(V) {Stack space}
-
-
-    // TOPO Sort algorithm using DFS
-    // The idea is to do dfs for all nodes after marking them visited,
-    // after returning from recursion calls add them to stack
-
     public int[] topoSort(int N, List<List<Integer>> graph) {
         Stack<Integer> stk = new Stack<>();
         int[] vis = new int[N];
@@ -6585,6 +6586,15 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+      Steps:
+        Build the graph using rowConditions
+        Find topological sorting order for this graph
+        Build one more graph using colConditions
+        Find topological sorting order for this graph
+        fill the matrix using the sorting order given by topological sort.
+     */
+
     //TC = O(N+E), SC = O(N), ASS = O(N)
     private void findTopoSort(int node, int[] vis, List<List<Integer>> graph, Stack<Integer> stk) {
         vis[node] = 1;
@@ -6596,15 +6606,6 @@ Output: [1,2,2,3,5,6]
 
         stk.push(node);
     }
-
-    /*
-      Steps:
-        Build the graph using rowConditions
-        Find topological sorting order for this graph
-        Build one more graph using colConditions
-        Find topological sorting order for this graph
-        fill the matrix using the sorting order given by topological sort.
-     */
 
     //TC  = O(N+E), SC = O(N) + O(N)
     // TOPO Sort using BFS algorithm
@@ -7019,6 +7020,9 @@ Output: [1,2,2,3,5,6]
         return all.isEmpty();
     }
 
+
+    // At most 1 consecutive pair
+
     public int longestSemiRepetitiveSubstring(String s) {
         int maxLen = 1;
         Set<String> ss = new HashSet<>();
@@ -7035,9 +7039,6 @@ Output: [1,2,2,3,5,6]
 
         return maxLen;
     }
-
-
-    // At most 1 consecutive pair
 
     private boolean repetitive(String str) {
         boolean flag = false;
@@ -7288,7 +7289,6 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
-
     //TBD
     public int longestString(int x, int y, int z) {
 
@@ -7409,7 +7409,6 @@ Output: [1,2,2,3,5,6]
         return max;
     }
 
-
     private void sieveOfEratosthenes(long num, int[] s) {
         // Create a boolean array
         // "prime[0..n]"  and initialize
@@ -7444,6 +7443,8 @@ Output: [1,2,2,3,5,6]
             }
         }
     }
+
+    //----------------------------------------------------------------------------
 
     public int sumImbalanceNumbers(int[] nums) {
         int cnt = 0;
@@ -7530,8 +7531,6 @@ Output: [1,2,2,3,5,6]
 
         return Math.max(cnt, 0);
     }
-
-    //----------------------------------------------------------------------------
 
     private int lower(int[] arr, int target) {
         if (arr == null || arr.length == 0) {
@@ -7670,14 +7669,14 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+
+    // 23rd  july
+
     public int numberOfEmployeesWhoMetTarget(int[] hours, int target) {
         int cnt = 0;
         for (int hour : hours) if (hour >= target) cnt++;
         return cnt;
     }
-
-
-    // 23rd  july
 
     public int countCompleteSubarrays(int[] nums) {
 
@@ -7857,6 +7856,60 @@ Output: [1,2,2,3,5,6]
         else return Math.abs(100 - 10 * (roundedAmount));
     }
 
+    /*
+    Input: nums = [4,9,6,10]
+    Output: true
+    Explanation: In the first operation: Pick i = 0 and p = 3, and then subtract 3 from nums[0], so that nums becomes [1,9,6,10].
+    In the second operation: i = 1, p = 7, subtract 7 from nums[1], so nums becomes equal to [1,2,6,10].
+    After the second operation, nums is sorted in strictly increasing order, so the answer is true.
+     */
+
+    public void primeSieve(int n) {
+        BitSet bitset = new BitSet(n + 1);
+        for (long i = 0; i < n; i++) {
+            if (i == 0 || i == 1) {
+                bitset.set((int) i);
+                continue;
+            }
+            if (bitset.get((int) i)) continue;
+            primeNumbers.put((int) i, true);
+            for (long j = i; j <= n; j += i)
+                bitset.set((int) j);
+        }
+    }
+
+    public boolean primeSubOperation(int[] nums) {
+
+        primeSieve(1000);
+
+        System.out.println(primeNumbers);
+        for (int i = 0; i < nums.length; i++) {
+            if (primeNumbers.firstKey() >= nums[i]) continue;
+            int prime = primeNumbers.lowerKey(nums[i]);
+            if (i == 0) {
+                nums[i] -= prime;
+                continue;
+            }
+
+            while (nums[i - 1] >= (nums[i] - prime)) {
+                if (primeNumbers.firstKey() >= prime) break;
+                prime = primeNumbers.lowerKey(prime);
+            }
+
+            if (nums[i - 1] < (nums[i] - prime)) nums[i] -= prime;
+        }
+
+
+        for (int i = 0; i < nums.length; i++) {
+            if (i == 0) continue;
+            if (nums[i - 1] >= nums[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     class Solution {
 
         int N = 8;
@@ -7952,62 +8005,66 @@ Output: [1,2,2,3,5,6]
         }
     }
 
-    /*
-    Input: nums = [4,9,6,10]
-    Output: true
-    Explanation: In the first operation: Pick i = 0 and p = 3, and then subtract 3 from nums[0], so that nums becomes [1,9,6,10].
-    In the second operation: i = 1, p = 7, subtract 7 from nums[1], so nums becomes equal to [1,2,6,10].
-    After the second operation, nums is sorted in strictly increasing order, so the answer is true.
-     */
-    class PrimeStrctlyIncreasing {
+    //Optimise solution
+    class Solution {
+        public int minimumSeconds(List<Integer> nums) {
 
-        TreeMap<Integer, Boolean> primeNumbers = new TreeMap<>();
+            Map<Integer, Integer> freq = new HashMap();
+            for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
+            freq = sortByValue((HashMap<Integer, Integer>) freq);
+            System.out.println(freq);
 
-        public void primeSieve(int n) {
-            BitSet bitset = new BitSet(n + 1);
-            for (long i = 0; i < n; i++) {
-                if (i == 0 || i == 1) {
-                    bitset.set((int) i);
-                    continue;
+            int d = -1;
+            if (new HashSet<>(freq.values()).size() == 1) d = freq.keySet().stream().findAny().get();
+            int n = nums.size();
+            int ans = 0;
+
+            while (freq.size() != 1) {
+                List<Integer> nl = new ArrayList<>();
+
+                for (int i = 0; i < n; i++) {
+
+                    if (freq.get(nums.get((i - 1 + n) % n)) < freq.get(nums.get((i + 1) % n))) {
+                        if (freq.get(nums.get((i + 1) % n)) > freq.get(nums.get(i))) {
+                            nl.add(nums.get((i + 1) % n));
+                        } else nl.add(nums.get(i));
+                    } else if (freq.get(nums.get((i - 1 + n) % n)) > freq.get(nums.get((i + 1) % n))) {
+                        if (freq.get(nums.get((i - 1 + n) % n)) > freq.get(nums.get(i))) {
+                            nl.add(nums.get((i - 1 + n) % n));
+                        } else nl.add(nums.get(i));
+                    } else {
+                        if (freq.get(nums.get((i - 1 + n) % n)) > freq.get(nums.get(i))) {
+                            nl.add(nums.get((i - 1 + n) % n));
+                        } else if (freq.get(nums.get((i - 1 + n) % n)) < freq.get(nums.get(i)) || d == -1)
+                            nl.add(nums.get(i));
+                        else nl.add(d);
+                    }
+
+                    System.out.println(Arrays.toString(nl.toArray()));
+
                 }
-                if (bitset.get((int) i)) continue;
-                primeNumbers.put((int) i, true);
-                for (long j = i; j <= n; j += i)
-                    bitset.set((int) j);
+
+                nums.clear();
+                nums.addAll(nl);
+
+                System.out.println(Arrays.toString(nums.toArray()));
+                freq = new HashMap();
+                for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
+                freq = sortByValue((HashMap<Integer, Integer>) freq);
+                ans++;
             }
+
+            return ans;
         }
 
-        public boolean primeSubOperation(int[] nums) {
-
-            primeSieve(1000);
-
-            System.out.println(primeNumbers);
-            for (int i = 0; i < nums.length; i++) {
-                if (primeNumbers.firstKey() >= nums[i]) continue;
-                int prime = primeNumbers.lowerKey(nums[i]);
-                if (i == 0) {
-                    nums[i] -= prime;
-                    continue;
-                }
-
-                while (nums[i - 1] >= (nums[i] - prime)) {
-                    if (primeNumbers.firstKey() >= prime) break;
-                    prime = primeNumbers.lowerKey(prime);
-                }
-
-                if (nums[i - 1] < (nums[i] - prime)) nums[i] -= prime;
-            }
-
-
-            for (int i = 0; i < nums.length; i++) {
-                if (i == 0) continue;
-                if (nums[i - 1] >= nums[i]) {
-                    return false;
-                }
-            }
-
-            return true;
+        private Map<Integer, Integer> sortByValue(Map<Integer, Integer> freq) {
+            List<Map.Entry<Integer, Integer>> nm = new LinkedList<>(freq.entrySet());
+            Collections.sort(nm, Comparator.comparing(Map.Entry::getValue));
+            Map<Integer, Integer> temp = new LinkedHashMap<>();
+            for (Map.Entry<Integer, Integer> entry : nm) temp.put(entry.getKey(), entry.getValue());
+            return temp;
         }
+
     }
 
 }
