@@ -7850,6 +7850,13 @@ Output: [1,2,2,3,5,6]
         return l;
     }
 
+    public int accountBalanceAfterPurchase(int purchaseAmount) {
+        int roundedAmount = purchaseAmount / 10;
+        int multiple = purchaseAmount % 10;
+        if (multiple >= 5) return Math.abs(100 - 10 * (roundedAmount + 1));
+        else return Math.abs(100 - 10 * (roundedAmount));
+    }
+
     class Solution {
 
         int N = 8;

@@ -1,6 +1,7 @@
 package com.company;
 
-import java.util.HashMap;import java.util.*;
+import java.util.HashMap;
+import java.util.*;
 
 public class LinkedListProblems {
     //Author: Anand
@@ -140,4 +141,30 @@ public class LinkedListProblems {
         return ptr.next;
 
     }
+
+
+    // Insert a node in linked list
+    public ListNode insertGreatestCommonDivisors(ListNode head) {
+        ListNode ptr = head;
+
+        while (ptr != null && ptr.next != null) {
+            ListNode nn = new ListNode(gcd(ptr.val, ptr.next.val));
+            /* 4. Make next of new Node as next of prev_node */
+            nn.next = ptr.next;
+
+            /* 5. make next of prev_node as new_node */
+            ptr.next = nn;
+            ptr = ptr.next.next;
+        }
+
+        return head;
+    }
+
+    public int gcd(int a, int b) {
+        if (a == 0)
+            return b;
+
+        return gcd(b % a, a);
+    }
+
 }

@@ -5,6 +5,7 @@ import java.util.Set;
 
 public class Bitmask {
 
+    int mod = (int) (Math.pow(10, 9) + 7);
 
     //Author:Anand
       /*
@@ -16,8 +17,6 @@ public class Bitmask {
         So suppose we have 11001 and we want to remove 9 - 1001 so . 11001^1001 will give 10000 ,
         and we can see that only those bits are off which we wanted to remove.
        */
-
-    int mod = (int) (Math.pow(10, 9) + 7);
 
     public int longestNiceSubarray(int[] nums) {
         int res = 0, j = 0, used = 0;
