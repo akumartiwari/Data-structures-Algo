@@ -1703,10 +1703,10 @@ It can be proven that there are no more than 3 square-free subsets in the given 
     }
 
     /*
-Input: nums = [2, 2, 1], m = 4
-Output: true
-Explanation: We can split the array into [2, 2] and [1] in the first step. Then, in the second step, we can split [2, 2] into [2] and [2]. As a result, the answer is true.
- */
+    Input: nums = [2, 2, 1], m = 4
+    Output: true
+    Explanation: We can split the array into [2, 2] and [1] in the first step. Then, in the second step, we can split [2, 2] into [2] and [2]. As a result, the answer is true.
+     */
     public boolean canSplitArray(List<Integer> nums, int m) {
         int n = nums.size();
         int[] ps = new int[n];
@@ -1736,6 +1736,44 @@ Explanation: We can split the array into [2, 2] and [1] in the first step. Then,
 
         dp[i][j] = 0;
         return false;
+    }
+
+
+    class TopDownDP {
+        /*
+        Input: nums = [2, 2, 1], m = 4
+        Output: true
+        Explanation: We can split the array into [2, 2] and [1] in the first step. Then, in the second step, we can split [2, 2] into [2] and [2]. As a result, the answer is true.
+         */
+        public boolean canSplitArray(List<Integer> nums, int m) {
+            int n = nums.size();
+            int[] ps = new int[n];
+            if (n == 1 || n == 2) return true;
+            for (int i = 0; i < n; i++) ps[i] = i > 0 ? (ps[i - 1] + nums.get(i)) : nums.get(i);
+            boolean[][] dp = new boolean[n][n];
+            return f(m, ps, dp);
+        }
+
+        private boolean f(int m, int[] ps, boolean[][] dp) {
+            int n = ps.length;
+            boolean left = false, right = false;
+
+            for (int i=0;i<n;i++){
+                for (int j=n-1;j>=0;j--){
+                    for (int ind = i; ind < j; ind++) {
+                        if ((ind == i || (ps[ind] - (i - 1 >= 0 ? ps[i - 1] : 0) >= m)) && (ind == j - 1 || (ps[j] - ps[ind] >= m))) {
+                            // System.out.println(i + ":" + j + ":" + ind);
+                            left = dp[i][ind];
+                            right = dp[ind + 1][j];
+                            boolean res = left && right;
+                            dp[i][j] = res;
+                            if (res) return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
     }
 
     // TODO
