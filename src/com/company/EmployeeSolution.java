@@ -7910,6 +7910,75 @@ Output: [1,2,2,3,5,6]
         return true;
     }
 
+    //Optimise solution
+    public int minimumSeconds(List<Integer> nums) {
+
+        Map<Integer, Integer> freq = new HashMap();
+        for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
+        freq = sortByValue((HashMap<Integer, Integer>) freq);
+        System.out.println(freq);
+
+        int d = -1;
+        if (new HashSet<>(freq.values()).size() == 1) d = freq.keySet().stream().findAny().get();
+        int n = nums.size();
+        int ans = 0;
+
+        while (freq.size() != 1) {
+            List<Integer> nl = new ArrayList<>();
+
+            for (int i = 0; i < n; i++) {
+
+                if (freq.get(nums.get((i - 1 + n) % n)) < freq.get(nums.get((i + 1) % n))) {
+                    if (freq.get(nums.get((i + 1) % n)) > freq.get(nums.get(i))) {
+                        nl.add(nums.get((i + 1) % n));
+                    } else nl.add(nums.get(i));
+                } else if (freq.get(nums.get((i - 1 + n) % n)) > freq.get(nums.get((i + 1) % n))) {
+                    if (freq.get(nums.get((i - 1 + n) % n)) > freq.get(nums.get(i))) {
+                        nl.add(nums.get((i - 1 + n) % n));
+                    } else nl.add(nums.get(i));
+                } else {
+                    if (freq.get(nums.get((i - 1 + n) % n)) > freq.get(nums.get(i))) {
+                        nl.add(nums.get((i - 1 + n) % n));
+                    } else if (freq.get(nums.get((i - 1 + n) % n)) < freq.get(nums.get(i)) || d == -1)
+                        nl.add(nums.get(i));
+                    else nl.add(d);
+                }
+
+                System.out.println(Arrays.toString(nl.toArray()));
+
+            }
+
+            nums.clear();
+            nums.addAll(nl);
+
+            System.out.println(Arrays.toString(nums.toArray()));
+            freq = new HashMap();
+            for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
+            freq = sortByValue((HashMap<Integer, Integer>) freq);
+            ans++;
+        }
+
+        return ans;
+    }
+
+    private Map<Integer, Integer> sortByValue(Map<Integer, Integer> freq) {
+        List<Map.Entry<Integer, Integer>> nm = new LinkedList<>(freq.entrySet());
+        Collections.sort(nm, Comparator.comparing(Map.Entry::getValue));
+        Map<Integer, Integer> temp = new LinkedHashMap<>();
+        for (Map.Entry<Integer, Integer> entry : nm) temp.put(entry.getKey(), entry.getValue());
+        return temp;
+    }
+
+    public String finalString(String s) {
+
+        StringBuilder sb = new StringBuilder();
+        for (char c : s.toCharArray()) {
+            if (c == 'i') sb.reverse();
+            else sb.append(c);
+        }
+        return sb.toString();
+    }
+
     class Solution {
 
         int N = 8;
@@ -8005,66 +8074,54 @@ Output: [1,2,2,3,5,6]
         }
     }
 
-    //Optimise solution
     class Solution {
-        public int minimumSeconds(List<Integer> nums) {
+        List<List<Integer>> subArrays = new ArrayList<>();
 
-            Map<Integer, Integer> freq = new HashMap();
-            for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
-            freq = sortByValue((HashMap<Integer, Integer>) freq);
-            System.out.println(freq);
-
-            int d = -1;
-            if (new HashSet<>(freq.values()).size() == 1) d = freq.keySet().stream().findAny().get();
+        public boolean canSplitArray(List<Integer> nums, int m) {
             int n = nums.size();
-            int ans = 0;
+            while (true) {
 
-            while (freq.size() != 1) {
-                List<Integer> nl = new ArrayList<>();
-
-                for (int i = 0; i < n; i++) {
-
-                    if (freq.get(nums.get((i - 1 + n) % n)) < freq.get(nums.get((i + 1) % n))) {
-                        if (freq.get(nums.get((i + 1) % n)) > freq.get(nums.get(i))) {
-                            nl.add(nums.get((i + 1) % n));
-                        } else nl.add(nums.get(i));
-                    } else if (freq.get(nums.get((i - 1 + n) % n)) > freq.get(nums.get((i + 1) % n))) {
-                        if (freq.get(nums.get((i - 1 + n) % n)) > freq.get(nums.get(i))) {
-                            nl.add(nums.get((i - 1 + n) % n));
-                        } else nl.add(nums.get(i));
-                    } else {
-                        if (freq.get(nums.get((i - 1 + n) % n)) > freq.get(nums.get(i))) {
-                            nl.add(nums.get((i - 1 + n) % n));
-                        } else if (freq.get(nums.get((i - 1 + n) % n)) < freq.get(nums.get(i)) || d == -1)
-                            nl.add(nums.get(i));
-                        else nl.add(d);
+                boolean wassplit = false;
+                if (subArrays.isEmpty()) {
+                    if (split(nums, m, subArrays)) {
+                        wassplit = true;
+                    }
+                } else {
+                    List<List<Integer>> copy = new ArrayList<>();
+                    copy.addAll(subArrays);
+                    for (List<Integer> list : subArrays) {
+                        if (split(list, m, copy)) {
+                            copy.remove(list);
+                            wassplit = true;
+                        }
                     }
 
-                    System.out.println(Arrays.toString(nl.toArray()));
-
+                    subArrays = copy;
                 }
 
-                nums.clear();
-                nums.addAll(nl);
+                System.out.println(Arrays.deepToString(subArrays.toArray()));
 
-                System.out.println(Arrays.toString(nums.toArray()));
-                freq = new HashMap();
-                for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
-                freq = sortByValue((HashMap<Integer, Integer>) freq);
-                ans++;
+                if (subArrays.size() == n) return true;
+                if (!wassplit) return false;
             }
-
-            return ans;
         }
 
-        private Map<Integer, Integer> sortByValue(Map<Integer, Integer> freq) {
-            List<Map.Entry<Integer, Integer>> nm = new LinkedList<>(freq.entrySet());
-            Collections.sort(nm, Comparator.comparing(Map.Entry::getValue));
-            Map<Integer, Integer> temp = new LinkedHashMap<>();
-            for (Map.Entry<Integer, Integer> entry : nm) temp.put(entry.getKey(), entry.getValue());
-            return temp;
-        }
 
+        private boolean split(List<Integer> nums, int m, List<List<Integer>> subArrays) {
+            int ts = Arrays.stream(nums.stream().mapToInt(x -> x).toArray()).sum();
+            int ssf = 0;
+            for (int i = 0; i < nums.size(); i++) {
+                ssf += nums.get(i);
+                if ((ssf >= m || i == 0) && ((ts - ssf) >= m || i == nums.size() - 2)) {
+                    // make a split
+
+                    subArrays.add(nums.subList(0, i + 1));
+                    subArrays.add(nums.subList(i + 1, nums.size()));
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
 }

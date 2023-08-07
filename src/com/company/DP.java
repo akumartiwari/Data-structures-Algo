@@ -2,7 +2,8 @@ package com.company;
 
 import javafx.util.Pair;
 
-import java.util.HashMap;import java.util.*;
+import java.util.HashMap;
+import java.util.*;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
@@ -1466,6 +1467,276 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return true;
     }
 
+    public int waysToReachTarget(int target, int[][] types) {
+        int[][] dp = new int[target + 1][types.length + 1];
+        for (int[] d : dp) Arrays.fill(d, -1);
+        return helper(target, types, 0, dp);
+    }
+
+    private int helper(int target, int[][] types, int ind, int[][] dp) {
+        // base case
+        if (target == 0) return 1;
+        if (ind >= types.length) return 0;
+
+        int ans = 0;
+        int cnt = types[ind][0];
+        int value = types[ind][1];
+
+        if (dp[target][ind] != -1) return dp[target][ind];
+        for (int i = 0; i <= cnt; i++) {
+            if (target - value * i >= 0) {
+                // take
+                ans = (ans + helper(target - value * i, types, ind + 1, dp)) % mod;
+            }
+        }
+        return dp[target][ind] = ans % mod;
+    }
+
+    //DP
+    public long countQuadruplets(int[] nums) {
+        Map<String, Long> dp = new HashMap<>();
+        return helper(nums, 0, new ArrayList<>(), dp);
+    }
+
+    private long helper(int[] nums, int ind, List<Integer> selected, Map<String, Long> dp) {
+
+        String key = String.valueOf(ind);
+        for (int s : selected) key += "-" + s;
+
+        if (selected.size() == 4) {
+            return 1;
+        }
+
+        if (ind >= nums.length || selected.size() > 4) return 0;
+
+        if (dp.containsKey(key)) return dp.get(key);
+
+        long cnt = 0L;
+        // take
+        if (selected.size() == 0
+                || (selected.size() == 1 && selected.get(0) + 1 < nums[ind])
+                || (selected.size() == 2 && selected.get(0) < nums[ind] && selected.get(1) > nums[ind])
+                || (selected.size() == 3
+                && selected.get(0) < nums[ind]
+                && selected.get(1) < nums[ind]
+                && selected.get(2) < nums[ind])
+        ) {
+            selected.add(nums[ind]);
+            cnt += helper(nums, ind + 1, selected, dp);
+            // bactrack
+            selected.remove(selected.size() - 1); // deleted last added element
+        }
+
+        //not-take
+        cnt += helper(nums, ind + 1, selected, dp);
+        dp.put(key, cnt);
+        return cnt;
+    }
+
+    /*
+    You are given a 0-indexed string s and a dictionary of words dictionary.
+    You have to break s into one or more non-overlapping substrings such that each substring is present in dictionary.
+    There may be some extra characters in s which are not present in any of the substrings.
+
+    Return the minimum number of extra characters left over if you break up s optimally.
+
+    Input: s = "leetscode", dictionary = ["leet","code","leetcode"]
+    Output: 1
+    Explanation: We can break s in two substrings: "leet" from index 0 to 3 and "code" from index 5 to 8.
+     There is only 1 unused character (at index 4), so we return 1.
+     */
+    public int func(int idx, String s, Set<String> st, int[] dp) {
+        if (idx == s.length())
+            return 0;
+        if (dp[idx] != -1)
+            return dp[idx];
+        int res = Integer.MAX_VALUE;
+        for (int j = idx; j < s.length(); ++j) {
+            String str = s.substring(idx, j + 1);
+            if (st.contains(str))
+                res = Math.min(res, func(j + 1, s, st, dp));
+            else
+                res = Math.min(res, j - idx + 1 + func(j + 1, s, st, dp));
+        }
+        return dp[idx] = res;
+    }
+
+    public int minExtraChar(String s, String[] dictionary) {
+        int[] dp = new int[s.length() + 1];
+        Arrays.fill(dp, -1);
+        Set<String> st = new HashSet<>(Arrays.asList(dictionary));
+        return func(0, s, st, dp);
+    }
+
+    public int maximumJumps(int[] nums, int target) {
+        int[] dp = new int[nums.length];
+        Arrays.fill(dp, Integer.MIN_VALUE);
+        return mj(nums, target, 0, nums[0], dp);
+    }
+
+    /*
+    Input: nums = [1,3,6,4,1,2], target = 2
+    Output: 3
+    Explanation: To go from index 0 to index n - 1 with the maximum number of jumps, you can perform the following jumping sequence:
+    - Jump from index 0 to index 1.
+    - Jump from index 1 to index 3.
+    - Jump from index 3 to index 5.
+    It can be proven that there is no other jumping sequence that goes from 0 to n - 1 with more than 3 jumps. Hence, the answer is 3.
+     */
+
+    private int mj(int[] nums, int target, int ind, int last, int[] dp) {
+
+        // base case
+        if (ind == nums.length - 1) {
+            return 0;
+        }
+
+        if (dp[ind] != Integer.MIN_VALUE) return dp[ind];
+
+        int res = -1;
+
+        for (int i = ind + 1; i < nums.length; i++) {
+
+            if (Math.abs(nums[i] - last) <= target) {
+
+                int solve = mj(nums, target, i, nums[i], dp);
+                if (solve != -1) {
+                    res = Math.max(res, 1 + solve);
+                }
+            }
+        }
+
+        return dp[ind] = res;
+    }
+
+    /*
+    Input: nums1 = [2,3,1], nums2 = [1,2,1]
+    Output: 2
+    Explanation: One way to construct nums3 is:
+    nums3 = [nums1[0], nums2[1], nums2[2]] => [2,2,1].
+    The subarray starting from index 0 and ending at index 1, [2,2], forms a non-decreasing subarray of length 2.
+    We can show that 2 is the maximum achievable length.
+
+     */
+    //TC = O(3N), SC = O(3n)
+    public int maxNonDecreasingLength(int[] nums1, int[] nums2) {
+
+        int[][] dp = new int[nums1.length][3];
+        for (int[] d : dp) Arrays.fill(d, -1);
+        return helper(0, nums1, nums2, 0, dp);
+    }
+
+    private int helper(int ind, int[] nums1, int[] nums2, int choice, int[][] dp) {
+        // base case
+        if (ind >= nums1.length) return 0;
+
+        int maxLen = 0;
+
+        if (dp[ind][choice] != -1) return dp[ind][choice];
+
+
+        //take
+        if (choice == 0) {
+            // not-take current guy
+            maxLen = Math.max(maxLen, helper(ind + 1, nums1, nums2, 0, dp));
+        }
+
+        int prev = choice == 0 ? -1 : choice == 1 ? nums1[ind - 1] : nums2[ind - 1];
+
+        if (nums1[ind] >= prev) {
+            maxLen = Math.max(maxLen, 1 + helper(ind + 1, nums1, nums2, 1, dp));
+        }
+        if (nums2[ind] >= prev) {
+            maxLen = Math.max(maxLen, 1 + helper(ind + 1, nums1, nums2, 2, dp));
+        }
+
+
+        return dp[ind][choice] = maxLen;
+    }
+
+    public long maxScore(int[] nums, int x) {
+        long[][] dp = new long[nums.length][2];
+        for (long[] d : dp) Arrays.fill(d, -1L);
+
+        return nums[0] + helper(nums, x, 0, nums[0] % 2, dp);
+    }
+
+    private long helper(int[] nums, int x, int ind, int parity, long[][] dp) {
+
+        // base case
+        if (ind >= nums.length - 1) return 0;
+        if (dp[ind][parity] != -1) return dp[ind][parity];
+        long max = 0;
+        int i = ind + 1;
+        //take
+        if (parity == nums[i] % 2) {
+            max = Math.max(max, nums[i] + helper(nums, x, i, parity, dp));
+        } else {
+            max = Math.max(max, nums[i] + helper(nums, x, i, nums[i] % 2, dp) - x);
+        }
+
+        //not-take
+        max = Math.max(max, helper(nums, x, i, parity, dp));
+        return dp[ind][parity] = max;
+    }
+
+    public int rob(int[] nums) {
+        int[] dp = new int[nums.length];
+        Arrays.fill(dp, -1);
+        return Math.max(nums[0] + helper(nums, 0, dp),
+                nums.length > 1 ? nums[1] + helper(nums, 1, dp) : 0);
+    }
+
+    private int helper(int[] nums, int ind, int[] dp) {
+
+        // base case
+        if (ind >= nums.length - 2) return 0;
+        if (dp[ind] != -1) return dp[ind];
+        int max = 0;
+        int i = ind + 2;
+        //take
+        max = Math.max(max, nums[i] + helper(nums, i, dp));
+
+        //not-take
+        max = Math.max(max, helper(nums, i - 1, dp));
+        return dp[ind] = max;
+    }
+
+    /*
+Input: nums = [2, 2, 1], m = 4
+Output: true
+Explanation: We can split the array into [2, 2] and [1] in the first step. Then, in the second step, we can split [2, 2] into [2] and [2]. As a result, the answer is true.
+ */
+    public boolean canSplitArray(List<Integer> nums, int m) {
+        int n = nums.size();
+        int[] ps = new int[n];
+        if (n == 1 || n == 2) return true;
+        for (int i = 0; i < n; i++) ps[i] = i > 0 ? (ps[i - 1] + nums.get(i)) : nums.get(i);
+        int[][] dp = new int[n][n];
+        for (int[] d : dp) Arrays.fill(d, -1);
+        return f(0, n - 1, m, ps, dp);
+    }
+
+    private boolean f(int i, int j, int m, int[] ps, int[][] dp) {
+        // base case
+        if (i == j) return true;
+
+        if (dp[i][j] != -1) return dp[i][j] == 1;
+        boolean left = false, right = false;
+        for (int ind = i; ind < j; ind++) {
+            if ((ind == i || (ps[ind] - (i - 1 >= 0 ? ps[i - 1] : 0) >= m)) && (ind == j - 1 || (ps[j] - ps[ind] >= m))) {
+                // System.out.println(i + ":" + j + ":" + ind);
+                left = f(i, ind, m, ps, dp);
+                right = f(ind + 1, j, m, ps, dp);
+                boolean res = left && right;
+                dp[i][j] = res ? 1 : 0;
+                if (res) return true;
+            }
+        }
+
+        dp[i][j] = 0;
+        return false;
+    }
 
     // TODO
     class Solution {
@@ -1546,244 +1817,5 @@ It can be proven that there are no more than 3 square-free subsets in the given 
             }
         }
     }
-
-    public int waysToReachTarget(int target, int[][] types) {
-        int[][] dp = new int[target + 1][types.length + 1];
-        for (int[] d : dp) Arrays.fill(d, -1);
-        return helper(target, types, 0, dp);
-    }
-
-    private int helper(int target, int[][] types, int ind, int[][] dp) {
-        // base case
-        if (target == 0) return 1;
-        if (ind >= types.length) return 0;
-
-        int ans = 0;
-        int cnt = types[ind][0];
-        int value = types[ind][1];
-
-        if (dp[target][ind] != -1) return dp[target][ind];
-        for (int i = 0; i <= cnt; i++) {
-            if (target - value * i >= 0) {
-                // take
-                ans = (ans + helper(target - value * i, types, ind + 1, dp)) % mod;
-            }
-        }
-        return dp[target][ind] = ans % mod;
-    }
-
-    //DP
-    public long countQuadruplets(int[] nums) {
-        Map<String, Long> dp = new HashMap<>();
-        return helper(nums, 0, new ArrayList<>(), dp);
-    }
-
-    private long helper(int[] nums, int ind, List<Integer> selected, Map<String, Long> dp) {
-
-        String key = String.valueOf(ind);
-        for (int s : selected) key += "-" + s;
-
-        if (selected.size() == 4) {
-            return 1;
-        }
-
-        if (ind >= nums.length || selected.size() > 4) return 0;
-
-        if (dp.containsKey(key)) return dp.get(key);
-
-        long cnt = 0L;
-        // take
-        if (selected.size() == 0
-                || (selected.size() == 1 && selected.get(0) + 1 < nums[ind])
-                || (selected.size() == 2 && selected.get(0) < nums[ind] && selected.get(1) > nums[ind])
-                || (selected.size() == 3
-                && selected.get(0) < nums[ind]
-                && selected.get(1) < nums[ind]
-                && selected.get(2) < nums[ind])
-        ) {
-            selected.add(nums[ind]);
-            cnt += helper(nums, ind + 1, selected, dp);
-            // bactrack
-            selected.remove(selected.size() - 1); // deleted last added element
-        }
-
-        //not-take
-        cnt += helper(nums, ind + 1, selected, dp);
-        dp.put(key, cnt);
-        return cnt;
-    }
-
-
-    /*
-    You are given a 0-indexed string s and a dictionary of words dictionary.
-    You have to break s into one or more non-overlapping substrings such that each substring is present in dictionary.
-    There may be some extra characters in s which are not present in any of the substrings.
-
-    Return the minimum number of extra characters left over if you break up s optimally.
-
-    Input: s = "leetscode", dictionary = ["leet","code","leetcode"]
-    Output: 1
-    Explanation: We can break s in two substrings: "leet" from index 0 to 3 and "code" from index 5 to 8.
-     There is only 1 unused character (at index 4), so we return 1.
-     */
-    public int func(int idx, String s, Set<String> st, int[] dp) {
-        if (idx == s.length())
-            return 0;
-        if (dp[idx] != -1)
-            return dp[idx];
-        int res = Integer.MAX_VALUE;
-        for (int j = idx; j < s.length(); ++j) {
-            String str = s.substring(idx, j + 1);
-            if (st.contains(str))
-                res = Math.min(res, func(j + 1, s, st, dp));
-            else
-                res = Math.min(res, j - idx + 1 + func(j + 1, s, st, dp));
-        }
-        return dp[idx] = res;
-    }
-
-    public int minExtraChar(String s, String[] dictionary) {
-        int[] dp = new int[s.length() + 1];
-        Arrays.fill(dp, -1);
-        Set<String> st = new HashSet<>(Arrays.asList(dictionary));
-        return func(0, s, st, dp);
-    }
-
-    /*
-    Input: nums = [1,3,6,4,1,2], target = 2
-    Output: 3
-    Explanation: To go from index 0 to index n - 1 with the maximum number of jumps, you can perform the following jumping sequence:
-    - Jump from index 0 to index 1.
-    - Jump from index 1 to index 3.
-    - Jump from index 3 to index 5.
-    It can be proven that there is no other jumping sequence that goes from 0 to n - 1 with more than 3 jumps. Hence, the answer is 3.
-     */
-
-    public int maximumJumps(int[] nums, int target) {
-        int[] dp = new int[nums.length];
-        Arrays.fill(dp, Integer.MIN_VALUE);
-        return mj(nums, target, 0, nums[0], dp);
-    }
-
-    private int mj(int[] nums, int target, int ind, int last, int[] dp) {
-
-        // base case
-        if (ind == nums.length - 1) {
-            return 0;
-        }
-
-        if (dp[ind] != Integer.MIN_VALUE) return dp[ind];
-
-        int res = -1;
-
-        for (int i = ind + 1; i < nums.length; i++) {
-
-            if (Math.abs(nums[i] - last) <= target) {
-
-                int solve = mj(nums, target, i, nums[i], dp);
-                if (solve != -1) {
-                    res = Math.max(res, 1 + solve);
-                }
-            }
-        }
-
-        return dp[ind] = res;
-    }
-
-
-    /*
-    Input: nums1 = [2,3,1], nums2 = [1,2,1]
-    Output: 2
-    Explanation: One way to construct nums3 is:
-    nums3 = [nums1[0], nums2[1], nums2[2]] => [2,2,1].
-    The subarray starting from index 0 and ending at index 1, [2,2], forms a non-decreasing subarray of length 2.
-    We can show that 2 is the maximum achievable length.
-
-     */
-    //TC = O(3N), SC = O(3n)
-    public int maxNonDecreasingLength(int[] nums1, int[] nums2) {
-
-        int[][] dp = new int[nums1.length][3];
-        for (int[] d : dp) Arrays.fill(d, -1);
-        return helper(0, nums1, nums2, 0, dp);
-    }
-
-    private int helper(int ind, int[] nums1, int[] nums2, int choice, int[][] dp) {
-        // base case
-        if (ind >= nums1.length) return 0;
-
-        int maxLen = 0;
-
-        if (dp[ind][choice] != -1) return dp[ind][choice];
-
-
-        //take
-        if (choice == 0) {
-            // not-take current guy
-            maxLen = Math.max(maxLen, helper(ind + 1, nums1, nums2, 0, dp));
-        }
-
-        int prev = choice == 0 ? -1 : choice == 1 ? nums1[ind - 1] : nums2[ind - 1];
-
-        if (nums1[ind] >= prev) {
-            maxLen = Math.max(maxLen, 1 + helper(ind + 1, nums1, nums2, 1, dp));
-        }
-        if (nums2[ind] >= prev) {
-            maxLen = Math.max(maxLen, 1 + helper(ind + 1, nums1, nums2, 2, dp));
-        }
-
-
-        return dp[ind][choice] = maxLen;
-    }
-
-
-    public long maxScore(int[] nums, int x) {
-        long[][] dp = new long[nums.length][2];
-        for (long[] d : dp) Arrays.fill(d, -1L);
-
-        return nums[0] + helper(nums, x, 0, nums[0] % 2, dp);
-    }
-
-    private long helper(int[] nums, int x, int ind, int parity, long[][] dp) {
-
-        // base case
-        if (ind >= nums.length - 1) return 0;
-        if (dp[ind][parity] != -1) return dp[ind][parity];
-        long max = 0;
-        int i = ind + 1;
-        //take
-        if (parity == nums[i] % 2) {
-            max = Math.max(max, nums[i] + helper(nums, x, i, parity, dp));
-        } else {
-            max = Math.max(max, nums[i] + helper(nums, x, i, nums[i] % 2, dp) - x);
-        }
-
-        //not-take
-        max = Math.max(max, helper(nums, x, i, parity, dp));
-        return dp[ind][parity] = max;
-    }
-
-    public int rob(int[] nums) {
-        int[] dp = new int[nums.length];
-        Arrays.fill(dp, -1);
-        return Math.max(nums[0] + helper(nums, 0, dp),
-                nums.length > 1 ? nums[1] + helper(nums, 1, dp) : 0);
-    }
-
-    private int helper(int[] nums, int ind, int[] dp) {
-
-        // base case
-        if (ind >= nums.length - 2) return 0;
-        if (dp[ind] != -1) return dp[ind];
-        int max = 0;
-        int i = ind + 2;
-        //take
-        max = Math.max(max, nums[i] + helper(nums, i, dp));
-
-        //not-take
-        max = Math.max(max, helper(nums, i - 1, dp));
-        return dp[ind] = max;
-    }
-
 
 }
