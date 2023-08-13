@@ -1,11 +1,7 @@
 package com.company;
 
-import javafx.util.Pair;
-
 import java.util.HashMap;
 import java.util.*;
-import java.util.HashMap;
-import java.util.stream.Collectors;
 
 public class DP {
 
@@ -1738,6 +1734,78 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return false;
     }
 
+    public int numberWaysTopDown(List<List<Integer>> hats) {
+        int n = hats.size();
+        int[] dp = new int[1 << n]; // {mask of selected person, ways}
+        dp[0] = 1; // 1 way to not select any person for hat
+
+        //create adj matrix for cap to people distribution
+        List<Integer>[] hattToP = new List[41];
+        for (int i = 1; i <= 40; i++) hattToP[i] = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            for (int h : hats.get(i)) {
+                hattToP[h].add(i);
+            }
+        }
+        int allMask = (1 << n) - 1;
+
+        for (int hat = 40; hat > 0; hat--) {
+            for (int mask = (1 << n) - 1; mask >= 0; mask--) {
+                int ways = dp[mask]; // skip the hat
+                for (Integer p : hattToP[hat]) {
+                    // if person already assigned a hat the skip
+                    if ((mask & (1 << p)) == 0) {
+                        ways += dp[mask | (1 << p)];
+                        ways %= mod;
+                        dp[mask | (1 << p)] = ways;
+                    }
+                }
+            }
+        }
+
+        return dp[allMask];
+    }
+
+    class Recursive {
+        public int numberWays(List<List<Integer>> hats) {
+            int n = hats.size();
+            Integer[][] dp = new Integer[41][1 << 10]; // {Pair(cap, mask of selected person), ways}
+            //create adj matrix for cap to people distribution
+            List<Integer>[] hattToP = new List[41];
+            for (int i = 1; i <= 40; i++) hattToP[i] = new ArrayList<>();
+
+            for (int i = 0; i < n; i++) {
+                for (int h : hats.get(i)) {
+                    hattToP[h].add(i);
+                }
+            }
+            return dfs((1 << n) - 1, 0, 1, hattToP, dp); // start with 1st hat and traverse through all
+        }
+
+        private int dfs(int allMask,
+                        int assignedPeople,
+                        int hat,
+                        List<Integer>[] hattToP,
+                        Integer[][] dp) {
+
+            if (assignedPeople == allMask) return 1;
+            if (hat > 40) return 0; // person can't wear hat > 40 number
+
+            if (dp[hat][assignedPeople] != null) return dp[hat][assignedPeople];
+            int ways = dfs(allMask, assignedPeople, hat + 1, hattToP, dp); // skip the hat
+
+            for (Integer p : hattToP[hat]) {
+                // if person already assigned a hat the skip
+                if ((assignedPeople & (1 << p)) == 0) {
+                    ways += dfs(allMask, assignedPeople | (1 << p), hat + 1, hattToP, dp);
+                    ways %= mod;
+                }
+            }
+            return dp[hat][assignedPeople] = ways;
+        }
+
+    }
 
     class TopDownDP {
         /*
@@ -1758,11 +1826,10 @@ It can be proven that there are no more than 3 square-free subsets in the given 
             int n = ps.length;
             boolean left = false, right = false;
 
-            for (int i=0;i<n;i++){
-                for (int j=n-1;j>=0;j--){
+            for (int i = 0; i < n; i++) {
+                for (int j = n - 1; j >= 0; j--) {
                     for (int ind = i; ind < j; ind++) {
                         if ((ind == i || (ps[ind] - (i - 1 >= 0 ? ps[i - 1] : 0) >= m)) && (ind == j - 1 || (ps[j] - ps[ind] >= m))) {
-                            // System.out.println(i + ":" + j + ":" + ind);
                             left = dp[i][ind];
                             right = dp[ind + 1][j];
                             boolean res = left && right;
@@ -1775,85 +1842,4 @@ It can be proven that there are no more than 3 square-free subsets in the given 
             return false;
         }
     }
-
-    // TODO
-    class Solution {
-        public int mostProfitablePath(int[][] edges, int bob, int[] amount) {
-            Map<Integer, List<Integer>> graph = new HashMap<>();
-            Map<Pair<Integer, Integer>, Integer> dm = new HashMap<>(); // wt of each edge
-
-            int n = amount.length;
-            for (int[] edge : edges) {
-                int start = edge[0];
-                int end = edge[1];
-
-                dm.put(new Pair<>(start, end), amount[end]);
-                dm.put(new Pair<>(end, start), amount[start]);
-
-                if (graph.containsKey(edge[0])) {
-                    List<Integer> exist = graph.get(edge[0]);
-                    exist.add(edge[1]);
-                    graph.put(edge[0], exist);
-                } else graph.put(edge[0], new ArrayList<>(Collections.singletonList(edge[1])));
-
-                if (graph.containsKey(edge[1])) {
-                    List<Integer> exist = graph.get(edge[1]);
-                    exist.add(edge[0]);
-                    graph.put(edge[1], exist);
-                } else graph.put(edge[1], new ArrayList<>(Collections.singletonList(edge[0])));
-            }
-            // To fetch the shortest path from all possible nodes
-            TreeMap<Integer, Pair<Long, Long>> tm = new TreeMap<>();
-
-            for (int i = 0; i < n; i++) {
-                tm.put(i, new Pair<>(Long.MAX_VALUE, 0L));
-            }
-
-            // Bob
-            shortestPath(bob, tm, graph, dm);
-
-            // To fetch the shortest path from all possible nodes
-            TreeMap<Integer, Pair<Long, Long>> atm = new TreeMap<>();
-
-            for (int i = 0; i < n; i++) {
-                atm.put(i, new Pair<>(Long.MAX_VALUE, 0L));
-            }
-
-
-            //Alice
-            shortestPath(0, atm, graph, dm);
-
-            int cost = 0;
-            for (Map.Entry<Integer, Pair<Long, Long>> entry : atm.entrySet()) {
-                if (tm.containsKey(entry.getKey()) && tm.get(entry.getKey()).getValue() == entry.getValue().getValue()) {
-                    cost += entry.getValue().getValue() / 2;
-                } else if (tm.containsKey(entry.getKey()) && tm.get(entry.getKey()).getValue() >= entry.getValue().getValue())
-                    cost += entry.getValue().getKey();
-            }
-
-            return cost;
-        }
-
-
-        // Dijkstra algorithm to find the shortest distance b/w each node
-        private void shortestPath(int src, TreeMap<Integer, Pair<Long, Long>> tm, Map<Integer, List<Integer>> graph, Map<Pair<Integer, Integer>, Integer> dm) {
-            // min PQ to find SD b/w src, dest
-            PriorityQueue<long[]> queue = new PriorityQueue<>(Comparator.comparingLong(a -> a[1]));
-
-            queue.add(new long[]{src, Long.MAX_VALUE, 0});
-
-            while (!queue.isEmpty()) {
-                long[] node = queue.poll();
-                int to = (int) node[0];
-                long dist = node[1];
-                if (tm.get(to).getKey() != Long.MAX_VALUE && tm.get(to).getKey() <= dist) continue;
-                tm.put(to, new Pair<>(dist, tm.get(to).getValue()));
-                // For all adjacent nodes continue the process;
-                for (int next : graph.get(to)) {
-                    queue.add(new long[]{next, dist + dm.get(new Pair<>(to, next)), tm.get(to).getValue() + 1});
-                }
-            }
-        }
-    }
-
 }

@@ -1,6 +1,5 @@
 package com.company;
 
-import java.util.HashMap;
 import java.util.*;
 
 public class LinkedListProblems {
@@ -142,7 +141,6 @@ public class LinkedListProblems {
 
     }
 
-
     // Insert a node in linked list
     public ListNode insertGreatestCommonDivisors(ListNode head) {
         ListNode ptr = head;
@@ -167,4 +165,118 @@ public class LinkedListProblems {
         return gcd(b % a, a);
     }
 
+    /**
+     * Definition for singly-linked list.
+     * public class ListNode {
+     * int val;
+     * ListNode next;
+     * ListNode() {}
+     * ListNode(int val) { this.val = val; }
+     * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+     * }
+     */
+
+    private ListNode append(ListNode head_ref, int new_data) {
+        /* 1. allocate node */
+        ListNode new_node = new ListNode();
+
+        ListNode last = head_ref; /* used in step 5*/
+
+        /* 2. put in the data */
+        new_node.val = new_data;
+
+    /* 3. This new node is going to be
+    the last node, so make next of
+    it as null*/
+        new_node.next = null;
+
+    /* 4. If the Linked List is empty,
+    then make the new node as head */
+        if (head_ref == null) {
+            head_ref = new_node;
+            return head_ref;
+        }
+
+        /* 5. Else traverse till the last node */
+        while (last.next != null) {
+            last = last.next;
+        }
+
+        /* 6. Change the next of last node */
+        last.next = new_node;
+        return head_ref;
+    }
+
+
+    public ListNode doubleIt(ListNode head) {
+
+        StringBuilder sb = new StringBuilder();
+
+        while (head != null) {
+            sb.append(head.val);
+            head = head.next;
+        }
+
+
+        int carry = 0;
+        StringBuilder nn = new StringBuilder();
+        for (int i = sb.length() - 1; i >= 0; i--) {
+            int c = sb.charAt(i) - '0';
+            int d = (c * 2) + carry;
+            int[] digits = new int[2];
+            int ind = 0;
+            while (d > 0) {
+                digits[ind++] = d % 10;
+                d /= 10;
+            }
+
+            nn.append(digits[0]);
+            carry = digits[1];
+        }
+
+
+        if (carry != 0) nn.append(carry);
+        List<Integer> nll = new ArrayList<>();
+
+        if (nn.toString() == "0") {
+            nll.add(0);
+        } else {
+            for (int i = 0; i < nn.length(); i++) {
+                int c = nn.charAt(i) - '0';
+                nll.add(c);
+            }
+        }
+
+        Collections.reverse(nll);
+        ListNode temp = new ListNode(nll.get(0));
+        for (int i = 1; i < nll.size(); i++) {
+            append(temp, nll.get(i));
+        }
+
+        return temp;
+    }
+
+
+    public int minAbsoluteDifference(List<Integer> nums, int x) {
+
+        TreeMap<Integer, Integer> freq = new TreeMap<>();
+        for (int i = x; i < nums.size(); i++) freq.put(nums.get(i), freq.getOrDefault(nums.get(i), 0) + 1);
+
+        int md = Integer.MAX_VALUE;
+        for (int i = 0; i < nums.size() - x; i++) {
+            int e = nums.get(i);
+            if (freq.floorKey(e) != null) md = Math.min(md, Math.abs(e - freq.floorKey(e)));
+            if (freq.ceilingKey(e) != null) md = Math.min(md, Math.abs(e - freq.ceilingKey(e)));
+
+            freq.put(nums.get(x + i), freq.getOrDefault(nums.get(x + i), 0) - 1);
+            if (freq.get(nums.get(x + i)) <= 0) freq.remove(nums.get(x + i));
+        }
+
+        return md;
+    }
+
+
+
 }
+
+

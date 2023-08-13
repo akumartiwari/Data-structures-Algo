@@ -1,8 +1,24 @@
 package Graph;
 
-import java.util.HashMap;import java.util.*;
+import javafx.util.Pair;
+
+import java.util.HashMap;
+import java.util.*;
 
 public class GraphProblems {
+
+    /*
+    ###BFS+BS###
+   // Algorithm
+   - Store locations of fire Queue
+   - Spread fire upto mn time
+   - Apply bfs+BS and check if user is reachable with t time
+   - If yes then  l = mid
+   - Else  r = mid-1
+   - return l;
+   // TC = O(mnlognm), SC = O(mn)
+  */
+    private static final int[][] DIRS = new int[][]{{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 
     /*
     For each edge (i, j) in edges,
@@ -90,20 +106,6 @@ public class GraphProblems {
         return maxSum;
     }
 
-    static class Node {
-        int value;
-        Set<GraphProblems.Node> next = new HashSet<>();
-
-        Node(int val) {
-            this.value = val;
-        }
-
-        void add(GraphProblems.Node node) {
-            next.add(node); // a ---> [b]
-            node.next.add(this); // b --> [a]
-        }
-    }
-
     // TC = O(mn), SC = O(mn)
     // Author : Anand
     // DFS on graph
@@ -147,20 +149,6 @@ public class GraphProblems {
     private boolean safe(int x, int y, char[][] grid) {
         return x >= 0 && x < grid.length && y >= 0 && y < grid[0].length && grid[x][y] != 'W' && grid[x][y] != 'G';
     }
-
-
-    /*
-    ###BFS+BS###
-   // Algorithm
-   - Store locations of fire Queue
-   - Spread fire upto mn time
-   - Apply bfs+BS and check if user is reachable with t time
-   - If yes then  l = mid
-   - Else  r = mid-1
-   - return l;
-   // TC = O(mnlognm), SC = O(mn)
-  */
-    private static final int[][] DIRS = new int[][]{{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 
     public int maximumMinutes(int[][] grid) {
         int m = grid.length;
@@ -242,5 +230,97 @@ public class GraphProblems {
         }
 
         return copy;
+    }
+
+    // TODO
+    public int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        Map<Pair<Integer, Integer>, Integer> dm = new HashMap<>(); // wt of each edge
+
+        int n = amount.length;
+        for (int[] edge : edges) {
+            int start = edge[0];
+            int end = edge[1];
+
+            dm.put(new Pair<>(start, end), amount[end]);
+            dm.put(new Pair<>(end, start), amount[start]);
+
+            if (graph.containsKey(edge[0])) {
+                List<Integer> exist = graph.get(edge[0]);
+                exist.add(edge[1]);
+                graph.put(edge[0], exist);
+            } else graph.put(edge[0], new ArrayList<>(Collections.singletonList(edge[1])));
+
+            if (graph.containsKey(edge[1])) {
+                List<Integer> exist = graph.get(edge[1]);
+                exist.add(edge[0]);
+                graph.put(edge[1], exist);
+            } else graph.put(edge[1], new ArrayList<>(Collections.singletonList(edge[0])));
+        }
+        // To fetch the shortest path from all possible nodes
+        TreeMap<Integer, Pair<Long, Long>> tm = new TreeMap<>();
+
+        for (int i = 0; i < n; i++) {
+            tm.put(i, new Pair<>(Long.MAX_VALUE, 0L));
+        }
+
+        // Bob
+        shortestPath(bob, tm, graph, dm);
+
+        // To fetch the shortest path from all possible nodes
+        TreeMap<Integer, Pair<Long, Long>> atm = new TreeMap<>();
+
+        for (int i = 0; i < n; i++) {
+            atm.put(i, new Pair<>(Long.MAX_VALUE, 0L));
+        }
+
+
+        //Alice
+        shortestPath(0, atm, graph, dm);
+
+        int cost = 0;
+        for (Map.Entry<Integer, Pair<Long, Long>> entry : atm.entrySet()) {
+            if (tm.containsKey(entry.getKey()) && tm.get(entry.getKey()).getValue() == entry.getValue().getValue()) {
+                cost += entry.getValue().getValue() / 2;
+            } else if (tm.containsKey(entry.getKey()) && tm.get(entry.getKey()).getValue() >= entry.getValue().getValue())
+                cost += entry.getValue().getKey();
+        }
+
+        return cost;
+    }
+
+    // Dijkstra algorithm to find the shortest distance b/w each node
+    private void shortestPath(int src, TreeMap<Integer, Pair<Long, Long>> tm, Map<Integer, List<Integer>> graph, Map<Pair<Integer, Integer>, Integer> dm) {
+        // min PQ to find SD b/w src, dest
+        PriorityQueue<long[]> queue = new PriorityQueue<>(Comparator.comparingLong(a -> a[1]));
+
+        queue.add(new long[]{src, Long.MAX_VALUE, 0});
+
+        while (!queue.isEmpty()) {
+            long[] node = queue.poll();
+            int to = (int) node[0];
+            long dist = node[1];
+            if (tm.get(to).getKey() != Long.MAX_VALUE && tm.get(to).getKey() <= dist) continue;
+            tm.put(to, new Pair<>(dist, tm.get(to).getValue()));
+            // For all adjacent nodes continue the process;
+            for (int next : graph.get(to)) {
+                queue.add(new long[]{next, dist + dm.get(new Pair<>(to, next)), tm.get(to).getValue() + 1});
+            }
+        }
+
+    }
+
+    static class Node {
+        int value;
+        Set<GraphProblems.Node> next = new HashSet<>();
+
+        Node(int val) {
+            this.value = val;
+        }
+
+        void add(GraphProblems.Node node) {
+            next.add(node); // a ---> [b]
+            node.next.add(this); // b --> [a]
+        }
     }
 }
