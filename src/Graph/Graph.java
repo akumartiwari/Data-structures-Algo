@@ -1,8 +1,7 @@
 package Graph;
 
-import javafx.util.Pair;
-
-import java.util.HashMap;import java.util.*;
+import java.util.HashMap;
+import java.util.*;
 
 
 // Adjacency list representation of graph
@@ -99,9 +98,8 @@ public class Graph {
     }
 
 
-//    Connected Components
-//    A connected component is a maximal set of connected vertices.
-
+    //    Connected Components
+    //    A connected component is a maximal set of connected vertices.
     // Count all connected components of a graph
     class CC {
         private final boolean[] marked;
@@ -239,11 +237,11 @@ public class Graph {
     }
 
     // Quick Union + path comparison
-    class QuickUnionPathComparisonUF {
+    class QuickUnionPathCompressionUF {
 
         int[] id;
 
-        QuickUnionPathComparisonUF(int N) {
+        QuickUnionPathCompressionUF(int N) {
             id = new int[N];
             for (int i = 0; i < N; i++) id[i] = i;
         }

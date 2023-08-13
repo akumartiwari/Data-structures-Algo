@@ -2,6 +2,7 @@ package com.company;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class BrainStormingProblems {
@@ -216,4 +217,17 @@ After every letter swap, check if we have the same amount of distinct characters
 
         return len;
     }
+
+    /*
+    Most Optimal:-
+    If we have at least one adjacent pair of elements whose sum >= m then we can chip (slice 1 element from left or right) from either side of array .
+     */
+    public boolean canSplitArray(List<Integer> nums, int m) {
+        for (int i = 0; i < nums.size() - 1; i++) {
+            if (nums.get(i) + nums.get(i + 1) >= m) return true;
+        }
+
+        return nums.size() < 3;
+    }
+
 }
