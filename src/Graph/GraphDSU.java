@@ -2,12 +2,10 @@ package Graph;
 
 import java.util.HashMap;import java.util.*;
 
-// TODO: Study DSU + Bitmasking
 public class GraphDSU {
     public static void main(String[] args) {
         System.out.println(Arrays.toString(groupStrings(new String[]{"a", "b", "ab", "cde"})));
     }
-
 
     public static int[] groupStrings(String[] words) {
         int n = words.length;
