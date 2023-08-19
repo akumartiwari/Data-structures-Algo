@@ -8003,6 +8003,61 @@ Output: [1,2,2,3,5,6]
         return false;
     }
 
+    public int countPairs(List<Integer> nums, int target) {
+
+        int cnt = 0;
+        for (int i = 0; i < nums.size(); i++) {
+            for (int j = i + 1; j < nums.size(); j++) {
+                if (nums.get(i) + nums.get(j) < target) cnt++;
+            }
+        }
+        return cnt;
+    }
+
+    public boolean canMakeSubsequence(String str1, String str2) {
+        int idx = 0, i = 0;
+
+        while (i < str2.length() && idx < str1.length()) {
+            char c = str2.charAt(i);
+
+            int newChar = ((str1.charAt(idx) - 'a') + 1) % 26;
+            char nc = (char) ('a' + (newChar < 0 ? newChar + 26 : newChar));
+
+            if (str1.charAt(idx++) == c || c == nc) i++;
+        }
+
+        return i == str2.length();
+    }
+
+    // TODO: Understand problem statement
+    public int minimumOperations(List<Integer> nums) {
+        int op = 0;
+        List<Integer> clone = new ArrayList<>();
+        clone.addAll(nums);
+        int benchmark = -1;
+
+        if (nums.size() == 1) return op;
+        for (int i = 0; i < nums.size(); i++) {
+
+            if (i == 0) {
+                if (clone.get(i + 1) < clone.get(i)) {
+                    clone.set(i, clone.get(i + 1));
+                    benchmark = clone.get(i + 1);
+                    op++;
+                }
+            } else {
+                if (clone.get(i) < benchmark) {
+                    clone.set(i, benchmark);
+                    op++;
+                }
+            }
+
+            benchmark = clone.get(i);
+        }
+
+        return op;
+    }
+
     class Solution {
 
         int N = 8;
