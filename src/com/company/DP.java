@@ -1767,79 +1767,111 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return dp[allMask];
     }
 
-    class Recursive {
-        public int numberWays(List<List<Integer>> hats) {
-            int n = hats.size();
-            Integer[][] dp = new Integer[41][1 << 10]; // {Pair(cap, mask of selected person), ways}
-            //create adj matrix for cap to people distribution
-            List<Integer>[] hattToP = new List[41];
-            for (int i = 1; i <= 40; i++) hattToP[i] = new ArrayList<>();
 
-            for (int i = 0; i < n; i++) {
-                for (int h : hats.get(i)) {
-                    hattToP[h].add(i);
-                }
+    public int numberWaysRecursive(List<List<Integer>> hats) {
+        int n = hats.size();
+        Integer[][] dp = new Integer[41][1 << 10]; // {Pair(cap, mask of selected person), ways}
+        //create adj matrix for cap to people distribution
+        List<Integer>[] hattToP = new List[41];
+        for (int i = 1; i <= 40; i++) hattToP[i] = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            for (int h : hats.get(i)) {
+                hattToP[h].add(i);
             }
-            return dfs((1 << n) - 1, 0, 1, hattToP, dp); // start with 1st hat and traverse through all
         }
+        return dfs((1 << n) - 1, 0, 1, hattToP, dp); // start with 1st hat and traverse through all
+    }
 
-        private int dfs(int allMask,
-                        int assignedPeople,
-                        int hat,
-                        List<Integer>[] hattToP,
-                        Integer[][] dp) {
+    private int dfs(int allMask,
+                    int assignedPeople,
+                    int hat,
+                    List<Integer>[] hattToP,
+                    Integer[][] dp) {
 
-            if (assignedPeople == allMask) return 1;
-            if (hat > 40) return 0; // person can't wear hat > 40 number
+        if (assignedPeople == allMask) return 1;
+        if (hat > 40) return 0; // person can't wear hat > 40 number
 
-            if (dp[hat][assignedPeople] != null) return dp[hat][assignedPeople];
-            int ways = dfs(allMask, assignedPeople, hat + 1, hattToP, dp); // skip the hat
+        if (dp[hat][assignedPeople] != null) return dp[hat][assignedPeople];
+        int ways = dfs(allMask, assignedPeople, hat + 1, hattToP, dp); // skip the hat
 
-            for (Integer p : hattToP[hat]) {
-                // if person already assigned a hat the skip
-                if ((assignedPeople & (1 << p)) == 0) {
-                    ways += dfs(allMask, assignedPeople | (1 << p), hat + 1, hattToP, dp);
-                    ways %= mod;
-                }
+        for (Integer p : hattToP[hat]) {
+            // if person already assigned a hat the skip
+            if ((assignedPeople & (1 << p)) == 0) {
+                ways += dfs(allMask, assignedPeople | (1 << p), hat + 1, hattToP, dp);
+                ways %= mod;
             }
-            return dp[hat][assignedPeople] = ways;
         }
+        return dp[hat][assignedPeople] = ways;
 
     }
 
-    class TopDownDP {
-        /*
-        Input: nums = [2, 2, 1], m = 4
-        Output: true
-        Explanation: We can split the array into [2, 2] and [1] in the first step. Then, in the second step, we can split [2, 2] into [2] and [2]. As a result, the answer is true.
-         */
-        public boolean canSplitArray(List<Integer> nums, int m) {
-            int n = nums.size();
-            int[] ps = new int[n];
-            if (n == 1 || n == 2) return true;
-            for (int i = 0; i < n; i++) ps[i] = i > 0 ? (ps[i - 1] + nums.get(i)) : nums.get(i);
-            boolean[][] dp = new boolean[n][n];
-            return f(m, ps, dp);
-        }
 
-        private boolean f(int m, int[] ps, boolean[][] dp) {
-            int n = ps.length;
-            boolean left = false, right = false;
+    /*
+    Input: nums = [2, 2, 1], m = 4
+    Output: true
+    Explanation: We can split the array into [2, 2] and [1] in the first step. Then, in the second step, we can split [2, 2] into [2] and [2]. As a result, the answer is true.
+     */
+    public boolean canSplitArrayTopDownDP(List<Integer> nums, int m) {
+        int n = nums.size();
+        int[] ps = new int[n];
+        if (n == 1 || n == 2) return true;
+        for (int i = 0; i < n; i++) ps[i] = i > 0 ? (ps[i - 1] + nums.get(i)) : nums.get(i);
+        boolean[][] dp = new boolean[n][n];
+        return f(m, ps, dp);
+    }
 
-            for (int i = 0; i < n; i++) {
-                for (int j = n - 1; j >= 0; j--) {
-                    for (int ind = i; ind < j; ind++) {
-                        if ((ind == i || (ps[ind] - (i - 1 >= 0 ? ps[i - 1] : 0) >= m)) && (ind == j - 1 || (ps[j] - ps[ind] >= m))) {
-                            left = dp[i][ind];
-                            right = dp[ind + 1][j];
-                            boolean res = left && right;
-                            dp[i][j] = res;
-                            if (res) return true;
-                        }
+    private boolean f(int m, int[] ps, boolean[][] dp) {
+        int n = ps.length;
+        boolean left = false, right = false;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = n - 1; j >= 0; j--) {
+                for (int ind = i; ind < j; ind++) {
+                    if ((ind == i || (ps[ind] - (i - 1 >= 0 ? ps[i - 1] : 0) >= m)) && (ind == j - 1 || (ps[j] - ps[ind] >= m))) {
+                        left = dp[i][ind];
+                        right = dp[ind + 1][j];
+                        boolean res = left && right;
+                        dp[i][j] = res;
+                        if (res) return true;
                     }
                 }
             }
-            return false;
         }
+        return false;
+    }
+
+    /*
+    Traverse through list and set any values {1,2,3} whenver condition breaks.
+    Condition :- nums.get(i) > nums.get(i+1) || nums.get(i) < nums.get(i-1);
+    TC = O(N2*3), SC = O(N2)
+    As N ~=100 that should be fine
+    */
+    public int minimumOperations(List<Integer> nums) {
+        int op = 0;
+        List<Integer> clone = new ArrayList<>();
+        clone.addAll(nums);
+        int benchmark = -1;
+
+        if (nums.size() == 1) return op;
+        for (int i = 0; i < nums.size(); i++) {
+
+            if (i == 0) {
+                if (clone.get(i + 1) < clone.get(i)) {
+                    clone.set(i, clone.get(i + 1));
+                    benchmark = clone.get(i + 1);
+                    op++;
+                }
+            } else {
+                if (clone.get(i) < benchmark) {
+                    clone.set(i, benchmark);
+                    op++;
+                }
+            }
+
+            benchmark = clone.get(i);
+        }
+
+        return op;
     }
 }
