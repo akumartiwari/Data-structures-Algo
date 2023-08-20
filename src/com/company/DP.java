@@ -1874,4 +1874,49 @@ It can be proven that there are no more than 3 square-free subsets in the given 
 
         return op;
     }
+
+    // DP + BS
+    // Upsolve
+    public int maximizeTheProfit(int n, List<List<Integer>> offers) {
+        Collections.sort(offers, new Comparator<List<Integer>>() {
+            @Override
+            public int compare(List<Integer> o1, List<Integer> o2) {
+                return o1.get(0).compareTo(o2.get(0));
+            }
+        });
+        System.out.println(Arrays.deepToString(offers.toArray()));
+        return helper(0, -1, n, offers);
+    }
+
+    private int helper(int ind, int li, int n, List<List<Integer>> offers) {
+        if (ind >= offers.size()) return 0;
+
+        int max = 0;
+        for (int i = ind; i < offers.size(); i++) {
+
+            int o = 0, no = 0;
+            List<Integer> offer = offers.get(i);
+            // No overlap
+            if (li == -1 || li < offer.get(0)) {
+                no += offer.get(2) + helper(ind + 1, offer.get(1), n, offers);
+            }
+            //  They overlap
+            else {
+                int c = 0, p = 0;
+                // take the current one
+                int pv = offers.get(i - 1).get(2);
+                c += offer.get(2) + helper(ind + 1, offer.get(1), n, offers);
+
+                // take the previous
+                p += pv + helper(ind + 1, li, n, offers);
+                o += Math.max(c, p);
+            }
+
+            max = Math.max(o, no);
+        }
+
+        System.out.println("li=" + li + ", max=" + max);
+        return max;
+    }
+
 }
