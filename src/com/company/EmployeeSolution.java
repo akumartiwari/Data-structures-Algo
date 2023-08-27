@@ -71,43 +71,43 @@ Output: [1,2,2,3,5,6]
 
     // Thoughts:-
 
-	/*
+    /*
 
-	   TC = O(2^n), Sc = O(n)
+       TC = O(2^n), Sc = O(n)
 
-	   Algorithm:-
-	  - The idea is to split array in two parts such that
-	     avg(A) = avg(B)
-	  - Iterate thrugh array elements and for each elem
-	     check if we can split it in two parts with equals avg
+       Algorithm:-
+      - The idea is to split array in two parts such that
+         avg(A) = avg(B)
+      - Iterate thrugh array elements and for each elem
+         check if we can split it in two parts with equals avg
 
-	  -  We have choice of take or dont take in first part
-	     ie. if arr(i) is taken in part1 sumA+arr(i)
-	     else sumB + arr(i)
+      -  We have choice of take or dont take in first part
+         ie. if arr(i) is taken in part1 sumA+arr(i)
+         else sumB + arr(i)
 
-	  - Do above step recursilvely and backtrack
-	  - check if sumA == sumB && (index == n-1) { that means all elements have been segregated into two parts successfuly
-	  }
-	     - if true return true
-	      else return false and recurse further
-	  - Add Memoization to improve exponential time complexity
+      - Do above step recursilvely and backtrack
+      - check if sumA == sumB && (index == n-1) { that means all elements have been segregated into two parts successfuly
+      }
+         - if true return true
+          else return false and recurse further
+      - Add Memoization to improve exponential time complexity
 
-	  total  = sumA + sumB
-	  sumB = total - sumA
+      total  = sumA + sumB
+      sumB = total - sumA
 
-	  A+B=n
-	  B=n-A
+      A+B=n
+      B=n-A
 
-	  sumA/A = sumB/B
+      sumA/A = sumB/B
 
-	  sumA/A = total-sumA/B
-	  sumA/A = total-sumA/n-A
-	  n*sumA/A  = total
-	  sumA = total * lenA / n
+      sumA/A = total-sumA/B
+      sumA/A = total-sumA/n-A
+      n*sumA/A  = total
+      sumA = total * lenA / n
 
-	  problem boils down to finding a subsequence of length len1
-	  with sum equals sumA
-	*/
+      problem boils down to finding a subsequence of length len1
+      with sum equals sumA
+    */
     int N = 8;
 
     EmployeeSolution(String n, Integer s) {
@@ -8151,7 +8151,117 @@ Output: [1,2,2,3,5,6]
         return Arrays.stream(numbers.toArray()).mapToInt(x -> (int) x).sum();
     }
 
+    public int furthestDistanceFromOrigin(String moves) {
 
+        int L = 0, R = 0;
+        for (char c : moves.toCharArray()) {
+            if (c == 'L') L++;
+            else if (c == 'R') R++;
+        }
+        StringBuilder sb = new StringBuilder();
+        if (L > R) {
+            sb.append(moves.replaceAll("_", "L"));
+        } else sb.append(moves.replaceAll("_", "R"));
+
+        int distance = 0;
+        for (char c : sb.toString().toCharArray()) {
+            if (c == 'L') distance--;
+            else distance++;
+        }
+
+        return Math.abs(distance);
+    }
+
+    public long minimumPossibleSum(int n, int target) {
+        Set<Integer> numbers = new HashSet<>();
+        int start = 1;
+
+        while (n > 0) {
+            if (numbers.contains(target - start)) {
+                start++;
+                continue;
+            }
+            numbers.add(start++);
+            n--;
+        }
+        long sum = 0L;
+        for (int num : numbers) sum += num;
+        return sum;
+    }
+
+
+    /*
+        Fix for [2,8,32,64] i.e. we can split any element not always the largest one
+     */
+
+    class Solution {
+        public int minOperations(List<Integer> nums, int target) {
+
+            int op = 0;
+            Collections.sort(nums);
+            List<Integer> copy = new ArrayList<>();
+            copy.addAll(nums);
+            List<Integer> nc = new ArrayList<>();
+
+            if (printAnyoneSubsequence(copy.stream().mapToInt(x -> x).toArray(), target, 0, 0L)) return 0;
+            while (true) {
+                long sum = 0L;
+                boolean flag = false;
+                for (int num : copy) {
+                    sum += num;
+                    nc.add(num);
+                    if (sum > target) {
+                        nc.remove(new Integer(num));
+                        int nn = num / 2;
+                        if (sum - nn >= target) {
+                            sum -= nn;
+                            nc.add(nn);
+                        } else nc.addAll(new ArrayList<>(Arrays.asList(nn, nn)));
+
+
+                        flag = true;
+                        op++;
+                        if (sum == target) return op;
+                        break;
+                    } else if (sum == target) return op;
+                }
+
+                if (!flag) return -1;
+                copy.clear();
+                Collections.sort(nc);
+                copy.addAll(nc);
+                nc.clear();
+
+                // check in the copy if target subsequence  exists
+                if (printAnyoneSubsequence(copy.stream().mapToInt(x -> x).toArray(), target, 0, 0L)) return op;
+            }
+        }
+
+
+        /***
+         * Function to print single subsequence of a given sum
+         * @param arr
+         * @param sum
+         */
+        private boolean printAnyoneSubsequence(int[] arr, int targetSum, int idx, long sum) {
+            // base case
+            if (idx == arr.length) {
+                if ((int) sum == targetSum) {
+                    return true;
+                }
+                return false;
+            }
+
+
+            // take
+            sum += arr[idx];
+            if (printAnyoneSubsequence(arr, targetSum, idx + 1, sum)) return true;
+            sum -= arr[idx];
+            // not-take
+            return printAnyoneSubsequence(arr, targetSum, idx + 1, sum);
+        }
+
+    }
 }
 
 

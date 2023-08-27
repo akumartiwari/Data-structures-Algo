@@ -1842,7 +1842,7 @@ It can be proven that there are no more than 3 square-free subsets in the given 
     }
 
     /*
-    Traverse through list and set any values {1,2,3} whenver condition breaks.
+    Traverse through list and set any values {1,2,3} whenever condition breaks.
     Condition :- nums.get(i) > nums.get(i+1) || nums.get(i) < nums.get(i-1);
     TC = O(N2*3), SC = O(N2)
     As N ~=100 that should be fine
