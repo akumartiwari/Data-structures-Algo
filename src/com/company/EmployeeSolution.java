@@ -8191,76 +8191,175 @@ Output: [1,2,2,3,5,6]
 
 
     /*
-        Fix for [2,8,32,64] i.e. we can split any element not always the largest one
+        Fix for [64,32,2,8] 5
+        i.e. we can split any element not always the largest one
      */
 
+
+    public int minOperations(List<Integer> nums, int target) {
+
+        int op = 0;
+        Collections.sort(nums);
+        List<Integer> copy = new ArrayList<>();
+        copy.addAll(nums);
+        List<Integer> nc = new ArrayList<>();
+
+        if (printAnyoneSubsequence(copy.stream().mapToInt(x -> x).toArray(), target, 0, 0L)) return 0;
+        while (true) {
+            long sum = 0L;
+            boolean flag = false;
+            for (int num : copy) {
+                sum += num;
+                nc.add(num);
+                if (sum > target) {
+                    // Attempts for all valid splits and check if possible to get such subsequence
+                    for (int c : nc) {
+                        // valid splits
+                        List<Integer> nnc = new ArrayList<>();
+                        nnc.addAll(nc);
+                        long ns = sum;
+
+                        int nop = op;
+                        if (c > 1) {
+                            nnc.remove(new Integer(c));
+                            int nn = c / 2;
+                            if (ns - nn >= target) {
+                                ns -= nn;
+                                nnc.add(nn);
+                            } else nnc.addAll(new ArrayList<>(Arrays.asList(nn, nn)));
+
+                            nop++;
+                            if (ns == target) return nop;
+
+                            // check in the copy if target subsequence  exists
+                            if (printAnyoneSubsequence(nnc.stream().mapToInt(x -> x).toArray(), target, 0, 0L))
+                                return nop;
+
+                        }
+                    }
+
+                    nc.remove(new Integer(num));
+                    int nn = num / 2;
+                    if (sum - nn >= target) {
+                        sum -= nn;
+                        nc.add(nn);
+                    } else nc.addAll(new ArrayList<>(Arrays.asList(nn, nn)));
+
+
+                    flag = true;
+                    op++;
+                    if (sum == target) return op;
+                    break;
+
+                } else if (sum == target) return op;
+            }
+
+            if (!flag) return -1;
+            copy.clear();
+            Collections.sort(nc);
+            copy.addAll(nc);
+            nc.clear();
+            // check in the copy if target subsequence  exists
+            if (printAnyoneSubsequence(copy.stream().mapToInt(x -> x).toArray(), target, 0, 0L)) return op;
+        }
+    }
+
+
+    /***
+     * Function to print single subsequence of a given sum
+     * @param arr
+     * @param sum
+     */
+    private boolean printAnyoneSubsequence(int[] arr, int targetSum, int idx, long sum) {
+        // base case
+        if (idx == arr.length) {
+            if ((int) sum == targetSum) {
+                return true;
+            }
+            return false;
+        }
+
+
+        // take
+        sum += arr[idx];
+        if (printAnyoneSubsequence(arr, targetSum, idx + 1, sum)) return true;
+        sum -= arr[idx];
+        // not-take
+        return printAnyoneSubsequence(arr, targetSum, idx + 1, sum);
+    }
+
+    // 2nd September
+    public boolean canBeEqual(String s1, String s2) {
+        boolean flag = true;
+        if (s1.charAt(0) != s2.charAt(0)) {
+            if (s1.charAt(2) == s2.charAt(0) && s1.charAt(0) == s2.charAt(2)) {
+            } else flag = false;
+        } else if (s1.charAt(2) != s2.charAt(2)) {
+            flag = false;
+        }
+
+        if (!flag) return flag;
+
+        if (s1.charAt(1) != s2.charAt(1)) {
+            if (s1.charAt(1 + 2) == s2.charAt(1) && s1.charAt(1) == s2.charAt(1 + 2)) {
+            } else flag = false;
+        } else if (s1.charAt(3) != s2.charAt(3)) {
+            flag = false;
+        }
+
+        return flag;
+    }
+
     class Solution {
-        public int minOperations(List<Integer> nums, int target) {
+        public boolean checkStrings(String s1, String s2) {
 
-            int op = 0;
-            Collections.sort(nums);
-            List<Integer> copy = new ArrayList<>();
-            copy.addAll(nums);
-            List<Integer> nc = new ArrayList<>();
+            TreeMap<Character, List<Integer>> tm = new TreeMap<>();
 
-            if (printAnyoneSubsequence(copy.stream().mapToInt(x -> x).toArray(), target, 0, 0L)) return 0;
-            while (true) {
-                long sum = 0L;
-                boolean flag = false;
-                for (int num : copy) {
-                    sum += num;
-                    nc.add(num);
-                    if (sum > target) {
-                        nc.remove(new Integer(num));
-                        int nn = num / 2;
-                        if (sum - nn >= target) {
-                            sum -= nn;
-                            nc.add(nn);
-                        } else nc.addAll(new ArrayList<>(Arrays.asList(nn, nn)));
+            for (int i = 0; i < s1.length(); i++) {
+                char c = s1.charAt(i);
+                if (!tm.containsKey(c)) tm.put(c, new ArrayList<>());
+                tm.get(c).add(i);
+            }
 
+            System.out.println(tm);
+            StringBuilder sb = new StringBuilder();
+            sb.append(s1);
 
-                        flag = true;
-                        op++;
-                        if (sum == target) return op;
+            for (int i = 0; i < s2.length(); i++) {
+
+                char c = s2.charAt(i);
+
+                if (c == sb.charAt(i)) continue;
+
+                if (!tm.containsKey(c)) return false;
+
+                List<Integer> indices = tm.get(c);
+                boolean possible = false;
+                for (int ind : indices) {
+                    if (Math.abs(ind - i) % 2 == 0) {
+                        possible = true;
+                        char prev = sb.charAt(i);
+
+                        tm.get(prev).remove(new Integer(ind));
+                        tm.get(prev).add(i);
+
+                        tm.get(sb.charAt(i)).remove(new Integer(i));
+                        tm.get(sb.charAt(i)).add(ind);
+
+                        sb.setCharAt(i, s2.charAt(i));
+                        sb.setCharAt(ind, prev);
+
                         break;
-                    } else if (sum == target) return op;
+                    }
                 }
 
-                if (!flag) return -1;
-                copy.clear();
-                Collections.sort(nc);
-                copy.addAll(nc);
-                nc.clear();
 
-                // check in the copy if target subsequence  exists
-                if (printAnyoneSubsequence(copy.stream().mapToInt(x -> x).toArray(), target, 0, 0L)) return op;
-            }
-        }
-
-
-        /***
-         * Function to print single subsequence of a given sum
-         * @param arr
-         * @param sum
-         */
-        private boolean printAnyoneSubsequence(int[] arr, int targetSum, int idx, long sum) {
-            // base case
-            if (idx == arr.length) {
-                if ((int) sum == targetSum) {
-                    return true;
-                }
-                return false;
+                System.out.println(sb.toString());
+                if (!possible) return false;
             }
 
-
-            // take
-            sum += arr[idx];
-            if (printAnyoneSubsequence(arr, targetSum, idx + 1, sum)) return true;
-            sum -= arr[idx];
-            // not-take
-            return printAnyoneSubsequence(arr, targetSum, idx + 1, sum);
+            return sb.toString() == s2;
         }
-
     }
 }
 
