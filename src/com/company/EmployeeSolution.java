@@ -8310,55 +8310,140 @@ Output: [1,2,2,3,5,6]
         return flag;
     }
 
-    class Solution {
-        public boolean checkStrings(String s1, String s2) {
+    public int countSymmetricIntegers(int low, int high) {
+        int cnt = 0;
+        for (int i = low; i <= high; i++) if (symmetric(i)) cnt++;
+        return cnt;
+    }
 
-            TreeMap<Character, List<Integer>> tm = new TreeMap<>();
+    public boolean checkStrings(String s1, String s2) {
 
-            for (int i = 0; i < s1.length(); i++) {
-                char c = s1.charAt(i);
-                if (!tm.containsKey(c)) tm.put(c, new ArrayList<>());
-                tm.get(c).add(i);
-            }
+        TreeMap<Character, List<Integer>> tm = new TreeMap<>();
 
-            System.out.println(tm);
-            StringBuilder sb = new StringBuilder();
-            sb.append(s1);
+        for (int i = 0; i < s1.length(); i++) {
+            char c = s1.charAt(i);
+            if (!tm.containsKey(c)) tm.put(c, new ArrayList<>());
+            tm.get(c).add(i);
+        }
 
-            for (int i = 0; i < s2.length(); i++) {
+        System.out.println(tm);
+        StringBuilder sb = new StringBuilder();
+        sb.append(s1);
 
-                char c = s2.charAt(i);
+        for (int i = 0; i < s2.length(); i++) {
 
-                if (c == sb.charAt(i)) continue;
+            char c = s2.charAt(i);
 
-                if (!tm.containsKey(c)) return false;
+            if (c == sb.charAt(i)) continue;
 
-                List<Integer> indices = tm.get(c);
-                boolean possible = false;
-                for (int ind : indices) {
-                    if (Math.abs(ind - i) % 2 == 0) {
-                        possible = true;
-                        char prev = sb.charAt(i);
+            if (!tm.containsKey(c)) return false;
 
-                        tm.get(prev).remove(new Integer(ind));
-                        tm.get(prev).add(i);
+            List<Integer> indices = tm.get(c);
+            boolean possible = false;
+            for (int ind : indices) {
+                if (Math.abs(ind - i) % 2 == 0) {
+                    possible = true;
+                    char prev = sb.charAt(i);
 
-                        tm.get(sb.charAt(i)).remove(new Integer(i));
-                        tm.get(sb.charAt(i)).add(ind);
+                    tm.get(prev).remove(new Integer(ind));
+                    tm.get(prev).add(i);
 
-                        sb.setCharAt(i, s2.charAt(i));
-                        sb.setCharAt(ind, prev);
+                    tm.get(sb.charAt(i)).remove(new Integer(i));
+                    tm.get(sb.charAt(i)).add(ind);
 
-                        break;
-                    }
+                    sb.setCharAt(i, s2.charAt(i));
+                    sb.setCharAt(ind, prev);
+
+                    break;
                 }
-
-
-                System.out.println(sb.toString());
-                if (!possible) return false;
             }
 
-            return sb.toString() == s2;
+
+            System.out.println(sb.toString());
+            if (!possible) return false;
+        }
+
+        return sb.toString() == s2;
+    }
+
+
+    private boolean symmetric(int number) {
+        String str = String.valueOf(number);
+
+        if (str.length() % 2 != 0) return false;
+
+        int i = 0, j = str.length() - 1;
+        int sl = 0, sr = 0;
+        while (i <= j) {
+            sl += str.charAt(i++) - '0';
+            sr += str.charAt(j--) - '0';
+        }
+
+        return sl == sr;
+    }
+
+    public int minimumOperations(String num) {
+
+        StringBuilder sb5 = new StringBuilder();
+        StringBuilder sb0 = new StringBuilder();
+        int op5 = 0, op0 = 0;
+        boolean l5 = false;
+        for (int i = num.length() - 1; i >= 0; i--) {
+            int cn = num.charAt(i) - '0';
+            if (sb5.length() == 0) {
+                if (cn == 5) sb5.insert(0, cn);
+                else op5++;
+            } else {
+                StringBuilder check = new StringBuilder();
+                check.append(sb5);
+                int nn = Integer.parseInt(check.insert(0, cn).toString());
+                if (nn % 25 == 0) {
+                    l5 = true;
+                    break;
+                }
+                op5++;
+            }
+        }
+
+        boolean l0 = false;
+        for (int i = num.length() - 1; i >= 0; i--) {
+            int cn = num.charAt(i) - '0';
+            if (sb0.length() == 0) {
+                if (cn == 0) {
+                    l0 = true;
+                    sb0.insert(0, cn);
+                } else op0++;
+            } else {
+                StringBuilder check = new StringBuilder();
+                check.append(sb0);
+                int nn = Integer.parseInt(check.insert(0, cn).toString());
+                if (nn % 25 == 0) {
+                    l0 = true;
+                    break;
+                }
+                op0++;
+            }
+        }
+
+        if (op0 == 0 && !l0) {
+            if (op5 > 0 && l5) return op5;
+        }
+        if (op5 == 0 && !l5) {
+            if (op0 > 0 && l0) return op0;
+        }
+
+        if (l0 && l5) return Math.min(op0, op5);
+        if (l0) return op0;
+        if (l5) return op5;
+        return num.length();
+    }
+
+
+
+
+    class Solution {
+        public long countInterestingSubarrays(List<Integer> nums, int modulo, int k) {
+            return 0L;
         }
     }
 }
