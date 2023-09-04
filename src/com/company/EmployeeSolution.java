@@ -8437,15 +8437,6 @@ Output: [1,2,2,3,5,6]
         if (l5) return op5;
         return num.length();
     }
-
-
-
-
-    class Solution {
-        public long countInterestingSubarrays(List<Integer> nums, int modulo, int k) {
-            return 0L;
-        }
-    }
 }
 
 

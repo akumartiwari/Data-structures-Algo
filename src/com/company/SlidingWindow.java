@@ -4,6 +4,18 @@ import java.util.HashMap;
 import java.util.*;
 
 public class SlidingWindow {
+    /*
+    Input: tiles = [[1,5],[10,11],[12,18],[20,25],[30,32]], carpetLen = 10
+    Output: 9
+    Explanation: Place the carpet starting on tile 10.
+    It covers 9 white tiles, so we return 9.
+    Note that there may be other places where the carpet covers 9 white tiles.
+    It can be shown that the carpet cannot cover more than 9 white tiles.
+     */
+    // Author: Anand
+    int end = 1;
+    int start = 0;
+
     // Sliding window
     // TC = O(26N)
     //Author: Anand
@@ -29,18 +41,6 @@ public class SlidingWindow {
 
         return total;
     }
-
-    /*
-    Input: tiles = [[1,5],[10,11],[12,18],[20,25],[30,32]], carpetLen = 10
-    Output: 9
-    Explanation: Place the carpet starting on tile 10.
-    It covers 9 white tiles, so we return 9.
-    Note that there may be other places where the carpet covers 9 white tiles.
-    It can be shown that the carpet cannot cover more than 9 white tiles.
-     */
-    // Author: Anand
-    int end = 1;
-    int start = 0;
 
     int maximumWhiteTiles(int[][] tiles, int len) {
 
@@ -139,24 +139,24 @@ public class SlidingWindow {
         return cnt;
     }
 
-    //TODO: complete
-    class Solution {
-        public int maximumBeauty(int[] nums, int k) {
-            int maxLen = 0, len = 0;
-            Arrays.sort(nums);
 
-            int i = 0, j = 0;
-            int[] range = new int[]{nums[0] - k, nums[0] + k};
+    /*
+    nums[i] % modulo == k. Then, cnt % modulo == k.
+     Solve using sliding window alogorithm
+     */
+    public long countInterestingSubarrays(List<Integer> nums, int modulo, int k) {
+        long sum = 0L;
+        long cnt = 0L;
 
-            for (i = 0, j = 0; i < nums.length; ++i) {
-                // condition fails
-                while (nums[i] < range[0] || nums[i] < range[1]) {
-                    j++;
-                }
+        for (int i = 0, j = 0; i < nums.size(); ++i) {
+            sum += nums.get(i);
+            while ((i - j + 1) * sum >= k) {
+                sum -= nums.get(j++);
             }
-
-            return len;
+            cnt += i - j + 1;
         }
+
+        return cnt;
     }
 
     public int subarrayLCM(int[] nums, int k) {
@@ -190,7 +190,6 @@ public class SlidingWindow {
         return gcd(b, a % b);
 
     }
-
 
     /*
     Input: nums = [1,3,0,0,2,0,0,4]
@@ -269,5 +268,25 @@ public class SlidingWindow {
 
         return maxSum;
 
+    }
+
+    //TODO: complete
+    class Solution {
+        public int maximumBeauty(int[] nums, int k) {
+            int maxLen = 0, len = 0;
+            Arrays.sort(nums);
+
+            int i = 0, j = 0;
+            int[] range = new int[]{nums[0] - k, nums[0] + k};
+
+            for (i = 0, j = 0; i < nums.length; ++i) {
+                // condition fails
+                while (nums[i] < range[0] || nums[i] < range[1]) {
+                    j++;
+                }
+            }
+
+            return len;
+        }
     }
 }
