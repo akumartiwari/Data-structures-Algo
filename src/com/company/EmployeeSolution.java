@@ -7,7 +7,6 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
-import java.util.HashMap;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -5489,6 +5488,7 @@ Output: [1,2,2,3,5,6]
 
             while (true) {
                 boolean canMove = false;
+                int[][] dirs = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
 
                 for (int[] dir : dirs) {
                     int nx = x + dir[0];
@@ -8384,58 +8384,179 @@ Output: [1,2,2,3,5,6]
 
     public int minimumOperations(String num) {
 
-        StringBuilder sb5 = new StringBuilder();
-        StringBuilder sb0 = new StringBuilder();
-        int op5 = 0, op0 = 0;
-        boolean l5 = false;
+        boolean zeroFound = false, fiveFound = false;
         for (int i = num.length() - 1; i >= 0; i--) {
-            int cn = num.charAt(i) - '0';
-            if (sb5.length() == 0) {
-                if (cn == 5) sb5.insert(0, cn);
-                else op5++;
-            } else {
-                StringBuilder check = new StringBuilder();
-                check.append(sb5);
-                int nn = Integer.parseInt(check.insert(0, cn).toString());
-                if (nn % 25 == 0) {
-                    l5 = true;
-                    break;
-                }
-                op5++;
-            }
-        }
+            if (zeroFound && num.charAt(i) == '0') return num.length() - 2 - i;
+            if (zeroFound && num.charAt(i) == '5') return num.length() - 2 - i;
+            if (fiveFound && num.charAt(i) == '2') return num.length() - 2 - i;
+            if (fiveFound && num.charAt(i) == '7') return num.length() - 2 - i;
 
-        boolean l0 = false;
-        for (int i = num.length() - 1; i >= 0; i--) {
-            int cn = num.charAt(i) - '0';
-            if (sb0.length() == 0) {
-                if (cn == 0) {
-                    l0 = true;
-                    sb0.insert(0, cn);
-                } else op0++;
-            } else {
-                StringBuilder check = new StringBuilder();
-                check.append(sb0);
-                int nn = Integer.parseInt(check.insert(0, cn).toString());
-                if (nn % 25 == 0) {
-                    l0 = true;
-                    break;
-                }
-                op0++;
-            }
-        }
+            if (num.charAt(i) == '0') zeroFound = true;
+            if (num.charAt(i) == '5') fiveFound = true;
 
-        if (op0 == 0 && !l0) {
-            if (op5 > 0 && l5) return op5;
         }
-        if (op5 == 0 && !l5) {
-            if (op0 > 0 && l0) return op0;
-        }
-
-        if (l0 && l5) return Math.min(op0, op5);
-        if (l0) return op0;
-        if (l5) return op5;
+        if (zeroFound) return num.length() - 1;
         return num.length();
+    }
+
+
+    // 10th Sep
+    public int numberOfPoints(List<List<Integer>> nums) {
+        Set<Integer> points = new HashSet<>();
+        for (List<Integer> range : nums) {
+            int start = range.get(0);
+            int end = range.get(1);
+            for (int i = start; i <= end; i++) points.add(i);
+        }
+        return points.size();
+    }
+
+    public boolean isReachableAtTime(int sx, int sy, int fx, int fy, int t) {
+        int dx = Math.abs(fx - sx);
+        int dy = Math.abs(fy - sy);
+        if (dx == 0 && dy == 0 && t == 1) return false;
+        return Math.max(dx, dy) <= t;
+    }
+
+    // TODO: Optimise solution
+    class minimumMoves {
+        int[][] dirs = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+
+        public int minimumMoves(int[][] grid) {
+            int moves = 0;
+            Map<int[], Integer> tm = new HashMap<>(); // coordinate,distance
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    if (grid[i][j] == 0) {
+                        int[][] visited = new int[3][3];
+                        int d = nearestNeighbour(grid, visited, new int[]{i, j}, false);
+                        tm.put(new int[]{i, j}, d);
+                    }
+                }
+            }
+
+
+            LinkedHashMap<int[], Integer> sortedMap = tm.entrySet().stream()
+                    .sorted((i1, i2) -> i1.getValue().compareTo(i2.getValue()))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+            System.out.println(sortedMap);
+
+
+            // group by distances and take min of all possible permuatations
+            TreeMap<Integer, List<int[]>> pm = new TreeMap<>();
+
+            for (Map.Entry<int[], Integer> entry : sortedMap.entrySet()) {
+                if (!pm.containsKey(entry.getValue())) pm.put(entry.getValue(), new ArrayList<>());
+                pm.get(entry.getValue()).add(entry.getKey());
+            }
+
+            for (Map.Entry<Integer, List<int[]>> entry : pm.entrySet()) {
+                int d = Integer.MAX_VALUE;
+
+                List<int[]> choice = new ArrayList<>();
+                for (List<int[]> perm : permute(entry.getValue())) {
+                    int[][] visited = new int[3][3];
+                    int[][] clone = grid;
+                    int total = 0;
+
+                    for (int[] source : perm) {
+                        total += nearestNeighbour(clone, visited, new int[]{source[0], source[1]}, true);
+                    }
+
+                    if (total < d) {
+                        d = total;
+                        choice = perm;
+                    }
+                }
+
+
+                // make real  selection based on choice
+                int[][] visited = new int[3][3];
+                int total = 0;
+                for (int[] source : choice) {
+                    total += nearestNeighbour(grid, visited, new int[]{source[0], source[1]}, true);
+                }
+
+                moves += total;
+            }
+            return moves;
+        }
+
+        public List<List<int[]>> permute(List<int[]> nums) {
+
+            List<List<int[]>> result = new ArrayList<>();
+            permute(nums, 0, nums.size() - 1, result);
+            return result;
+        }
+
+        private void permute(List<int[]> nums, int l, int r, List<List<int[]>> result) {
+            if (l == r) {
+                result.add(nums);
+                return;
+            }
+            for (int i = l; i <= r; i++) {
+                swap(nums, l, i);
+                permute(nums, l + 1, r, result);
+                swap(nums, l, i);
+            }
+        }
+
+        public void swap(List<int[]> arr, int i, int j) {
+            int[] temp = arr.get(i);
+            arr.set(i, arr.get(j));
+            arr.set(j, temp);
+        }
+
+
+        private int nearestNeighbour(int[][] graph, int[][] visited, int[] src, boolean mark) {
+            int ans = 0;
+            Queue<int[]> queue = new PriorityQueue<>(Comparator.comparingInt(a -> a[2]));
+            queue.add(new int[]{src[0], src[1], 0}); // {distance, coordinates}
+            visited[src[0]][src[1]] = 1;
+            while (!queue.isEmpty()) {
+                int[] elem = queue.poll();
+                int dist = elem[2], x = elem[0], y = elem[1];
+                if (mark) System.out.println(Arrays.toString(elem));
+
+                int max = Integer.MIN_VALUE;
+                int[] choice = new int[2];
+
+                for (int[] dir : dirs) {
+                    int nx = x + dir[0];
+                    int ny = y + dir[1];
+
+                    if (safe(nx, ny) && graph[nx][ny] > 1) {
+                        ans = 1 + dist;
+                        if (graph[nx][ny] > max) {
+                            choice = new int[]{nx, ny};
+                            max = graph[nx][ny];
+                        }
+                        if (!mark) return ans;
+                    }
+
+                    // check for boundary condition
+                    while (safe(nx, ny) && visited[nx][ny] == 0) {
+                        visited[nx][ny] = 1;
+                        queue.add(new int[]{nx, ny, 1 + dist});
+                    }
+                }
+
+                if (mark) System.out.println("choice=" + Arrays.toString(choice));
+                if (max != Integer.MIN_VALUE) {
+                    graph[choice[0]][choice[1]]--;
+                    graph[src[0]][src[1]] = 1;
+                    System.out.println("ans=" + ans);
+                    return ans;
+                }
+            }
+            return ans;
+        }
+
+        private boolean safe(int nx, int ny) {
+            return nx < 3 && nx >= 0 && ny >= 0 && ny < 3;
+        }
+
     }
 }
 

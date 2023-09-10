@@ -403,7 +403,7 @@ public class BinarySearch {
             int key = r[1];
             int value = r[0];
             List<Integer> list = new ArrayList<>();
-            if (map.containsKey(key)) list = map.get(key);
+            if (map.containsKey(key)) list.addAll(map.get(key));
             list.add(value);
             map.put(key, list);
             max = Math.max(max, key);
