@@ -4,7 +4,8 @@ import javafx.util.Pair;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.HashMap;import java.util.*;
+import java.util.HashMap;
+import java.util.*;
 
 public class PriorityQueueExamples {
 
@@ -332,6 +333,49 @@ public class PriorityQueueExamples {
         return minCost;
     }
 
+    /*
+
+    Statement:-
+    You can perform the following operation any number of times:
+    Choose two indices, i and j, where i < j, such that nums[i] < nums[j].
+    Then, remove the elements at indices i and j from nums.
+    The remaining elements retain their original order, and the array is re-indexed.
+
+
+    TC :-
+    Input: nums = [1,1,2]
+    Output: 1
+    Explanation: Initially, nums = [1, 1, 2].
+    In an operation, we can choose index 0 and 2 because nums[0] < nums[2] <=> 1 < 2.
+    Remove indices 0 and 2, and nums becomes [1].
+    It is no longer possible to perform an operation on the array.
+    Hence, the minimum achievable length is 1.
+     */
+    public int minLengthAfterRemovals(List<Integer> nums) {
+        HashMap<Integer, Integer> m = new HashMap<>();
+        for (int num : nums) m.put(num, m.getOrDefault(num, 0) + 1);
+
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> b[1] - a[1]);
+
+        for (Map.Entry<Integer, Integer> entry : m.entrySet()) {
+            pq.offer(new int[]{entry.getKey(), entry.getValue()});
+        }
+
+        while (pq.size() > 1) {
+            int[] maxe = pq.poll();
+            int[] mine = pq.poll();
+
+            maxe[1]--;
+            mine[1]--;
+            if (maxe[1] > 0) pq.offer(maxe);
+            if (mine[1] > 0) pq.offer(mine);
+        }
+
+        int sz = 0;
+        while (!pq.isEmpty()) sz += pq.poll()[1];
+        return sz;
+    }
+
     class Node {
         int roomId;
         int endTime;
@@ -363,4 +407,6 @@ public class PriorityQueueExamples {
             this.end = end;
         }
     }
+
+
 }

@@ -8003,6 +8003,34 @@ Output: [1,2,2,3,5,6]
         return false;
     }
 
+    public int minimumRightShifts(List<Integer> nums) {
+        int op = 0;
+        List<Integer> nl = new ArrayList<>();
+        nl.addAll(nums);
+        if (sorted(nl)) return op;
+        rs(nl);
+        op++;
+
+        while (true) {
+            if (sorted(nl)) return op;
+            if (nl.equals(nums)) return -1;
+            rs(nl);
+            op++;
+        }
+    }
+
+    private void rs(List<Integer> nl) {
+        int n = nl.size();
+        int l = nl.get(n - 1);
+        for (int i = nl.size() - 1; i > 0; i--) nl.set(i, nl.get(i - 1));
+        nl.set(0, l);
+    }
+
+    private boolean sorted(List<Integer> nl) {
+        for (int i = 1; i < nl.size(); i++) if (nl.get(i) < nl.get(i - 1)) return false;
+        return true;
+    }
+
     class Solution {
 
         int N = 8;
@@ -8097,7 +8125,6 @@ Output: [1,2,2,3,5,6]
 
         }
     }
-
 }
 
 
