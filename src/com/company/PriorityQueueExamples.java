@@ -409,4 +409,62 @@ public class PriorityQueueExamples {
     }
 
 
+    //TBD
+    class Solution {
+        public int maxNumberOfAlloys(int n, int k, int budget, List<List<Integer>> composition, List<Integer> stock, List<Integer> cost) {
+
+            int max = 0;
+            for (int i = 0; i < composition.size(); i++) {
+                int cnt = 0;
+                int bc = budget;
+                List<Integer> sc  = new ArrayList<>();
+                sc.addAll(stock);
+
+                int allowithstock = 0;
+                int units=Integer.MAX_VALUE;
+                for (int j=0;j<sc.size(); j++){
+                    int r = composition.get(i).get(j);
+                    int a = sc.get(j);
+                    units = Math.min(units, a/r);
+                }
+
+                for (int j=0;j<sc.size(); j++) sc.set(j, sc.get(j) - units);
+
+                cnt += units;
+
+                // create alloy with remaining stocks
+                PriorityQueue<int[]> pq = new PriorityQueue<>((a,b) -> b[1]*b[0]-a[1]*a[0]); // new int[]{req, cost}
+
+                for (int j=0;j<sc.size(); j++) pq.offer(new int[]{sc.get(j), cost.get(j)});
+
+                while (!pq.isEmpty()){
+                    int[] elem= pq.poll();
+                }
+                while (bc > 0) {
+                    boolean aloy = true;
+                    for (int j = 0; j < composition.get(i).size(); j++) {
+                        int available = sc.get(j);
+                        int demand = composition.get(i).get(j);
+                        if (available >= demand) {
+                            available -= demand;
+                            sc.set(j, available);
+                        } else {
+                            sc.set(j, 0);
+                            demand -= available;
+                            bc -= (demand * cost.get(j));
+                            if (bc < 0) {
+                                aloy=false;
+                                break;
+                            }
+                        }
+                    }
+                    if (aloy) cnt++;
+                }
+
+                max = Math.max(max, cnt);
+            }
+
+            return max;
+        }
+    }
 }
