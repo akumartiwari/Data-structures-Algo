@@ -410,61 +410,71 @@ public class PriorityQueueExamples {
 
 
     //TBD
+    //TC = O(n2logn)
     class Solution {
         public int maxNumberOfAlloys(int n, int k, int budget, List<List<Integer>> composition, List<Integer> stock, List<Integer> cost) {
 
-            int max = 0;
+            long max = 0;
             for (int i = 0; i < composition.size(); i++) {
-                int cnt = 0;
+                long cnt = 0;
                 int bc = budget;
-                List<Integer> sc  = new ArrayList<>();
+                List<Integer> sc = new ArrayList<>();
                 sc.addAll(stock);
 
-                int allowithstock = 0;
-                int units=Integer.MAX_VALUE;
-                for (int j=0;j<sc.size(); j++){
-                    int r = composition.get(i).get(j);
-                    int a = sc.get(j);
-                    units = Math.min(units, a/r);
+                int minA = Integer.MAX_VALUE;
+                for (int j = 0; j < sc.size(); j++) {
+                    int s = sc.get(j);
+                    minA = Math.min(minA, s / composition.get(i).get(j));
                 }
 
-                for (int j=0;j<sc.size(); j++) sc.set(j, sc.get(j) - units);
+                cnt += minA;
 
-                cnt += units;
-
-                // create alloy with remaining stocks
-                PriorityQueue<int[]> pq = new PriorityQueue<>((a,b) -> b[1]*b[0]-a[1]*a[0]); // new int[]{req, cost}
-
-                for (int j=0;j<sc.size(); j++) pq.offer(new int[]{sc.get(j), cost.get(j)});
-
-                while (!pq.isEmpty()){
-                    int[] elem= pq.poll();
-                }
-                while (bc > 0) {
-                    boolean aloy = true;
-                    for (int j = 0; j < composition.get(i).size(); j++) {
-                        int available = sc.get(j);
-                        int demand = composition.get(i).get(j);
-                        if (available >= demand) {
-                            available -= demand;
-                            sc.set(j, available);
-                        } else {
-                            sc.set(j, 0);
-                            demand -= available;
-                            bc -= (demand * cost.get(j));
-                            if (bc < 0) {
-                                aloy=false;
-                                break;
-                            }
-                        }
-                    }
-                    if (aloy) cnt++;
+                //update min stocks
+                for (int j = 0; j < sc.size(); j++) {
+                    int s = sc.get(j);
+                    sc.set(j, s - minA);
                 }
 
+                PriorityQueue<long[]> pq = new PriorityQueue<>(Comparator.comparingLong(a -> (a[0] - a[1]) * a[2]));
+
+                for (int j = 0; j < sc.size(); j++) {
+                    pq.offer(new long[]{sc.get(j), composition.get(i).get(j), cost.get(j)});
+                }
+
+                System.out.println("cnt=" + cnt);
+
+                long[] maxE = pq.poll();
+                System.out.println(Arrays.toString(maxE));
+                long r = maxE[1];
+                long a = maxE[0];
+                long attmept = (long) bc / (long) ((r - a) * maxE[2]);
+                long l = 0, h = attmept;
+                while (l < h) {
+                    long mid = l + (h - l) / 2;
+
+                    System.out.println(l + ":" + mid + ":" + h);
+
+                    if (canDistribute(mid, sc, composition.get(i), bc, cost)) l = mid + 1;
+                    else h = mid;
+                }
+
+                cnt += (l - 1);
                 max = Math.max(max, cnt);
             }
 
-            return max;
+            return (int) max;
+        }
+
+        private boolean canDistribute(long attempt, List<Integer> ssc, List<Integer> requirement, int tb, List<Integer> cost) {
+            for (int j = 0; j < ssc.size(); j++) {
+                if (requirement.get(j) * attempt > ssc.get(j))
+                    tb -= (requirement.get(j) * attempt - ssc.get(j)) * cost.get(j);
+                else ssc.set(j, (int) (ssc.get(j) - requirement.get(j) * attempt));
+                System.out.println("tb=" + tb);
+            }
+
+            System.out.println("tb=" + tb);
+            return tb >= 0;
         }
     }
 }
