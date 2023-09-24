@@ -447,8 +447,8 @@ public class PriorityQueueExamples {
                 System.out.println(Arrays.toString(maxE));
                 long r = maxE[1];
                 long a = maxE[0];
-                long attmept = (long) bc / (long) ((r - a) * maxE[2]);
-                long l = 0, h = attmept;
+                long attempt = (long) bc / (long) ((r - a) * maxE[2]);
+                long l = 0, h = attempt;
                 while (l < h) {
                     long mid = l + (h - l) / 2;
 

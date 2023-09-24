@@ -71,43 +71,43 @@ Output: [1,2,2,3,5,6]
 
     // Thoughts:-
 
-	/*
+    /*
 
-	   TC = O(2^n), Sc = O(n)
+       TC = O(2^n), Sc = O(n)
 
-	   Algorithm:-
-	  - The idea is to split array in two parts such that
-	     avg(A) = avg(B)
-	  - Iterate thrugh array elements and for each elem
-	     check if we can split it in two parts with equals avg
+       Algorithm:-
+      - The idea is to split array in two parts such that
+         avg(A) = avg(B)
+      - Iterate thrugh array elements and for each elem
+         check if we can split it in two parts with equals avg
 
-	  -  We have choice of take or dont take in first part
-	     ie. if arr(i) is taken in part1 sumA+arr(i)
-	     else sumB + arr(i)
+      -  We have choice of take or dont take in first part
+         ie. if arr(i) is taken in part1 sumA+arr(i)
+         else sumB + arr(i)
 
-	  - Do above step recursilvely and backtrack
-	  - check if sumA == sumB && (index == n-1) { that means all elements have been segregated into two parts successfuly
-	  }
-	     - if true return true
-	      else return false and recurse further
-	  - Add Memoization to improve exponential time complexity
+      - Do above step recursilvely and backtrack
+      - check if sumA == sumB && (index == n-1) { that means all elements have been segregated into two parts successfuly
+      }
+         - if true return true
+          else return false and recurse further
+      - Add Memoization to improve exponential time complexity
 
-	  total  = sumA + sumB
-	  sumB = total - sumA
+      total  = sumA + sumB
+      sumB = total - sumA
 
-	  A+B=n
-	  B=n-A
+      A+B=n
+      B=n-A
 
-	  sumA/A = sumB/B
+      sumA/A = sumB/B
 
-	  sumA/A = total-sumA/B
-	  sumA/A = total-sumA/n-A
-	  n*sumA/A  = total
-	  sumA = total * lenA / n
+      sumA/A = total-sumA/B
+      sumA/A = total-sumA/n-A
+      n*sumA/A  = total
+      sumA = total * lenA / n
 
-	  problem boils down to finding a subsequence of length len1
-	  with sum equals sumA
-	*/
+      problem boils down to finding a subsequence of length len1
+      with sum equals sumA
+    */
     int N = 8;
 
     EmployeeSolution(String n, Integer s) {
@@ -8152,6 +8152,57 @@ Output: [1,2,2,3,5,6]
             }
         }
         return cnt;
+    }
+
+    // 24th september
+
+    public String maximumOddBinaryNumber(String s) {
+        long one = s.chars().filter(c -> c == '1').count();
+        int len = s.length();
+        StringBuilder sb = new StringBuilder();
+        while (len-- > 1) {
+            if (one > 1) {
+                sb.append('1');
+                one--;
+            } else sb.append('0');
+        }
+        if (one == 1) sb.append('1');
+        return sb.toString();
+    }
+
+    public long maximumSumOfHeights(List<Integer> maxHeights) {
+        long ans = 0;
+        for (int idx = 0; idx < maxHeights.size(); idx++)
+            ans = Math.max(ans, mr(maxHeights, idx));
+        return ans;
+    }
+
+    private long mr(List<Integer> maxHeights, int ind) {
+
+        long res = 0;
+
+        res += maxHeights.get(ind);
+        // left half
+        int li = ind;
+        int lv = Integer.MAX_VALUE;
+        if (li > 0) lv = Math.min(maxHeights.get(li), maxHeights.get(li - 1));
+
+        while (li-- > 0) {
+            lv = Math.min(maxHeights.get(li), lv);
+            res += lv;
+        }
+
+
+        // right half
+        int ri = ind;
+        int rv = Integer.MAX_VALUE;
+        if (ri < (maxHeights.size() - 1)) rv = Math.min(maxHeights.get(ri), maxHeights.get(ri + 1));
+
+        while (ri++ < maxHeights.size() - 1) {
+            rv = Math.min(maxHeights.get(ri), rv);
+            res += rv;
+        }
+        return res;
     }
 }
 
