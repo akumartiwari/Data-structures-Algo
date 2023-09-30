@@ -1,5 +1,6 @@
 package com.company;
 
+import java.util.List;
 import java.util.Stack;
 
 public class MonotonicStack {
@@ -149,5 +150,9 @@ public class MonotonicStack {
             }
             return subArraySize;
         }
+    }
+    //Use monotonic stack
+    public long maximumSumOfHeights(List<Integer> maxHeights) {
+        return 0L;
     }
 }

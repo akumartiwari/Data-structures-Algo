@@ -8205,11 +8205,75 @@ Output: [1,2,2,3,5,6]
         return res;
     }
 
-    //Use monotonic stack
-    class Solution {
-        public long maximumSumOfHeights(List<Integer> maxHeights) {
+    // 30th Sep
+    public int minOperations(List<Integer> nums, int k) {
+        int op = 0;
+        Map<Integer, Boolean> tm = new HashMap<>();
+        for (int i = nums.size() - 1; i >= 0; i--) {
+            int curr = nums.get(i);
+            op++;
+            if (curr >= 1 && curr <= k) tm.putIfAbsent(curr, true);
+            // check
+            if (tm.size() == k) return op;
+        }
+        return -1;
+    }
 
-            return 0L;
+
+    public int minOperations(int[] nums) {
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
+        int op = 0;
+        for (int e : freq.values()) {
+            if (e == 1) return -1;
+            op += (e / 3) + (e % 3 != 0 ? 1 : 0);
+        }
+        return op;
+    }
+
+
+    //TODO: Complete this
+    class Solution {
+        public int maxSubarrays(int[] nums) {
+
+            int split = 0;
+            int score = -1;
+
+            Set<Integer> set = Arrays.stream(nums).boxed().collect(Collectors.toSet());
+            if (set.size() == 1) {
+                return nums.length;
+            }
+
+            for (int i = 0; i < nums.length; i++) {
+                if (i == 0) {
+                    score = nums[i];
+                    System.out.println(score);
+                    continue;
+                }
+                int prev = score & nums[i];
+                int next = i < nums.length - 1 ? nums[i] & nums[i + 1] : Integer.MAX_VALUE;
+
+                if (prev < score || (prev == score && prev != 0)) {
+                    score = prev;
+                    System.out.println(score);
+                    if (score == 0) {
+                        score = i < nums.length - 1 ? nums[i + 1] : 0;
+                        i++;
+                        split++;
+                    }
+                    continue;
+                }
+                if (prev - score >= next) {
+                    score = nums[i] & nums[i + 1];
+                    i++;
+                } else {
+                    score = prev;
+                }
+                System.out.println("prev=" + prev + ", score=" + score + ",next=" + next + ",nums[i]=" + nums[i]);
+                split++;
+            }
+
+            return split == 0 ? 1 : split;
         }
     }
 }
