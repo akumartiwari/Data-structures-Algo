@@ -8204,6 +8204,14 @@ Output: [1,2,2,3,5,6]
         }
         return res;
     }
+
+    //Use monotonic stack
+    class Solution {
+        public long maximumSumOfHeights(List<Integer> maxHeights) {
+
+            return 0L;
+        }
+    }
 }
 
 

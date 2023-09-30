@@ -59,7 +59,7 @@ public class MonotonicStack {
                 while (!stk.isEmpty() && stk.peek()[0] < nums[i]) {
                     count++;
                     int[] item = stk.pop();
-                    if (item[1] > count) count = item[1];
+                    count = Math.max(count, item[1]);
                 }
                 stk.push(new int[]{nums[i], count});
                 ans = Math.max(ans, count);
@@ -116,7 +116,7 @@ public class MonotonicStack {
         }
         while (!s.isEmpty()) {
             int j = s.pop();
-            left[j] = j - 1 - (-1 + 1) + 1;
+            left[j] = (j - 1) + 1;
         }
         for (int i = 0; i < n; i++)
             sum = sum % mod + (a[i] * (left[i] + 1) * (right[i] + 1)) % mod;
