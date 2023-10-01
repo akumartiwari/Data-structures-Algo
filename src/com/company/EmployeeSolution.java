@@ -8276,6 +8276,62 @@ Output: [1,2,2,3,5,6]
             return split == 0 ? 1 : split;
         }
     }
+
+    // 462/560
+
+    public long maximumTripletValue(int[] nums) {
+
+        int[] min = new int[nums.length];
+        int[] max = new int[nums.length];
+        int maximum = -1, minimum = -1;
+        for (int i = nums.length - 1; i >= 0; i--) {
+            if (minimum == -1 && maximum == -1) {
+                minimum = i;
+                maximum = i;
+                min[i] = minimum;
+                max[i] = maximum;
+            } else {
+
+                if (nums[i] <= nums[minimum]) {
+                    min[i] = i;
+                    minimum = i;
+                } else min[i] = minimum;
+
+                if (nums[i] >= nums[maximum]) {
+                    max[i] = i;
+                    maximum = i;
+                } else max[i] = maximum;
+            }
+        }
+
+
+        System.out.println(Arrays.toString(min));
+
+        System.out.println(Arrays.toString(max));
+
+        long ans = 0L;
+        for (int i = 0; i < nums.length - 1; i++) {
+            int first = nums[i];
+            int second = min[i + 1];
+            if (second >= nums.length - 1) {
+                TreeMap<Integer, List<Integer>> tm = new TreeMap<>();
+                for (int j = i + 1; j < nums.length - 1; j++) {
+                    if (!tm.containsKey(nums[j])) tm.put(nums[j], new ArrayList<>());
+                    tm.get(nums[j]).add(j);
+                }
+
+                if (tm.isEmpty()) continue;
+                second = tm.firstEntry().getValue().get(0);
+            }
+
+            if (second >= nums.length - 1) continue;
+            int third = max[second + 1];
+            ans = Math.max(ans, (long) (first - nums[second]) * nums[third]);
+            System.out.println(ans);
+
+        }
+        return ans;
+    }
 }
 
 
