@@ -8276,6 +8276,35 @@ Output: [1,2,2,3,5,6]
             return split == 0 ? 1 : split;
         }
     }
+
+    /*
+    Input: nums = [12,6,1,2,7]
+    Output: 77
+    Explanation: The value of the triplet (0, 2, 4) is (nums[0] - nums[2]) * nums[4] = 77.
+    It can be shown that there are no ordered triplets of indices with a value greater than 77.
+
+    Algo:-
+        The idea is to calcute maximum from the left, {max, min} to the right and evaluate
+        maximum value for the expression (A[i]-A[j])*A[k] where i < j < k for all {i,j,k} E [0,n-1] where n = size of array
+     */
+    public long maximumTripletValue(int[] nums) {
+        long ans = 0L;
+
+        int n = nums.length;
+        int[] maxL = new int[n], maxR = new int[n];
+        for (int i = 0; i < n; i++) {
+            maxL[i] = i == 0 ? nums[i] : Math.max(maxL[i - 1], nums[i]);
+            maxR[n - 1 - i] = i == 0 ? nums[n - 1 - i] : Math.max(maxR[n - i], nums[n - 1 - i]);
+        }
+
+        for (int i = 1; i < n - 1; i++)
+            ans = Math.max(ans, (long) (maxL[i - 1] - nums[i]) * maxR[i + 1]);
+
+        return ans;
+    }
+
+
+    
 }
 
 
