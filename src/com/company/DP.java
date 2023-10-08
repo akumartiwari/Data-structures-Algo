@@ -1,5 +1,7 @@
 package com.company;
 
+import javafx.util.Pair;
+
 import java.util.HashMap;
 import java.util.*;
 
@@ -1842,4 +1844,110 @@ It can be proven that there are no more than 3 square-free subsets in the given 
             return false;
         }
     }
+
+
+    class Solution {
+        public int minOperations(String s1, String s2, int x) {
+            return f(new StringBuilder(s1), s2, x, 0);
+        }
+
+        private int f(StringBuilder s1, String s2, int x, int ind) {
+            // base case
+            if (ind > s1.length()) return 0;
+
+            if (s1.toString() == s2) return 0;
+
+            int adj = 0, twoi = 0;
+            for (int i = ind; i < s1.length() - 1; i++) {
+
+                if (s1.charAt(i) != s2.charAt(i)) {
+                    if (s1.charAt(i) == 1) s1.setCharAt(i, '0');
+                    else s1.setCharAt(i, '1');
+
+                    if (s1.charAt(i + 1) == 1) s1.setCharAt(i + 1, '0');
+                    else s1.setCharAt(i + 1, '1');
+
+                    adj += 1 + f(s1, s2, x, ind + 1);
+
+
+                    // backtrack
+                    if (s1.charAt(i + 1) == 1) s1.setCharAt(i + 1, '0');
+                    else s1.setCharAt(i + 1, '1');
+
+
+                    for (int j = 0; j < s1.length() & j != i; j++) {
+                        if (s1.charAt(j) == 1) s1.setCharAt(j, '0');
+                        else s1.setCharAt(j, '1');
+                        twoi += x + f(s1, s2, x, ind + 1);
+                        if (s1.charAt(j) == 1) s1.setCharAt(j, '0');
+                        else s1.setCharAt(j, '1');
+                    }
+                }
+            }
+            return Math.min(adj, twoi);
+        }
+    }
+
+    /*
+    "1100011000"
+    "0101001010"
+    2
+    "10110"
+    "00011"
+    4
+    "0110010001101011010"
+    "1011110101000001100"
+    3
+
+    // breaks-
+    "101101"
+    "000000"
+    6
+     */
+
+    public int minOperations(String s1, String s2, int x) {
+
+        List<Integer> indices = new ArrayList<>();
+        for (int i = 0; i < s1.length(); i++) {
+            if (s1.charAt(i) != s2.charAt(i)) indices.add(i);
+        }
+
+        if (indices.size() % 2 != 0) return -1;
+        int mincost = 0;
+
+        List<Integer> clone = new ArrayList<>();
+        clone.addAll(indices);
+        System.out.println("indices=" + Arrays.toString(indices.toArray()));
+
+
+        while (true) {
+            if (indices.isEmpty()) return mincost;
+            TreeMap<Integer, List<Pair<Integer, Integer>>> tm = new TreeMap<>();
+
+            for (int i = 0; i < indices.size() - 1; i++) {
+                int dist = indices.get(i + 1) - indices.get(i);
+                if (!tm.containsKey(dist)) tm.put(dist, new ArrayList<>());
+                tm.get(dist).add(new Pair<>(indices.get(i + 1), indices.get(i)));
+            }
+
+            if (tm.isEmpty()) return mincost;
+
+            System.out.println(tm);
+            System.out.println(Arrays.toString(indices.toArray()));
+            System.out.println(mincost);
+
+            Map.Entry<Integer, List<Pair<Integer, Integer>>> entry = tm.firstEntry();
+            Set<Integer> s = new HashSet<>();
+            for (Pair<Integer, Integer> point : entry.getValue()) {
+                if (!s.contains(point.getKey()) && !s.contains(point.getValue())) {
+                    mincost += Math.min(x, Math.abs(point.getValue() - point.getKey()));
+                    s.add(point.getKey());
+                    s.add(point.getValue());
+                    indices.remove(new Integer(point.getKey()));
+                    indices.remove(new Integer(point.getValue()));
+                }
+            }
+        }
+    }
+
 }

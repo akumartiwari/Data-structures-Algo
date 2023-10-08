@@ -8304,7 +8304,35 @@ Output: [1,2,2,3,5,6]
     }
 
 
+    public int differenceOfSums(int n, int m) {
+        int ts = n * (n + 1) / 2;
+        int ds = 0;
+        int i = 1;
+        System.out.println(ts);
+        int nm = m;
+        while (nm <= n) {
+            ds += nm;
+            nm = m * ++i;
+        }
+        System.out.println(ds);
 
+        return ts - 2 * ds;
+    }
+
+    public int minProcessingTime(List<Integer> processorTime, List<Integer> tasks) {
+
+        Collections.sort(processorTime);
+        Collections.sort(tasks, Collections.reverseOrder());
+
+        int cores = 0;
+        int tt = 0;
+        for (int pt : processorTime) {
+            tt = Math.max(tt, pt + tasks.get(cores));
+            cores += 4;
+        }
+
+        return tt;
+    }
 }
 
 
