@@ -1920,27 +1920,35 @@ It can be proven that there are no more than 3 square-free subsets in the given 
             clone.addAll(indices);
             System.out.println("indices=" + Arrays.toString(indices.toArray()));
 
-            return helper(clone, 0, x);
+            return helper(clone, x);
 
         }
 
 
         // Take any 2 indexes and get min of two operations
-        private int helper(List<Integer> clone, int ind, int x) {
+        private int helper(List<Integer> clone, int x) {
             List<Integer> nc = new ArrayList<>();
             nc.addAll(clone);
 
             int mc = Integer.MAX_VALUE;
             int cost = 0;
-            for (int i = 0; i < clone.size() - 1; i++) {
-                for (int j = i + 1; j < clone.size(); j++) {
-                    clone.remove(j);
-                    clone.remove(i);
-                    cost += Math.min(Math.abs(clone.get(j) - clone.get(i)), x) + helper(clone, 0, x);
+            for (int i = 0; i < nc.size() - 1; i++) {
+                for (int j = i + 1; j < nc.size(); j++) {
+                    int diff = nc.get(j) - nc.get(i);
+                    nc.remove(j);
+                    nc.remove(i);
+                    System.out.println("nc=" + nc);
+
+                    cost += Math.min(Math.abs(diff), x) + helper(nc, x);
+                    //backtrack
+                    nc.set(i, nc.get(i));
+                    nc.set(j, nc.get(j));
+                    mc = Math.min(cost, mc);
+                    System.out.println("cost=" + cost);
                 }
             }
-
-            return mc = Math.min(cost, mc);
+            System.out.println(mc);
+            return mc;
         }
     }
 
