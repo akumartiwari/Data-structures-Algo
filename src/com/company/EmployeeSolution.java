@@ -8333,6 +8333,60 @@ Output: [1,2,2,3,5,6]
 
         return tt;
     }
+
+    // 14th Oct
+    public List<Integer> lastVisitedIntegers(List<String> words) {
+
+        List<Integer> ans = new ArrayList<>();
+        List<String> digits = new ArrayList<>();
+        int k = 0;
+        for (int i = 0; i < words.size(); i++) {
+            String word = words.get(i);
+
+            if (word.equals("prev")) {
+                k++;
+                ans.add((digits.size() - k < digits.size() && digits.size() - k >= 0) ? Integer.parseInt(digits.get(digits.size() - k)) : -1);
+            } else {
+                digits.add(word);
+                k = 0;
+            }
+        }
+
+        return ans;
+    }
+
+    public List<String> getWordsInLongestSubsequence(int n, String[] words, int[] groups) {
+
+        int zero = -1, one = -1;
+        for (int i = 0; i < groups.length; i++) {
+            if (groups[i] == 0 && zero == -1) {
+                zero = i;
+            } else if (one == -1) {
+                one = i;
+            }
+        }
+
+        List<String> z = new ArrayList<>();
+        List<String> o = new ArrayList<>();
+        if (zero != -1) z.addAll(helper(zero, words, groups));
+        if (one != -1) o.addAll(helper(one, words, groups));
+        if (z.size() > o.size()) return z;
+        return o;
+    }
+
+    private List<String> helper(int ind, String[] words, int[] groups) {
+        int prev = -1;
+        List<String> ans = new ArrayList<>();
+        for (int i = ind; i < groups.length; i++) {
+            if (prev == -1) {
+                ans.add(words[i]);
+            } else if (prev != groups[i]) {
+                ans.add(words[i]);
+            }
+            prev = groups[i];
+        }
+        return ans;
+    }
 }
 
 

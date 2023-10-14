@@ -1952,4 +1952,60 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         }
     }
 
+
+    //TODO: Complete this
+    class Solution {
+        List<Integer> take = new ArrayList<>();
+        List<Integer> nottake = new ArrayList<>();
+
+        public List<String> getWordsInLongestSubsequence(int n, String[] words, int[] groups) {
+            List<String> ans = new ArrayList<>();
+            List<Integer> result = helper(0, n, words, groups);
+            for (int r : result) ans.add(words[r]);
+            return ans;
+        }
+
+        private List<Integer> helper(int ind, int n, String[] words, int[] groups) {
+            // base case;
+            if (ind > n) return new ArrayList<>();
+            int t = 0, nt = 0;
+            for (int i = ind; i < groups.length; i++) {
+                if (take.isEmpty()) {
+                    take.add(i);
+                    List<Integer> call = helper(ind + 1, n, words, groups);
+                    t += 1 + call.size();
+                } else if (groups[i] != groups[take.get(take.size() - 1)] && chardiff(words[take.get(take.size() - 1)], words[i]) == 1) {
+                    take.add(i);
+                    List<Integer> call = helper(ind + 1, n, words, groups);
+                    t += 1 + call.size();
+
+                    //backtrack
+                    take.remove(i);
+                    List<Integer> ncall = helper(ind + 1, n, words, groups);
+                    nt += ncall.size();
+                } else {
+                    List<Integer> ncall = helper(ind + 1, n, words, groups);
+                    nt += ncall.size();
+                }
+            }
+
+
+            if (t > nt) {
+                return take;
+            }
+
+            return nottake;
+        }
+
+        private int chardiff(String word1, String word2) {
+            if (word1.length() != word2.length()) return Integer.MAX_VALUE;
+            int cnt = 0;
+            for (int i = 0; i < word1.length(); i++) {
+                if (word1.charAt(i) != word2.charAt(i)) cnt++;
+            }
+
+            return cnt;
+        }
+    }
+
 }
