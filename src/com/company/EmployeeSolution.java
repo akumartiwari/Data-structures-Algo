@@ -8389,18 +8389,6 @@ Output: [1,2,2,3,5,6]
     }
 
 
-    //Store the sorted array
-    public int[] findIndices(int[] nums, int indexDifference, int valueDifference) {
-
-        for (int i = 0; i < nums.length; i++) {
-            for (int j = i + indexDifference; j < nums.length; j++) {
-                if (Math.abs(nums[i] - nums[j]) >= valueDifference) return new int[]{i, j};
-            }
-        }
-        return new int[]{-1, -1};
-    }
-
-
     public String shortestBeautifulSubstring(String s, int k) {
         String ans = "";
         for (int i = 0; i < s.length(); i++) {
@@ -8420,13 +8408,10 @@ Output: [1,2,2,3,5,6]
             for (int j = i + 1; j < s.length(); j++) {
                 if (s.charAt(j) == '1') cnt++;
                 if (cnt == k) {
-                    String str = j <= s.length() - 1 ? s.substring(i, j + 1) : s.substring(i, j);
-                    if (ans.isEmpty()) ans = str;
+                    String str = s.substring(i, j + 1);
+                    if (ans.isEmpty() || str.length() < ans.length()) ans = str;
                     else if (str.length() == ans.length()) {
-                        int ct = str.compareTo(ans);
-                        if (ct < 0) ans = str;
-                    } else if (str.length() < ans.length()) {
-                        ans = str;
+                        if (str.compareTo(ans) < 0) ans = str;
                     }
                 }
             }
@@ -8434,6 +8419,31 @@ Output: [1,2,2,3,5,6]
 
         return ans;
     }
+
+    public int[] findIndices(int[] nums, int indexDifference, int valueDifference) {
+        TreeMap<Integer, int[]> tm = new TreeMap<>();//{index, new int[]{largI, smallI}}
+        for (int i = nums.length - 1; i >= 0; i--) {
+            if (i == nums.length - 1) tm.put(i, new int[]{i, i});
+            else {
+                int[] next = tm.get(i + 1);
+                int nl = next[0];
+                int ns = next[1];
+                tm.put(i, new int[]{(nums[i] > nums[nl] ? i : nl), (nums[i] < nums[ns] ? i : ns)});
+            }
+
+            // check for valid answer
+            int ni = i + indexDifference;
+            int[] values = ni < nums.length ? tm.get(ni) : new int[]{};
+            if (values.length == 0) continue;
+            int ns = values[1];
+            int nl = values[0];
+            if (Math.abs(nums[nl] - nums[i]) >= valueDifference) return new int[]{i, nl};
+            if (Math.abs(nums[ns] - nums[i]) >= valueDifference) return new int[]{i, ns};
+        }
+
+        return new int[]{-1, -1};
+    }
+
 }
 
 

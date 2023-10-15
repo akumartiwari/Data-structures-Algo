@@ -1952,11 +1952,7 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         }
     }
 
-
-    //TODO: Complete this
     class Solution {
-        List<Integer> take = new ArrayList<>();
-        List<Integer> nottake = new ArrayList<>();
 
         public List<String> getWordsInLongestSubsequence(int n, String[] words, int[] groups) {
             List<String> ans = new ArrayList<>();
@@ -1968,32 +1964,36 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         private List<Integer> helper(int ind, int n, String[] words, int[] groups) {
             // base case;
             if (ind > n) return new ArrayList<>();
-            int t = 0, nt = 0;
+            List<Integer> take = new ArrayList<>();
+            List<Integer> nottake = new ArrayList<>();
+
             for (int i = ind; i < groups.length; i++) {
                 if (take.isEmpty()) {
                     take.add(i);
-                    List<Integer> call = helper(ind + 1, n, words, groups);
-                    t += 1 + call.size();
+                    List<Integer> call = helper(i + 1, n, words, groups);
+                    take.addAll(call);
                 } else if (groups[i] != groups[take.get(take.size() - 1)] && chardiff(words[take.get(take.size() - 1)], words[i]) == 1) {
                     take.add(i);
-                    List<Integer> call = helper(ind + 1, n, words, groups);
-                    t += 1 + call.size();
+                    List<Integer> call = helper(i + 1, n, words, groups);
+                    take.addAll(call);
 
                     //backtrack
-                    take.remove(i);
-                    List<Integer> ncall = helper(ind + 1, n, words, groups);
-                    nt += ncall.size();
+                    take.remove(new Integer(i));
+                    List<Integer> ncall = helper(i + 1, n, words, groups);
+                    nottake.addAll(ncall);
                 } else {
-                    List<Integer> ncall = helper(ind + 1, n, words, groups);
-                    nt += ncall.size();
+                    List<Integer> ncall = helper(i + 1, n, words, groups);
+                    nottake.addAll(ncall);
                 }
             }
 
 
-            if (t > nt) {
+            if (take.size() > nottake.size()) {
+                System.out.println(take);
                 return take;
             }
 
+            System.out.println(nottake);
             return nottake;
         }
 
@@ -2007,5 +2007,4 @@ It can be proven that there are no more than 3 square-free subsets in the given 
             return cnt;
         }
     }
-
 }
