@@ -1,6 +1,7 @@
 package com.company;
 
-import java.util.HashMap;import java.util.*;
+import java.util.HashMap;
+import java.util.*;
 
 public class StackExamples {
 
@@ -25,6 +26,8 @@ public class StackExamples {
 
         return ans;
     }
+
+
 
     //Author: Anand
     public int[] nextGreaterElements(int[] nums) {

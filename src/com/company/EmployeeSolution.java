@@ -7,6 +7,7 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
+import java.util.HashMap;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -5488,7 +5489,6 @@ Output: [1,2,2,3,5,6]
 
             while (true) {
                 boolean canMove = false;
-                int[][] dirs = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
 
                 for (int[] dir : dirs) {
                     int nx = x + dir[0];
@@ -8004,30 +8004,32 @@ Output: [1,2,2,3,5,6]
         return false;
     }
 
-    public int countPairs(List<Integer> nums, int target) {
+    public int minimumRightShifts(List<Integer> nums) {
+        int op = 0;
+        List<Integer> nl = new ArrayList<>();
+        nl.addAll(nums);
+        if (sorted(nl)) return op;
+        rs(nl);
+        op++;
 
-        int cnt = 0;
-        for (int i = 0; i < nums.size(); i++) {
-            for (int j = i + 1; j < nums.size(); j++) {
-                if (nums.get(i) + nums.get(j) < target) cnt++;
-            }
+        while (true) {
+            if (sorted(nl)) return op;
+            if (nl.equals(nums)) return -1;
+            rs(nl);
+            op++;
         }
-        return cnt;
     }
 
-    public boolean canMakeSubsequence(String str1, String str2) {
-        int idx = 0, i = 0;
+    private void rs(List<Integer> nl) {
+        int n = nl.size();
+        int l = nl.get(n - 1);
+        for (int i = nl.size() - 1; i > 0; i--) nl.set(i, nl.get(i - 1));
+        nl.set(0, l);
+    }
 
-        while (i < str2.length() && idx < str1.length()) {
-            char c = str2.charAt(i);
-
-            int newChar = ((str1.charAt(idx) - 'a') + 1) % 26;
-            char nc = (char) ('a' + (newChar < 0 ? newChar + 26 : newChar));
-
-            if (str1.charAt(idx++) == c || c == nc) i++;
-        }
-
-        return i == str2.length();
+    private boolean sorted(List<Integer> nl) {
+        for (int i = 1; i < nl.size(); i++) if (nl.get(i) < nl.get(i - 1)) return false;
+        return true;
     }
 
     /* A utility function to check if i,j are
@@ -8120,445 +8122,331 @@ Output: [1,2,2,3,5,6]
 
     }
 
-
-    // -----------------------------------------------------------------------------------
-    // 20th Aug
-
-
-    public boolean isAcronym(List<String> words, String s) {
-        StringBuilder sb = new StringBuilder();
-        for (String word : words) sb.append(word.charAt(0));
-        return sb.toString().equals(s);
-    }
-
-
-    public int minimumSum(int n, int k) {
-        int start = 1;
-        List<Integer> numbers = new ArrayList<>();
-        while (numbers.size() < n) {
-            boolean pair = false;
-            for (int num : numbers) {
-                if (num + start == k) {
-                    start++;
-                    pair = true;
-                    break;
-                }
-            }
-            if (pair) continue;
-            numbers.add(start++);
+    public int sumIndicesWithKSetBits(List<Integer> nums, int k) {
+        int sum = 0;
+        int ind = 0;
+        for (int num : nums) {
+            if (Integer.bitCount(ind++) == k) sum += num;
         }
-
-        return Arrays.stream(numbers.toArray()).mapToInt(x -> (int) x).sum();
-    }
-
-    public int furthestDistanceFromOrigin(String moves) {
-
-        int L = 0, R = 0;
-        for (char c : moves.toCharArray()) {
-            if (c == 'L') L++;
-            else if (c == 'R') R++;
-        }
-        StringBuilder sb = new StringBuilder();
-        if (L > R) {
-            sb.append(moves.replaceAll("_", "L"));
-        } else sb.append(moves.replaceAll("_", "R"));
-
-        int distance = 0;
-        for (char c : sb.toString().toCharArray()) {
-            if (c == 'L') distance--;
-            else distance++;
-        }
-
-        return Math.abs(distance);
-    }
-
-    public long minimumPossibleSum(int n, int target) {
-        Set<Integer> numbers = new HashSet<>();
-        int start = 1;
-
-        while (n > 0) {
-            if (numbers.contains(target - start)) {
-                start++;
-                continue;
-            }
-            numbers.add(start++);
-            n--;
-        }
-        long sum = 0L;
-        for (int num : numbers) sum += num;
         return sum;
     }
 
-
-    /*
-        Fix for [64,32,2,8] 5
-        i.e. we can split any element not always the largest one
-     */
-
-
-    public int minOperations(List<Integer> nums, int target) {
-
-        int op = 0;
-        Collections.sort(nums);
-        List<Integer> copy = new ArrayList<>();
-        copy.addAll(nums);
-        List<Integer> nc = new ArrayList<>();
-
-        if (printAnyoneSubsequence(copy.stream().mapToInt(x -> x).toArray(), target, 0, 0L)) return 0;
-        while (true) {
-            long sum = 0L;
-            boolean flag = false;
-            for (int num : copy) {
-                sum += num;
-                nc.add(num);
-                if (sum > target) {
-                    // Attempts for all valid splits and check if possible to get such subsequence
-                    for (int c : nc) {
-                        // valid splits
-                        List<Integer> nnc = new ArrayList<>();
-                        nnc.addAll(nc);
-                        long ns = sum;
-
-                        int nop = op;
-                        if (c > 1) {
-                            nnc.remove(new Integer(c));
-                            int nn = c / 2;
-                            if (ns - nn >= target) {
-                                ns -= nn;
-                                nnc.add(nn);
-                            } else nnc.addAll(new ArrayList<>(Arrays.asList(nn, nn)));
-
-                            nop++;
-                            if (ns == target) return nop;
-
-                            // check in the copy if target subsequence  exists
-                            if (printAnyoneSubsequence(nnc.stream().mapToInt(x -> x).toArray(), target, 0, 0L))
-                                return nop;
-
-                        }
-                    }
-
-                    nc.remove(new Integer(num));
-                    int nn = num / 2;
-                    if (sum - nn >= target) {
-                        sum -= nn;
-                        nc.add(nn);
-                    } else nc.addAll(new ArrayList<>(Arrays.asList(nn, nn)));
-
-
-                    flag = true;
-                    op++;
-                    if (sum == target) return op;
-                    break;
-
-                } else if (sum == target) return op;
-            }
-
-            if (!flag) return -1;
-            copy.clear();
-            Collections.sort(nc);
-            copy.addAll(nc);
-            nc.clear();
-            // check in the copy if target subsequence  exists
-            if (printAnyoneSubsequence(copy.stream().mapToInt(x -> x).toArray(), target, 0, 0L)) return op;
-        }
-    }
-
-
-    /***
-     * Function to print single subsequence of a given sum
-     * @param arr
-     * @param sum
-     */
-    private boolean printAnyoneSubsequence(int[] arr, int targetSum, int idx, long sum) {
-        // base case
-        if (idx == arr.length) {
-            if ((int) sum == targetSum) {
-                return true;
-            }
-            return false;
-        }
-
-
-        // take
-        sum += arr[idx];
-        if (printAnyoneSubsequence(arr, targetSum, idx + 1, sum)) return true;
-        sum -= arr[idx];
-        // not-take
-        return printAnyoneSubsequence(arr, targetSum, idx + 1, sum);
-    }
-
-    // 2nd September
-    public boolean canBeEqual(String s1, String s2) {
-        boolean flag = true;
-        if (s1.charAt(0) != s2.charAt(0)) {
-            if (s1.charAt(2) == s2.charAt(0) && s1.charAt(0) == s2.charAt(2)) {
-            } else flag = false;
-        } else if (s1.charAt(2) != s2.charAt(2)) {
-            flag = false;
-        }
-
-        if (!flag) return flag;
-
-        if (s1.charAt(1) != s2.charAt(1)) {
-            if (s1.charAt(1 + 2) == s2.charAt(1) && s1.charAt(1) == s2.charAt(1 + 2)) {
-            } else flag = false;
-        } else if (s1.charAt(3) != s2.charAt(3)) {
-            flag = false;
-        }
-
-        return flag;
-    }
-
-    public int countSymmetricIntegers(int low, int high) {
+    public int countWays(List<Integer> nums) {
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        for (int num : nums) pq.add(num);
         int cnt = 0;
-        for (int i = low; i <= high; i++) if (symmetric(i)) cnt++;
+        int total = 0;
+        boolean first = false;
+        while (!pq.isEmpty()) {
+            int elem = pq.poll();
+
+            if (!first) {
+                if (elem != 0) cnt++; // no element is selected
+                first = true;
+            }
+
+            total++;
+            if (elem < total) {
+                if (pq.size() == 0) cnt++;
+                else if (pq.peek() > total) cnt++;
+            }
+        }
         return cnt;
     }
 
-    public boolean checkStrings(String s1, String s2) {
+    // 24th september
 
-        TreeMap<Character, List<Integer>> tm = new TreeMap<>();
-
-        for (int i = 0; i < s1.length(); i++) {
-            char c = s1.charAt(i);
-            if (!tm.containsKey(c)) tm.put(c, new ArrayList<>());
-            tm.get(c).add(i);
-        }
-
-        System.out.println(tm);
+    public String maximumOddBinaryNumber(String s) {
+        long one = s.chars().filter(c -> c == '1').count();
+        int len = s.length();
         StringBuilder sb = new StringBuilder();
-        sb.append(s1);
+        while (len-- > 1) {
+            if (one > 1) {
+                sb.append('1');
+                one--;
+            } else sb.append('0');
+        }
+        if (one == 1) sb.append('1');
+        return sb.toString();
+    }
 
-        for (int i = 0; i < s2.length(); i++) {
+    public long maximumSumOfHeights(List<Integer> maxHeights) {
+        long ans = 0;
+        for (int idx = 0; idx < maxHeights.size(); idx++)
+            ans = Math.max(ans, mr(maxHeights, idx));
+        return ans;
+    }
 
-            char c = s2.charAt(i);
+    private long mr(List<Integer> maxHeights, int ind) {
 
-            if (c == sb.charAt(i)) continue;
+        long res = 0;
 
-            if (!tm.containsKey(c)) return false;
+        res += maxHeights.get(ind);
+        // left half
+        int li = ind;
+        int lv = Integer.MAX_VALUE;
+        if (li > 0) lv = Math.min(maxHeights.get(li), maxHeights.get(li - 1));
 
-            List<Integer> indices = tm.get(c);
-            boolean possible = false;
-            for (int ind : indices) {
-                if (Math.abs(ind - i) % 2 == 0) {
-                    possible = true;
-                    char prev = sb.charAt(i);
+        while (li-- > 0) {
+            lv = Math.min(maxHeights.get(li), lv);
+            res += lv;
+        }
 
-                    tm.get(prev).remove(new Integer(ind));
-                    tm.get(prev).add(i);
 
-                    tm.get(sb.charAt(i)).remove(new Integer(i));
-                    tm.get(sb.charAt(i)).add(ind);
+        // right half
+        int ri = ind;
+        int rv = Integer.MAX_VALUE;
+        if (ri < (maxHeights.size() - 1)) rv = Math.min(maxHeights.get(ri), maxHeights.get(ri + 1));
 
-                    sb.setCharAt(i, s2.charAt(i));
-                    sb.setCharAt(ind, prev);
+        while (ri++ < maxHeights.size() - 1) {
+            rv = Math.min(maxHeights.get(ri), rv);
+            res += rv;
+        }
+        return res;
+    }
 
-                    break;
+    // 30th Sep
+    public int minOperations(List<Integer> nums, int k) {
+        int op = 0;
+        Map<Integer, Boolean> tm = new HashMap<>();
+        for (int i = nums.size() - 1; i >= 0; i--) {
+            int curr = nums.get(i);
+            op++;
+            if (curr >= 1 && curr <= k) tm.putIfAbsent(curr, true);
+            // check
+            if (tm.size() == k) return op;
+        }
+        return -1;
+    }
+
+
+    public int minOperations(int[] nums) {
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
+        int op = 0;
+        for (int e : freq.values()) {
+            if (e == 1) return -1;
+            op += (e / 3) + (e % 3 != 0 ? 1 : 0);
+        }
+        return op;
+    }
+
+
+    //TODO: Complete this
+    class Solution {
+        public int maxSubarrays(int[] nums) {
+
+            int split = 0;
+            int score = -1;
+
+            Set<Integer> set = Arrays.stream(nums).boxed().collect(Collectors.toSet());
+            if (set.size() == 1) {
+                return nums.length;
+            }
+
+            for (int i = 0; i < nums.length; i++) {
+                if (i == 0) {
+                    score = nums[i];
+                    System.out.println(score);
+                    continue;
+                }
+                int prev = score & nums[i];
+                int next = i < nums.length - 1 ? nums[i] & nums[i + 1] : Integer.MAX_VALUE;
+
+                if (prev < score || (prev == score && prev != 0)) {
+                    score = prev;
+                    System.out.println(score);
+                    if (score == 0) {
+                        score = i < nums.length - 1 ? nums[i + 1] : 0;
+                        i++;
+                        split++;
+                    }
+                    continue;
+                }
+                if (prev - score >= next) {
+                    score = nums[i] & nums[i + 1];
+                    i++;
+                } else {
+                    score = prev;
+                }
+                System.out.println("prev=" + prev + ", score=" + score + ",next=" + next + ",nums[i]=" + nums[i]);
+                split++;
+            }
+
+            return split == 0 ? 1 : split;
+        }
+    }
+
+    /*
+    Input: nums = [12,6,1,2,7]
+    Output: 77
+    Explanation: The value of the triplet (0, 2, 4) is (nums[0] - nums[2]) * nums[4] = 77.
+    It can be shown that there are no ordered triplets of indices with a value greater than 77.
+
+    Algo:-
+        The idea is to calcute maximum from the left, {max, min} to the right and evaluate
+        maximum value for the expression (A[i]-A[j])*A[k] where i < j < k for all {i,j,k} E [0,n-1] where n = size of array
+     */
+    public long maximumTripletValue(int[] nums) {
+        long ans = 0L;
+
+        int n = nums.length;
+        int[] maxL = new int[n], maxR = new int[n];
+        for (int i = 0; i < n; i++) {
+            maxL[i] = i == 0 ? nums[i] : Math.max(maxL[i - 1], nums[i]);
+            maxR[n - 1 - i] = i == 0 ? nums[n - 1 - i] : Math.max(maxR[n - i], nums[n - 1 - i]);
+        }
+
+        for (int i = 1; i < n - 1; i++)
+            ans = Math.max(ans, (long) (maxL[i - 1] - nums[i]) * maxR[i + 1]);
+
+        return ans;
+    }
+
+
+    public int differenceOfSums(int n, int m) {
+        int ts = n * (n + 1) / 2;
+        int ds = 0;
+        int i = 1;
+        System.out.println(ts);
+        int nm = m;
+        while (nm <= n) {
+            ds += nm;
+            nm = m * ++i;
+        }
+        System.out.println(ds);
+
+        return ts - 2 * ds;
+    }
+
+    public int minProcessingTime(List<Integer> processorTime, List<Integer> tasks) {
+
+        Collections.sort(processorTime);
+        Collections.sort(tasks, Collections.reverseOrder());
+
+        int cores = 0;
+        int tt = 0;
+        for (int pt : processorTime) {
+            tt = Math.max(tt, pt + tasks.get(cores));
+            cores += 4;
+        }
+
+        return tt;
+    }
+
+    // 14th Oct
+    public List<Integer> lastVisitedIntegers(List<String> words) {
+
+        List<Integer> ans = new ArrayList<>();
+        List<String> digits = new ArrayList<>();
+        int k = 0;
+        for (int i = 0; i < words.size(); i++) {
+            String word = words.get(i);
+
+            if (word.equals("prev")) {
+                k++;
+                ans.add((digits.size() - k < digits.size() && digits.size() - k >= 0) ? Integer.parseInt(digits.get(digits.size() - k)) : -1);
+            } else {
+                digits.add(word);
+                k = 0;
+            }
+        }
+
+        return ans;
+    }
+
+    public List<String> getWordsInLongestSubsequence(int n, String[] words, int[] groups) {
+
+        int zero = -1, one = -1;
+        for (int i = 0; i < groups.length; i++) {
+            if (groups[i] == 0 && zero == -1) {
+                zero = i;
+            } else if (one == -1) {
+                one = i;
+            }
+        }
+
+        List<String> z = new ArrayList<>();
+        List<String> o = new ArrayList<>();
+        if (zero != -1) z.addAll(helper(zero, words, groups));
+        if (one != -1) o.addAll(helper(one, words, groups));
+        if (z.size() > o.size()) return z;
+        return o;
+    }
+
+    private List<String> helper(int ind, String[] words, int[] groups) {
+        int prev = -1;
+        List<String> ans = new ArrayList<>();
+        for (int i = ind; i < groups.length; i++) {
+            if (prev == -1) {
+                ans.add(words[i]);
+            } else if (prev != groups[i]) {
+                ans.add(words[i]);
+            }
+            prev = groups[i];
+        }
+        return ans;
+    }
+
+
+    public String shortestBeautifulSubstring(String s, int k) {
+        String ans = "";
+        for (int i = 0; i < s.length(); i++) {
+            int cnt = 0;
+            if (s.charAt(i) == '1') cnt++;
+            if (cnt == k) {
+                String str = s.substring(i, i + 1);
+                if (ans.isEmpty()) ans = str;
+                else if (str.length() == ans.length()) {
+                    int ct = str.compareTo(ans);
+                    if (ct < 0) ans = str;
+                } else {
+                    ans = str;
                 }
             }
 
-
-            System.out.println(sb.toString());
-            if (!possible) return false;
-        }
-
-        return sb.toString() == s2;
-    }
-
-
-    private boolean symmetric(int number) {
-        String str = String.valueOf(number);
-
-        if (str.length() % 2 != 0) return false;
-
-        int i = 0, j = str.length() - 1;
-        int sl = 0, sr = 0;
-        while (i <= j) {
-            sl += str.charAt(i++) - '0';
-            sr += str.charAt(j--) - '0';
-        }
-
-        return sl == sr;
-    }
-
-    public int minimumOperations(String num) {
-
-        boolean zeroFound = false, fiveFound = false;
-        for (int i = num.length() - 1; i >= 0; i--) {
-            if (zeroFound && num.charAt(i) == '0') return num.length() - 2 - i;
-            if (zeroFound && num.charAt(i) == '5') return num.length() - 2 - i;
-            if (fiveFound && num.charAt(i) == '2') return num.length() - 2 - i;
-            if (fiveFound && num.charAt(i) == '7') return num.length() - 2 - i;
-
-            if (num.charAt(i) == '0') zeroFound = true;
-            if (num.charAt(i) == '5') fiveFound = true;
-
-        }
-        if (zeroFound) return num.length() - 1;
-        return num.length();
-    }
-
-
-    // 10th Sep
-    public int numberOfPoints(List<List<Integer>> nums) {
-        Set<Integer> points = new HashSet<>();
-        for (List<Integer> range : nums) {
-            int start = range.get(0);
-            int end = range.get(1);
-            for (int i = start; i <= end; i++) points.add(i);
-        }
-        return points.size();
-    }
-
-    public boolean isReachableAtTime(int sx, int sy, int fx, int fy, int t) {
-        int dx = Math.abs(fx - sx);
-        int dy = Math.abs(fy - sy);
-        if (dx == 0 && dy == 0 && t == 1) return false;
-        return Math.max(dx, dy) <= t;
-    }
-
-    // TODO: Optimise solution
-    class minimumMoves {
-        int[][] dirs = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-
-        public int minimumMoves(int[][] grid) {
-            int moves = 0;
-            Map<int[], Integer> tm = new HashMap<>(); // coordinate,distance
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    if (grid[i][j] == 0) {
-                        int[][] visited = new int[3][3];
-                        int d = nearestNeighbour(grid, visited, new int[]{i, j}, false);
-                        tm.put(new int[]{i, j}, d);
+            for (int j = i + 1; j < s.length(); j++) {
+                if (s.charAt(j) == '1') cnt++;
+                if (cnt == k) {
+                    String str = s.substring(i, j + 1);
+                    if (ans.isEmpty() || str.length() < ans.length()) ans = str;
+                    else if (str.length() == ans.length()) {
+                        if (str.compareTo(ans) < 0) ans = str;
                     }
                 }
             }
-
-
-            LinkedHashMap<int[], Integer> sortedMap = tm.entrySet().stream()
-                    .sorted((i1, i2) -> i1.getValue().compareTo(i2.getValue()))
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-
-            System.out.println(sortedMap);
-
-
-            // group by distances and take min of all possible permuatations
-            TreeMap<Integer, List<int[]>> pm = new TreeMap<>();
-
-            for (Map.Entry<int[], Integer> entry : sortedMap.entrySet()) {
-                if (!pm.containsKey(entry.getValue())) pm.put(entry.getValue(), new ArrayList<>());
-                pm.get(entry.getValue()).add(entry.getKey());
-            }
-
-            for (Map.Entry<Integer, List<int[]>> entry : pm.entrySet()) {
-                int d = Integer.MAX_VALUE;
-
-                List<int[]> choice = new ArrayList<>();
-                for (List<int[]> perm : permute(entry.getValue())) {
-                    int[][] visited = new int[3][3];
-                    int[][] clone = grid;
-                    int total = 0;
-
-                    for (int[] source : perm) {
-                        total += nearestNeighbour(clone, visited, new int[]{source[0], source[1]}, true);
-                    }
-
-                    if (total < d) {
-                        d = total;
-                        choice = perm;
-                    }
-                }
-
-
-                // make real  selection based on choice
-                int[][] visited = new int[3][3];
-                int total = 0;
-                for (int[] source : choice) {
-                    total += nearestNeighbour(grid, visited, new int[]{source[0], source[1]}, true);
-                }
-
-                moves += total;
-            }
-            return moves;
         }
 
-        public List<List<int[]>> permute(List<int[]> nums) {
-
-            List<List<int[]>> result = new ArrayList<>();
-            permute(nums, 0, nums.size() - 1, result);
-            return result;
-        }
-
-        private void permute(List<int[]> nums, int l, int r, List<List<int[]>> result) {
-            if (l == r) {
-                result.add(nums);
-                return;
-            }
-            for (int i = l; i <= r; i++) {
-                swap(nums, l, i);
-                permute(nums, l + 1, r, result);
-                swap(nums, l, i);
-            }
-        }
-
-        public void swap(List<int[]> arr, int i, int j) {
-            int[] temp = arr.get(i);
-            arr.set(i, arr.get(j));
-            arr.set(j, temp);
-        }
-
-
-        private int nearestNeighbour(int[][] graph, int[][] visited, int[] src, boolean mark) {
-            int ans = 0;
-            Queue<int[]> queue = new PriorityQueue<>(Comparator.comparingInt(a -> a[2]));
-            queue.add(new int[]{src[0], src[1], 0}); // {distance, coordinates}
-            visited[src[0]][src[1]] = 1;
-            while (!queue.isEmpty()) {
-                int[] elem = queue.poll();
-                int dist = elem[2], x = elem[0], y = elem[1];
-                if (mark) System.out.println(Arrays.toString(elem));
-
-                int max = Integer.MIN_VALUE;
-                int[] choice = new int[2];
-
-                for (int[] dir : dirs) {
-                    int nx = x + dir[0];
-                    int ny = y + dir[1];
-
-                    if (safe(nx, ny) && graph[nx][ny] > 1) {
-                        ans = 1 + dist;
-                        if (graph[nx][ny] > max) {
-                            choice = new int[]{nx, ny};
-                            max = graph[nx][ny];
-                        }
-                        if (!mark) return ans;
-                    }
-
-                    // check for boundary condition
-                    while (safe(nx, ny) && visited[nx][ny] == 0) {
-                        visited[nx][ny] = 1;
-                        queue.add(new int[]{nx, ny, 1 + dist});
-                    }
-                }
-
-                if (mark) System.out.println("choice=" + Arrays.toString(choice));
-                if (max != Integer.MIN_VALUE) {
-                    graph[choice[0]][choice[1]]--;
-                    graph[src[0]][src[1]] = 1;
-                    System.out.println("ans=" + ans);
-                    return ans;
-                }
-            }
-            return ans;
-        }
-
-        private boolean safe(int nx, int ny) {
-            return nx < 3 && nx >= 0 && ny >= 0 && ny < 3;
-        }
-
+        return ans;
     }
+
+    public int[] findIndices(int[] nums, int indexDifference, int valueDifference) {
+        TreeMap<Integer, int[]> tm = new TreeMap<>();//{index, new int[]{largI, smallI}}
+        for (int i = nums.length - 1; i >= 0; i--) {
+            if (i == nums.length - 1) tm.put(i, new int[]{i, i});
+            else {
+                int[] next = tm.get(i + 1);
+                int nl = next[0];
+                int ns = next[1];
+                tm.put(i, new int[]{(nums[i] > nums[nl] ? i : nl), (nums[i] < nums[ns] ? i : ns)});
+            }
+
+            // check for valid answer
+            int ni = i + indexDifference;
+            int[] values = ni < nums.length ? tm.get(ni) : new int[]{};
+            if (values.length == 0) continue;
+            int ns = values[1];
+            int nl = values[0];
+            if (Math.abs(nums[nl] - nums[i]) >= valueDifference) return new int[]{i, nl};
+            if (Math.abs(nums[ns] - nums[i]) >= valueDifference) return new int[]{i, ns};
+        }
+
+        return new int[]{-1, -1};
+    }
+
 }
+
+
 
 
 
