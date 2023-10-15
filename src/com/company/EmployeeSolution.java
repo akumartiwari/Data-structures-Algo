@@ -8387,7 +8387,56 @@ Output: [1,2,2,3,5,6]
         }
         return ans;
     }
+
+
+    //Store the sorted array
+    public int[] findIndices(int[] nums, int indexDifference, int valueDifference) {
+
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + indexDifference; j < nums.length; j++) {
+                if (Math.abs(nums[i] - nums[j]) >= valueDifference) return new int[]{i, j};
+            }
+        }
+        return new int[]{-1, -1};
+    }
+
+
+    public String shortestBeautifulSubstring(String s, int k) {
+        String ans = "";
+        for (int i = 0; i < s.length(); i++) {
+            int cnt = 0;
+            if (s.charAt(i) == '1') cnt++;
+            if (cnt == k) {
+                String str = s.substring(i, i + 1);
+                if (ans.isEmpty()) ans = str;
+                else if (str.length() == ans.length()) {
+                    int ct = str.compareTo(ans);
+                    if (ct < 0) ans = str;
+                } else {
+                    ans = str;
+                }
+            }
+
+            for (int j = i + 1; j < s.length(); j++) {
+                if (s.charAt(j) == '1') cnt++;
+                if (cnt == k) {
+                    String str = j <= s.length() - 1 ? s.substring(i, j + 1) : s.substring(i, j);
+                    if (ans.isEmpty()) ans = str;
+                    else if (str.length() == ans.length()) {
+                        int ct = str.compareTo(ans);
+                        if (ct < 0) ans = str;
+                    } else if (str.length() < ans.length()) {
+                        ans = str;
+                    }
+                }
+            }
+        }
+
+        return ans;
+    }
 }
+
+
 
 
 
