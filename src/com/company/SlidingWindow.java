@@ -5,6 +5,18 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class SlidingWindow {
+    /*
+    Input: tiles = [[1,5],[10,11],[12,18],[20,25],[30,32]], carpetLen = 10
+    Output: 9
+    Explanation: Place the carpet starting on tile 10.
+    It covers 9 white tiles, so we return 9.
+    Note that there may be other places where the carpet covers 9 white tiles.
+    It can be shown that the carpet cannot cover more than 9 white tiles.
+     */
+    // Author: Anand
+    int end = 1;
+    int start = 0;
+
     // Sliding window
     // TC = O(26N)
     //Author: Anand
@@ -181,6 +193,26 @@ public class SlidingWindow {
         }
     }
 
+    /*
+ nums[i] % modulo == k. Then, cnt % modulo == k.
+ Solve using sliding window algorithm
+ */
+    public long countInterestingSubarrays(List<Integer> nums, int modulo, int k) {
+        long sum = 0L;
+        long cnt = 0L;
+
+        for (int i = 0, j = 0; i < nums.size(); ++i) {
+            sum += nums.get(i);
+            while ((i - j + 1) * sum >= k) {
+                sum -= nums.get(j++);
+            }
+            cnt += i - j + 1;
+        }
+
+        return cnt;
+    }
+
+
     public int subarrayLCM(int[] nums, int k) {
         int cnt = 0;
         int lcm = -1;
@@ -212,7 +244,6 @@ public class SlidingWindow {
         return gcd(b, a % b);
 
     }
-
 
     /*
     Input: nums = [1,3,0,0,2,0,0,4]

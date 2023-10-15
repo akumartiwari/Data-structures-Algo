@@ -1,16 +1,36 @@
 package com.company;
 
-import java.util.HashMap;import java.util.*;
 import java.util.HashMap;
+import java.util.*;
+import java.util.HashMap;
+import java.util.stream.IntStream;
 
 class SolutionHasPath {
+    // cheer up solution for placing operators b/w numbers
+    public ArrayList<String> answer;
+    public String digits;
+    public long target;
     int rows;
     int cols;
     int[][] vis;
     String dir = "URLD"; // lexico order
     int[] dirx = {1, 0, -1, 0};
     int[] diry = {0, 1, 0, -1};
+    int max = Integer.MIN_VALUE;
+    /*
 
+      [5,2,1,3,6]
+      val  = 5
+      idx = 1
+      lo = check(-INF, 5, nums)
+      ro = check(5,INF, nums)
+
+     */
+    int idx = 0;
+    List<Integer> ans = new ArrayList<>();
+    List<String> ansStr = new ArrayList<>();
+    boolean flip = false;
+    int maxOne = Integer.MIN_VALUE;
 
     public static String OrderOfFrequencies(String S) {
 
@@ -98,9 +118,6 @@ class SolutionHasPath {
         return false;
     }
 
-
-    int max = Integer.MIN_VALUE;
-
     public int maxSumBST(TreeNode root) {
         if (root == null) return 0;
         subTree(root);
@@ -131,35 +148,23 @@ class SolutionHasPath {
         return currTree;
     }
 
-    class SubTree {
-        int max;
-        int min;
-        int sum;
-        boolean bst;
-
-        SubTree(int val) {
-            this.max = val;
-            this.min = val;
-            this.sum = val;
-            this.bst = true;
-        }
-    }
-
-
     /*
-
-      [5,2,1,3,6]
-      val  = 5
-      idx = 1
-      lo = check(-INF, 5, nums)
-      ro = check(5,INF, nums)
-
+     // Algo:-
+       Pseudo code :-
+     - create a tree  with given preorder traversal and traverse to get all subpaths
+     - check for current subpath size
+        - if ss == (num-k) then add to ans
+        - else keep on getting paths
+     - ans array will hold all possible paths with size = nums.size()-k;
+     - scan to get the min value
+     - return min_value
      */
-    int idx = 0;
 
     public boolean verifyPreorder(int[] preorder) {
         return check(Integer.MIN_VALUE, Integer.MAX_VALUE, preorder);
     }
+
+    // TBD FROM 10 aug onwards
 
     private boolean check(int lb, int up, int[] nums) {
         // base case
@@ -190,32 +195,23 @@ class SolutionHasPath {
         return ans;
     }
 
-    List<Integer> ans = new ArrayList<>();
-
     public List<Integer> rightSideView(TreeNode root) {
         if (root == null) return ans;
         helper(root, 0);
         return ans;
     }
 
+    /*
+    "abcd"
+    "aaaaa"
+    "aabcaabdaab"
+     */
 
     private void helper(TreeNode root, int level) {
         if (level == ans.size()) ans.add(root.val);
         if (root.right != null) helper(root.right, level + 1);
         if (root.left != null) helper(root.left, level + 1);
     }
-
-    /*
-     // Algo:-
-       Pseudo code :-
-     - create a tree  with given preorder traversal and traverse to get all subpaths
-     - check for current subpath size
-        - if ss == (num-k) then add to ans
-        - else keep on getting paths
-     - ans array will hold all possible paths with size = nums.size()-k;
-     - scan to get the min value
-     - return min_value
-     */
 
     public String removeKdigits(String num, int k) {
         int n = num.length();
@@ -241,8 +237,6 @@ class SolutionHasPath {
         String regex = "^0+(?!$)";
         return sb.reverse().toString().replaceAll(regex, "");
     }
-
-    // TBD FROM 10 aug onwards
 
     public int[] mostCompetitive(int[] nums, int k) {
         Deque<Integer> queue = new ArrayDeque<>();
@@ -328,13 +322,6 @@ class SolutionHasPath {
         return new StringBuilder(new String(ans)).reverse().toString();
     }
 
-    /*
-    "abcd"
-    "aaaaa"
-    "aabcaabdaab"
-     */
-
-
     public int longestRepeatingSubstring(String s) {
         Set<String> set = new HashSet<>();
 
@@ -348,9 +335,6 @@ class SolutionHasPath {
         }
         return max;
     }
-
-
-    List<String> ansStr = new ArrayList<>();
 
     /*
     "hello"
@@ -406,7 +390,6 @@ class SolutionHasPath {
                         && flipEquiv(root1.left, root2.right));
     }
 
-
     private boolean equals(TreeNode root1, TreeNode root2) {
 
         if (root1 == null && root2 == null) return true;
@@ -417,7 +400,6 @@ class SolutionHasPath {
 
         return false;
     }
-
 
     private TreeNode invertTree(TreeNode root) {
         if (root == null) return null;
@@ -506,7 +488,6 @@ class SolutionHasPath {
         }
         return ans;
     }
-
 
     public int trapStack(int[] height) {
 
@@ -601,7 +582,6 @@ class SolutionHasPath {
         return heights;
     }
 
-
     // TC = O(N^2), SC = O(1)
     public int threeSumSmaller(int[] nums, int target) {
         Arrays.sort(nums);
@@ -685,45 +665,6 @@ class SolutionHasPath {
         }
     }
 
-    class KSum {
-        public List<List<Integer>> fourSum(int[] nums, int target) {
-            Arrays.sort(nums);
-            return kSum(nums, target, 0, 4);
-        }
-
-        public List<List<Integer>> kSum(int[] nums, int target, int start, int k) {
-            List<List<Integer>> res = new ArrayList<>();
-            if (start == nums.length || nums[start] * k > target || target > nums[nums.length - 1] * k)
-                return res;
-            if (k == 2)
-                return twoSum(nums, target, start);
-
-            for (int i = start; i < nums.length; ++i)
-                if (i == start || nums[i - 1] != nums[i])
-                    for (List<Integer> subset : kSum(nums, target - nums[i], i + 1, k - 1)) {
-                        res.add(new ArrayList<>(Collections.singletonList(nums[i])));
-                        res.get(res.size() - 1).addAll(subset);
-                    }
-
-            return res;
-        }
-
-        public List<List<Integer>> twoSum(int[] nums, int target, int start) {
-            List<List<Integer>> res = new ArrayList<>();
-            Set<Integer> s = new HashSet<>();
-
-            for (int i = start; i < nums.length; ++i) {
-                if (res.isEmpty() || res.get(res.size() - 1).get(1) != nums[i])
-                    if (s.contains(target - nums[i]))
-                        res.add(Arrays.asList(target - nums[i], nums[i]));
-                s.add(nums[i]);
-            }
-
-            return res;
-        }
-    }
-
-
     public int findPeakElement(int[] nums) {
         int n = nums.length;
         return search(nums, 0, n - 1);
@@ -798,9 +739,6 @@ class SolutionHasPath {
         return cnt;
     }
 
-    boolean flip = false;
-    int maxOne = Integer.MIN_VALUE;
-
     public int findMaxConsecutiveOnes(int[] nums) {
         consective(nums, 0);
         return maxOne;
@@ -868,11 +806,6 @@ class SolutionHasPath {
         }
         return longest;
     }
-
-    // cheer up solution for placing operators b/w numbers
-    public ArrayList<String> answer;
-    public String digits;
-    public long target;
 
     public void recurse(int index, long previousOperand, long currentOperand, long value, ArrayList<String> ops) {
         String nums = this.digits;
@@ -970,7 +903,6 @@ class SolutionHasPath {
 
         return dp[l][r];
     }
-    // using prefix sum approach
 
     public int maxScorePrefixSum(int[] cardPoints, int k) {
         int n = cardPoints.length;
@@ -992,6 +924,7 @@ class SolutionHasPath {
     public TreeNode sortedArrayToBST(int[] nums) {
         return bst(nums, 0, nums.length - 1);
     }
+    // using prefix sum approach
 
     private TreeNode bst(int[] nums, int l, int r) {
         // base case
@@ -1019,30 +952,6 @@ class SolutionHasPath {
             map.putIfAbsent(sum, i);
         }
         return ans;
-    }
-
-    static class Edge {
-        int v;
-        int nbr;
-        int wt;
-
-        Edge(int v, int nbr, int wt) {
-            this.v = v;
-            this.nbr = nbr;
-            this.wt = wt;
-        }
-    }
-
-    static class Pair {
-        int v;
-        int av; //acquiring vertex (As Prims works on considering next connected min edge)
-        int wt;
-
-        Pair(int v, int av, int wt) {
-            this.v = v;
-            this.av = av;
-            this.wt = wt;
-        }
     }
 
     public int minCostConnectPoints(int[][] points) {
@@ -1093,6 +1002,32 @@ class SolutionHasPath {
         return cost;
     }
 
+    public int splitArray(int[] nums, int m) {
+        int low = IntStream.of(nums).max().orElse(0);
+        int high = IntStream.of(nums).sum();
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            if (split(nums, mid) > m) {
+                low = mid + 1;
+            } else {
+                high = mid;
+            }
+        }
+        return low;
+    }
+
+    private int split(int[] nums, int sum) {
+        int ret = 1;
+        int currentSum = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (currentSum + nums[i] > sum) {
+                ret++;
+                currentSum = 0;
+            }
+            currentSum += nums[i];
+        }
+        return ret;
+    }
 
     public int maxSatisfaction(int[] satisfaction) {
         Arrays.sort(satisfaction);
@@ -1217,6 +1152,82 @@ class SolutionHasPath {
                 num.remove(new Integer(candidates[p]));
                 sum -= candidates[p];
             }
+        }
+    }
+
+    static class Edge {
+        int v;
+        int nbr;
+        int wt;
+
+        Edge(int v, int nbr, int wt) {
+            this.v = v;
+            this.nbr = nbr;
+            this.wt = wt;
+        }
+    }
+
+    static class Pair {
+        int v;
+        int av; //acquiring vertex (As Prims works on considering next connected min edge)
+        int wt;
+
+        Pair(int v, int av, int wt) {
+            this.v = v;
+            this.av = av;
+            this.wt = wt;
+        }
+    }
+
+    class SubTree {
+        int max;
+        int min;
+        int sum;
+        boolean bst;
+
+        SubTree(int val) {
+            this.max = val;
+            this.min = val;
+            this.sum = val;
+            this.bst = true;
+        }
+    }
+
+    class KSum {
+        public List<List<Integer>> fourSum(int[] nums, int target) {
+            Arrays.sort(nums);
+            return kSum(nums, target, 0, 4);
+        }
+
+        public List<List<Integer>> kSum(int[] nums, int target, int start, int k) {
+            List<List<Integer>> res = new ArrayList<>();
+            if (start == nums.length || nums[start] * k > target || target > nums[nums.length - 1] * k)
+                return res;
+            if (k == 2)
+                return twoSum(nums, target, start);
+
+            for (int i = start; i < nums.length; ++i)
+                if (i == start || nums[i - 1] != nums[i])
+                    for (List<Integer> subset : kSum(nums, target - nums[i], i + 1, k - 1)) {
+                        res.add(new ArrayList<>(Collections.singletonList(nums[i])));
+                        res.get(res.size() - 1).addAll(subset);
+                    }
+
+            return res;
+        }
+
+        public List<List<Integer>> twoSum(int[] nums, int target, int start) {
+            List<List<Integer>> res = new ArrayList<>();
+            Set<Integer> s = new HashSet<>();
+
+            for (int i = start; i < nums.length; ++i) {
+                if (res.isEmpty() || res.get(res.size() - 1).get(1) != nums[i])
+                    if (s.contains(target - nums[i]))
+                        res.add(Arrays.asList(target - nums[i], nums[i]));
+                s.add(nums[i]);
+            }
+
+            return res;
         }
     }
 }

@@ -1,7 +1,5 @@
 package com.company;
 
-import javafx.util.Pair;
-
 import java.util.HashMap;
 import java.util.*;
 
@@ -1769,242 +1767,156 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return dp[allMask];
     }
 
-    class Recursive {
-        public int numberWays(List<List<Integer>> hats) {
-            int n = hats.size();
-            Integer[][] dp = new Integer[41][1 << 10]; // {Pair(cap, mask of selected person), ways}
-            //create adj matrix for cap to people distribution
-            List<Integer>[] hattToP = new List[41];
-            for (int i = 1; i <= 40; i++) hattToP[i] = new ArrayList<>();
 
-            for (int i = 0; i < n; i++) {
-                for (int h : hats.get(i)) {
-                    hattToP[h].add(i);
-                }
+    public int numberWaysRecursive(List<List<Integer>> hats) {
+        int n = hats.size();
+        Integer[][] dp = new Integer[41][1 << 10]; // {Pair(cap, mask of selected person), ways}
+        //create adj matrix for cap to people distribution
+        List<Integer>[] hattToP = new List[41];
+        for (int i = 1; i <= 40; i++) hattToP[i] = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            for (int h : hats.get(i)) {
+                hattToP[h].add(i);
             }
-            return dfs((1 << n) - 1, 0, 1, hattToP, dp); // start with 1st hat and traverse through all
         }
+        return dfs((1 << n) - 1, 0, 1, hattToP, dp); // start with 1st hat and traverse through all
+    }
 
-        private int dfs(int allMask,
-                        int assignedPeople,
-                        int hat,
-                        List<Integer>[] hattToP,
-                        Integer[][] dp) {
+    private int dfs(int allMask,
+                    int assignedPeople,
+                    int hat,
+                    List<Integer>[] hattToP,
+                    Integer[][] dp) {
 
-            if (assignedPeople == allMask) return 1;
-            if (hat > 40) return 0; // person can't wear hat > 40 number
+        if (assignedPeople == allMask) return 1;
+        if (hat > 40) return 0; // person can't wear hat > 40 number
 
-            if (dp[hat][assignedPeople] != null) return dp[hat][assignedPeople];
-            int ways = dfs(allMask, assignedPeople, hat + 1, hattToP, dp); // skip the hat
+        if (dp[hat][assignedPeople] != null) return dp[hat][assignedPeople];
+        int ways = dfs(allMask, assignedPeople, hat + 1, hattToP, dp); // skip the hat
 
-            for (Integer p : hattToP[hat]) {
-                // if person already assigned a hat the skip
-                if ((assignedPeople & (1 << p)) == 0) {
-                    ways += dfs(allMask, assignedPeople | (1 << p), hat + 1, hattToP, dp);
-                    ways %= mod;
-                }
+        for (Integer p : hattToP[hat]) {
+            // if person already assigned a hat the skip
+            if ((assignedPeople & (1 << p)) == 0) {
+                ways += dfs(allMask, assignedPeople | (1 << p), hat + 1, hattToP, dp);
+                ways %= mod;
             }
-            return dp[hat][assignedPeople] = ways;
         }
+        return dp[hat][assignedPeople] = ways;
 
     }
 
-    class TopDownDP {
-        /*
-        Input: nums = [2, 2, 1], m = 4
-        Output: true
-        Explanation: We can split the array into [2, 2] and [1] in the first step. Then, in the second step, we can split [2, 2] into [2] and [2]. As a result, the answer is true.
-         */
-        public boolean canSplitArray(List<Integer> nums, int m) {
-            int n = nums.size();
-            int[] ps = new int[n];
-            if (n == 1 || n == 2) return true;
-            for (int i = 0; i < n; i++) ps[i] = i > 0 ? (ps[i - 1] + nums.get(i)) : nums.get(i);
-            boolean[][] dp = new boolean[n][n];
-            return f(m, ps, dp);
-        }
 
-        private boolean f(int m, int[] ps, boolean[][] dp) {
-            int n = ps.length;
-            boolean left = false, right = false;
-
-            for (int i = 0; i < n; i++) {
-                for (int j = n - 1; j >= 0; j--) {
-                    for (int ind = i; ind < j; ind++) {
-                        if ((ind == i || (ps[ind] - (i - 1 >= 0 ? ps[i - 1] : 0) >= m)) && (ind == j - 1 || (ps[j] - ps[ind] >= m))) {
-                            left = dp[i][ind];
-                            right = dp[ind + 1][j];
-                            boolean res = left && right;
-                            dp[i][j] = res;
-                            if (res) return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
+    /*
+    Input: nums = [2, 2, 1], m = 4
+    Output: true
+    Explanation: We can split the array into [2, 2] and [1] in the first step. Then, in the second step, we can split [2, 2] into [2] and [2]. As a result, the answer is true.
+     */
+    public boolean canSplitArrayTopDownDP(List<Integer> nums, int m) {
+        int n = nums.size();
+        int[] ps = new int[n];
+        if (n == 1 || n == 2) return true;
+        for (int i = 0; i < n; i++) ps[i] = i > 0 ? (ps[i - 1] + nums.get(i)) : nums.get(i);
+        boolean[][] dp = new boolean[n][n];
+        return f(m, ps, dp);
     }
 
+    private boolean f(int m, int[] ps, boolean[][] dp) {
+        int n = ps.length;
+        boolean left = false, right = false;
 
-    class Solution {
-        public int minOperations(String s1, String s2, int x) {
-            return f(new StringBuilder(s1), s2, x, 0);
-        }
-
-        private int f(StringBuilder s1, String s2, int x, int ind) {
-            // base case
-            if (ind > s1.length()) return 0;
-
-            if (s1.toString() == s2) return 0;
-
-            int adj = 0, twoi = 0;
-            for (int i = ind; i < s1.length() - 1; i++) {
-
-                if (s1.charAt(i) != s2.charAt(i)) {
-                    if (s1.charAt(i) == 1) s1.setCharAt(i, '0');
-                    else s1.setCharAt(i, '1');
-
-                    if (s1.charAt(i + 1) == 1) s1.setCharAt(i + 1, '0');
-                    else s1.setCharAt(i + 1, '1');
-
-                    adj += 1 + f(s1, s2, x, ind + 1);
-
-
-                    // backtrack
-                    if (s1.charAt(i + 1) == 1) s1.setCharAt(i + 1, '0');
-                    else s1.setCharAt(i + 1, '1');
-
-
-                    for (int j = 0; j < s1.length() & j != i; j++) {
-                        if (s1.charAt(j) == 1) s1.setCharAt(j, '0');
-                        else s1.setCharAt(j, '1');
-                        twoi += x + f(s1, s2, x, ind + 1);
-                        if (s1.charAt(j) == 1) s1.setCharAt(j, '0');
-                        else s1.setCharAt(j, '1');
+        for (int i = 0; i < n; i++) {
+            for (int j = n - 1; j >= 0; j--) {
+                for (int ind = i; ind < j; ind++) {
+                    if ((ind == i || (ps[ind] - (i - 1 >= 0 ? ps[i - 1] : 0) >= m)) && (ind == j - 1 || (ps[j] - ps[ind] >= m))) {
+                        left = dp[i][ind];
+                        right = dp[ind + 1][j];
+                        boolean res = left && right;
+                        dp[i][j] = res;
+                        if (res) return true;
                     }
                 }
             }
-            return Math.min(adj, twoi);
         }
+        return false;
     }
 
     /*
-    "1100011000"
-    "0101001010"
-    2
-    "10110"
-    "00011"
-    4
-    "0110010001101011010"
-    "1011110101000001100"
-    3
+    Traverse through list and set any values {1,2,3} whenever condition breaks.
+    Condition :- nums.get(i) > nums.get(i+1) || nums.get(i) < nums.get(i-1);
+    TC = O(N2*3), SC = O(N2)
+    As N ~=100 that should be fine
+    */
+    public int minimumOperations(List<Integer> nums) {
+        int op = 0;
+        List<Integer> clone = new ArrayList<>();
+        clone.addAll(nums);
+        int benchmark = -1;
 
-    // breaks-
-    "101101"
-    "000000"
-    6
-     */
+        if (nums.size() == 1) return op;
+        for (int i = 0; i < nums.size(); i++) {
 
-    class Solution {
-        public int minOperations(String s1, String s2, int x) {
-
-            List<Integer> indices = new ArrayList<>();
-            for (int i = 0; i < s1.length(); i++) {
-                if (s1.charAt(i) != s2.charAt(i)) indices.add(i);
-            }
-
-            if (indices.size() % 2 != 0) return -1;
-            int mincost = 0;
-
-            List<Integer> clone = new ArrayList<>();
-            clone.addAll(indices);
-            System.out.println("indices=" + Arrays.toString(indices.toArray()));
-
-            return helper(clone, x);
-
-        }
-
-
-        // Take any 2 indexes and get min of two operations
-        private int helper(List<Integer> clone, int x) {
-            List<Integer> nc = new ArrayList<>();
-            nc.addAll(clone);
-
-            int mc = Integer.MAX_VALUE;
-            int cost = 0;
-            for (int i = 0; i < nc.size() - 1; i++) {
-                for (int j = i + 1; j < nc.size(); j++) {
-                    int diff = nc.get(j) - nc.get(i);
-                    nc.remove(j);
-                    nc.remove(i);
-                    System.out.println("nc=" + nc);
-
-                    cost += Math.min(Math.abs(diff), x) + helper(nc, x);
-                    //backtrack
-                    nc.set(i, nc.get(i));
-                    nc.set(j, nc.get(j));
-                    mc = Math.min(cost, mc);
-                    System.out.println("cost=" + cost);
+            if (i == 0) {
+                if (clone.get(i + 1) < clone.get(i)) {
+                    clone.set(i, clone.get(i + 1));
+                    benchmark = clone.get(i + 1);
+                    op++;
                 }
-            }
-            System.out.println(mc);
-            return mc;
-        }
-    }
-
-    class Solution {
-
-        public List<String> getWordsInLongestSubsequence(int n, String[] words, int[] groups) {
-            List<String> ans = new ArrayList<>();
-            List<Integer> result = helper(0, n, words, groups);
-            for (int r : result) ans.add(words[r]);
-            return ans;
-        }
-
-        private List<Integer> helper(int ind, int n, String[] words, int[] groups) {
-            // base case;
-            if (ind > n) return new ArrayList<>();
-            List<Integer> take = new ArrayList<>();
-            List<Integer> nottake = new ArrayList<>();
-
-            for (int i = ind; i < groups.length; i++) {
-                if (take.isEmpty()) {
-                    take.add(i);
-                    List<Integer> call = helper(i + 1, n, words, groups);
-                    take.addAll(call);
-                } else if (groups[i] != groups[take.get(take.size() - 1)] && chardiff(words[take.get(take.size() - 1)], words[i]) == 1) {
-                    take.add(i);
-                    List<Integer> call = helper(i + 1, n, words, groups);
-                    take.addAll(call);
-
-                    //backtrack
-                    take.remove(new Integer(i));
-                    List<Integer> ncall = helper(i + 1, n, words, groups);
-                    nottake.addAll(ncall);
-                } else {
-                    List<Integer> ncall = helper(i + 1, n, words, groups);
-                    nottake.addAll(ncall);
+            } else {
+                if (clone.get(i) < benchmark) {
+                    clone.set(i, benchmark);
+                    op++;
                 }
             }
 
-
-            if (take.size() > nottake.size()) {
-                System.out.println(take);
-                return take;
-            }
-
-            System.out.println(nottake);
-            return nottake;
+            benchmark = clone.get(i);
         }
 
-        private int chardiff(String word1, String word2) {
-            if (word1.length() != word2.length()) return Integer.MAX_VALUE;
-            int cnt = 0;
-            for (int i = 0; i < word1.length(); i++) {
-                if (word1.charAt(i) != word2.charAt(i)) cnt++;
-            }
-
-            return cnt;
-        }
+        return op;
     }
+
+    // DP + BS
+    // Upsolve
+    public int maximizeTheProfit(int n, List<List<Integer>> offers) {
+        Collections.sort(offers, new Comparator<List<Integer>>() {
+            @Override
+            public int compare(List<Integer> o1, List<Integer> o2) {
+                return o1.get(0).compareTo(o2.get(0));
+            }
+        });
+        System.out.println(Arrays.deepToString(offers.toArray()));
+        return helper(0, -1, n, offers);
+    }
+
+    private int helper(int ind, int li, int n, List<List<Integer>> offers) {
+        if (ind >= offers.size()) return 0;
+
+        int max = 0;
+        for (int i = ind; i < offers.size(); i++) {
+
+            int o = 0, no = 0;
+            List<Integer> offer = offers.get(i);
+            // No overlap
+            if (li == -1 || li < offer.get(0)) {
+                no += offer.get(2) + helper(ind + 1, offer.get(1), n, offers);
+            }
+            //  They overlap
+            else {
+                int c = 0, p = 0;
+                // take the current one
+                int pv = offers.get(i - 1).get(2);
+                c += offer.get(2) + helper(ind + 1, offer.get(1), n, offers);
+
+                // take the previous
+                p += pv + helper(ind + 1, li, n, offers);
+                o += Math.max(c, p);
+            }
+
+            max = Math.max(o, no);
+        }
+
+        System.out.println("li=" + li + ", max=" + max);
+        return max;
+    }
+
 }
