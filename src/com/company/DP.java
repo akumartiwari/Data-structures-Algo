@@ -1,5 +1,7 @@
 package com.company;
 
+import javafx.util.Pair;
+
 import java.util.HashMap;
 import java.util.*;
 
@@ -1840,6 +1842,169 @@ It can be proven that there are no more than 3 square-free subsets in the given 
                 }
             }
             return false;
+        }
+    }
+
+
+    class Solution {
+        public int minOperations(String s1, String s2, int x) {
+            return f(new StringBuilder(s1), s2, x, 0);
+        }
+
+        private int f(StringBuilder s1, String s2, int x, int ind) {
+            // base case
+            if (ind > s1.length()) return 0;
+
+            if (s1.toString() == s2) return 0;
+
+            int adj = 0, twoi = 0;
+            for (int i = ind; i < s1.length() - 1; i++) {
+
+                if (s1.charAt(i) != s2.charAt(i)) {
+                    if (s1.charAt(i) == 1) s1.setCharAt(i, '0');
+                    else s1.setCharAt(i, '1');
+
+                    if (s1.charAt(i + 1) == 1) s1.setCharAt(i + 1, '0');
+                    else s1.setCharAt(i + 1, '1');
+
+                    adj += 1 + f(s1, s2, x, ind + 1);
+
+
+                    // backtrack
+                    if (s1.charAt(i + 1) == 1) s1.setCharAt(i + 1, '0');
+                    else s1.setCharAt(i + 1, '1');
+
+
+                    for (int j = 0; j < s1.length() & j != i; j++) {
+                        if (s1.charAt(j) == 1) s1.setCharAt(j, '0');
+                        else s1.setCharAt(j, '1');
+                        twoi += x + f(s1, s2, x, ind + 1);
+                        if (s1.charAt(j) == 1) s1.setCharAt(j, '0');
+                        else s1.setCharAt(j, '1');
+                    }
+                }
+            }
+            return Math.min(adj, twoi);
+        }
+    }
+
+    /*
+    "1100011000"
+    "0101001010"
+    2
+    "10110"
+    "00011"
+    4
+    "0110010001101011010"
+    "1011110101000001100"
+    3
+
+    // breaks-
+    "101101"
+    "000000"
+    6
+     */
+
+    class Solution {
+        public int minOperations(String s1, String s2, int x) {
+
+            List<Integer> indices = new ArrayList<>();
+            for (int i = 0; i < s1.length(); i++) {
+                if (s1.charAt(i) != s2.charAt(i)) indices.add(i);
+            }
+
+            if (indices.size() % 2 != 0) return -1;
+            int mincost = 0;
+
+            List<Integer> clone = new ArrayList<>();
+            clone.addAll(indices);
+            System.out.println("indices=" + Arrays.toString(indices.toArray()));
+
+            return helper(clone, x);
+
+        }
+
+
+        // Take any 2 indexes and get min of two operations
+        private int helper(List<Integer> clone, int x) {
+            List<Integer> nc = new ArrayList<>();
+            nc.addAll(clone);
+
+            int mc = Integer.MAX_VALUE;
+            int cost = 0;
+            for (int i = 0; i < nc.size() - 1; i++) {
+                for (int j = i + 1; j < nc.size(); j++) {
+                    int diff = nc.get(j) - nc.get(i);
+                    nc.remove(j);
+                    nc.remove(i);
+                    System.out.println("nc=" + nc);
+
+                    cost += Math.min(Math.abs(diff), x) + helper(nc, x);
+                    //backtrack
+                    nc.set(i, nc.get(i));
+                    nc.set(j, nc.get(j));
+                    mc = Math.min(cost, mc);
+                    System.out.println("cost=" + cost);
+                }
+            }
+            System.out.println(mc);
+            return mc;
+        }
+    }
+
+    class Solution {
+
+        public List<String> getWordsInLongestSubsequence(int n, String[] words, int[] groups) {
+            List<String> ans = new ArrayList<>();
+            List<Integer> result = helper(0, n, words, groups);
+            for (int r : result) ans.add(words[r]);
+            return ans;
+        }
+
+        private List<Integer> helper(int ind, int n, String[] words, int[] groups) {
+            // base case;
+            if (ind > n) return new ArrayList<>();
+            List<Integer> take = new ArrayList<>();
+            List<Integer> nottake = new ArrayList<>();
+
+            for (int i = ind; i < groups.length; i++) {
+                if (take.isEmpty()) {
+                    take.add(i);
+                    List<Integer> call = helper(i + 1, n, words, groups);
+                    take.addAll(call);
+                } else if (groups[i] != groups[take.get(take.size() - 1)] && chardiff(words[take.get(take.size() - 1)], words[i]) == 1) {
+                    take.add(i);
+                    List<Integer> call = helper(i + 1, n, words, groups);
+                    take.addAll(call);
+
+                    //backtrack
+                    take.remove(new Integer(i));
+                    List<Integer> ncall = helper(i + 1, n, words, groups);
+                    nottake.addAll(ncall);
+                } else {
+                    List<Integer> ncall = helper(i + 1, n, words, groups);
+                    nottake.addAll(ncall);
+                }
+            }
+
+
+            if (take.size() > nottake.size()) {
+                System.out.println(take);
+                return take;
+            }
+
+            System.out.println(nottake);
+            return nottake;
+        }
+
+        private int chardiff(String word1, String word2) {
+            if (word1.length() != word2.length()) return Integer.MAX_VALUE;
+            int cnt = 0;
+            for (int i = 0; i < word1.length(); i++) {
+                if (word1.charAt(i) != word2.charAt(i)) cnt++;
+            }
+
+            return cnt;
         }
     }
 }

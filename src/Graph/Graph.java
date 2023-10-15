@@ -329,6 +329,7 @@ public class Graph {
         }
     }
 
+
     /*
     Input: nums = [1,5,5,4,11], edges = [[0,1],[1,2],[1,3],[3,4]]
     Output: 9
@@ -492,6 +493,7 @@ public class Graph {
 
         return sum;
     }
+
     // The left node has the value 2 * val, and
     // The right node has the value 2 * val + 1.
     // The concept is to find LCA for each node in query
@@ -515,6 +517,51 @@ public class Graph {
     // Graph based problem
     public int countAnagrams(String s) {
         return 0;
+    }
+
+
+    //TODO : Optimise
+
+    /*
+    Input: edges = [1,2,0,0]
+    Output: [3,3,3,4]
+    Explanation: We perform the process starting from each node in the following way:
+    - Starting from node 0, we visit the nodes 0 -> 1 -> 2 -> 0. The number of different nodes we visit is 3.
+    - Starting from node 1, we visit the nodes 1 -> 2 -> 0 -> 1. The number of different nodes we visit is 3.
+    - Starting from node 2, we visit the nodes 2 -> 0 -> 1 -> 2. The number of different nodes we visit is 3.
+    - Starting from node 3, we visit the nodes 3 -> 0 -> 1 -> 2 -> 0. The number of different nodes we visit is 4.
+
+     */
+    class Solution {
+        Map<Integer, Integer> nm = new HashMap<>();
+        public int[] countVisitedNodes(List<Integer> edges) {
+            int n = edges.size();
+            int[] ans = new int[n];
+            Map<Integer, List<Integer>> graph = new HashMap<>();
+            for (int i = 0; i < edges.size(); i++) {
+                int in = edges.get(i);
+                if (!graph.containsKey(i)) graph.put(i, new ArrayList<>());
+                graph.get(i).add(in);
+            }
+            int[] visited = new int[n];
+            int count = -1;
+            for (int i = 0; i < n; ++i) {
+                visited = new int[n];
+                count =  1 + DFS(i, graph, visited);
+                ans[i] = count;
+            }
+            return ans;
+        }
+
+        private int DFS(int start, Map<Integer, List<Integer>> graph, int[] visited) {
+            visited[start] = 1;
+            for (int i = 0; i < (graph.containsKey(start) ? graph.get(start).size() : 0); ++i) {
+                if (visited[(graph.get(start).get(i))] == 0)
+                    return 1 + DFS(graph.get(start).get(i), graph, visited);
+                return nm.getOrDefault(graph.get(start).get(i), 0);
+            }
+            return -1;
+        }
     }
 
 }

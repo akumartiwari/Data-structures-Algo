@@ -2,6 +2,7 @@ package com.company;
 
 import java.util.HashMap;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SlidingWindow {
     // Sliding window
@@ -137,6 +138,27 @@ public class SlidingWindow {
         }
 
         return cnt;
+    }
+
+    public int minSizeSubarray(int[] nums, int target) {
+
+        int ts = Arrays.stream(nums).sum();
+        int nt = ts < target ? target % ts : target;
+
+        int sum = 0;
+        List<Integer> nn = Arrays.stream(nums).boxed().collect(Collectors.toList());
+        nn.addAll(nn);
+
+        int ans = Integer.MAX_VALUE;
+        for (int i = 0, j = 0; i < nn.size(); ++i) {
+            sum += nn.get(i);
+            while (sum > nt) sum -= nn.get(j++);
+            if (sum == nt) ans = Math.min(ans, i - j + 1);
+        }
+
+        if (ans == Integer.MAX_VALUE) return -1;
+        int factor = target / ts;
+        return ts < target ? (ans + factor * nums.length) : ans;
     }
 
     //TODO: complete
