@@ -532,7 +532,7 @@ public class Graph {
     - Starting from node 3, we visit the nodes 3 -> 0 -> 1 -> 2 -> 0. The number of different nodes we visit is 4.
 
      */
-    class Solution {
+    class CountVisitedNodes {
         Map<Integer, Integer> nm = new HashMap<>();
         public int[] countVisitedNodes(List<Integer> edges) {
             int n = edges.size();

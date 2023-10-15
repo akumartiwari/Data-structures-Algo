@@ -52,8 +52,6 @@ public class SlidingWindow {
     It can be shown that the carpet cannot cover more than 9 white tiles.
      */
     // Author: Anand
-    int end = 1;
-    int start = 0;
 
     int maximumWhiteTiles(int[][] tiles, int len) {
 
