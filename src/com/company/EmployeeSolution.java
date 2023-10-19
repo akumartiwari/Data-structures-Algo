@@ -8429,26 +8429,21 @@ Output: [1,2,2,3,5,6]
     public int[][] constructProductMatrix(int[][] grid) {
 
         int m = grid.length, n = grid[0].length;
-        int[] prefixProd = new int[m * n];
-        int[] suffixProd = new int[m * n];
+        int[] prefixProd = new int[m * n], suffixProd = new int[m * n];
+        Arrays.fill(prefixProd, 1);
+        Arrays.fill(suffixProd, 1);
         List<Integer> flatten = new ArrayList<>();
         for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
+            for (int j = 0; j < n; j++)
                 flatten.add(grid[i][j] % 12345);
-            }
         }
 
         int p = 1, s = 1;
-        for (int i = 0; i < flatten.size(); i++) {
-            if (i == 0) {
-                prefixProd[i] = 1;
-                suffixProd[flatten.size() - 1 - i] = 1;
-            } else {
-                p = p * flatten.get(i - 1) % 12345;
-                s = s * flatten.get(Math.min(flatten.size() - i, flatten.size() - 1)) % 12345;
-                prefixProd[i] = p;
-                suffixProd[Math.max(flatten.size() - 1 - i, 0)] = s;
-            }
+        for (int i = 1; i < flatten.size(); i++) {
+            p = p * flatten.get(i - 1) % 12345;
+            s = s * flatten.get(flatten.size() - i) % 12345;
+            prefixProd[i] = p;
+            suffixProd[flatten.size() - 1 - i] = s;
         }
 
         int ind = 0;
