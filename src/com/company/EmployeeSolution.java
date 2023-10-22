@@ -8476,54 +8476,96 @@ Output: [1,2,2,3,5,6]
     }
 
 
-    class Solution {
+    /*
+`    [3,2,3,2,3]
+    [10,10,10,3,1,1]
+    [1,1,1,3,1,2,2,2,3]
+    [1,3,2,1,1,1,3,1,1,2,3,2,2]
+    [1,1,3,3,1,1,2,2,3,1,3,2]
+    [2,1,1,1,2,1,2,1,3,3,3,2,1,3,3]
+    [1,1,1,3,1,1,1,1,2,3,1,3,2,1,2,3]
+`     */
 
-        public HashMap<Integer, Integer> sortByValue(Map<Integer, Integer> hm) {
-            HashMap<Integer, Integer> temp
-                    = hm.entrySet()
-                    .stream()
-                    .sorted((i1, i2) -> i1.getValue().compareTo(i2.getValue()))
-                    .collect(Collectors.toMap(
-                            Map.Entry::getKey,
-                            Map.Entry::getValue,
-                            (e1, e2) -> e1, LinkedHashMap::new));
+    public HashMap<Integer, Integer> sbv(Map<Integer, Integer> hm) {
+        HashMap<Integer, Integer> temp
+                = hm.entrySet()
+                .stream()
+                .sorted((i1, i2) -> i1.getValue().compareTo(i2.getValue()))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1, LinkedHashMap::new));
 
-            return temp;
-        }
+        return temp;
+    }
 
 
-        public int minGroupsForValidAssignment(int[] nums) {
-            HashMap<Integer, Integer> freq = new HashMap<>();
-            for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
+    public int minGroupsForValidAssignment(int[] nums) {
+        HashMap<Integer, Integer> freq = new HashMap<>();
+        for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
 
-            freq = sortByValue(freq);
+        freq = sbv(freq);
 
-            System.out.println(freq);
-            int size = new ArrayList<>(freq.values()).get(0) + 1;
-            int groups = 0;
-            System.out.println(size);
+        System.out.println(freq);
+        int size = new ArrayList<>(freq.values()).get(0) + 1;
+        int groups = 0;
 
-            int min = Integer.MAX_VALUE;
+
+        // This function can be converted to groupify function to evaluate which size works perfectly
+        while (true) {
+            boolean valid = true;
             for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {
-                if (entry.getValue() < size) groups++;
-                else {
-                    groups += (entry.getValue() / size) + (entry.getValue() % size != 0 ? 1 : 0);
+                if (entry.getValue() > size) {
+                    int rem = entry.getValue() % size;
 
-                    if (entry.getValue() > size) {
-                        int rem = entry.getValue() % size;
-                        if (rem != 0 && Math.abs(rem - size) > 1) {
-                            min = Math.min(min, (size + rem) / 2);
-                            size = min + 1;
+                    if (rem != 0 && Math.abs(rem - size) > 1) {
+
+                        int newsize = (rem + size) / 2;
+
+                        if ((Math.abs(newsize - size)) == 1) break;
+
+                        int ns = size - 1;
+                        int nr = entry.getValue() % ns;
+
+                        if (nr == 0) break;
+                        if (nr == 1) {
+                            int nns = (nr + ns) / 2;
+                            if ((Math.abs(nns - ns)) != 1) {
+                                size--;
+                                continue;
+                            }
+                        }
+
+                        if (Math.abs(nr - ns) > 1 || (Math.abs(newsize - size)) == 2) {
+                            size--;
+                            valid = false;
+                            break;
                         }
                     }
-
-                    System.out.println(entry.getKey() + ":" + groups);
                 }
             }
 
-            return groups;
+            if (valid) break;
         }
+
+
+        System.out.println("size=" + size);
+
+        for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {
+            if (entry.getValue() <= size) groups++;
+            else {
+                if (entry.getValue() % size == 0) {
+                    groups += (entry.getValue() / size) + (entry.getValue() % size != 0 ? 1 : 0);
+                } else {
+                    groups += (entry.getValue() / size) + (entry.getValue() % size != 0 ? 1 : 0);
+                }
+                System.out.println(entry.getKey() + ":" + groups);
+            }
+        }
+
+        return groups;
     }
+
 }
 
 
