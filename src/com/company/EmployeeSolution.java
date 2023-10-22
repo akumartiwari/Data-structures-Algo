@@ -8336,13 +8336,10 @@ Output: [1,2,2,3,5,6]
 
     // 14th Oct
     public List<Integer> lastVisitedIntegers(List<String> words) {
-
         List<Integer> ans = new ArrayList<>();
         List<String> digits = new ArrayList<>();
         int k = 0;
-        for (int i = 0; i < words.size(); i++) {
-            String word = words.get(i);
-
+        for (String word : words) {
             if (word.equals("prev")) {
                 k++;
                 ans.add((digits.size() - k < digits.size() && digits.size() - k >= 0) ? Integer.parseInt(digits.get(digits.size() - k)) : -1);
@@ -8351,7 +8348,6 @@ Output: [1,2,2,3,5,6]
                 k = 0;
             }
         }
-
         return ans;
     }
 
@@ -8393,19 +8389,7 @@ Output: [1,2,2,3,5,6]
         String ans = "";
         for (int i = 0; i < s.length(); i++) {
             int cnt = 0;
-            if (s.charAt(i) == '1') cnt++;
-            if (cnt == k) {
-                String str = s.substring(i, i + 1);
-                if (ans.isEmpty()) ans = str;
-                else if (str.length() == ans.length()) {
-                    int ct = str.compareTo(ans);
-                    if (ct < 0) ans = str;
-                } else {
-                    ans = str;
-                }
-            }
-
-            for (int j = i + 1; j < s.length(); j++) {
+            for (int j = i; j < s.length(); j++) {
                 if (s.charAt(j) == '1') cnt++;
                 if (cnt == k) {
                     String str = s.substring(i, j + 1);
@@ -8416,7 +8400,6 @@ Output: [1,2,2,3,5,6]
                 }
             }
         }
-
         return ans;
     }
 
@@ -8426,22 +8409,70 @@ Output: [1,2,2,3,5,6]
             if (i == nums.length - 1) tm.put(i, new int[]{i, i});
             else {
                 int[] next = tm.get(i + 1);
-                int nl = next[0];
-                int ns = next[1];
-                tm.put(i, new int[]{(nums[i] > nums[nl] ? i : nl), (nums[i] < nums[ns] ? i : ns)});
+                tm.put(i, new int[]{(nums[i] > nums[next[0]] ? i : next[0]), (nums[i] < nums[next[1]] ? i : next[1])});
             }
-
             // check for valid answer
             int ni = i + indexDifference;
             int[] values = ni < nums.length ? tm.get(ni) : new int[]{};
             if (values.length == 0) continue;
-            int ns = values[1];
-            int nl = values[0];
-            if (Math.abs(nums[nl] - nums[i]) >= valueDifference) return new int[]{i, nl};
-            if (Math.abs(nums[ns] - nums[i]) >= valueDifference) return new int[]{i, ns};
+            if (Math.abs(nums[values[0]] - nums[i]) >= valueDifference) return new int[]{i, values[0]};
+            if (Math.abs(nums[values[1]] - nums[i]) >= valueDifference) return new int[]{i, values[1]};
+        }
+        return new int[]{-1, -1};
+    }
+
+
+    public int[][] constructProductMatrix(int[][] grid) {
+
+        int m = grid.length, n = grid[0].length;
+        int[] prefixProd = new int[m * n], suffixProd = new int[m * n];
+        Arrays.fill(prefixProd, 1);
+        Arrays.fill(suffixProd, 1);
+        List<Integer> flatten = new ArrayList<>();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++)
+                flatten.add(grid[i][j] % 12345);
         }
 
-        return new int[]{-1, -1};
+        int p = 1, s = 1;
+        for (int i = 1; i < flatten.size(); i++) {
+            p = p * flatten.get(i - 1) % 12345;
+            s = s * flatten.get(flatten.size() - i) % 12345;
+            prefixProd[i] = p;
+            suffixProd[flatten.size() - 1 - i] = s;
+        }
+
+        int ind = 0;
+        int[][] ans = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                ans[i][j] = prefixProd[ind] * suffixProd[ind] % 12345;
+                ind++;
+            }
+        }
+        return ans;
+    }
+
+
+    public int minimumSum(int[] nums) {
+        int[] left = new int[nums.length], right = new int[nums.length];
+        Arrays.fill(left, Integer.MAX_VALUE);
+        Arrays.fill(right, Integer.MAX_VALUE);
+        for (int i = 1; i < nums.length; i++) {
+            left[i] = Math.min(nums[i - 1], left[i - 1]);
+            right[nums.length - 1 - i] = Math.min(nums[nums.length - i], right[nums.length - i]);
+        }
+
+        int ans = Integer.MAX_VALUE;
+        for (int i = 1; i < nums.length - 1; i++) {
+            int cs = Integer.MAX_VALUE;
+            if (left[i] != Integer.MAX_VALUE && right[i] != Integer.MAX_VALUE
+                    && nums[i] > left[i] && right[i] < nums[i]
+            ) cs = left[i] + right[i] + nums[i];
+
+            ans = Math.min(ans, cs);
+        }
+        return ans == Integer.MAX_VALUE ? -1 : ans;
     }
 
 }
