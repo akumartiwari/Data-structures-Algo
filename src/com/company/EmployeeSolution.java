@@ -8336,13 +8336,10 @@ Output: [1,2,2,3,5,6]
 
     // 14th Oct
     public List<Integer> lastVisitedIntegers(List<String> words) {
-
         List<Integer> ans = new ArrayList<>();
         List<String> digits = new ArrayList<>();
         int k = 0;
-        for (int i = 0; i < words.size(); i++) {
-            String word = words.get(i);
-
+        for (String word : words) {
             if (word.equals("prev")) {
                 k++;
                 ans.add((digits.size() - k < digits.size() && digits.size() - k >= 0) ? Integer.parseInt(digits.get(digits.size() - k)) : -1);
@@ -8351,7 +8348,6 @@ Output: [1,2,2,3,5,6]
                 k = 0;
             }
         }
-
         return ans;
     }
 
@@ -8455,6 +8451,78 @@ Output: [1,2,2,3,5,6]
             }
         }
         return ans;
+    }
+
+
+    public int minimumSum(int[] nums) {
+        int[] left = new int[nums.length], right = new int[nums.length];
+        Arrays.fill(left, Integer.MAX_VALUE);
+        Arrays.fill(right, Integer.MAX_VALUE);
+        for (int i = 1; i < nums.length; i++) {
+            left[i] = Math.min(nums[i - 1], left[i - 1]);
+            right[nums.length - 1 - i] = Math.min(nums[nums.length - i], right[nums.length - i]);
+        }
+
+        int ans = Integer.MAX_VALUE;
+        for (int i = 1; i < nums.length - 1; i++) {
+            int cs = Integer.MAX_VALUE;
+            if (left[i] != Integer.MAX_VALUE && right[i] != Integer.MAX_VALUE
+                    && nums[i] > left[i] && right[i] < nums[i]
+            ) cs = left[i] + right[i] + nums[i];
+
+            ans = Math.min(ans, cs);
+        }
+        return ans == Integer.MAX_VALUE ? -1 : ans;
+    }
+
+
+    class Solution {
+
+        public HashMap<Integer, Integer> sortByValue(Map<Integer, Integer> hm) {
+            HashMap<Integer, Integer> temp
+                    = hm.entrySet()
+                    .stream()
+                    .sorted((i1, i2) -> i1.getValue().compareTo(i2.getValue()))
+                    .collect(Collectors.toMap(
+                            Map.Entry::getKey,
+                            Map.Entry::getValue,
+                            (e1, e2) -> e1, LinkedHashMap::new));
+
+            return temp;
+        }
+
+
+        public int minGroupsForValidAssignment(int[] nums) {
+            HashMap<Integer, Integer> freq = new HashMap<>();
+            for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
+
+            freq = sortByValue(freq);
+
+            System.out.println(freq);
+            int size = new ArrayList<>(freq.values()).get(0) + 1;
+            int groups = 0;
+            System.out.println(size);
+
+            int min = Integer.MAX_VALUE;
+            for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {
+                if (entry.getValue() < size) groups++;
+                else {
+                    groups += (entry.getValue() / size) + (entry.getValue() % size != 0 ? 1 : 0);
+
+                    if (entry.getValue() > size) {
+                        int rem = entry.getValue() % size;
+                        if (rem != 0 && Math.abs(rem - size) > 1) {
+                            min = Math.min(min, (size + rem) / 2);
+                            size = min + 1;
+                        }
+                    }
+
+                    System.out.println(entry.getKey() + ":" + groups);
+                }
+            }
+
+            return groups;
+        }
     }
 }
 
