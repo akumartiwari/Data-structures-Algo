@@ -1768,6 +1768,30 @@ It can be proven that there are no more than 3 square-free subsets in the given 
     }
 
 
+    // take, nottake classical problem
+    // The problem asks us to find largest subsequence that have sum equal to target
+    // Algo:-
+    // We need to iterate over list and use take, not-take based recursive approach and then memomise
+    public int lengthOfLongestSubsequence(List<Integer> nums, int target) {
+        Collections.sort(nums);
+        int[][] dp = new int[target + 1][nums.size() + 1];
+        for (int[] d : dp) Arrays.fill(d, -1);
+        int ans = helper(nums, target, 0, dp);
+        return Math.max(ans, -1);
+    }
+
+    private int helper(List<Integer> nums, int target, int ind, int[][] dp) {
+        // base case
+        if (target == 0) return 0;
+        if (target < 0 || ind >= nums.size()) return -1001;
+
+        if (dp[target][ind] != -1) return dp[target][ind];
+        int take = 1 + helper(nums, target - nums.get(ind), ind + 1, dp);
+        int nottake = helper(nums, target, ind + 1, dp);
+        return dp[target][ind] = Math.max(take, nottake);
+    }
+
+
     public int numberWaysRecursive(List<List<Integer>> hats) {
         int n = hats.size();
         Integer[][] dp = new Integer[41][1 << 10]; // {Pair(cap, mask of selected person), ways}

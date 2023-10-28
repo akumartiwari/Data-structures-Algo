@@ -8540,45 +8540,21 @@ Output: [1,2,2,3,5,6]
 
 
     //TLE
-    public int lengthOfLongestSubsequence(List<Integer> nums, int target) {
-        Collections.sort(nums);
-        List<List<Integer>> ans = new ArrayList<>();
-        findCombinations(0, nums.stream().mapToInt(x -> x).toArray(), target, ans, new ArrayList<>());
-        int res = -1;
-        for (List<Integer> list : ans) res = Math.max(res, list.size());
-        return res;
-    }
+    public int sumCounts(int[] nums) {
 
-    private void findCombinations(int ind, int[] arr, int target, List<List<Integer>> ans, List<Integer> ds) {
+        int ans = 0;
+        final int mod = 1_000_000_007;
 
-        //base case
-        if (target == 0) {
-            ans.add(new ArrayList<>(ds));
-            return;
+        for (int i = 0; i < nums.length; i++) {
+            Set<Integer> values = new HashSet<>();
+            for (int j = i; j < nums.length; j++) {
+                values.add(nums[j]);
+                ans = (ans + values.size() * values.size()) % mod;
+            }
         }
 
-        //start from ind
-        for (int i = ind; i < arr.length; i++) {
-            //check if two consecutive element are same then we will not take that combination
-            if (i > ind && arr[i - 1] == arr[i]) {
-                continue;
-            }
+        return ans;
 
-            //if arr[i] is greater than target means if this element is grater than target then we can not the element present further
-            if (arr[i] > target) {
-                break;
-            }
-
-
-            //add that element in ds
-            ds.add(arr[i]);
-
-            //make a recursive call on the next element
-            findCombinations(i + 1, arr, target - arr[i], ans, ds);
-
-            //after recursive call has completed then remove that element from ds
-            ds.remove(ds.size() - 1);
-        }
     }
 
 }
