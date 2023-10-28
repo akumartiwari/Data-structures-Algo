@@ -8474,6 +8474,118 @@ Output: [1,2,2,3,5,6]
         }
         return ans == Integer.MAX_VALUE ? -1 : ans;
     }
+    // 28th oct
+
+    public int sumCounts(List<Integer> nums) {
+
+        int ans = 0;
+        for (int i = 0; i < nums.size(); i++) {
+            Set<Integer> values = new HashSet<>();
+            for (int j = i; j < nums.size(); j++) {
+                values.add(nums.get(j));
+                ans += values.size() * values.size();
+            }
+        }
+
+        return ans;
+    }
+
+
+    public int minChanges(String s) {
+        int c1 = 0, c0 = 0;
+        int ans = 0;
+        int len = 0;
+        for (int i = 0; i < s.length(); i++) {
+            int c = s.charAt(i) - '0';
+            if (c1 == 0 && c0 == 0) {
+                if (c == 0) c0++;
+                else c1++;
+                len++;
+            } else {
+                if (c == 0 && c1 > c0) {
+                    //make o->1 
+                    ans++;
+                    len++;
+                    // if even length then make a partition
+                    if (len % 2 == 0) {
+                        c1 = 0;
+                        c0 = 0;
+                        len = 0;
+                    }
+                } else if (c == 1 && c0 > c1) {
+                    //make 1->0 and paritition
+                    ans++;
+                    len++;
+                    // if even length then make a partition
+                    if (len % 2 == 0) {
+                        c1 = 0;
+                        c0 = 0;
+                        len = 0;
+                    }
+                } else {
+                    len++;
+                    if (c == 1) c1++;
+                    else c0++;
+                    if (len % 2 == 0) {
+                        c1 = 0;
+                        c0 = 0;
+                        len = 0;
+                    }
+                }
+            }
+        }
+
+        return ans;
+    }
+
+
+    //TLE
+    public int lengthOfLongestSubsequence(List<Integer> nums, int target) {
+        Collections.sort(nums);
+        List<List<Integer>> ans = new ArrayList<>();
+        findCombinations(0, nums.stream().mapToInt(x -> x).toArray(), target, ans, new ArrayList<>());
+        int res = -1;
+        for (List<Integer> list : ans) {
+            res = Math.max(res, list.size());
+        }
+
+        return res;
+    }
+
+    private void findCombinations(int ind, int[] arr, int target, List<List<Integer>> ans, List<Integer> ds) {
+
+        //base case
+        if (target == 0) {
+            ans.add(new ArrayList<>(ds));
+            return;
+        }
+
+        //start from ind
+        for (int i = ind; i < arr.length; i++) {
+
+
+            //check if two consecutive element are same then we will not take that combination
+            if (i > ind && arr[i - 1] == arr[i]) {
+                continue;
+            }
+
+            //if arr[i] is greater than target means if this element is grater than target then we can not the element present further
+            if (arr[i] > target) {
+                break;
+            }
+
+
+            //add that element in ds
+            ds.add(arr[i]);
+
+            //make a recursive call on the next element
+            findCombinations(i + 1, arr, target - arr[i], ans, ds);
+
+            //after recursive call has completed then remove that element from ds
+            ds.remove(ds.size() - 1);
+        }
+    }
+
 
 }
 
