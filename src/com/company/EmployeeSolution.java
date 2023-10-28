@@ -8545,10 +8545,7 @@ Output: [1,2,2,3,5,6]
         List<List<Integer>> ans = new ArrayList<>();
         findCombinations(0, nums.stream().mapToInt(x -> x).toArray(), target, ans, new ArrayList<>());
         int res = -1;
-        for (List<Integer> list : ans) {
-            res = Math.max(res, list.size());
-        }
-
+        for (List<Integer> list : ans) res = Math.max(res, list.size());
         return res;
     }
 
@@ -8585,7 +8582,6 @@ Output: [1,2,2,3,5,6]
             ds.remove(ds.size() - 1);
         }
     }
-
 
 }
 
