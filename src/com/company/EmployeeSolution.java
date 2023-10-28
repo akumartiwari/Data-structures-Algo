@@ -8559,8 +8559,6 @@ Output: [1,2,2,3,5,6]
 
         //start from ind
         for (int i = ind; i < arr.length; i++) {
-
-
             //check if two consecutive element are same then we will not take that combination
             if (i > ind && arr[i - 1] == arr[i]) {
                 continue;
