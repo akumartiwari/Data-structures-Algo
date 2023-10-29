@@ -8554,7 +8554,73 @@ Output: [1,2,2,3,5,6]
         }
 
         return ans;
+    }
 
+    // 29th oct
+
+
+    public int findKOr(int[] nums, int k) {
+        int largest = -1;
+        for (int num : nums) largest = Math.max(largest, num);
+        int cnt = Integer.toBinaryString(largest).length();
+        int ans = 0;
+        cnt--;
+
+        while (cnt >= 0) {
+            int setbit = 0;
+            for (int num : nums) {
+                // set bit
+                if ((num & (1 << cnt)) != 0) setbit++;
+
+                if (setbit == k) {
+                    ans += (int) Math.pow(2, cnt);
+                    break;
+                }
+            }
+            cnt--;
+        }
+
+        return ans;
+    }
+
+    //Solve for hideen test case
+    public long minSum(int[] nums1, int[] nums2) {
+        long sum1 = Arrays.stream(nums1).sum();
+        long sum2 = Arrays.stream(nums2).sum();
+
+        int cnt01 = 0;
+        for (int num : nums1) if (num == 0) cnt01++;
+        int cnt02 = 0;
+        for (int num : nums2) if (num == 0) cnt02++;
+
+        System.out.println("cnt01=" + cnt01);
+        System.out.println("cnt02=" + cnt02);
+
+        if (sum1 > sum2) {
+
+            if (cnt01 == 0) {
+                if (cnt02 > 0) {
+                    if (sum1 - sum2 >= cnt02) return sum1;
+                    else return -1;
+                } else return -1;
+            } else if (cnt02 > 0) {
+                return Math.max(sum1 + cnt01, sum2 + cnt02);
+            } else return -1;
+        } else if (sum2 > sum1) {
+            if (cnt02 == 0) {
+                if (cnt01 > 0) {
+                    if (sum2 - sum1 >= cnt01) return sum2;
+                    else return -1;
+                } else return -1;
+            } else if (cnt01 > 0) return Math.max(sum1 + cnt01, sum2 + cnt02);
+            else return -1;
+        } else {
+            if (cnt01 == cnt02) {
+                return sum1 + cnt01;
+            } else if (cnt01 != 0 && cnt02 != 0) {
+                return Math.max(sum1 + cnt01, sum2 + cnt02);
+            } else return -1;
+        }
     }
 
 }
