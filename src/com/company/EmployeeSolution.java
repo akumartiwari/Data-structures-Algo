@@ -8557,8 +8557,6 @@ Output: [1,2,2,3,5,6]
     }
 
     // 29th oct
-
-
     public int findKOr(int[] nums, int k) {
         int largest = -1;
         for (int num : nums) largest = Math.max(largest, num);
@@ -8583,44 +8581,128 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
-    //Solve for hideen test case
     public long minSum(int[] nums1, int[] nums2) {
-        long sum1 = Arrays.stream(nums1).sum();
-        long sum2 = Arrays.stream(nums2).sum();
-
-        int cnt01 = 0;
+        BigInteger bigsum1 = BigInteger.valueOf(0L);
+        BigInteger bigsum2 = BigInteger.valueOf(0L);
+        for (int num : nums1) bigsum1 = bigsum1.add(new BigInteger(String.valueOf(num)));
+        for (int num : nums2) bigsum2 = bigsum2.add(new BigInteger(String.valueOf(num)));
+        long sum1 = bigsum1.longValue();
+        long sum2 = bigsum2.longValue();
+        long cnt01 = 0;
         for (int num : nums1) if (num == 0) cnt01++;
-        int cnt02 = 0;
+        long cnt02 = 0;
         for (int num : nums2) if (num == 0) cnt02++;
-
-        System.out.println("cnt01=" + cnt01);
-        System.out.println("cnt02=" + cnt02);
-
+        //sum1>sum2
         if (sum1 > sum2) {
-
             if (cnt01 == 0) {
                 if (cnt02 > 0) {
                     if (sum1 - sum2 >= cnt02) return sum1;
                     else return -1;
                 } else return -1;
             } else if (cnt02 > 0) {
-                return Math.max(sum1 + cnt01, sum2 + cnt02);
+                BigInteger bsum2 = BigInteger.valueOf(sum2);
+                BigInteger bsum1 = BigInteger.valueOf(sum1);
+                BigInteger bcnt01 = BigInteger.valueOf(cnt01);
+                BigInteger bcnt02 = BigInteger.valueOf(cnt02);
+
+                return Math.max(bsum1.add(bcnt01).longValue(), bsum2.add(bcnt02).longValue());
             } else return -1;
-        } else if (sum2 > sum1) {
+        }
+        //sum2>sum1
+        else if (sum2 > sum1) {
             if (cnt02 == 0) {
                 if (cnt01 > 0) {
                     if (sum2 - sum1 >= cnt01) return sum2;
                     else return -1;
                 } else return -1;
-            } else if (cnt01 > 0) return Math.max(sum1 + cnt01, sum2 + cnt02);
-            else return -1;
-        } else {
+            } else if (cnt01 > 0) {
+                BigInteger bsum2 = BigInteger.valueOf(sum2);
+                BigInteger bsum1 = BigInteger.valueOf(sum1);
+                BigInteger bcnt01 = BigInteger.valueOf(cnt01);
+                BigInteger bcnt02 = BigInteger.valueOf(cnt02);
+
+                return Math.max(bsum1.add(bcnt01).longValue(), bsum2.add(bcnt02).longValue());
+            } else return -1;
+        }
+        //sum1==sum2
+        else {
             if (cnt01 == cnt02) {
                 return sum1 + cnt01;
             } else if (cnt01 != 0 && cnt02 != 0) {
-                return Math.max(sum1 + cnt01, sum2 + cnt02);
+                BigInteger bsum2 = BigInteger.valueOf(sum2);
+                BigInteger bsum1 = BigInteger.valueOf(sum1);
+                BigInteger bcnt01 = BigInteger.valueOf(cnt01);
+                BigInteger bcnt02 = BigInteger.valueOf(cnt02);
+
+                return Math.max(bsum1.add(bcnt01).longValue(), bsum2.add(bcnt02).longValue());
             } else return -1;
         }
+
+    }
+
+
+    //solve for
+    /*
+    [43,31,14,4]
+            73
+     */
+    public long minIncrementOperations(int[] nums, int k) {
+
+        long op = 0;
+        TreeMap<Integer, List<Integer>> tmvalues = new TreeMap<>();
+        TreeMap<Integer, Integer> tmindexes = new TreeMap<>();
+        for (int i = 0; i < nums.length; i++) tmindexes.put(i, nums[i]);
+
+        for (int i = 0; i < nums.length; i++) {
+
+            // Add new entry
+            tmvalues.putIfAbsent(nums[i], new ArrayList<>(Collections.emptyList()));
+            List<Integer> idx = new ArrayList<>(tmvalues.get(nums[i])); // Always create new Arraylist to avoid UnsupportedAddOperationException
+            idx.add(i);
+            tmvalues.put(nums[i], idx);
+            System.out.println("tmvalues latest=" + tmvalues);
+
+            int sz = 0;
+            for (List<Integer> v : tmvalues.values()) sz += v.size();
+            if (sz >= 3) {
+
+                System.out.println("check kar=");
+
+                int max = tmvalues.lastKey();
+                List<Integer> indexes = tmvalues.lastEntry().getValue();
+                int li = indexes.get(indexes.size() - 1);
+                if (k > max) {
+                    int diff = k - max;
+                    op += diff;
+
+                    indexes.remove(indexes.size() - 1);
+                    if (!indexes.isEmpty()) tmvalues.put(max, indexes);
+                    else tmvalues.remove(max);
+
+                    tmvalues.put(k, Collections.singletonList(li));
+
+                    tmindexes.put(li, k);
+                }
+
+                System.out.println("tmvalues=" + tmvalues);
+                System.out.println("tmindexes=" + tmindexes);
+                System.out.println("op=" + op + ", i=" + i);
+            }
+
+
+            if (i >= 2) {
+                System.out.println("move to next index then remove earliest index");
+                int key = tmindexes.get(i - 2);
+                List<Integer> values = tmvalues.get(key);
+                tmvalues.put(key, values.subList(1, values.size()));
+
+                if (tmvalues.get(key).isEmpty()) tmvalues.remove(key);
+                System.out.println("tmvalues=" + tmvalues);
+
+            }
+        }
+
+        return op;
     }
 
 }
