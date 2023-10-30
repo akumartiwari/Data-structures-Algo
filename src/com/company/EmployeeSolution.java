@@ -8581,6 +8581,26 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    public int[] sortByBits(int[] arr) {
+        int[] ans = new int[arr.length];
+
+        TreeMap<Integer, List<Integer>> tm = new TreeMap<>(); // no of 1's, numbers list
+
+        int ind = 0;
+        for (int a : arr) {
+            int cnt = Integer.bitCount(a);
+            tm.putIfAbsent(cnt, new ArrayList<>());
+            tm.get(cnt).add(a);
+        }
+
+        for (List<Integer> list : tm.values()) {
+            Collections.sort(list);
+            for (int l : list) ans[ind++] = l;
+        }
+
+        return ans;
+    }
+
     public long minSum(int[] nums1, int[] nums2) {
         BigInteger bigsum1 = BigInteger.valueOf(0L);
         BigInteger bigsum2 = BigInteger.valueOf(0L);
@@ -8642,41 +8662,40 @@ Output: [1,2,2,3,5,6]
 
 
     // Solve via DP
-    class Solution {
 
-        //Return min of 3 next values
-        private int checkNext3(int[] nums, int ind, TreeMap<Integer, Integer> tmindexes, int target) {
+    //Return min of 3 next values
+    private int checkNext3(int[] nums, int ind, TreeMap<Integer, Integer> tmindexes, int target) {
 
-            return 0;
-        }
+        return 0;
+    }
 
-        public long minIncrementOperations(int[] nums, int k) {
+    public long minIncrementOperations(int[] nums, int k) {
 
-            long op = 0;
-            TreeMap<Integer, List<Integer>> tmvalues = new TreeMap<>();
-            TreeMap<Integer, Integer> tmindexes = new TreeMap<>();
-            for (int i = 0; i < nums.length; i++) tmindexes.put(i, nums[i]);
+        long op = 0;
+        TreeMap<Integer, List<Integer>> tmvalues = new TreeMap<>();
+        TreeMap<Integer, Integer> tmindexes = new TreeMap<>();
+        for (int i = 0; i < nums.length; i++) tmindexes.put(i, nums[i]);
 
-            for (int i = nums.length - 1; i >= 0; i--) {
+        for (int i = nums.length - 1; i >= 0; i--) {
 
-                // Add new entry
-                tmvalues.putIfAbsent(nums[i], new ArrayList<>(Collections.emptyList()));
-                List<Integer> idx = new ArrayList<>(tmvalues.get(nums[i])); // Always create new Arraylist to avoid UnsupportedAddOperationException
-                idx.add(i);
-                tmvalues.put(nums[i], idx);
-                System.out.println("tmvalues latest=" + tmvalues);
+            // Add new entry
+            tmvalues.putIfAbsent(nums[i], new ArrayList<>(Collections.emptyList()));
+            List<Integer> idx = new ArrayList<>(tmvalues.get(nums[i])); // Always create new Arraylist to avoid UnsupportedAddOperationException
+            idx.add(i);
+            tmvalues.put(nums[i], idx);
+            System.out.println("tmvalues latest=" + tmvalues);
 
-                int sz = 0;
-                for (List<Integer> v : tmvalues.values()) sz += v.size();
-                if (sz >= 3) {
+            int sz = 0;
+            for (List<Integer> v : tmvalues.values()) sz += v.size();
+            if (sz >= 3) {
 
-                    System.out.println("check kar=");
+                System.out.println("check kar=");
 
-                    int max = tmvalues.lastKey();
-                    List<Integer> indexes = tmvalues.lastEntry().getValue();
-                    int li = indexes.get(indexes.size() - 1);
-                    if (k > max) {
-                        int ind = checkNext3(nums, i, tmindexes, k);
+                int max = tmvalues.lastKey();
+                List<Integer> indexes = tmvalues.lastEntry().getValue();
+                int li = indexes.get(indexes.size() - 1);
+                if (k > max) {
+                    int ind = checkNext3(nums, i, tmindexes, k);
 
                         /*
 
@@ -8692,30 +8711,29 @@ Output: [1,2,2,3,5,6]
                             tmindexes.put(li, k);\
                          */
 
-                    }
-
-                    System.out.println("tmvalues=" + tmvalues);
-                    System.out.println("tmindexes=" + tmindexes);
-                    System.out.println("op=" + op + ", i=" + i);
                 }
 
-
-                if (i < nums.length - 2) {
-                    System.out.println("move to next index then remove earliest index");
-                    int key = tmindexes.get(i + 2);
-                    List<Integer> values = tmvalues.get(key);
-                    tmvalues.put(key, values.subList(1, values.size()));
-
-                    if (tmvalues.get(key).isEmpty()) tmvalues.remove(key);
-                    System.out.println("tmvalues=" + tmvalues);
-
-                }
+                System.out.println("tmvalues=" + tmvalues);
+                System.out.println("tmindexes=" + tmindexes);
+                System.out.println("op=" + op + ", i=" + i);
             }
 
-            return op;
-        }
-    }
 
+            if (i < nums.length - 2) {
+                System.out.println("move to next index then remove earliest index");
+                int key = tmindexes.get(i + 2);
+                List<Integer> values = tmvalues.get(key);
+                tmvalues.put(key, values.subList(1, values.size()));
+
+                if (tmvalues.get(key).isEmpty()) tmvalues.remove(key);
+                System.out.println("tmvalues=" + tmvalues);
+
+            }
+        }
+
+        return op;
+    }
+    
 }
 
 
