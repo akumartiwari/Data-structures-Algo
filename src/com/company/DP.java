@@ -1943,4 +1943,60 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return max;
     }
 
+
+    //Cleanup solution
+    public long minIncrementOperations(int[] nums, int k) {
+
+        if (nums.length == 3) {
+
+            int closest = Integer.MAX_VALUE;
+            for (int num : nums) {
+                if (num >= k) {
+                    return 0;
+                } else {
+                    closest = Math.min(closest, k - num);
+                }
+            }
+
+            return closest == Integer.MAX_VALUE ? 0 : closest;
+        }
+
+
+        long ans = Math.min(helper(nums, k, nums.length - 1, new HashSet<>())
+                , Math.min(helper(nums, k, nums.length - 2, new HashSet<>()),
+                        helper(nums, k, nums.length - 3, new HashSet<>())));
+
+
+        return ans == Long.MAX_VALUE ? 0 : ans;
+
+    }
+
+    private long helper(int[] nums, int k, int ind, HashSet<Integer> changedIndex) {
+        // base case
+        if (ind < 0) return 0;
+
+        long take = 0, notake = 0;
+
+        if (nums[ind] < k) {
+            //change at index
+            take += k - nums[ind];
+            int prev = nums[ind];
+            nums[ind] = k;
+            changedIndex.add(ind);
+            take += helper(nums, k, ind - 3, changedIndex);
+        }
+
+        // not take
+        if (changedIndex.contains(ind + 1) || changedIndex.contains(ind + 2)) {
+            // can skip to take only till 2 times consecutive
+            notake += helper(nums, k, ind - 1, changedIndex);
+        }
+
+        if (take == 0) take = Long.MAX_VALUE;
+        if (notake == 0) notake = Long.MAX_VALUE;
+
+        System.out.println(take + ":" + notake);
+        return Math.min(Math.max(take, 0), Math.max(notake, 0));
+    }
+
 }
