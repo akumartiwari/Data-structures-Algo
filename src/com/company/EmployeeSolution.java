@@ -8384,6 +8384,56 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /**
+     * Definition for a binary tree node.
+     * public class TreeNode {
+     * int val;
+     * TreeNode left;
+     * TreeNode right;
+     * TreeNode() {}
+     * TreeNode(int val) { this.val = val; }
+     * TreeNode(int val, TreeNode left, TreeNode right) {
+     * this.val = val;
+     * this.left = left;
+     * this.right = right;
+     * }
+     * }
+     */
+
+    class ModeBST {
+        List<Integer> ans;
+        int val = Integer.MIN_VALUE, freq = 0, maxFreq = 0;
+
+        // Author: Anand
+        public int[] findMode(TreeNode root) {
+
+            ans = new ArrayList<>();
+            if (root.left == null && root.right == null) return new int[]{root.val};
+            helper(root);
+
+            return ans.stream().mapToInt(x -> x).toArray();
+        }
+
+        private void helper(TreeNode root) {
+            // base case
+            if (root == null) return;
+            helper(root.left);
+
+            if (val == root.val) freq++;
+            else {
+                val = root.val;
+                freq = 1;
+            }
+
+            if (freq > maxFreq) {
+                maxFreq = freq;
+                ans = new ArrayList<>(Arrays.asList(root.val));
+            } else if (freq == maxFreq) ans.add(val);
+
+            helper(root.right);
+        }
+    }
+
 
     public String shortestBeautifulSubstring(String s, int k) {
         String ans = "";

@@ -1980,7 +1980,6 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         if (nums[ind] < k) {
             //change at index
             take += k - nums[ind];
-            int prev = nums[ind];
             nums[ind] = k;
             changedIndex.add(ind);
             take += helper(nums, k, ind - 3, changedIndex);
@@ -1998,5 +1997,4 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         System.out.println(take + ":" + notake);
         return Math.min(Math.max(take, 0), Math.max(notake, 0));
     }
-
 }
