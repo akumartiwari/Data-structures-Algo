@@ -8708,6 +8708,24 @@ Output: [1,2,2,3,5,6]
             } else return -1;
         }
     }
+
+    public List<String> buildArray(int[] target, int n) {
+
+        int start = 1;
+        List<String> ans = new ArrayList<>();
+        for (int t : target) {
+            while (start != t && start < n) {
+                start++;
+                ans.add("Push");
+                ans.add("Pop");
+            }
+
+            start++;
+            ans.add("Push");
+        }
+
+        return ans;
+    }
 }
 
 
