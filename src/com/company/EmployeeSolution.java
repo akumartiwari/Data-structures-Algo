@@ -3,6 +3,7 @@ package com.company;
 import javafx.util.Pair;
 
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
@@ -8726,6 +8727,16 @@ Output: [1,2,2,3,5,6]
 
         return ans;
     }
+
+    public int getLastMoment(int n, int[] left, int[] right) {
+        int lm = -1, rm = Integer.MAX_VALUE;
+        for (int l : left) lm = Math.max(l, lm);
+        for (int r : right) rm = Math.min(r, rm);
+        return Math.max(lm, n-rm);
+    }
+    // 5th November
+
+
 }
 
 
