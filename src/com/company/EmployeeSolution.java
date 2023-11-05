@@ -8749,9 +8749,6 @@ Output: [1,2,2,3,5,6]
 
         return ans;
     }
-
-}
-
     //Compute max by traversing wisely
 
     public int findChampion(int n, int[][] edges) {
@@ -8794,7 +8791,6 @@ Output: [1,2,2,3,5,6]
 
         return ans.size() != 1 ? -1 : ans.get(0);
     }
-
 }
 
 
