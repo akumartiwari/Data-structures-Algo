@@ -8732,10 +8732,68 @@ Output: [1,2,2,3,5,6]
         int lm = -1, rm = Integer.MAX_VALUE;
         for (int l : left) lm = Math.max(l, lm);
         for (int r : right) rm = Math.min(r, rm);
-        return Math.max(lm, n-rm);
+        return Math.max(lm, n - rm);
     }
-    // 5th November
 
+    // 5th November
+    public int findChampion(int[][] grid) {
+        int ans = -1;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == 1) {
+                    if (ans == -1) ans = i;
+                    else if (j == ans) ans = i;
+                }
+            }
+        }
+
+        return ans;
+    }
+
+}
+
+    //Compute max by traversing wisely
+
+    public int findChampion(int n, int[][] edges) {
+
+        TreeMap<Integer, List<Integer>> graph = new TreeMap<>();
+        for (int[] edge : edges) {
+            int k = edge[0];
+            int v = edge[1];
+            graph.putIfAbsent(k, new ArrayList<>());
+            graph.get(k).add(v);
+        }
+
+        if (edges.length == 0) {
+            if (n == 1) return 0;
+            return -1;
+        }
+
+        // If there is a node in isolation then return -1;
+        Set<Integer> nodes = new HashSet<>();
+        graph.values().forEach(x -> nodes.addAll(new ArrayList<>(x)));
+        nodes.addAll(graph.keySet());
+        if (nodes.size() < n) return -1;
+
+
+        System.out.println(graph);
+
+
+        List<Integer> ans = new ArrayList<>();
+        Set<Integer> values = new HashSet<>();
+        for (Map.Entry<Integer, List<Integer>> entry : graph.entrySet()) {
+
+            if (ans.isEmpty()) {
+                ans.add(entry.getKey());
+                values.addAll(entry.getValue());
+            } else {
+                for (int e : entry.getValue()) if (values.contains(e)) values.remove(e);
+            }
+            values.add(entry.getKey());
+        }
+
+        return ans.size() != 1 ? -1 : ans.get(0);
+    }
 
 }
 
