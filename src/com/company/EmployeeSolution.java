@@ -8795,6 +8795,7 @@ Output: [1,2,2,3,5,6]
     }
 
     //Daily LC
+    //TODO: Solve in O(N) time
     public int eliminateMaximum(int[] dist, int[] speed) {
         // Sort the monster based on the abiltiies to reach city earliest
         PriorityQueue<Pair<Integer, Integer>> pq = new PriorityQueue<>(Comparator.comparingDouble(a -> (double) ((double) a.getKey() / a.getValue())));
@@ -8805,17 +8806,17 @@ Output: [1,2,2,3,5,6]
         while (!pq.isEmpty()) {
             Pair<Integer, Integer> p = pq.poll();
             //Update distance of nearest monster
-            Pair<Integer, Integer> pair = new Pair<>((p.getKey() - p.getValue() * time), p.getValue());
+            Pair<Integer, Integer> nearestMonster = new Pair<>((p.getKey() - p.getValue() * time), p.getValue());
             // if nearest monster reached the city game over
-            if (pair.getKey() <= 0) return cnt;
+            if (nearestMonster.getKey() <= 0) return cnt;
             cnt++;
 
             //check the next nearset monster
             if (pq.peek() != null) {
-                Pair<Integer, Integer> pppek = pq.peek();
-                Pair<Integer, Integer> peek = new Pair<>((pppek.getKey() - pppek.getValue() * time), pppek.getValue());
+                Pair<Integer, Integer> peek = pq.peek();
+                Pair<Integer, Integer> nextMonster = new Pair<>((peek.getKey() - peek.getValue() * time), peek.getValue());
                 // If this has reached the city
-                if (peek.getKey() / peek.getValue() < 1) return cnt;
+                if (nextMonster.getKey() / nextMonster.getValue() < 1) return cnt;
             }
 
             // take 1 min to charge weopon
