@@ -8778,6 +8778,8 @@ Output: [1,2,2,3,5,6]
 
         List<Integer> ans = new ArrayList<>();
         Set<Integer> values = new HashSet<>();
+
+        //Compute the max node here
         for (Map.Entry<Integer, List<Integer>> entry : graph.entrySet()) {
 
             if (ans.isEmpty()) {
@@ -8790,6 +8792,37 @@ Output: [1,2,2,3,5,6]
         }
 
         return ans.size() != 1 ? -1 : ans.get(0);
+    }
+
+    //Daily LC
+    public int eliminateMaximum(int[] dist, int[] speed) {
+        // Sort the monster based on the abiltiies to reach city earliest
+        PriorityQueue<Pair<Integer, Integer>> pq = new PriorityQueue<>(Comparator.comparingDouble(a -> (double) ((double) a.getKey() / a.getValue())));
+        for (int i = 0; i < dist.length; i++) pq.add(new Pair<>(dist[i], speed[i]));
+
+        int cnt = 0;
+        int time = 0;
+        while (!pq.isEmpty()) {
+            Pair<Integer, Integer> p = pq.poll();
+            //Update distance of nearest monster
+            Pair<Integer, Integer> pair = new Pair<>((p.getKey() - p.getValue() * time), p.getValue());
+            // if nearest monster reached the city game over
+            if (pair.getKey() <= 0) return cnt;
+            cnt++;
+
+            //check the next nearset monster
+            if (pq.peek() != null) {
+                Pair<Integer, Integer> pppek = pq.peek();
+                Pair<Integer, Integer> peek = new Pair<>((pppek.getKey() - pppek.getValue() * time), pppek.getValue());
+                // If this has reached the city
+                if (peek.getKey() / peek.getValue() < 1) return cnt;
+            }
+
+            // take 1 min to charge weopon
+            time++;
+        }
+        // Return count of monster killed
+        return cnt;
     }
 }
 
