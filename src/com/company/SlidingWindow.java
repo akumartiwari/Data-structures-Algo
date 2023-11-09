@@ -210,6 +210,18 @@ public class SlidingWindow {
         return cnt;
     }
 
+    int MOD = 1_000_000_000 + 7;
+
+    public int countHomogenous(String s) {
+        int cnt = 0;
+        for (int i = 0, j = 0; i < s.length(); ++i) {
+            char last = s.charAt(i);
+            while (s.charAt(j) != last && j < i) j++;
+            cnt = (cnt + (i - j + 1) % MOD) % MOD;
+            System.out.println(cnt);
+        }
+        return cnt;
+    }
 
     public int subarrayLCM(int[] nums, int k) {
         int cnt = 0;
