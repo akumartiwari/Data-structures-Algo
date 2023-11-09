@@ -215,10 +215,8 @@ public class SlidingWindow {
     public int countHomogenous(String s) {
         int cnt = 0;
         for (int i = 0, j = 0; i < s.length(); ++i) {
-            char last = s.charAt(i);
-            while (s.charAt(j) != last && j < i) j++;
+            while (s.charAt(j) != s.charAt(i)) j++;
             cnt = (cnt + (i - j + 1) % MOD) % MOD;
-            System.out.println(cnt);
         }
         return cnt;
     }
