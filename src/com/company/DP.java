@@ -284,6 +284,38 @@ public class DP {
         return dp[ind][seats] = calls;
     }
 
+
+    //TODO:TLE
+    class Solution {
+        public int distributeCandies(int n, int limit) {
+            int[][] dp = new int[n + 1][4];
+            for (int[] d : dp) Arrays.fill(d, -1);
+            return helper(n, limit, 3, dp);
+        }
+
+        private int helper(int n, int limit, int child, int[][] dp) {
+            // base case
+            if (child == 0) {
+                if (n == 0) return 1;
+                return 0;
+            }
+
+            if (n < 0) return 0;
+
+            if (dp[n][child] != -1) return dp[n][child];
+
+            int cnt = 0;
+            for (int i = 0; i <= n; i++) {
+                if (i <= limit && (child == 1 || (child - 1) * limit >= (n - i))) {
+                    cnt += helper(n - i, limit, child - 1, dp);
+                }
+            }
+
+            return dp[n][child] = cnt;
+        }
+    }
+
+
     // Similar to Frog jump
     // Author: Anand
     //    [0,1,2,3,0]

@@ -265,8 +265,7 @@ public class SlidingWindow {
                 sz++;
                 lcm = lcm != -1 ? lcm(lcm, nums[j]) : lcm(nums[i], nums[j]);
                 if (lcm == k) cnt++;
-                else if (lcm <= k) continue;
-                else break;
+                else if (lcm > k) break;
             }
         }
         return cnt;
