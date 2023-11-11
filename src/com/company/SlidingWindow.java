@@ -210,15 +210,47 @@ public class SlidingWindow {
         return cnt;
     }
 
-    int MOD = 1_000_000_000 + 7;
+    int MOD = (int) (1e9 + 7);
 
     public int countHomogenous(String s) {
         int cnt = 0;
         for (int i = 0, j = 0; i < s.length(); ++i) {
             while (s.charAt(j) != s.charAt(i)) j++;
-            cnt = (cnt + (i - j + 1) % MOD) % MOD;
+            cnt = (cnt + i - j + 1) % MOD;
         }
         return cnt;
+    }
+
+    public int numSub(String s) {
+        int cnt = 0;
+        for (int i = 0, j = 0; i < s.length(); ++i) {
+            while (s.charAt(j) != s.charAt(i)) j++;
+            if (s.charAt(i) == '1') cnt = (cnt + i - j + 1) % MOD;
+        }
+        return cnt;
+    }
+
+    public int sumSubarrayMins(int[] nums) {
+        int sum = 0;
+        for (int i = 0; i < nums.length; i++) {
+            int max = Integer.MIN_VALUE, min = Integer.MAX_VALUE;
+            for (int j = i; j < nums.length; j++) {
+                max = Math.max(max, nums[j]);
+                min = Math.min(min, nums[j]);
+                sum += (max - min);
+            }
+        }
+
+        return sum;
+    }
+
+    public int maxPower(String s) {
+        int max = 0;
+        for (int i = 0, j = 0; i < s.length(); ++i) {
+            while (s.charAt(j) != s.charAt(i)) j++;
+            max = Math.max(max, i - j + 1);
+        }
+        return max;
     }
 
     public int subarrayLCM(int[] nums, int k) {

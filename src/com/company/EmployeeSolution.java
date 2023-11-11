@@ -8798,7 +8798,7 @@ Output: [1,2,2,3,5,6]
     //TODO: Solve in O(N) time
     public int eliminateMaximum(int[] dist, int[] speed) {
         // Sort the monster based on the abiltiies to reach city earliest
-        PriorityQueue<Pair<Integer, Integer>> pq = new PriorityQueue<>(Comparator.comparingDouble(a -> (double) ((double) a.getKey() / a.getValue())));
+        PriorityQueue<Pair<Integer, Integer>> pq = new PriorityQueue<>(Comparator.comparingDouble(a -> (double)a.getKey() / a.getValue()));
         for (int i = 0; i < dist.length; i++) pq.add(new Pair<>(dist[i], speed[i]));
 
         int cnt = 0;
@@ -8810,15 +8810,6 @@ Output: [1,2,2,3,5,6]
             // if nearest monster reached the city game over
             if (nearestMonster.getKey() <= 0) return cnt;
             cnt++;
-
-            //check the next nearset monster
-            if (pq.peek() != null) {
-                Pair<Integer, Integer> peek = pq.peek();
-                Pair<Integer, Integer> nextMonster = new Pair<>((peek.getKey() - peek.getValue() * time), peek.getValue());
-                // If this has reached the city
-                if (nextMonster.getKey() / nextMonster.getValue() < 1) return cnt;
-            }
-
             // take 1 min to charge weopon
             time++;
         }

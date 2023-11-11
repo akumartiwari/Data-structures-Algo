@@ -120,7 +120,7 @@ public class MonotonicStack {
             left[j] = (j - 1) + 1;
         }
         for (int i = 0; i < n; i++)
-            sum = sum % mod + (a[i] * (left[i] + 1) * (right[i] + 1)) % mod;
+            sum = sum % mod + ((a[i] * (left[i] + 1)) % mod) * ((right[i] + 1) % mod) % mod;
         return sum % mod;
     }
 
