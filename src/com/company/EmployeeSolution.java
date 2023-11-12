@@ -8798,7 +8798,7 @@ Output: [1,2,2,3,5,6]
     //TODO: Solve in O(N) time
     public int eliminateMaximum(int[] dist, int[] speed) {
         // Sort the monster based on the abiltiies to reach city earliest
-        PriorityQueue<Pair<Integer, Integer>> pq = new PriorityQueue<>(Comparator.comparingDouble(a -> (double)a.getKey() / a.getValue()));
+        PriorityQueue<Pair<Integer, Integer>> pq = new PriorityQueue<>(Comparator.comparingDouble(a -> (double) a.getKey() / a.getValue()));
         for (int i = 0; i < dist.length; i++) pq.add(new Pair<>(dist[i], speed[i]));
 
         int cnt = 0;
@@ -8816,11 +8816,58 @@ Output: [1,2,2,3,5,6]
         // Return count of monster killed
         return cnt;
     }
+
+    public int maximumStrongPairXor(int[] nums) {
+
+        int ans = 0;
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i; j < nums.length; j++) {
+                if (Math.abs(nums[i] - nums[j]) <= Math.min(nums[i], nums[j])) {
+                    ans = Math.max(ans, nums[i] ^ nums[j]);
+                }
+            }
+        }
+
+        return ans;
+    }
+
+    public List<String> findHighAccessEmployees(List<List<String>> access_times) {
+
+        List<String> ans = new ArrayList<>();
+        Map<String, List<String>> map = new HashMap<>();// emp, access_times,
+        for (List<String> at : access_times) {
+            String emp = at.get(0);
+            String time = at.get(1);
+            map.putIfAbsent(emp, new ArrayList<>());
+            map.get(emp).add(time);
+        }
+
+        Map<String, List<Integer>> sm = new HashMap<>();// emp, access_times,
+
+        for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+            List<Integer> value = entry.getValue().stream().mapToInt(x -> Integer.parseInt(x.substring(0, 2)) * 60 + Integer.parseInt(x.substring(2, 4))).boxed().sorted().collect(Collectors.toList());
+            sm.put(entry.getKey(), value);
+        }
+
+        for (Map.Entry<String, List<Integer>> entry : sm.entrySet()) {
+            List<Integer> times = new ArrayList<>();
+            for (int at : entry.getValue()) {
+                // check diff is less than an hour
+                if (!times.isEmpty() && Math.abs(times.get(0) - at) >= 60) {
+                    times.remove(0);
+                }
+                times.add(at);
+                if (times.size() == 3) {
+                    ans.add(entry.getKey());
+                    break;
+                }
+            }
+        }
+        return ans;
+    }
+
+
 }
-
-
-
-
 
 
 

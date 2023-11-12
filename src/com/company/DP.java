@@ -2029,4 +2029,69 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         System.out.println(take + ":" + notake);
         return Math.min(Math.max(take, 0), Math.max(notake, 0));
     }
+
+    //TODO:TBD
+    public int minOperations(int[] nums1, int[] nums2) {
+        if (Arrays.stream(nums1).max().getAsInt() == nums1[nums1.length - 1]
+                && Arrays.stream(nums2).max().getAsInt() == nums2[nums2.length - 1]
+        ) return 0;
+
+        TreeMap<Integer, Integer> freq1 = new TreeMap<>(Collections.reverseOrder());
+        TreeMap<Integer, Integer> freq2 = new TreeMap<>(Collections.reverseOrder());
+
+        for (int num : nums1) freq1.put(num, freq1.getOrDefault(num, 0) + 1);
+        for (int num : nums2) freq2.put(num, freq2.getOrDefault(num, 0) + 1);
+
+        if (freq1.firstEntry().getValue() == 1 && freq2.firstEntry().getValue() == 1) {
+            // check if max of both arrays are at same index then  return -1
+            int ind = -1;
+            for (int i = 0; i < nums1.length; i++) {
+                if (nums1[i] == freq1.firstKey()) {
+                    ind = i;
+                    break;
+                }
+            }
+
+            for (int i = 0; i < nums2.length; i++) {
+                if (nums2[i] == freq2.firstKey() && ind == i) {
+                    return -1;
+                }
+            }
+        }
+
+
+        return helper(nums1, nums2, 0);
+    }
+
+    private int helper(int[] nums1, int[] nums2, int ind) {
+        // base case
+        if (ind >= nums1.length) {
+            if (Arrays.stream(nums1).max().getAsInt() == nums1[nums1.length - 1]
+                    && Arrays.stream(nums2).max().getAsInt() == nums2[nums2.length - 1]
+            ) return 0;
+            return 999999;
+        }
+
+        int take = 0, nottake = 0;
+        for (int i = ind; i < nums1.length; i++) {
+            // take
+
+            //swap
+            int temp = nums1[i];
+            nums1[i] = nums2[i];
+            nums2[i] = temp;
+            take = 1 + helper(nums1, nums2, ind + 1);
+
+            //backtrack
+            int backtemp = nums2[i];
+            nums2[i] = nums1[i];
+            nums1[i] = backtemp;
+
+            // not take
+            nottake = helper(nums1, nums2, ind + 1);
+        }
+
+        return Math.min(take, nottake);
+
+    }
 }

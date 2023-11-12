@@ -1,5 +1,7 @@
 package com.company;
 
+import javafx.util.Pair;
+
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -87,5 +89,84 @@ public class Trie {
         }
 
         return temp.isEnd;
+    }
+
+    //TBD
+    class Solution {
+        class TrieNode {
+            TrieNode left, right;
+            int val;
+
+            public TrieNode(int val) {
+                left = null;
+                right = null;
+                this.val = val;
+            }
+        }
+
+        //Insert by iteration
+        public void insert(TrieNode root, int num) {
+            TrieNode curr = root;
+
+            for (int i = 31; i >= 0; i--) {
+                int bit = (num >> i) & 1;
+                if (bit == 0) {
+                    if (curr.left == null) {
+                        curr.left = new TrieNode(num);
+                    }
+                    curr = curr.left;
+                } else {
+                    if (curr.right == null) {
+                        curr.right = new TrieNode(num);
+                    }
+                    curr = curr.right;
+                }
+            }
+        }
+
+        public Pair<Integer, Integer> getMaxXor(TrieNode root, int num) {
+            TrieNode curr = root;
+            int maxXor = 0;
+
+            for (int i = 31; i >= 0; i--) {
+                int bit = (num >> i) & 1;
+                if (bit == 0) {
+                    if (curr.right != null) {
+                        curr = curr.right;
+                        maxXor += (1 << i);
+                    } else {
+                        curr = curr.left;
+                    }
+                } else {
+                    if (curr.left != null) {
+                        curr = curr.left;
+                        maxXor += (1 << i);   //pow(2,i)
+                    } else {
+                        curr = curr.right;
+                    }
+                }
+            }
+
+            return new Pair<>(maxXor, curr.val);
+        }
+
+        public int maximumStrongPairXor(int[] nums) {
+            TrieNode root = new TrieNode(0);
+            int maxXor = 0;
+
+            for (int num : nums) {
+                insert(root, num);
+            }
+
+            for (int num : nums) {
+                Pair<Integer, Integer> pair = getMaxXor(root, num);
+                System.out.println(pair.getValue() + ":num=" + num);
+
+                if (Math.abs(pair.getValue() - num) <= Math.min(pair.getValue(), num))
+                    maxXor = Math.max(maxXor, pair.getKey());
+            }
+
+            return maxXor;
+        }
     }
 }
