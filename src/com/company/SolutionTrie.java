@@ -242,9 +242,9 @@ class WordFilter {
 
         /*
         Input: dist = [1,1,2,3], speed = [1,1,1,1]
-Output: 1
-Input: dist = [3,2,4], speed = [5,3,2]
-Output: 1
+        Output: 1
+        Input: dist = [3,2,4], speed = [5,3,2]
+        Output: 1
 
          */
 
