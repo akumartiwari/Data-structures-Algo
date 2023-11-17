@@ -8866,6 +8866,21 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    public int minPairSum(int[] nums) {
+        Arrays.sort(nums);
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        for (int num : nums) pq.offer(num);
+        int maxValue = Integer.MIN_VALUE;
+        int sz = 0;
+        for (int i = nums.length - 1; i >= 0; i--) {
+            if (sz == nums.length) break;
+            int least = pq.poll();
+            maxValue = Math.max(maxValue, least + nums[i]);
+            sz += 2;
+        }
+        return maxValue;
+    }
+
 
 }
 
