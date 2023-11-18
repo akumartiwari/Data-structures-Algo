@@ -3,12 +3,10 @@ package com.company;
 import javafx.util.Pair;
 
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
-import java.util.HashMap;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -8285,7 +8283,7 @@ Output: [1,2,2,3,5,6]
     It can be shown that there are no ordered triplets of indices with a value greater than 77.
 
     Algo:-
-        The idea is to calcute maximum from the left, {max, min} to the right and evaluate
+        The idea is to calculate maximum from the left, {max, min} to the right and evaluate
         maximum value for the expression (A[i]-A[j])*A[k] where i < j < k for all {i,j,k} E [0,n-1] where n = size of array
      */
     public long maximumTripletValue(int[] nums) {
@@ -8309,13 +8307,11 @@ Output: [1,2,2,3,5,6]
         int ts = n * (n + 1) / 2;
         int ds = 0;
         int i = 1;
-        System.out.println(ts);
         int nm = m;
         while (nm <= n) {
             ds += nm;
             nm = m * ++i;
         }
-        System.out.println(ds);
 
         return ts - 2 * ds;
     }
@@ -8543,9 +8539,7 @@ Output: [1,2,2,3,5,6]
 
 
     public int minChanges(String s) {
-        int c1 = 0, c0 = 0;
-        int ans = 0;
-        int len = 0;
+        int c1 = 0, c0 = 0, ans = 0, len = 0;
         for (int i = 0; i < s.length(); i++) {
             int c = s.charAt(i) - '0';
             if (c1 == 0 && c0 == 0) {
@@ -8564,7 +8558,7 @@ Output: [1,2,2,3,5,6]
                         len = 0;
                     }
                 } else if (c == 1 && c0 > c1) {
-                    //make 1->0 and paritition
+                    //make 1->0 and partition
                     ans++;
                     len++;
                     // if even length then make a partition
@@ -8594,7 +8588,7 @@ Output: [1,2,2,3,5,6]
     public int sumCounts(int[] nums) {
 
         int ans = 0;
-        final int mod = 1_000_000_007;
+        final int mod = (int)1e9+7;
 
         for (int i = 0; i < nums.length; i++) {
             Set<Integer> values = new HashSet<>();
@@ -8717,8 +8711,7 @@ Output: [1,2,2,3,5,6]
         for (int t : target) {
             while (start != t && start < n) {
                 start++;
-                ans.add("Push");
-                ans.add("Pop");
+                ans.addAll(new ArrayList<>(Arrays.asList("Push", "Pop")));
             }
 
             start++;
@@ -8845,7 +8838,11 @@ Output: [1,2,2,3,5,6]
         Map<String, List<Integer>> sm = new HashMap<>();// emp, access_times,
 
         for (Map.Entry<String, List<String>> entry : map.entrySet()) {
-            List<Integer> value = entry.getValue().stream().mapToInt(x -> Integer.parseInt(x.substring(0, 2)) * 60 + Integer.parseInt(x.substring(2, 4))).boxed().sorted().collect(Collectors.toList());
+            List<Integer> value = entry.getValue().stream()
+                    .mapToInt(x -> Integer.parseInt(x.substring(0, 2)) * 60 + Integer.parseInt(x.substring(2, 4)))
+                    .boxed()
+                    .sorted()
+                    .collect(Collectors.toList());
             sm.put(entry.getKey(), value);
         }
 
@@ -8853,9 +8850,7 @@ Output: [1,2,2,3,5,6]
             List<Integer> times = new ArrayList<>();
             for (int at : entry.getValue()) {
                 // check diff is less than an hour
-                if (!times.isEmpty() && Math.abs(times.get(0) - at) >= 60) {
-                    times.remove(0);
-                }
+                if (!times.isEmpty() && Math.abs(times.get(0) - at) >= 60) times.remove(0);
                 times.add(at);
                 if (times.size() == 3) {
                     ans.add(entry.getKey());
@@ -8870,12 +8865,10 @@ Output: [1,2,2,3,5,6]
         Arrays.sort(nums);
         PriorityQueue<Integer> pq = new PriorityQueue<>();
         for (int num : nums) pq.offer(num);
-        int maxValue = Integer.MIN_VALUE;
-        int sz = 0;
+        int maxValue = Integer.MIN_VALUE, sz = 0;
         for (int i = nums.length - 1; i >= 0; i--) {
             if (sz == nums.length) break;
-            int least = pq.poll();
-            maxValue = Math.max(maxValue, least + nums[i]);
+            maxValue = Math.max(maxValue, pq.peek() + nums[i]);
             sz += 2;
         }
         return maxValue;
