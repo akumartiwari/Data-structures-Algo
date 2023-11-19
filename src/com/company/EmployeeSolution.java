@@ -8588,7 +8588,7 @@ Output: [1,2,2,3,5,6]
     public int sumCounts(int[] nums) {
 
         int ans = 0;
-        final int mod = (int)1e9+7;
+        final int mod = (int) 1e9 + 7;
 
         for (int i = 0; i < nums.length; i++) {
             Set<Integer> values = new HashSet<>();
@@ -8861,19 +8861,95 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+
+    // To compute min maximum sum of a pair in the array
+    // we need to maintain count of min,max, element of array
     public int minPairSum(int[] nums) {
-        Arrays.sort(nums);
-        PriorityQueue<Integer> pq = new PriorityQueue<>();
-        for (int num : nums) pq.offer(num);
-        int maxValue = Integer.MIN_VALUE, sz = 0;
-        for (int i = nums.length - 1; i >= 0; i--) {
-            if (sz == nums.length) break;
-            maxValue = Math.max(maxValue, pq.peek() + nums[i]);
-            sz += 2;
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+
+        for (int num : nums) {
+            max = Math.max(max, num);
+            min = Math.min(min, num);
         }
-        return maxValue;
+
+        int[] hash = new int[max + 1];
+        for (int num : nums) hash[num]++;
+
+        int low = min, high = max;
+        int ans = Integer.MIN_VALUE;
+        while (low <= high) {
+            if (hash[low] == 0) low++;
+            else if (hash[high] == 0) high--;
+            else {
+                ans = Math.max(ans, low + high);
+                hash[low]--;
+                hash[high]--;
+            }
+        }
+        return ans;
     }
 
+    public int reductionOperations(int[] nums) {
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+
+        for (int num : nums) {
+            max = Math.max(max, num);
+            min = Math.min(min, num);
+        }
+
+        int[] hash = new int[max + 1];
+        for (int num : nums) hash[num]++;
+
+        int low = min, high = max;
+        int ans = 0, prev = -1;
+        while (low <= high) {
+            if (hash[high] != 0) {
+                if (prev == -1) prev = hash[high];
+                else {
+                    ans += prev;
+                    hash[high] += prev;
+                    prev = hash[high];
+                }
+            }
+            high--;
+        }
+
+        return ans;
+    }
+
+    //19th Nov
+    //Continue to delete character from behind and count the number of operations needed
+    public int findMinimumOperations(String s1, String s2, String s3) {
+        if (s1.length() == s2.length() && s2.length() == s3.length()) {
+            int sz = 0;
+            for (int i = 0; i < s1.length(); i++) {
+                if (s1.charAt(i) == s2.charAt(i) && s2.charAt(i) == s3.charAt(i)) sz++;
+                else break;
+            }
+            if (sz > 0) return s1.length() * (s1.length() - sz);
+            return s1.equals(s2) && s2.equals(s3) ? 0 : -1;
+        }
+
+        PriorityQueue<String> pq = new PriorityQueue<>(String::compareTo);
+        pq.add(s1);
+        pq.add(s2);
+        pq.add(s3);
+        int op = 0;
+        while (!pq.isEmpty()) {
+            String curr = pq.poll();
+            String next = pq.peek();
+            if (next == null) {
+                break;
+            } else {
+                if (!next.startsWith(curr)) return -1;
+                op += next.length() - curr.length();
+                pq.poll();
+                pq.add(curr);
+            }
+        }
+
+        return op;
+    }
 
 }
 
