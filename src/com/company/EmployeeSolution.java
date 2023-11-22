@@ -8951,6 +8951,46 @@ Output: [1,2,2,3,5,6]
         return op;
     }
 
+
+    //Solve with correct ordering
+    public int[] findDiagonalOrder(List<List<Integer>> nums) {
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        Map<Integer, List<Integer>> map = new HashMap<>();
+
+        for (int i = 0; i < nums.size(); i++) {
+            List<Integer> row = nums.get(i);
+            for (int j = 0; j < row.size(); j++) {
+                map.putIfAbsent(row.get(j), new ArrayList<>());
+                if (j - 1 >= 0) map.get(row.get(j)).add(row.get(j - 1));
+                if (j + 1 < row.size()) map.get(row.get(j)).add(row.get(j + 1));
+                if (i + 1 < nums.size()) map.get(row.get(j)).add(nums.get(i + 1).get(j));
+                if (i - 1 >= 0) map.get(row.get(j)).add(nums.get(i - 1).get(j));
+            }
+        }
+
+        List<Integer> result = new ArrayList<>();
+        bfsUtil(map, new boolean[]{}, result);
+
+        return result.stream().mapToInt(x -> x).toArray();
+    }
+
+    private void bfsUtil(Map<Integer, List<Integer>> graph, boolean[] visited, List<Integer> result) {
+        int pathLen = 0;
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(graph.get(0).get(0));
+        while (!queue.isEmpty()) {
+            int elem = queue.poll();
+            for (int i = 0; i < graph.get(elem).size(); i++) {
+                //  Not visited and seats are available
+                if (!visited[graph.get(elem).get(i)]) {
+                    visited[graph.get(elem).get(i)] = true;
+                    queue.add(graph.get(elem).get(i));
+                }
+            }
+        }
+    }
+
+
 }
 
 
