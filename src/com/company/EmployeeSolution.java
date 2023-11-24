@@ -8861,7 +8861,6 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
-
     // To compute min maximum sum of a pair in the array
     // we need to maintain count of min,max, element of array
     public int minPairSum(int[] nums) {
@@ -8951,6 +8950,45 @@ Output: [1,2,2,3,5,6]
         return op;
     }
 
+    public int maxCoins(int[] nums) {
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+
+        for (int num : nums) {
+            max = Math.max(max, num);
+            min = Math.min(min, num);
+        }
+
+        int[] hash = new int[max + 1];
+        for (int num : nums) hash[num]++;
+
+        int low = min, high = max;
+        int ans = 0;
+        while (low <= high) {
+            if (hash[high] == 0) high--; // haven't got max number continue search
+            else if (hash[high] > 0 && hash[low] > 0) { // got max number as well min
+                hash[high]--; // pass on max number
+                // move to search next maximum
+                if (hash[high] == 0 && high > 0) high--;
+                // move to search next minimum
+                while (hash[low] == 0 && low < nums.length) low++;
+                hash[low]--; // pass on  numbermin
+                // if min exists only once it's time to move to next larger number
+                if (hash[low] == 0 && low < nums.length) low++;
+                // if max exists only once it's time to move to next smaller number
+                while (hash[high] == 0 && high > 0) high--;
+
+                // This is second maximum, get it and reduce frequency
+                if (hash[high] != 0) {
+                    ans += high;
+                    hash[high]--;
+                }
+            }
+
+            // haven't got min number continue search
+            if (hash[low] == 0) low++;
+        }
+        return ans;
+    }
 
     //TODO: write better code
     public int[] findDiagonalOrder(List<List<Integer>> nums) {
@@ -8993,9 +9031,6 @@ Output: [1,2,2,3,5,6]
 
 
 }
-
-
-
 /*
     // in some cases, player needs to push the box further in order to change its direction; hence, tracking the box itself isn't enough,
 
