@@ -8971,7 +8971,7 @@ Output: [1,2,2,3,5,6]
                 if (hash[high] == 0 && high > 0) high--;
                 // move to search next minimum
                 while (hash[low] == 0 && low < nums.length) low++;
-                hash[low]--; // pass on  numbermin
+                hash[low]--; // pass on  min number
                 // if min exists only once it's time to move to next larger number
                 if (hash[low] == 0 && low < nums.length) low++;
                 // if max exists only once it's time to move to next smaller number
@@ -8989,6 +8989,20 @@ Output: [1,2,2,3,5,6]
         }
         return ans;
     }
+
+    public int[] getSumAbsoluteDifferences(int[] nums) {
+        int n = nums.length;
+        int[] prefix = new int[n], ans = new int[n];
+
+        for (int i = 0; i < n; i++)
+            prefix[i] += nums[i] + (i > 0 ? prefix[i - 1] : 0);
+
+        for (int i = 0; i < n; i++) {
+            ans[i] = prefix[n - 1] + nums[i] * (2 * (i + 1) - n) - 2 * prefix[i];
+        }
+        return ans;
+    }
+
 
     //TODO: write better code
     public int[] findDiagonalOrder(List<List<Integer>> nums) {
