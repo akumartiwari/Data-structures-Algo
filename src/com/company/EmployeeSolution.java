@@ -9004,6 +9004,20 @@ Output: [1,2,2,3,5,6]
     }
 
 
+    public int getWinner(int[] arr, int k) {
+        Map<Integer, Integer> freq = new LinkedHashMap<>();
+        int max = arr[0];
+        for (int i = 1; i < arr.length; i++) {
+            max = Math.max(arr[i], max);
+            freq.put(max, freq.getOrDefault(max, 0) + 1);
+        }
+
+        for (Map.Entry<Integer, Integer> entry : freq.entrySet())
+            if (entry.getValue() >= k) return entry.getKey();
+        return max;
+    }
+
+
     //TODO: write better code
     public int[] findDiagonalOrder(List<List<Integer>> nums) {
         ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
@@ -9041,6 +9055,66 @@ Output: [1,2,2,3,5,6]
             }
         }
         return result.stream().mapToInt(x -> x).toArray();
+    }
+
+    public List<Integer> findWordsContaining(String[] words, char x) {
+        int ind = 0;
+        List<Integer> ans = new ArrayList<>();
+        for (String word : words) {
+            if (word.contains(String.valueOf(x)))
+                ans.add(ind);
+            ind++;
+        }
+        return ans;
+    }
+
+    public int maximizeSquareHoleArea(int n, int m, int[] hBars, int[] vBars) {
+        int length = n + 2;
+        int breadth = m + 2;
+        Arrays.sort(hBars);
+        Arrays.sort(vBars);
+        if (m < n) {
+            int start = 1;
+            Set<Integer> barsRemoved = new HashSet<>();
+            for (int hb : hBars)
+                barsRemoved.add(hb);
+        } else {
+            for (int vb : vBars) {
+            }
+        }
+        return 1 + Math.min(m + 2, n + 2) * Math.min(m + 2, n + 2);
+    }
+
+    //TODO : Do Memo
+    public int minimumCoins(int[] prices) {
+        return helper(prices, 0, 0);
+    }
+
+    private int helper(int[] prices, int ind, int capacity) {
+        // base case
+        if (ind >= prices.length) return 0;
+        int ans = 0;
+
+        System.out.println("ind=" + ind + ", capacity=" + capacity);
+
+        for (int i = ind; i < prices.length; i++) {
+            if (capacity == 0) {
+                ans += prices[ind];
+                ans += helper(prices, ind + 1, ind + 1);
+            } else {
+                int b = 0, uc = 0;
+                // buy
+                b = prices[ind] + helper(prices, ind + 1, ind + 1);
+
+                // use capacity
+                uc = helper(prices, ind + 1, capacity - 1);
+                ans += (Math.min(b, uc) == 0 ? Math.max(b, uc) : Math.min(b, uc));
+            }
+
+            System.out.println("ans=" + ans);
+        }
+
+        return ans;
     }
 
 
