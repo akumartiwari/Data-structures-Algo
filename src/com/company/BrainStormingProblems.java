@@ -79,22 +79,22 @@ public class BrainStormingProblems {
 
     /*
 
-Input: word1 = "ac", word2 = "b"
-Output: false
-Explanation: Any pair of swaps would yield two distinct characters in the first string, and one in the second string.
-----------------------------------------------------------------------------------------------------------
-APPROACH -
-Because we are bound to lowercase English letters,
-we know the search space is 26 letters.
-We will try all possible combinations of swaps which is 26*26.
+    Input: word1 = "ac", word2 = "b"
+    Output: false
+    Explanation: Any pair of swaps would yield two distinct characters in the first string, and one in the second string.
+    ----------------------------------------------------------------------------------------------------------
+    APPROACH -
+    Because we are bound to lowercase English letters,
+    we know the search space is 26 letters.
+    We will try all possible combinations of swaps which is 26*26.
 
-So with that intuition, we have the following procedure:
+    So with that intuition, we have the following procedure:
 
-Count the initial frequencies of the strings
-Try all possible letter swaps
-After every letter swap, check if we have the same amount of distinct characters
+    Count the initial frequencies of the strings
+    Try all possible letter swaps
+    After every letter swap, check if we have the same amount of distinct characters
 
- */
+     */
     public boolean isItPossible(String word1, String word2) {
         int[] word1Cnt = new int[26];
         int[] word2Cnt = new int[26];
@@ -207,8 +207,8 @@ After every letter swap, check if we have the same amount of distinct characters
         int len = 1;
         Set<Integer> set = new HashSet<>();
 
-        for (int i = 0; i < rolls.length; i++) {
-            set.add(rolls[i]);
+        for (int roll : rolls) {
+            set.add(roll);
             if (set.size() == k) {
                 set.clear();
                 len++;

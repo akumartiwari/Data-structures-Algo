@@ -284,6 +284,38 @@ public class DP {
         return dp[ind][seats] = calls;
     }
 
+
+    //TODO:TLE
+    class Solution {
+        public int distributeCandies(int n, int limit) {
+            int[][] dp = new int[n + 1][4];
+            for (int[] d : dp) Arrays.fill(d, -1);
+            return helper(n, limit, 3, dp);
+        }
+
+        private int helper(int n, int limit, int child, int[][] dp) {
+            // base case
+            if (child == 0) {
+                if (n == 0) return 1;
+                return 0;
+            }
+
+            if (n < 0) return 0;
+
+            if (dp[n][child] != -1) return dp[n][child];
+
+            int cnt = 0;
+            for (int i = 0; i <= n; i++) {
+                if (i <= limit && (child == 1 || (child - 1) * limit >= (n - i))) {
+                    cnt += helper(n - i, limit, child - 1, dp);
+                }
+            }
+
+            return dp[n][child] = cnt;
+        }
+    }
+
+
     // Similar to Frog jump
     // Author: Anand
     //    [0,1,2,3,0]
@@ -1768,6 +1800,30 @@ It can be proven that there are no more than 3 square-free subsets in the given 
     }
 
 
+    // take, nottake classical problem
+    // The problem asks us to find largest subsequence that have sum equal to target
+    // Algo:-
+    // We need to iterate over list and use take, not-take based recursive approach and then memomise
+    public int lengthOfLongestSubsequence(List<Integer> nums, int target) {
+        Collections.sort(nums);
+        int[][] dp = new int[target + 1][nums.size() + 1];
+        for (int[] d : dp) Arrays.fill(d, -1);
+        int ans = helper(nums, target, 0, dp);
+        return Math.max(ans, -1);
+    }
+
+    private int helper(List<Integer> nums, int target, int ind, int[][] dp) {
+        // base case
+        if (target == 0) return 0;
+        if (target < 0 || ind >= nums.size()) return -1001;
+
+        if (dp[target][ind] != -1) return dp[target][ind];
+        int take = 1 + helper(nums, target - nums.get(ind), ind + 1, dp);
+        int nottake = helper(nums, target, ind + 1, dp);
+        return dp[target][ind] = Math.max(take, nottake);
+    }
+
+
     public int numberWaysRecursive(List<List<Integer>> hats) {
         int n = hats.size();
         Integer[][] dp = new Integer[41][1 << 10]; // {Pair(cap, mask of selected person), ways}
@@ -1919,4 +1975,123 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return max;
     }
 
+
+    //TODO: Cleanup solution & solve for correct answer
+    public long minIncrementOperations(int[] nums, int k) {
+
+        if (nums.length == 3) {
+
+            int closest = Integer.MAX_VALUE;
+            for (int num : nums) {
+                if (num >= k) {
+                    return 0;
+                } else {
+                    closest = Math.min(closest, k - num);
+                }
+            }
+
+            return closest == Integer.MAX_VALUE ? 0 : closest;
+        }
+
+
+        long ans = Math.min(helper(nums, k, nums.length - 1, new HashSet<>())
+                , Math.min(helper(nums, k, nums.length - 2, new HashSet<>()),
+                        helper(nums, k, nums.length - 3, new HashSet<>())));
+
+
+        return ans == Long.MAX_VALUE ? 0 : ans;
+
+    }
+
+    private long helper(int[] nums, int k, int ind, HashSet<Integer> changedIndex) {
+        // base case
+        if (ind < 0) return 0;
+
+        long take = 0, notake = 0;
+
+        if (nums[ind] < k) {
+            //change at index
+            take += k - nums[ind];
+            nums[ind] = k;
+            changedIndex.add(ind);
+            take += helper(nums, k, ind - 3, changedIndex);
+        }
+
+        // not take
+        if (changedIndex.contains(ind + 1) || changedIndex.contains(ind + 2)) {
+            // can skip to take only till 2 times consecutive
+            notake += helper(nums, k, ind - 1, changedIndex);
+        }
+
+        if (take == 0) take = Long.MAX_VALUE;
+        if (notake == 0) notake = Long.MAX_VALUE;
+
+        System.out.println(take + ":" + notake);
+        return Math.min(Math.max(take, 0), Math.max(notake, 0));
+    }
+
+    //TODO:TBD
+    public int minOperations(int[] nums1, int[] nums2) {
+        if (Arrays.stream(nums1).max().getAsInt() == nums1[nums1.length - 1]
+                && Arrays.stream(nums2).max().getAsInt() == nums2[nums2.length - 1]
+        ) return 0;
+
+        TreeMap<Integer, Integer> freq1 = new TreeMap<>(Collections.reverseOrder());
+        TreeMap<Integer, Integer> freq2 = new TreeMap<>(Collections.reverseOrder());
+
+        for (int num : nums1) freq1.put(num, freq1.getOrDefault(num, 0) + 1);
+        for (int num : nums2) freq2.put(num, freq2.getOrDefault(num, 0) + 1);
+
+        if (freq1.firstEntry().getValue() == 1 && freq2.firstEntry().getValue() == 1) {
+            // check if max of both arrays are at same index then  return -1
+            int ind = -1;
+            for (int i = 0; i < nums1.length; i++) {
+                if (nums1[i] == freq1.firstKey()) {
+                    ind = i;
+                    break;
+                }
+            }
+
+            for (int i = 0; i < nums2.length; i++) {
+                if (nums2[i] == freq2.firstKey() && ind == i) {
+                    return -1;
+                }
+            }
+        }
+
+
+        return helper(nums1, nums2, 0);
+    }
+
+    private int helper(int[] nums1, int[] nums2, int ind) {
+        // base case
+        if (ind >= nums1.length) {
+            if (Arrays.stream(nums1).max().getAsInt() == nums1[nums1.length - 1]
+                    && Arrays.stream(nums2).max().getAsInt() == nums2[nums2.length - 1]
+            ) return 0;
+            return 999999;
+        }
+
+        int take = 0, nottake = 0;
+        for (int i = ind; i < nums1.length; i++) {
+            // take
+
+            //swap
+            int temp = nums1[i];
+            nums1[i] = nums2[i];
+            nums2[i] = temp;
+            take = 1 + helper(nums1, nums2, ind + 1);
+
+            //backtrack
+            int backtemp = nums2[i];
+            nums2[i] = nums1[i];
+            nums1[i] = backtemp;
+
+            // not take
+            nottake = helper(nums1, nums2, ind + 1);
+        }
+
+        return Math.min(take, nottake);
+
+    }
 }

@@ -7,7 +7,6 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
-import java.util.HashMap;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -8284,7 +8283,7 @@ Output: [1,2,2,3,5,6]
     It can be shown that there are no ordered triplets of indices with a value greater than 77.
 
     Algo:-
-        The idea is to calcute maximum from the left, {max, min} to the right and evaluate
+        The idea is to calculate maximum from the left, {max, min} to the right and evaluate
         maximum value for the expression (A[i]-A[j])*A[k] where i < j < k for all {i,j,k} E [0,n-1] where n = size of array
      */
     public long maximumTripletValue(int[] nums) {
@@ -8308,13 +8307,11 @@ Output: [1,2,2,3,5,6]
         int ts = n * (n + 1) / 2;
         int ds = 0;
         int i = 1;
-        System.out.println(ts);
         int nm = m;
         while (nm <= n) {
             ds += nm;
             nm = m * ++i;
         }
-        System.out.println(ds);
 
         return ts - 2 * ds;
     }
@@ -8382,6 +8379,56 @@ Output: [1,2,2,3,5,6]
             prev = groups[i];
         }
         return ans;
+    }
+
+    /**
+     * Definition for a binary tree node.
+     * public class TreeNode {
+     * int val;
+     * TreeNode left;
+     * TreeNode right;
+     * TreeNode() {}
+     * TreeNode(int val) { this.val = val; }
+     * TreeNode(int val, TreeNode left, TreeNode right) {
+     * this.val = val;
+     * this.left = left;
+     * this.right = right;
+     * }
+     * }
+     */
+
+    class ModeBST {
+        List<Integer> ans;
+        int val = Integer.MIN_VALUE, freq = 0, maxFreq = 0;
+
+        // Author: Anand
+        public int[] findMode(TreeNode root) {
+
+            ans = new ArrayList<>();
+            if (root.left == null && root.right == null) return new int[]{root.val};
+            helper(root);
+
+            return ans.stream().mapToInt(x -> x).toArray();
+        }
+
+        private void helper(TreeNode root) {
+            // base case
+            if (root == null) return;
+            helper(root.left);
+
+            if (val == root.val) freq++;
+            else {
+                val = root.val;
+                freq = 1;
+            }
+
+            if (freq > maxFreq) {
+                maxFreq = freq;
+                ans = new ArrayList<>(Arrays.asList(root.val));
+            } else if (freq == maxFreq) ans.add(val);
+
+            helper(root.right);
+        }
     }
 
 
@@ -8492,9 +8539,7 @@ Output: [1,2,2,3,5,6]
 
 
     public int minChanges(String s) {
-        int c1 = 0, c0 = 0;
-        int ans = 0;
-        int len = 0;
+        int c1 = 0, c0 = 0, ans = 0, len = 0;
         for (int i = 0; i < s.length(); i++) {
             int c = s.charAt(i) - '0';
             if (c1 == 0 && c0 == 0) {
@@ -8513,7 +8558,7 @@ Output: [1,2,2,3,5,6]
                         len = 0;
                     }
                 } else if (c == 1 && c0 > c1) {
-                    //make 1->0 and paritition
+                    //make 1->0 and partition
                     ans++;
                     len++;
                     // if even length then make a partition
@@ -8540,61 +8585,540 @@ Output: [1,2,2,3,5,6]
 
 
     //TLE
-    public int lengthOfLongestSubsequence(List<Integer> nums, int target) {
-        Collections.sort(nums);
-        List<List<Integer>> ans = new ArrayList<>();
-        findCombinations(0, nums.stream().mapToInt(x -> x).toArray(), target, ans, new ArrayList<>());
-        int res = -1;
-        for (List<Integer> list : ans) {
-            res = Math.max(res, list.size());
+    public int sumCounts(int[] nums) {
+
+        int ans = 0;
+        final int mod = (int) 1e9 + 7;
+
+        for (int i = 0; i < nums.length; i++) {
+            Set<Integer> values = new HashSet<>();
+            for (int j = i; j < nums.length; j++) {
+                values.add(nums[j]);
+                ans = (ans + values.size() * values.size()) % mod;
+            }
         }
 
-        return res;
+        return ans;
     }
 
-    private void findCombinations(int ind, int[] arr, int target, List<List<Integer>> ans, List<Integer> ds) {
+    // 29th oct
+    public int findKOr(int[] nums, int k) {
+        int largest = -1;
+        for (int num : nums) largest = Math.max(largest, num);
+        int cnt = Integer.toBinaryString(largest).length();
+        int ans = 0;
+        cnt--;
 
-        //base case
-        if (target == 0) {
-            ans.add(new ArrayList<>(ds));
-            return;
+        while (cnt >= 0) {
+            int setbit = 0;
+            for (int num : nums) {
+                // set bit
+                if ((num & (1 << cnt)) != 0) setbit++;
+
+                if (setbit == k) {
+                    ans += (int) Math.pow(2, cnt);
+                    break;
+                }
+            }
+            cnt--;
         }
 
-        //start from ind
-        for (int i = ind; i < arr.length; i++) {
+        return ans;
+    }
 
+    public int[] sortByBits(int[] arr) {
+        int[] ans = new int[arr.length];
 
-            //check if two consecutive element are same then we will not take that combination
-            if (i > ind && arr[i - 1] == arr[i]) {
-                continue;
+        TreeMap<Integer, List<Integer>> tm = new TreeMap<>(); // no of 1's, numbers list
+
+        int ind = 0;
+        for (int a : arr) {
+            int cnt = Integer.bitCount(a);
+            tm.putIfAbsent(cnt, new ArrayList<>());
+            tm.get(cnt).add(a);
+        }
+
+        for (List<Integer> list : tm.values()) {
+            Collections.sort(list);
+            for (int l : list) ans[ind++] = l;
+        }
+
+        return ans;
+    }
+
+    public long minSum(int[] nums1, int[] nums2) {
+        BigInteger bigsum1 = BigInteger.valueOf(0L);
+        BigInteger bigsum2 = BigInteger.valueOf(0L);
+        for (int num : nums1) bigsum1 = bigsum1.add(new BigInteger(String.valueOf(num)));
+        for (int num : nums2) bigsum2 = bigsum2.add(new BigInteger(String.valueOf(num)));
+        long sum1 = bigsum1.longValue();
+        long sum2 = bigsum2.longValue();
+        long cnt01 = 0;
+        for (int num : nums1) if (num == 0) cnt01++;
+        long cnt02 = 0;
+        for (int num : nums2) if (num == 0) cnt02++;
+        //sum1>sum2
+        if (sum1 > sum2) {
+            if (cnt01 == 0) {
+                if (cnt02 > 0) {
+                    if (sum1 - sum2 >= cnt02) return sum1;
+                    else return -1;
+                } else return -1;
+            } else if (cnt02 > 0) {
+                BigInteger bsum2 = BigInteger.valueOf(sum2);
+                BigInteger bsum1 = BigInteger.valueOf(sum1);
+                BigInteger bcnt01 = BigInteger.valueOf(cnt01);
+                BigInteger bcnt02 = BigInteger.valueOf(cnt02);
+
+                return Math.max(bsum1.add(bcnt01).longValue(), bsum2.add(bcnt02).longValue());
+            } else return -1;
+        }
+        //sum2>sum1
+        else if (sum2 > sum1) {
+            if (cnt02 == 0) {
+                if (cnt01 > 0) {
+                    if (sum2 - sum1 >= cnt01) return sum2;
+                    else return -1;
+                } else return -1;
+            } else if (cnt01 > 0) {
+                BigInteger bsum2 = BigInteger.valueOf(sum2);
+                BigInteger bsum1 = BigInteger.valueOf(sum1);
+                BigInteger bcnt01 = BigInteger.valueOf(cnt01);
+                BigInteger bcnt02 = BigInteger.valueOf(cnt02);
+
+                return Math.max(bsum1.add(bcnt01).longValue(), bsum2.add(bcnt02).longValue());
+            } else return -1;
+        }
+        //sum1==sum2
+        else {
+            if (cnt01 == cnt02) {
+                return sum1 + cnt01;
+            } else if (cnt01 != 0 && cnt02 != 0) {
+                BigInteger bsum2 = BigInteger.valueOf(sum2);
+                BigInteger bsum1 = BigInteger.valueOf(sum1);
+                BigInteger bcnt01 = BigInteger.valueOf(cnt01);
+                BigInteger bcnt02 = BigInteger.valueOf(cnt02);
+
+                return Math.max(bsum1.add(bcnt01).longValue(), bsum2.add(bcnt02).longValue());
+            } else return -1;
+        }
+    }
+
+    public List<String> buildArray(int[] target, int n) {
+
+        int start = 1;
+        List<String> ans = new ArrayList<>();
+        for (int t : target) {
+            while (start != t && start < n) {
+                start++;
+                ans.addAll(new ArrayList<>(Arrays.asList("Push", "Pop")));
             }
 
-            //if arr[i] is greater than target means if this element is grater than target then we can not the element present further
-            if (arr[i] > target) {
+            start++;
+            ans.add("Push");
+        }
+
+        return ans;
+    }
+
+    public int getLastMoment(int n, int[] left, int[] right) {
+        int lm = -1, rm = Integer.MAX_VALUE;
+        for (int l : left) lm = Math.max(l, lm);
+        for (int r : right) rm = Math.min(r, rm);
+        return Math.max(lm, n - rm);
+    }
+
+    // 5th November
+    public int findChampion(int[][] grid) {
+        int ans = -1;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == 1) {
+                    if (ans == -1) ans = i;
+                    else if (j == ans) ans = i;
+                }
+            }
+        }
+
+        return ans;
+    }
+    //Compute max by traversing wisely
+
+    public int findChampion(int n, int[][] edges) {
+
+        TreeMap<Integer, List<Integer>> graph = new TreeMap<>();
+        for (int[] edge : edges) {
+            int k = edge[0];
+            int v = edge[1];
+            graph.putIfAbsent(k, new ArrayList<>());
+            graph.get(k).add(v);
+        }
+
+        if (edges.length == 0) {
+            if (n == 1) return 0;
+            return -1;
+        }
+
+        // If there is a node in isolation then return -1;
+        Set<Integer> nodes = new HashSet<>();
+        graph.values().forEach(x -> nodes.addAll(new ArrayList<>(x)));
+        nodes.addAll(graph.keySet());
+        if (nodes.size() < n) return -1;
+
+
+        System.out.println(graph);
+
+
+        List<Integer> ans = new ArrayList<>();
+        Set<Integer> values = new HashSet<>();
+
+        //Compute the max node here
+        for (Map.Entry<Integer, List<Integer>> entry : graph.entrySet()) {
+
+            if (ans.isEmpty()) {
+                ans.add(entry.getKey());
+                values.addAll(entry.getValue());
+            } else {
+                for (int e : entry.getValue()) if (values.contains(e)) values.remove(e);
+            }
+            values.add(entry.getKey());
+        }
+
+        return ans.size() != 1 ? -1 : ans.get(0);
+    }
+
+    //Daily LC
+    //TODO: Solve in O(N) time
+    public int eliminateMaximum(int[] dist, int[] speed) {
+        // Sort the monster based on the abiltiies to reach city earliest
+        PriorityQueue<Pair<Integer, Integer>> pq = new PriorityQueue<>(Comparator.comparingDouble(a -> (double) a.getKey() / a.getValue()));
+        for (int i = 0; i < dist.length; i++) pq.add(new Pair<>(dist[i], speed[i]));
+
+        int cnt = 0;
+        int time = 0;
+        while (!pq.isEmpty()) {
+            Pair<Integer, Integer> p = pq.poll();
+            //Update distance of nearest monster
+            Pair<Integer, Integer> nearestMonster = new Pair<>((p.getKey() - p.getValue() * time), p.getValue());
+            // if nearest monster reached the city game over
+            if (nearestMonster.getKey() <= 0) return cnt;
+            cnt++;
+            // take 1 min to charge weopon
+            time++;
+        }
+        // Return count of monster killed
+        return cnt;
+    }
+
+    public int maximumStrongPairXor(int[] nums) {
+
+        int ans = 0;
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i; j < nums.length; j++) {
+                if (Math.abs(nums[i] - nums[j]) <= Math.min(nums[i], nums[j])) {
+                    ans = Math.max(ans, nums[i] ^ nums[j]);
+                }
+            }
+        }
+
+        return ans;
+    }
+
+    public List<String> findHighAccessEmployees(List<List<String>> access_times) {
+
+        List<String> ans = new ArrayList<>();
+        Map<String, List<String>> map = new HashMap<>();// emp, access_times,
+        for (List<String> at : access_times) {
+            String emp = at.get(0);
+            String time = at.get(1);
+            map.putIfAbsent(emp, new ArrayList<>());
+            map.get(emp).add(time);
+        }
+
+        Map<String, List<Integer>> sm = new HashMap<>();// emp, access_times,
+
+        for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+            List<Integer> value = entry.getValue().stream()
+                    .mapToInt(x -> Integer.parseInt(x.substring(0, 2)) * 60 + Integer.parseInt(x.substring(2, 4)))
+                    .boxed()
+                    .sorted()
+                    .collect(Collectors.toList());
+            sm.put(entry.getKey(), value);
+        }
+
+        for (Map.Entry<String, List<Integer>> entry : sm.entrySet()) {
+            List<Integer> times = new ArrayList<>();
+            for (int at : entry.getValue()) {
+                // check diff is less than an hour
+                if (!times.isEmpty() && Math.abs(times.get(0) - at) >= 60) times.remove(0);
+                times.add(at);
+                if (times.size() == 3) {
+                    ans.add(entry.getKey());
+                    break;
+                }
+            }
+        }
+        return ans;
+    }
+
+    // To compute min maximum sum of a pair in the array
+    // we need to maintain count of min,max, element of array
+    public int minPairSum(int[] nums) {
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+
+        for (int num : nums) {
+            max = Math.max(max, num);
+            min = Math.min(min, num);
+        }
+
+        int[] hash = new int[max + 1];
+        for (int num : nums) hash[num]++;
+
+        int low = min, high = max;
+        int ans = Integer.MIN_VALUE;
+        while (low <= high) {
+            if (hash[low] == 0) low++;
+            else if (hash[high] == 0) high--;
+            else {
+                ans = Math.max(ans, low + high);
+                hash[low]--;
+                hash[high]--;
+            }
+        }
+        return ans;
+    }
+
+    public int reductionOperations(int[] nums) {
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+
+        for (int num : nums) {
+            max = Math.max(max, num);
+            min = Math.min(min, num);
+        }
+
+        int[] hash = new int[max + 1];
+        for (int num : nums) hash[num]++;
+
+        int low = min, high = max;
+        int ans = 0, prev = -1;
+        while (low <= high) {
+            if (hash[high] != 0) {
+                if (prev == -1) prev = hash[high];
+                else {
+                    ans += prev;
+                    hash[high] += prev;
+                    prev = hash[high];
+                }
+            }
+            high--;
+        }
+
+        return ans;
+    }
+
+    //19th Nov
+    //Continue to delete character from behind and count the number of operations needed
+    public int findMinimumOperations(String s1, String s2, String s3) {
+        if (s1.length() == s2.length() && s2.length() == s3.length()) {
+            int sz = 0;
+            for (int i = 0; i < s1.length(); i++) {
+                if (s1.charAt(i) == s2.charAt(i) && s2.charAt(i) == s3.charAt(i)) sz++;
+                else break;
+            }
+            if (sz > 0) return s1.length() * (s1.length() - sz);
+            return s1.equals(s2) && s2.equals(s3) ? 0 : -1;
+        }
+
+        PriorityQueue<String> pq = new PriorityQueue<>(String::compareTo);
+        pq.add(s1);
+        pq.add(s2);
+        pq.add(s3);
+        int op = 0;
+        while (!pq.isEmpty()) {
+            String curr = pq.poll();
+            String next = pq.peek();
+            if (next == null) {
                 break;
+            } else {
+                if (!next.startsWith(curr)) return -1;
+                op += next.length() - curr.length();
+                pq.poll();
+                pq.add(curr);
+            }
+        }
+
+        return op;
+    }
+
+    public int maxCoins(int[] nums) {
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+
+        for (int num : nums) {
+            max = Math.max(max, num);
+            min = Math.min(min, num);
+        }
+
+        int[] hash = new int[max + 1];
+        for (int num : nums) hash[num]++;
+
+        int low = min, high = max;
+        int ans = 0;
+        while (low <= high) {
+            if (hash[high] == 0) high--; // haven't got max number continue search
+            else if (hash[high] > 0 && hash[low] > 0) { // got max number as well min
+                hash[high]--; // pass on max number
+                // move to search next maximum
+                if (hash[high] == 0 && high > 0) high--;
+                // move to search next minimum
+                while (hash[low] == 0 && low < nums.length) low++;
+                hash[low]--; // pass on  min number
+                // if min exists only once it's time to move to next larger number
+                if (hash[low] == 0 && low < nums.length) low++;
+                // if max exists only once it's time to move to next smaller number
+                while (hash[high] == 0 && high > 0) high--;
+
+                // This is second maximum, get it and reduce frequency
+                if (hash[high] != 0) {
+                    ans += high;
+                    hash[high]--;
+                }
             }
 
-
-            //add that element in ds
-            ds.add(arr[i]);
-
-            //make a recursive call on the next element
-            findCombinations(i + 1, arr, target - arr[i], ans, ds);
-
-            //after recursive call has completed then remove that element from ds
-            ds.remove(ds.size() - 1);
+            // haven't got min number continue search
+            if (hash[low] == 0) low++;
         }
+        return ans;
+    }
+
+    public int[] getSumAbsoluteDifferences(int[] nums) {
+        int n = nums.length;
+        int[] prefix = new int[n], ans = new int[n];
+
+        for (int i = 0; i < n; i++)
+            prefix[i] += nums[i] + (i > 0 ? prefix[i - 1] : 0);
+
+        for (int i = 0; i < n; i++) {
+            ans[i] = prefix[n - 1] + nums[i] * (2 * (i + 1) - n) - 2 * prefix[i];
+        }
+        return ans;
+    }
+
+
+    public int getWinner(int[] arr, int k) {
+        Map<Integer, Integer> freq = new LinkedHashMap<>();
+        int max = arr[0];
+        for (int i = 1; i < arr.length; i++) {
+            max = Math.max(arr[i], max);
+            freq.put(max, freq.getOrDefault(max, 0) + 1);
+        }
+
+        for (Map.Entry<Integer, Integer> entry : freq.entrySet())
+            if (entry.getValue() >= k) return entry.getKey();
+        return max;
+    }
+
+
+    //TODO: write better code
+    public int[] findDiagonalOrder(List<List<Integer>> nums) {
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        Map<Integer, List<Integer>> map = new LinkedHashMap<>();
+
+        Set<Pair<Integer, Integer>> visited = new HashSet<>();
+        for (int i = 0; i < nums.size(); i++) {
+            List<Integer> row = nums.get(i);
+            for (int j = 0; j < row.size(); j += 2) {
+                map.putIfAbsent(row.get(j), new ArrayList<>());
+                visited.add(new Pair<>(i, j));
+                if (i + 1 < nums.size() && nums.get(i + 1).size() > j) {
+                    map.get(row.get(j)).add(nums.get(i + 1).get(j));
+                    visited.add(new Pair<>(i + 1, j));
+                }
+                if (j + 1 < row.size()) {
+                    map.get(row.get(j)).add(row.get(j + 1));
+                    visited.add(new Pair<>(i, j + 1));
+                }
+            }
+        }
+
+        System.out.println(map);
+        List<Integer> result = new ArrayList<>();
+        Queue<Integer> queue = new LinkedList<>();
+        int start = new ArrayList<>(map.keySet()).get(0);
+        queue.add(start);
+        result.add(start);
+        while (!queue.isEmpty()) {
+            int elem = queue.poll();
+            for (int i = 0; i < (map.containsKey(elem) ? map.get(elem).size() : 0); i++) {
+                //  Not visited and seats are available
+                queue.add(map.get(elem).get(i));
+                result.add(map.get(elem).get(i));
+            }
+        }
+        return result.stream().mapToInt(x -> x).toArray();
+    }
+
+    public List<Integer> findWordsContaining(String[] words, char x) {
+        int ind = 0;
+        List<Integer> ans = new ArrayList<>();
+        for (String word : words) {
+            if (word.contains(String.valueOf(x)))
+                ans.add(ind);
+            ind++;
+        }
+        return ans;
+    }
+
+    public int maximizeSquareHoleArea(int n, int m, int[] hBars, int[] vBars) {
+        int length = n + 2;
+        int breadth = m + 2;
+        Arrays.sort(hBars);
+        Arrays.sort(vBars);
+        if (m < n) {
+            int start = 1;
+            Set<Integer> barsRemoved = new HashSet<>();
+            for (int hb : hBars)
+                barsRemoved.add(hb);
+        } else {
+            for (int vb : vBars) {
+            }
+        }
+        return 1 + Math.min(m + 2, n + 2) * Math.min(m + 2, n + 2);
+    }
+
+    //TODO : Do Memo
+    public int minimumCoins(int[] prices) {
+        return helper(prices, 0, 0);
+    }
+
+    private int helper(int[] prices, int ind, int capacity) {
+        // base case
+        if (ind >= prices.length) return 0;
+        int ans = 0;
+
+        System.out.println("ind=" + ind + ", capacity=" + capacity);
+
+        for (int i = ind; i < prices.length; i++) {
+            if (capacity == 0) {
+                ans += prices[ind];
+                ans += helper(prices, ind + 1, ind + 1);
+            } else {
+                int b = 0, uc = 0;
+                // buy
+                b = prices[ind] + helper(prices, ind + 1, ind + 1);
+
+                // use capacity
+                uc = helper(prices, ind + 1, capacity - 1);
+                ans += (Math.min(b, uc) == 0 ? Math.max(b, uc) : Math.min(b, uc));
+            }
+
+            System.out.println("ans=" + ans);
+        }
+
+        return ans;
     }
 
 
 }
-
-
-
-
-
-
-
 /*
     // in some cases, player needs to push the box further in order to change its direction; hence, tracking the box itself isn't enough,
 
