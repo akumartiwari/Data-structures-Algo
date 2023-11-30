@@ -9068,6 +9068,22 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    public boolean checkPowersOfThree(int n) {
+        int max = 0;
+        while (Math.pow(3, max) <= n) max++;
+        int sum = 0;
+        while (true) {
+            if (max < 0) break;
+            if (sum + Math.pow(3, max) == n) return true;
+
+            if (sum + Math.pow(3, max) < n) {
+                max--;
+                sum += (int) Math.pow(3, max);
+            }
+        }
+        return sum == n;
+    }
+
     public int maximizeSquareHoleArea(int n, int m, int[] hBars, int[] vBars) {
         int length = n + 2;
         int breadth = m + 2;
