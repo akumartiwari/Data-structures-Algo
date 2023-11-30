@@ -9072,14 +9072,10 @@ Output: [1,2,2,3,5,6]
         int max = 0;
         while (Math.pow(3, max) <= n) max++;
         int sum = 0;
-        while (true) {
-            if (max < 0) break;
+        while (max >= 0) {
             if (sum + Math.pow(3, max) == n) return true;
-
-            if (sum + Math.pow(3, max) < n) {
-                max--;
-                sum += (int) Math.pow(3, max);
-            }
+            if (sum + Math.pow(3, max) < n) sum += (int) Math.pow(3, max);
+            max--;
         }
         return sum == n;
     }
