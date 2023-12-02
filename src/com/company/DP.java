@@ -2094,4 +2094,47 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return Math.min(take, nottake);
 
     }
+
+    //TLE
+    // O(N3) valid when N ~ 100
+    public int waysToSplit(int[] nums) {
+        int[] prefix = new int[nums.length];
+        for (int i = 0; i < nums.length; i++)
+            prefix[i] += nums[i] + (i > 0 ? prefix[i - 1] : 0);
+        Map<String, Integer> dp = new HashMap<>();
+        return ways(nums, prefix, new ArrayList<>(), 0, dp);
+    }
+
+    private int ways(int[] nums, int[] prefix, List<Integer> indexes, int i, Map<String, Integer> dp) {
+        // base case
+        if (i >= nums.length) return 0;
+        String key = Arrays.toString(indexes.toArray()) + i;
+        if (dp.containsKey(key)) return dp.get(key);
+        int ways = 0;
+        // split
+        if (indexes.isEmpty()) {
+            indexes.add(i);
+            ways = (ways + ways(nums, prefix, indexes, i + 1, dp)) % mod;
+            indexes.remove(indexes.size() - 1); //backtrack
+        }
+
+        if (indexes.size() == 1 && (prefix[i] >= 2 * prefix[indexes.get(0)])) {
+            indexes.add(i);
+            ways = (ways + ways(nums, prefix, indexes, i + 1, dp)) % mod;
+            indexes.remove(indexes.size() - 1); //backtrack
+        }
+
+        if (indexes.size() == 2 && i == nums.length - 1) {
+            int li = indexes.get(indexes.size() - 1);
+            int currSum = prefix[i] - prefix[li];
+            int lastSum = prefix[li] - prefix[indexes.get(0)];
+            System.out.println(currSum + ":" + lastSum);
+            if (currSum >= lastSum) return 1;
+            return 0;
+        }
+        // not split
+        ways = (ways + ways(nums, prefix, indexes, i + 1, dp)) % mod;
+        return ways;
+    }
+
 }
