@@ -9076,6 +9076,30 @@ Output: [1,2,2,3,5,6]
         return sb1.toString().equals(sb2.toString());
     }
 
+    public int countCharacters(String[] words, String chars) {
+        Map<Character, Integer> freq = new HashMap<>();
+        for (Character c : chars.toCharArray()) freq.put(c, freq.getOrDefault(c, 0) + 1);
+
+        int ans = 0;
+        for (String word : words) {
+            Map<Character, Integer> map = new HashMap<>(freq);
+            boolean present = true;
+            for (Character c : word.toCharArray()) {
+                if (!map.containsKey(c)) {
+                    present = false;
+                    break;
+                }
+                map.put(c, map.get(c) - 1);
+                if (map.get(c) <= 0) map.remove(c);
+            }
+
+            if (present) ans += word.length();
+        }
+        return ans;
+    }
+    
+    
+
     public boolean checkPowersOfThree(int n) {
         int max = 0;
         while (Math.pow(3, max) <= n) max++;
