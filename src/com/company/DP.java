@@ -2128,7 +2128,6 @@ It can be proven that there are no more than 3 square-free subsets in the given 
             int li = indexes.get(indexes.size() - 1);
             int currSum = prefix[i] - prefix[li];
             int lastSum = prefix[li] - prefix[indexes.get(0)];
-            System.out.println(currSum + ":" + lastSum);
             if (currSum >= lastSum) return 1;
             return 0;
         }

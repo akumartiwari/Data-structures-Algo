@@ -9097,8 +9097,21 @@ Output: [1,2,2,3,5,6]
         }
         return ans;
     }
-    
-    
+
+    public int minTimeToVisitAllPoints(int[][] points) {
+        int shortestDistance = 0;
+        int ind = 0;
+        for (int[] point : points) {
+            if (ind++ >= points.length) break;
+            int[] point2 = points[ind];
+            int diffx = Math.abs(point2[0] - point[0]);
+            int diffy = Math.abs(point2[1] - point[1]);
+            int larger = Math.max(diffx, diffy);
+            shortestDistance += larger;
+        }
+        return shortestDistance;
+    }
+
 
     public boolean checkPowersOfThree(int n) {
         int max = 0;
