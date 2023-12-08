@@ -1,6 +1,9 @@
 package com.company;
 
-import java.util.HashMap;import java.util.*;
+import javafx.util.Pair;
+
+import java.util.HashMap;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -56,6 +59,27 @@ class TreeNode {
         }
         return ans;
     }
+
+
+    public String tree2str(TreeNode root) {
+        Map<TreeNode, Pair<TreeNode, TreeNode>> relation = new LinkedHashMap<>();
+
+        preorder(root, relation);
+
+        StringBuilder ans = new StringBuilder();
+
+        //Think of using Queue as linkedList for traversal
+        return ans.toString();
+    }
+
+    private void preorder(TreeNode root, Map<TreeNode, Pair<TreeNode, TreeNode>> relation) {
+        // base case
+        if (root == null) return;
+        relation.put(root, new Pair<>(root.left, root.right));
+        preorder(root.left, relation);
+        preorder(root.right, relation);
+    }
+
 
     List<TreeNode> recursion(int start, int end, int[][] dp) {
         List<TreeNode> list = new ArrayList<>();

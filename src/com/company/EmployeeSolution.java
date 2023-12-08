@@ -9140,6 +9140,19 @@ Output: [1,2,2,3,5,6]
         return sum == n;
     }
 
+    public int totalMoney(int n) {
+        int start = 1;
+        int cnt = 1;
+        int ans = 0;
+        while (cnt <= n) {
+            ans += start++;
+            if (cnt++ % 7 == 0) start = start - 6;
+        }
+
+        return ans;
+    }
+
+
     public int maximizeSquareHoleArea(int n, int m, int[] hBars, int[] vBars) {
         int length = n + 2;
         int breadth = m + 2;
