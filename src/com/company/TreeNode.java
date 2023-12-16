@@ -60,26 +60,19 @@ class TreeNode {
         return ans;
     }
 
-
+    /*
+    Use Recursion to traverse subTree of a node and place braces around them
+    Traverse the right subtree only of node is present and place braces in the string
+     */
     public String tree2str(TreeNode root) {
-        Map<TreeNode, Pair<TreeNode, TreeNode>> relation = new LinkedHashMap<>();
-
-        preorder(root, relation);
-
-        StringBuilder ans = new StringBuilder();
-
-        //Think of using Queue as linkedList for traversal
-        return ans.toString();
+        String ans = "";
+        if (root == null) return "";
+        ans += root.val;
+        if (root.left == null && root.right == null) return ans;
+        ans += "(" + tree2str(root.left) + ")";
+        if (root.right != null) ans += "(" + tree2str(root.right) + ")";
+        return ans;
     }
-
-    private void preorder(TreeNode root, Map<TreeNode, Pair<TreeNode, TreeNode>> relation) {
-        // base case
-        if (root == null) return;
-        relation.put(root, new Pair<>(root.left, root.right));
-        preorder(root.left, relation);
-        preorder(root.right, relation);
-    }
-
 
     List<TreeNode> recursion(int start, int end, int[][] dp) {
         List<TreeNode> list = new ArrayList<>();

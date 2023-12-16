@@ -9152,6 +9152,36 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    public boolean isAnagram(String s, String t) {
+        Map<Character, Integer> freq = new HashMap<>();
+        for (Character c : s.toCharArray()) freq.put(c, freq.getOrDefault(c, 0) + 1);
+        for (Character c : s.toCharArray()) {
+            if (!freq.containsKey(c)) return false;
+            freq.put(c, freq.get(c) - 1);
+            if (freq.get(c) <= 0) freq.remove(c);
+        }
+        return freq.isEmpty();
+    }
+
+    public int findSpecialInteger(int[] arr) {
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int a : arr) freq.put(a, freq.getOrDefault(a, 0) + 1);
+        int len = arr.length;
+        for (Map.Entry<Integer, Integer> entry : freq.entrySet())
+            if (entry.getValue() > len / 4) return entry.getKey();
+        return -1;
+    }
+
+    public int[] createTargetArray(int[] nums, int[] index) {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            int ind = index[i];
+            if (list.size() <= ind) list.add(nums[i]);
+                // insert and Shift towards right
+            else list.add(ind, nums[i]);
+        }
+        return list.stream().mapToInt(x -> x).toArray();
+    }
 
     public int maximizeSquareHoleArea(int n, int m, int[] hBars, int[] vBars) {
         int length = n + 2;
