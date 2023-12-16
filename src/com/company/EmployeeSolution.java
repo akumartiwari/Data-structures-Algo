@@ -9172,6 +9172,20 @@ Output: [1,2,2,3,5,6]
         return -1;
     }
 
+    public int maxProduct(int[] nums) {
+        int first = -1, second = -1;
+        for (int num : nums) {
+            if (first == -1) first = Math.max(first, num);
+            else {
+                if (num >= first) {
+                    second = first;
+                    first = num;
+                } else second = Math.max(second, num);
+            }
+        }
+        return (first - 1) * (second - 1);
+    }
+
     public int[] createTargetArray(int[] nums, int[] index) {
         List<Integer> list = new ArrayList<>();
         for (int i = 0; i < nums.length; i++) {
