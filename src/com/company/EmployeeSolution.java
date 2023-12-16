@@ -9146,7 +9146,7 @@ Output: [1,2,2,3,5,6]
         int ans = 0;
         while (cnt <= n) {
             ans += start++;
-            if (cnt++ % 7 == 0) start = start - 6;
+            if (cnt++ % 7 == 0) start -= 6;
         }
 
         return ans;
