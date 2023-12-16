@@ -1,6 +1,9 @@
 package com.company;
 
-import java.util.HashMap;import java.util.*;
+import javafx.util.Pair;
+
+import java.util.HashMap;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -54,6 +57,20 @@ class TreeNode {
                 }
             }
         }
+        return ans;
+    }
+
+    /*
+    Use Recursion to traverse subTree of a node and place braces around them
+    Traverse the right subtree only of node is present and place braces in the string
+     */
+    public String tree2str(TreeNode root) {
+        String ans = "";
+        if (root == null) return "";
+        ans += root.val;
+        if (root.left == null && root.right == null) return ans;
+        ans += "(" + tree2str(root.left) + ")";
+        if (root.right != null) ans += "(" + tree2str(root.right) + ")";
         return ans;
     }
 
