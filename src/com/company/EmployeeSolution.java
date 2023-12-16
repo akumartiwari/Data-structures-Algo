@@ -9068,6 +9068,135 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    public boolean arrayStringsAreEqual(String[] word1, String[] word2) {
+        StringBuilder sb1 = new StringBuilder();
+        StringBuilder sb2 = new StringBuilder();
+        for (String word : word1) sb1.append(word);
+        for (String word : word2) sb2.append(word);
+        return sb1.toString().equals(sb2.toString());
+    }
+
+    public int countCharacters(String[] words, String chars) {
+        Map<Character, Integer> freq = new HashMap<>();
+        for (Character c : chars.toCharArray()) freq.put(c, freq.getOrDefault(c, 0) + 1);
+
+        int ans = 0;
+        for (String word : words) {
+            Map<Character, Integer> map = new HashMap<>(freq);
+            boolean present = true;
+            for (Character c : word.toCharArray()) {
+                if (!map.containsKey(c)) {
+                    present = false;
+                    break;
+                }
+                map.put(c, map.get(c) - 1);
+                if (map.get(c) <= 0) map.remove(c);
+            }
+
+            if (present) ans += word.length();
+        }
+        return ans;
+    }
+
+    public int minTimeToVisitAllPoints(int[][] points) {
+        int shortestDistance = 0;
+        int ind = 0;
+        for (int[] point : points) {
+            if (ind++ >= points.length) break;
+            int[] point2 = points[ind];
+            int diffx = Math.abs(point2[0] - point[0]);
+            int diffy = Math.abs(point2[1] - point[1]);
+            int larger = Math.max(diffx, diffy);
+            shortestDistance += larger;
+        }
+        return shortestDistance;
+    }
+
+
+    public int numberOfMatches(int n) {
+        int ans = 0;
+        while (n > 1) {
+            if (n % 2 == 0) {
+                ans += n / 2;
+                n /= 2;
+            } else {
+                ans += (n - 1) / 2;
+                n = (n + 1) / 2;
+            }
+        }
+        return ans;
+    }
+
+
+    public boolean checkPowersOfThree(int n) {
+        int max = 0;
+        while (Math.pow(3, max) <= n) max++;
+        int sum = 0;
+        while (max >= 0) {
+            if (sum + Math.pow(3, max) == n) return true;
+            if (sum + Math.pow(3, max) < n) sum += (int) Math.pow(3, max);
+            max--;
+        }
+        return sum == n;
+    }
+
+    public int totalMoney(int n) {
+        int start = 1;
+        int cnt = 1;
+        int ans = 0;
+        while (cnt <= n) {
+            ans += start++;
+            if (cnt++ % 7 == 0) start = start - 6;
+        }
+
+        return ans;
+    }
+
+    public boolean isAnagram(String s, String t) {
+        Map<Character, Integer> freq = new HashMap<>();
+        for (Character c : s.toCharArray()) freq.put(c, freq.getOrDefault(c, 0) + 1);
+        for (Character c : s.toCharArray()) {
+            if (!freq.containsKey(c)) return false;
+            freq.put(c, freq.get(c) - 1);
+            if (freq.get(c) <= 0) freq.remove(c);
+        }
+        return freq.isEmpty();
+    }
+
+    public int findSpecialInteger(int[] arr) {
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int a : arr) freq.put(a, freq.getOrDefault(a, 0) + 1);
+        int len = arr.length;
+        for (Map.Entry<Integer, Integer> entry : freq.entrySet())
+            if (entry.getValue() > len / 4) return entry.getKey();
+        return -1;
+    }
+
+    public int maxProduct(int[] nums) {
+        int first = -1, second = -1;
+        for (int num : nums) {
+            if (first == -1) first = Math.max(first, num);
+            else {
+                if (num >= first) {
+                    second = first;
+                    first = num;
+                } else second = Math.max(second, num);
+            }
+        }
+        return (first - 1) * (second - 1);
+    }
+
+    public int[] createTargetArray(int[] nums, int[] index) {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            int ind = index[i];
+            if (list.size() <= ind) list.add(nums[i]);
+                // insert and Shift towards right
+            else list.add(ind, nums[i]);
+        }
+        return list.stream().mapToInt(x -> x).toArray();
+    }
+
     public int maximizeSquareHoleArea(int n, int m, int[] hBars, int[] vBars) {
         int length = n + 2;
         int breadth = m + 2;
