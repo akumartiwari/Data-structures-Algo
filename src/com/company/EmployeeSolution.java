@@ -9186,6 +9186,29 @@ Output: [1,2,2,3,5,6]
         return (first - 1) * (second - 1);
     }
 
+    public int maxProductDifference(int[] nums) {
+        int firstMax = -1, secondMax = -1, firstMin = Integer.MAX_VALUE, secondMin = Integer.MAX_VALUE;
+        for (int num : nums) {
+            if (firstMax == -1) firstMax = Math.max(firstMax, num);
+            else {
+                if (num >= firstMax) {
+                    secondMax = firstMax;
+                    firstMax = num;
+                } else secondMax = Math.max(secondMax, num);
+            }
+
+            if (firstMin == Integer.MAX_VALUE) firstMin = Math.min(firstMin, num);
+            else {
+                if (num <= firstMin) {
+                    secondMin = firstMin;
+                    firstMin = num;
+                } else secondMin = Math.min(secondMin, num);
+            }
+        }
+        return (firstMax * secondMax) - (firstMin * secondMin);
+    }
+    
+
     public int[] createTargetArray(int[] nums, int[] index) {
         List<Integer> list = new ArrayList<>();
         for (int i = 0; i < nums.length; i++) {
