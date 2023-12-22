@@ -9186,6 +9186,26 @@ Output: [1,2,2,3,5,6]
         return (first - 1) * (second - 1);
     }
 
+    public int maxScore(String s) {
+        int n  = s.length();
+        int[] zeros = new int[n];
+        int[] ones = new int[n];
+        for (int i = 0; i < n; i++) {
+            if (i == 0) {
+                zeros[i] = ((s.charAt(i) == '0') ? 1 : 0);
+                ones[n - 1 - i] = ((s.charAt(n - 1 - i) == '1') ? 1 : 0);
+            } else {
+                zeros[i] = zeros[i - 1] + ((s.charAt(i) == '0') ? 1 : 0);
+                ones[n - 1 - i] = ones[n - i] + ((s.charAt(n - 1 - i) == '1') ? 1 : 0);
+            }
+        }
+        int ans = -1;
+        for (int i = 0; i < n - 1; i++)
+            ans = Math.max(ans, zeros[i] + ones[i + 1]);
+        return ans;
+    }
+
+
     public int maxProductDifference(int[] nums) {
         int firstMax = -1, secondMax = -1, firstMin = Integer.MAX_VALUE, secondMin = Integer.MAX_VALUE;
         for (int num : nums) {
@@ -9207,7 +9227,7 @@ Output: [1,2,2,3,5,6]
         }
         return (firstMax * secondMax) - (firstMin * secondMin);
     }
-    
+
 
     public int[] createTargetArray(int[] nums, int[] index) {
         List<Integer> list = new ArrayList<>();
