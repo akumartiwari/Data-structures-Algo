@@ -1,7 +1,5 @@
 package com.company;
 
-import javafx.util.Pair;
-
 import java.util.HashMap;
 import java.util.*;
 import java.util.stream.Collectors;
