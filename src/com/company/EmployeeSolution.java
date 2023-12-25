@@ -9139,19 +9139,6 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
-
-    public boolean checkPowersOfThree(int n) {
-        int max = 0;
-        while (Math.pow(3, max) <= n) max++;
-        int sum = 0;
-        while (max >= 0) {
-            if (sum + Math.pow(3, max) == n) return true;
-            if (sum + Math.pow(3, max) < n) sum += (int) Math.pow(3, max);
-            max--;
-        }
-        return sum == n;
-    }
-
     public int totalMoney(int n) {
         int start = 1;
         int cnt = 1;
@@ -9199,7 +9186,7 @@ Output: [1,2,2,3,5,6]
     }
 
     public int maxScore(String s) {
-        int n  = s.length();
+        int n = s.length();
         int[] zeros = new int[n];
         int[] ones = new int[n];
         for (int i = 0; i < n; i++) {
@@ -9267,6 +9254,32 @@ Output: [1,2,2,3,5,6]
             }
         }
         return 1 + Math.min(m + 2, n + 2) * Math.min(m + 2, n + 2);
+    }
+
+    public int minOperations(String s) {
+        int start = Math.min(helper(new StringBuilder(s), '1', 0),
+                helper(new StringBuilder(s), '0', 0));
+        int end = Math.min(helper(new StringBuilder(s), '1', s.length() - 1),
+                helper(new StringBuilder(s), '0', s.length() - 1));
+        return Math.min(start, end);
+    }
+
+    private int helper(StringBuilder s, Character c, int ind) {
+        int ans = 0;
+        if (c != s.charAt(ind)) {
+            s.setCharAt(ind, s.charAt(ind) == '1' ? '0' : '1');
+            ans++;
+        }
+
+        int dir = ind == 0 ? 1 : -1;
+        for (int i = ind + dir; i < s.length() && i >= 0; i += dir) {
+            if (s.charAt(i + Math.negateExact(dir)) == s.charAt(i)) {
+                ans++;
+                s.setCharAt(i, s.charAt(i + Math.negateExact(dir)) == '1' ? '0' : '1');
+            }
+        }
+
+        return ans;
     }
 
     //TODO : Do Memo
