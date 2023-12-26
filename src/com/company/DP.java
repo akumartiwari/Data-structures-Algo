@@ -1931,6 +1931,26 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return op;
     }
 
+
+    public int numRollsToTarget(int n, int k, int target) {
+        int[][] dp = new int[target + 1][n + 1];
+        for (int[] d : dp) Arrays.fill(d, -1);
+        return helper(n, k, target, 0, dp);
+    }
+
+    private int helper(int n, int k, int target, int sum, int[][] dp) {
+        if (sum > target) return 0;
+        // base case
+        if (n <= 0) return sum == target ? 1 : 0;
+        if (dp[sum][n] != -1) return dp[sum][n];
+        int ways = 0;
+        for (int i = 1; i <= k; i++) {
+            ways = (ways + helper(n - 1, k, target, sum + i, dp)) % mod;
+        }
+        return dp[sum][n] = ways;
+    }
+
+
     // DP + BS
     // Upsolve
     public int maximizeTheProfit(int n, List<List<Integer>> offers) {
