@@ -9395,6 +9395,18 @@ Output: [1,2,2,3,5,6]
         return 1 + Math.min(m + 2, n + 2) * Math.min(m + 2, n + 2);
     }
 
+    public boolean checkPowersOfThree(int n) {
+        int max = 0;
+        while (Math.pow(3, max) <= n) max++;
+        int sum = 0;
+        while (max >= 0) {
+            if (sum + Math.pow(3, max) == n) return true;
+            if (sum + Math.pow(3, max) < n) sum += (int) Math.pow(3, max);
+            max--;
+        }
+        return sum == n;
+    }
+
     public int minOperations(String s) {
         int start = Math.min(helper(new StringBuilder(s), '1', 0),
                 helper(new StringBuilder(s), '0', 0));
