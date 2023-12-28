@@ -10,6 +10,7 @@ import java.util.Queue;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class EmployeeSolution {
     String name;
@@ -9159,48 +9160,50 @@ Output: [1,2,2,3,5,6]
         return -1;
     }
 
+
+    public int minCost(String colors, int[] neededTime) {
+        int total = Arrays.stream(neededTime).sum();
+        int ans = 0, max = -1;
+        for (int i = 0; i < colors.length(); i++) {
+            if (max == -1) max = neededTime[i];
+            else if (colors.charAt(i) == colors.charAt(i - 1)) {
+                max = Math.max(max, neededTime[i]);
+            } else {
+                ans += max;
+                max = neededTime[i];
+            }
+        }
+        ans += max;
+        return total - ans;
+    }
+
+
     public int minOperationsToMakeArraySumEqual(int[] nums1, int[] nums2) {
-        Arrays.sort(nums1);
-        Arrays.sort(nums2);
+        if (nums1.length * 6 < nums2.length || nums1.length > 6 * nums2.length) {
+            return -1;
+        }
 
         int sum1 = Arrays.stream(nums1).sum();
         int sum2 = Arrays.stream(nums2).sum();
-
-        if (sum2 > sum1) {
-            int[] clone = nums1;
-            nums1 = nums2;
-            nums2 = clone;
-            sum1 = Arrays.stream(nums1).sum();
-            sum2 = Arrays.stream(nums2).sum();
+        if (sum1 > sum2) {
+            return minOperationsToMakeArraySumEqual(nums2, nums1);
         }
 
-        int i1 = nums1.length - 1, i2 = 0;
+        Arrays.sort(nums1);
+        Arrays.sort(nums2);
+
+        int i = 0, j = nums2.length - 1;
         int op = 0;
-        while (true) {
-            if (sum1 == sum2) return op;
-            if (i1 < 0 && i2 >= nums2.length) return -1;
-
-            int d1 = i1 < 0 ? -1 : Math.max(Math.abs(6 - nums1[i1]), nums1[i1]);
-            int d2 = i2 >= nums2.length ? -1 : Math.max(Math.abs(6 - nums2[i2]), nums2[i2]);
-
-            if (d1 <= d2) {
-                sum2 -= nums2[i2];
-                nums2[i2] = 6;
-                sum2 += 6;
-                i2++;
+        while (sum2 > sum1) {
+            if (j < 0 || i < nums1.length && 6 - nums1[i] > nums2[j] - 1) {
+                sum1 += 6 - nums1[i++]; // Take nums1[i] and change to 6
             } else {
-                sum1 -= nums1[i1];
-                nums1[i1] = 1;
-                sum1++;
-                i1--;
+                sum2 -= nums2[j--] - 1; // Take nums2[j] and change to 1
             }
-            if (sum2 >= sum1) {
-                if (op == 197) return 184;
-                if (op == 376) return 368;
-                return ++op;
-            }
-            op++;
+            ++op;
         }
+
+        return op;
     }
 
     public int maxProduct(int[] nums) {
