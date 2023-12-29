@@ -2156,4 +2156,72 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return ways;
     }
 
+
+    //TLE
+    class StringCompressionII {
+        private String compress(String color) {
+            StringBuilder sb = new StringBuilder();
+
+            int cnt = 1;
+            sb.append(color.charAt(0));
+            for (int i = 1; i < color.length(); i++) {
+                if (color.charAt(i) == color.charAt(i - 1)) {
+                    cnt++;
+                } else {
+                    if (cnt > 1) sb.append(cnt);
+                    sb.append(color.charAt(i));
+                    cnt = 1;
+                }
+            }
+
+            if (cnt > 1) sb.append(cnt);
+            return sb.toString();
+        }
+
+        public int getLengthOfOptimalCompression(String s, int k) {
+            Map<String, Integer> dp = new HashMap<>();
+            // If all characters are unique then return s.length()-k;
+            Set<Character> seen = new HashSet<>();
+            for (char c : s.toCharArray()) {
+                if (seen.contains(c)) {
+                    return helper(s, k, 0, new HashSet<>(), dp);
+                }
+                seen.add(c);
+            }
+
+            return s.length() - k;
+        }
+
+        private int helper(String s, int k, int ind, Set<Integer> deleted, Map<String, Integer> dp) {
+            // base case
+            if (k == 0) {
+                StringBuilder res = new StringBuilder();
+                for (int i = 0; i < s.length(); i++)
+                    if (!deleted.contains(i)) res.append(s.charAt(i));
+
+                if (res.length() > 0) {
+                    String ans = compress(res.toString());
+                    return ans.length();
+                }
+                return 0;
+            }
+
+
+            String key = k + ":" + ind + ":" + Arrays.toString(deleted.stream().mapToInt(x -> x).toArray());
+            if (dp.containsKey(key)) return dp.get(key);
+
+            int r = Integer.MAX_VALUE;
+            for (int i = ind; i < s.length(); i++) {
+                // remove
+                if (k > 0) {
+                    deleted.add(i);
+                    r = Math.min(r, helper(s, k - 1, i + 1, deleted, dp));
+                    deleted.remove(new Integer(i)); //backtrack
+                }
+            }
+            dp.put(key, r);
+            return dp.get(key);
+        }
+    }
+
 }
