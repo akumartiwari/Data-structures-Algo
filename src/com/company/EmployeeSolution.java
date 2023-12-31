@@ -9188,6 +9188,98 @@ Output: [1,2,2,3,5,6]
         return true;
     }
 
+
+    //O(n), O(1)
+    public int maxLengthBetweenEqualCharacters(String s) {
+        int[] seen = new int[26];
+        Arrays.fill(seen, -1);
+        int max = -1;
+        for (int i = 0; i < s.length(); i++) {
+            int character = s.charAt(i) - 'a';
+            if (seen[character] >= 0) max = Math.max(max, i - seen[character] - 1);
+            else seen[character] = i;
+        }
+        return max;
+    }
+
+
+    public int longestBeautifulSubstring(String word) {
+        char prev = '#';
+        int max = -1, curr = 0;
+        for (int i = 0; i < word.length(); i++) {
+            char c = word.charAt(i);
+            if (prev == '#') {
+                if (c == 'a') {
+                    prev = c;
+                    curr++;
+                }
+            } else {
+                if (prev == 'a') {
+                    if (c == 'a' || c == 'e') curr++;
+                    else {
+                        prev = '#';
+                        curr = 0;
+                        continue;
+                    }
+                } else if (prev == 'e') {
+                    if (c == 'e' || c == 'i') curr++;
+                    else {
+                        if (c == 'a') {
+                            prev = c;
+                            curr = 1;
+                        } else {
+                            prev = '#';
+                            curr = 0;
+                        }
+                        continue;
+                    }
+                } else if (prev == 'i') {
+                    if (c == 'i' || c == 'o') curr++;
+                    else {
+                        if (c == 'a') {
+                            prev = c;
+                            curr = 1;
+                        } else {
+                            prev = '#';
+                            curr = 0;
+                        }
+                        continue;
+                    }
+                } else if (prev == 'o') {
+                    if (c == 'o' || c == 'u') {
+                        curr++;
+                        if (c == 'u') max = Math.max(max, curr);
+                    } else {
+                        if (c == 'a') {
+                            prev = c;
+                            curr = 1;
+                        } else {
+                            prev = '#';
+                            curr = 0;
+                        }
+                        continue;
+                    }
+                } else {
+                    if (c == 'u') {
+                        curr++;
+                        max = Math.max(max, curr);
+                    } else {
+                        if (c == 'a') {
+                            prev = c;
+                            curr = 1;
+                        } else {
+                            prev = '#';
+                            curr = 0;
+                        }
+                        continue;
+                    }
+                }
+                prev = c;
+            }
+        }
+        return max == -1 ? 0 : max;
+    }
+
     public int minOperationsToMakeArraySumEqual(int[] nums1, int[] nums2) {
         if (nums1.length * 6 < nums2.length || nums1.length > 6 * nums2.length) {
             return -1;
@@ -9261,7 +9353,7 @@ Output: [1,2,2,3,5,6]
                 } else secondMax = Math.max(secondMax, num);
             }
 
-            if (firstMin == Integer.MAX_VALUE) firstMin = Math.min(firstMin, num);
+            if (firstMin == Integer.MAX_VALUE) firstMin = num;
             else {
                 if (num <= firstMin) {
                     secondMin = firstMin;
