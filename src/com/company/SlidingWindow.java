@@ -191,10 +191,74 @@ public class SlidingWindow {
         }
     }
 
+
+    class Solution {
+        public int longestBeautifulSubstring(String word) {
+            char prev = '#';
+            int max = -1, curr = 0;
+            for (int i = 0; i < word.length(); i++) {
+                char c = word.charAt(i);
+                if (prev == '#') {
+                    if (c == 'a') {
+                        prev = c;
+                        curr++;
+                    }
+                } else {
+                    if (prev == 'a') {
+                        if (c == 'a' || c == 'e') curr++;
+                        else prev = '#';
+                    } else if (prev == 'e') {
+                        if (c == 'e' || c == 'i') curr++;
+                        else {
+                            if (c == 'a') {
+                                prev = c;
+                                curr++;
+                            } else prev = '#';
+                            continue;
+                        }
+                    } else if (prev == 'i') {
+                        if (c == 'i' || c == 'o') curr++;
+                        else {
+                            if (c == 'a') {
+                                prev = c;
+                                curr++;
+                            } else prev = '#';
+                            continue;
+                        }
+                    } else if (prev == 'o') {
+                        if (c == 'o' || c == 'u') curr++;
+                        else {
+                            if (c == 'a') {
+                                prev = c;
+                                curr++;
+                            } else prev = '#';
+                            continue;
+
+                        }
+                    } else if (prev == 'u') {
+                        if (c == 'u') {
+                            curr++;
+                            max = Math.max(max, curr);
+                        } else {
+                            if (c == 'a') {
+                                prev = c;
+                                curr++;
+                            } else prev = '#';
+                            continue;
+                        }
+                    }
+
+                    prev = c;
+                }
+            }
+            return max;
+        }
+    }
+
     /*
- nums[i] % modulo == k. Then, cnt % modulo == k.
- Solve using sliding window algorithm
- */
+     nums[i] % modulo == k. Then, cnt % modulo == k.
+     Solve using sliding window algorithm
+     */
     public long countInterestingSubarrays(List<Integer> nums, int modulo, int k) {
         long sum = 0L;
         long cnt = 0L;
