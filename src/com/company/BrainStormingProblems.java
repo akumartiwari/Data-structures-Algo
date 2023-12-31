@@ -7,6 +7,34 @@ import java.util.Set;
 
 public class BrainStormingProblems {
 
+    /*
+
+    Input: word = "aeiaaioaaaaeiiiiouuuooaauuaeiu"
+    Output: 13
+    Explanation: The longest beautiful substring in word is "aaaaeiiiiouuu" of length 13.
+
+
+    As 'a < e < i < o < u'
+    Maintain len ,cnt and search for a substring of 5 characters i.e. {a,e,i,o,u}
+    and follow the above pattern
+    */
+    public int longestBeautifulSubstringOptimial(String word) {
+        int max = 0, len = 1, cnt = 1;
+        for (int i = 1; i < word.length(); i++) {
+            if (word.charAt(i) == word.charAt(i - 1)) len++;
+            else if (word.charAt(i) > word.charAt(i - 1)) {
+                ++len;
+                cnt++;
+            } else {
+                cnt = 1;
+                len = 1;
+            }
+            if (cnt == 5) max = Math.max(max, len);
+        }
+
+        return max;
+    }
+
 
     /*
     First for any of distributions,

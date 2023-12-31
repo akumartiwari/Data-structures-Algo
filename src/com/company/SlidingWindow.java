@@ -192,9 +192,9 @@ public class SlidingWindow {
     }
 
     /*
- nums[i] % modulo == k. Then, cnt % modulo == k.
- Solve using sliding window algorithm
- */
+     nums[i] % modulo == k. Then, cnt % modulo == k.
+     Solve using sliding window algorithm
+     */
     public long countInterestingSubarrays(List<Integer> nums, int modulo, int k) {
         long sum = 0L;
         long cnt = 0L;
