@@ -9431,6 +9431,43 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+
+    public int findContentChildren(int[] g, int[] s) {
+        TreeMap<Integer, Integer> tm = new TreeMap<>();
+        for (int e : s) tm.put(e, tm.getOrDefault(e, 0) + 1);
+        int cnt = 0;
+        for (int e : g) {
+            if (tm.ceilingKey(e) != null) {
+                cnt++;
+                int key = tm.ceilingKey(e);
+                tm.put(key, tm.get(key) - 1);
+                if (tm.get(key) <= 0) tm.remove(key);
+            }
+        }
+
+        return cnt;
+    }
+
+    public int maxProfitAssignment(int[] difficulty, int[] profit, int[] worker) {
+        TreeMap<Integer, Integer> dpMap = new TreeMap<>();
+        int max = -1;
+        for (int i = 0; i < difficulty.length; i++)
+            dpMap.put(difficulty[i], Math.max(profit[i], dpMap.getOrDefault(difficulty[i], profit[i])));
+        TreeMap<Integer, Integer> maxProfitMap = new TreeMap<>();
+        for (Map.Entry<Integer, Integer> entry : dpMap.entrySet()) {
+            max = Math.max(max, entry.getValue());
+            maxProfitMap.put(entry.getKey(), max);
+        }
+        int maxProfit = 0;
+        for (int w : worker) {
+            if (maxProfitMap.floorKey(w) != null)
+                maxProfit += maxProfitMap.get(maxProfitMap.floorKey(w));
+        }
+
+        return maxProfit;
+    }
+
+
     //TODO : Do Memo
     public int minimumCoins(int[] prices) {
         return helper(prices, 0, 0);
