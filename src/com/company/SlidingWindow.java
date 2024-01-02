@@ -244,6 +244,24 @@ public class SlidingWindow {
         return sum;
     }
 
+
+    public int maxAscendingSum(int[] nums) {
+        int max = 0, sum = 0;
+        for (int i = 0; i < nums.length; ++i) {
+            if (i == 0) sum += nums[i];
+            else {
+                if (nums[i - 1] < nums[i]) sum += nums[i];
+                else {
+                    max = Math.max(max, sum);
+                    sum = nums[i];
+                }
+            }
+        }
+        max = Math.max(max, sum);
+        return max;
+    }
+
+
     public int maxPower(String s) {
         int max = 0;
         for (int i = 0, j = 0; i < s.length(); ++i) {
