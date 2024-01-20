@@ -9137,7 +9137,75 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    public int minimumCost(int[] nums) {
+        int firstMin = Integer.MAX_VALUE, secondMin = Integer.MAX_VALUE;
+        for (int i = 1; i < nums.length; i++) {
+            int num = nums[i];
+            if (firstMin == Integer.MAX_VALUE) firstMin = Math.min(firstMin, num);
+            else {
+                if (num <= firstMin) {
+                    secondMin = firstMin;
+                    firstMin = num;
+                } else secondMin = Math.min(secondMin, num);
+            }
+        }
+        return nums[0] + firstMin + secondMin;
+    }
 
+
+    public boolean canSortArray(int[] nums) {
+
+        Map<Integer, Integer> setBits = new LinkedHashMap<>();
+        for (int num : nums) setBits.putIfAbsent(num, Integer.bitCount(num));
+        List<Integer> list = Arrays.stream(nums).boxed().collect(Collectors.toList());
+
+        while (true) {
+            boolean check = checkIfSorted(list);
+            if (check) return true;
+            boolean canSwap = false;
+
+            for (int i = 0; i < list.size() - 1; i++) {
+                if (list.get(i) > list.get(i + 1)) {
+                    int small = list.get(i + 1);
+                    int large = list.get(i);
+                    if (setBits.get(large) == setBits.get(small)) {
+                        list.set(i, small);
+                        list.set(i + 1, large);
+                        canSwap = true;
+                    }
+                }
+            }
+
+            if (!canSwap) return false;
+        }
+    }
+
+    private boolean checkIfSorted(List<Integer> list) {
+        for (int i = 0; i < list.size() - 1; i++) {
+            if (list.get(i) > list.get(i + 1)) return false;
+        }
+        return true;
+    }
+
+
+    /*
+    Input: nums = [1,4,3,1]
+    Output: 1
+    Explanation: One way to minimize the length of the array is as follows:
+    Operation 1: Select indices 2 and 1, insert nums[2] % nums[1] at the end and it becomes [1,4,3,1,3], then delete elements at indices 2 and 1.
+    nums becomes [1,1,3].
+    Operation 2: Select indices 1 and 2, insert nums[1] % nums[2] at the end and it becomes [1,1,3,1], then delete elements at indices 1 and 2.
+    nums becomes [1,1].
+    Operation 3: Select indices 1 and 0, insert nums[1] % nums[0] at the end and it becomes [1,1,0], then delete elements at indices 1 and 0.
+    nums becomes [0].
+    The length of nums cannot be reduced further. Hence, the answer is 1.
+    It can be shown that 1 is the minimum achievable length.
+
+     */
+    //TODO: O(nlogn)
+    public int minimumArrayLength(int[] nums) {
+        return 0;
+    }
 }
 /*
     // in some cases, player needs to push the box further in order to change its direction; hence, tracking the box itself isn't enough,
