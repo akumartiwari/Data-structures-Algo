@@ -9549,26 +9549,6 @@ Output: [1,2,2,3,5,6]
         }
         return true;
     }
-
-
-    /*
-    Input: nums = [1,4,3,1]
-    Output: 1
-    Explanation: One way to minimize the length of the array is as follows:
-    Operation 1: Select indices 2 and 1, insert nums[2] % nums[1] at the end and it becomes [1,4,3,1,3], then delete elements at indices 2 and 1.
-    nums becomes [1,1,3].
-    Operation 2: Select indices 1 and 2, insert nums[1] % nums[2] at the end and it becomes [1,1,3,1], then delete elements at indices 1 and 2.
-    nums becomes [1,1].
-    Operation 3: Select indices 1 and 0, insert nums[1] % nums[0] at the end and it becomes [1,1,0], then delete elements at indices 1 and 0.
-    nums becomes [0].
-    The length of nums cannot be reduced further. Hence, the answer is 1.
-    It can be shown that 1 is the minimum achievable length.
-
-     */
-    //TODO: O(nlogn)
-    public int minimumArrayLength(int[] nums) {
-        return 0;
-    }
 }
 /*
     // in some cases, player needs to push the box further in order to change its direction; hence, tracking the box itself isn't enough,
