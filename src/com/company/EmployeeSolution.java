@@ -10,6 +10,7 @@ import java.util.Queue;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class EmployeeSolution {
     String name;
@@ -9076,16 +9077,303 @@ Output: [1,2,2,3,5,6]
         return sb1.toString().equals(sb2.toString());
     }
 
-    public boolean checkPowersOfThree(int n) {
-        int max = 0;
-        while (Math.pow(3, max) <= n) max++;
-        int sum = 0;
-        while (max >= 0) {
-            if (sum + Math.pow(3, max) == n) return true;
-            if (sum + Math.pow(3, max) < n) sum += (int) Math.pow(3, max);
-            max--;
+    public int countCharacters(String[] words, String chars) {
+        Map<Character, Integer> freq = new HashMap<>();
+        for (Character c : chars.toCharArray()) freq.put(c, freq.getOrDefault(c, 0) + 1);
+
+        int ans = 0;
+        for (String word : words) {
+            Map<Character, Integer> map = new HashMap<>(freq);
+            boolean present = true;
+            for (Character c : word.toCharArray()) {
+                if (!map.containsKey(c)) {
+                    present = false;
+                    break;
+                }
+                map.put(c, map.get(c) - 1);
+                if (map.get(c) <= 0) map.remove(c);
+            }
+
+            if (present) ans += word.length();
         }
-        return sum == n;
+        return ans;
+    }
+
+    public int minTimeToVisitAllPoints(int[][] points) {
+        int shortestDistance = 0;
+        int ind = 0;
+        for (int[] point : points) {
+            if (ind++ >= points.length) break;
+            int[] point2 = points[ind];
+            int diffx = Math.abs(point2[0] - point[0]);
+            int diffy = Math.abs(point2[1] - point[1]);
+            int larger = Math.max(diffx, diffy);
+            shortestDistance += larger;
+        }
+        return shortestDistance;
+    }
+
+
+    public int numberOfMatches(int n) {
+        int ans = 0;
+        while (n > 1) {
+            if (n % 2 == 0) {
+                ans += n / 2;
+                n /= 2;
+            } else {
+                ans += (n - 1) / 2;
+                n = (n + 1) / 2;
+            }
+        }
+        return ans;
+    }
+
+    public int totalMoney(int n) {
+        int start = 1;
+        int cnt = 1;
+        int ans = 0;
+        while (cnt <= n) {
+            ans += start++;
+            if (cnt++ % 7 == 0) start -= 6;
+        }
+
+        return ans;
+    }
+
+    public boolean isAnagram(String s, String t) {
+        Map<Character, Integer> freq = new HashMap<>();
+        for (Character c : s.toCharArray()) freq.put(c, freq.getOrDefault(c, 0) + 1);
+        for (Character c : s.toCharArray()) {
+            if (!freq.containsKey(c)) return false;
+            freq.put(c, freq.get(c) - 1);
+            if (freq.get(c) <= 0) freq.remove(c);
+        }
+        return freq.isEmpty();
+    }
+
+    public int findSpecialInteger(int[] arr) {
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int a : arr) freq.put(a, freq.getOrDefault(a, 0) + 1);
+        int len = arr.length;
+        for (Map.Entry<Integer, Integer> entry : freq.entrySet())
+            if (entry.getValue() > len / 4) return entry.getKey();
+        return -1;
+    }
+
+
+    public int minCost(String colors, int[] neededTime) {
+        int total = Arrays.stream(neededTime).sum();
+        int ans = 0, max = -1;
+        for (int i = 0; i < colors.length(); i++) {
+            if (max == -1) max = neededTime[i];
+            else if (colors.charAt(i) == colors.charAt(i - 1)) {
+                max = Math.max(max, neededTime[i]);
+            } else {
+                ans += max;
+                max = neededTime[i];
+            }
+        }
+        ans += max;
+        return total - ans;
+    }
+
+    public boolean makeEqual(String[] words) {
+        Map<Character, Integer> freq = new HashMap<>();
+        for (String word : words) {
+            for (char c : word.toCharArray())
+                freq.put(c, freq.getOrDefault(c, 0) + 1);
+        }
+        for (int value : freq.values())
+            if (value % words.length != 0) return false;
+        return true;
+    }
+
+
+    //O(n), O(1)
+    public int maxLengthBetweenEqualCharacters(String s) {
+        int[] seen = new int[26];
+        Arrays.fill(seen, -1);
+        int max = -1;
+        for (int i = 0; i < s.length(); i++) {
+            int character = s.charAt(i) - 'a';
+            if (seen[character] >= 0) max = Math.max(max, i - seen[character] - 1);
+            else seen[character] = i;
+        }
+        return max;
+    }
+
+
+    public int longestBeautifulSubstring(String word) {
+        char prev = '#';
+        int max = -1, curr = 0;
+        for (int i = 0; i < word.length(); i++) {
+            char c = word.charAt(i);
+            if (prev == '#') {
+                if (c == 'a') {
+                    prev = c;
+                    curr++;
+                }
+            } else {
+                if (prev == 'a') {
+                    if (c == 'a' || c == 'e') curr++;
+                    else {
+                        prev = '#';
+                        curr = 0;
+                        continue;
+                    }
+                } else if (prev == 'e') {
+                    if (c == 'e' || c == 'i') curr++;
+                    else {
+                        if (c == 'a') {
+                            prev = c;
+                            curr = 1;
+                        } else {
+                            prev = '#';
+                            curr = 0;
+                        }
+                        continue;
+                    }
+                } else if (prev == 'i') {
+                    if (c == 'i' || c == 'o') curr++;
+                    else {
+                        if (c == 'a') {
+                            prev = c;
+                            curr = 1;
+                        } else {
+                            prev = '#';
+                            curr = 0;
+                        }
+                        continue;
+                    }
+                } else if (prev == 'o') {
+                    if (c == 'o' || c == 'u') {
+                        curr++;
+                        if (c == 'u') max = Math.max(max, curr);
+                    } else {
+                        if (c == 'a') {
+                            prev = c;
+                            curr = 1;
+                        } else {
+                            prev = '#';
+                            curr = 0;
+                        }
+                        continue;
+                    }
+                } else {
+                    if (c == 'u') {
+                        curr++;
+                        max = Math.max(max, curr);
+                    } else {
+                        if (c == 'a') {
+                            prev = c;
+                            curr = 1;
+                        } else {
+                            prev = '#';
+                            curr = 0;
+                        }
+                        continue;
+                    }
+                }
+                prev = c;
+            }
+        }
+        return max == -1 ? 0 : max;
+    }
+
+    public int minOperationsToMakeArraySumEqual(int[] nums1, int[] nums2) {
+        if (nums1.length * 6 < nums2.length || nums1.length > 6 * nums2.length) {
+            return -1;
+        }
+
+        int sum1 = Arrays.stream(nums1).sum();
+        int sum2 = Arrays.stream(nums2).sum();
+        if (sum1 > sum2) {
+            return minOperationsToMakeArraySumEqual(nums2, nums1);
+        }
+
+        Arrays.sort(nums1);
+        Arrays.sort(nums2);
+
+        int i = 0, j = nums2.length - 1;
+        int op = 0;
+        while (sum2 > sum1) {
+            if (j < 0 || i < nums1.length && 6 - nums1[i] > nums2[j] - 1) {
+                sum1 += 6 - nums1[i++]; // Take nums1[i] and change to 6
+            } else {
+                sum2 -= nums2[j--] - 1; // Take nums2[j] and change to 1
+            }
+            ++op;
+        }
+
+        return op;
+    }
+
+    public int maxProduct(int[] nums) {
+        int first = -1, second = -1;
+        for (int num : nums) {
+            if (first == -1) first = Math.max(first, num);
+            else {
+                if (num >= first) {
+                    second = first;
+                    first = num;
+                } else second = Math.max(second, num);
+            }
+        }
+        return (first - 1) * (second - 1);
+    }
+
+    public int maxScore(String s) {
+        int n = s.length();
+        int[] zeros = new int[n];
+        int[] ones = new int[n];
+        for (int i = 0; i < n; i++) {
+            if (i == 0) {
+                zeros[i] = ((s.charAt(i) == '0') ? 1 : 0);
+                ones[n - 1 - i] = ((s.charAt(n - 1 - i) == '1') ? 1 : 0);
+            } else {
+                zeros[i] = zeros[i - 1] + ((s.charAt(i) == '0') ? 1 : 0);
+                ones[n - 1 - i] = ones[n - i] + ((s.charAt(n - 1 - i) == '1') ? 1 : 0);
+            }
+        }
+        int ans = -1;
+        for (int i = 0; i < n - 1; i++)
+            ans = Math.max(ans, zeros[i] + ones[i + 1]);
+        return ans;
+    }
+
+
+    public int maxProductDifference(int[] nums) {
+        int firstMax = -1, secondMax = -1, firstMin = Integer.MAX_VALUE, secondMin = Integer.MAX_VALUE;
+        for (int num : nums) {
+            if (firstMax == -1) firstMax = Math.max(firstMax, num);
+            else {
+                if (num >= firstMax) {
+                    secondMax = firstMax;
+                    firstMax = num;
+                } else secondMax = Math.max(secondMax, num);
+            }
+
+            if (firstMin == Integer.MAX_VALUE) firstMin = num;
+            else {
+                if (num <= firstMin) {
+                    secondMin = firstMin;
+                    firstMin = num;
+                } else secondMin = Math.min(secondMin, num);
+            }
+        }
+        return (firstMax * secondMax) - (firstMin * secondMin);
+    }
+
+
+    public int[] createTargetArray(int[] nums, int[] index) {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            int ind = index[i];
+            if (list.size() <= ind) list.add(nums[i]);
+                // insert and Shift towards right
+            else list.add(ind, nums[i]);
+        }
+        return list.stream().mapToInt(x -> x).toArray();
     }
 
     public int maximizeSquareHoleArea(int n, int m, int[] hBars, int[] vBars) {
@@ -9104,6 +9392,81 @@ Output: [1,2,2,3,5,6]
         }
         return 1 + Math.min(m + 2, n + 2) * Math.min(m + 2, n + 2);
     }
+
+    public boolean checkPowersOfThree(int n) {
+        int max = 0;
+        while (Math.pow(3, max) <= n) max++;
+        int sum = 0;
+        while (max >= 0) {
+            if (sum + Math.pow(3, max) == n) return true;
+            if (sum + Math.pow(3, max) < n) sum += (int) Math.pow(3, max);
+            max--;
+        }
+        return sum == n;
+    }
+
+    public int minOperations(String s) {
+        int start = Math.min(helper(new StringBuilder(s), '1', 0),
+                helper(new StringBuilder(s), '0', 0));
+        int end = Math.min(helper(new StringBuilder(s), '1', s.length() - 1),
+                helper(new StringBuilder(s), '0', s.length() - 1));
+        return Math.min(start, end);
+    }
+
+    private int helper(StringBuilder s, Character c, int ind) {
+        int ans = 0;
+        if (c != s.charAt(ind)) {
+            s.setCharAt(ind, s.charAt(ind) == '1' ? '0' : '1');
+            ans++;
+        }
+
+        int dir = ind == 0 ? 1 : -1;
+        for (int i = ind + dir; i < s.length() && i >= 0; i += dir) {
+            if (s.charAt(i + Math.negateExact(dir)) == s.charAt(i)) {
+                ans++;
+                s.setCharAt(i, s.charAt(i + Math.negateExact(dir)) == '1' ? '0' : '1');
+            }
+        }
+
+        return ans;
+    }
+
+
+    public int findContentChildren(int[] g, int[] s) {
+        TreeMap<Integer, Integer> tm = new TreeMap<>();
+        for (int e : s) tm.put(e, tm.getOrDefault(e, 0) + 1);
+        int cnt = 0;
+        for (int e : g) {
+            if (tm.ceilingKey(e) != null) {
+                cnt++;
+                int key = tm.ceilingKey(e);
+                tm.put(key, tm.get(key) - 1);
+                if (tm.get(key) <= 0) tm.remove(key);
+            }
+        }
+
+        return cnt;
+    }
+
+    public int maxProfitAssignment(int[] difficulty, int[] profit, int[] worker) {
+        TreeMap<Integer, Integer> dpMap = new TreeMap<>();
+        int max = -1;
+        for (int i = 0; i < difficulty.length; i++)
+            dpMap.put(difficulty[i], Math.max(profit[i], dpMap.getOrDefault(difficulty[i], profit[i])));
+        TreeMap<Integer, Integer> maxProfitMap = new TreeMap<>();
+        for (Map.Entry<Integer, Integer> entry : dpMap.entrySet()) {
+            max = Math.max(max, entry.getValue());
+            maxProfitMap.put(entry.getKey(), max);
+        }
+        int maxProfit = 0;
+        for (int w : worker) {
+            if (maxProfitMap.floorKey(w) != null)
+                maxProfit += maxProfitMap.get(maxProfitMap.floorKey(w));
+        }
+
+        return maxProfit;
+    }
+
 
     //TODO : Do Memo
     public int minimumCoins(int[] prices) {

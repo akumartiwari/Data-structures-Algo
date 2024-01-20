@@ -192,9 +192,9 @@ public class SlidingWindow {
     }
 
     /*
- nums[i] % modulo == k. Then, cnt % modulo == k.
- Solve using sliding window algorithm
- */
+     nums[i] % modulo == k. Then, cnt % modulo == k.
+     Solve using sliding window algorithm
+     */
     public long countInterestingSubarrays(List<Integer> nums, int modulo, int k) {
         long sum = 0L;
         long cnt = 0L;
@@ -243,6 +243,24 @@ public class SlidingWindow {
 
         return sum;
     }
+
+
+    public int maxAscendingSum(int[] nums) {
+        int max = 0, sum = 0;
+        for (int i = 0; i < nums.length; ++i) {
+            if (i == 0) sum += nums[i];
+            else {
+                if (nums[i - 1] < nums[i]) sum += nums[i];
+                else {
+                    max = Math.max(max, sum);
+                    sum = nums[i];
+                }
+            }
+        }
+        max = Math.max(max, sum);
+        return max;
+    }
+
 
     public int maxPower(String s) {
         int max = 0;

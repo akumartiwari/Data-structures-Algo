@@ -1,6 +1,7 @@
 package com.company;
 
-import java.util.HashMap;import java.util.*;
+import java.util.HashMap;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -54,6 +55,36 @@ class TreeNode {
                 }
             }
         }
+        return ans;
+    }
+
+
+    public boolean leafSimilar(TreeNode root1, TreeNode root2) {
+        List<Integer> leaves1 = new ArrayList<>();
+        List<Integer> leaves2 = new ArrayList<>();
+        dfs(root1, leaves1);
+        dfs(root2, leaves2);
+        return leaves1.equals(leaves2);
+    }
+
+    private void dfs(TreeNode root, List<Integer> leaves) {
+        if (root == null) return;
+        if (root.left == null && root.right == null) leaves.add(root.val);
+        dfs(root.left, leaves);
+        dfs(root.right, leaves);
+    }
+
+    /*
+    Use Recursion to traverse subTree of a node and place braces around them
+    Traverse the right subtree only of node is present and place braces in the string
+     */
+    public String tree2str(TreeNode root) {
+        String ans = "";
+        if (root == null) return "";
+        ans += root.val;
+        if (root.left == null && root.right == null) return ans;
+        ans += "(" + tree2str(root.left) + ")";
+        if (root.right != null) ans += "(" + tree2str(root.right) + ")";
         return ans;
     }
 

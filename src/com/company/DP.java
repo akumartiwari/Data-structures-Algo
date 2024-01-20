@@ -1931,6 +1931,26 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return op;
     }
 
+
+    public int numRollsToTarget(int n, int k, int target) {
+        int[][] dp = new int[target + 1][n + 1];
+        for (int[] d : dp) Arrays.fill(d, -1);
+        return helper(n, k, target, 0, dp);
+    }
+
+    private int helper(int n, int k, int target, int sum, int[][] dp) {
+        if (sum > target) return 0;
+        // base case
+        if (n <= 0) return sum == target ? 1 : 0;
+        if (dp[sum][n] != -1) return dp[sum][n];
+        int ways = 0;
+        for (int i = 1; i <= k; i++) {
+            ways = (ways + helper(n - 1, k, target, sum + i, dp)) % mod;
+        }
+        return dp[sum][n] = ways;
+    }
+
+
     // DP + BS
     // Upsolve
     public int maximizeTheProfit(int n, List<List<Integer>> offers) {
@@ -2094,4 +2114,114 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return Math.min(take, nottake);
 
     }
+
+    //TLE
+    // O(N3) valid when N ~ 100
+    public int waysToSplit(int[] nums) {
+        int[] prefix = new int[nums.length];
+        for (int i = 0; i < nums.length; i++)
+            prefix[i] += nums[i] + (i > 0 ? prefix[i - 1] : 0);
+        Map<String, Integer> dp = new HashMap<>();
+        return ways(nums, prefix, new ArrayList<>(), 0, dp);
+    }
+
+    private int ways(int[] nums, int[] prefix, List<Integer> indexes, int i, Map<String, Integer> dp) {
+        // base case
+        if (i >= nums.length) return 0;
+        String key = Arrays.toString(indexes.toArray()) + i;
+        if (dp.containsKey(key)) return dp.get(key);
+        int ways = 0;
+        // split
+        if (indexes.isEmpty()) {
+            indexes.add(i);
+            ways = (ways + ways(nums, prefix, indexes, i + 1, dp)) % mod;
+            indexes.remove(indexes.size() - 1); //backtrack
+        }
+
+        if (indexes.size() == 1 && (prefix[i] >= 2 * prefix[indexes.get(0)])) {
+            indexes.add(i);
+            ways = (ways + ways(nums, prefix, indexes, i + 1, dp)) % mod;
+            indexes.remove(indexes.size() - 1); //backtrack
+        }
+
+        if (indexes.size() == 2 && i == nums.length - 1) {
+            int li = indexes.get(indexes.size() - 1);
+            int currSum = prefix[i] - prefix[li];
+            int lastSum = prefix[li] - prefix[indexes.get(0)];
+            if (currSum >= lastSum) return 1;
+            return 0;
+        }
+        // not split
+        ways = (ways + ways(nums, prefix, indexes, i + 1, dp)) % mod;
+        return ways;
+    }
+
+
+    //TLE
+    class StringCompressionII {
+        private String compress(String color) {
+            StringBuilder sb = new StringBuilder();
+
+            int cnt = 1;
+            sb.append(color.charAt(0));
+            for (int i = 1; i < color.length(); i++) {
+                if (color.charAt(i) == color.charAt(i - 1)) {
+                    cnt++;
+                } else {
+                    if (cnt > 1) sb.append(cnt);
+                    sb.append(color.charAt(i));
+                    cnt = 1;
+                }
+            }
+
+            if (cnt > 1) sb.append(cnt);
+            return sb.toString();
+        }
+
+        public int getLengthOfOptimalCompression(String s, int k) {
+            Map<String, Integer> dp = new HashMap<>();
+            // If all characters are unique then return s.length()-k;
+            Set<Character> seen = new HashSet<>();
+            for (char c : s.toCharArray()) {
+                if (seen.contains(c)) {
+                    return helper(s, k, 0, new HashSet<>(), dp);
+                }
+                seen.add(c);
+            }
+
+            return s.length() - k;
+        }
+
+        private int helper(String s, int k, int ind, Set<Integer> deleted, Map<String, Integer> dp) {
+            // base case
+            if (k == 0) {
+                StringBuilder res = new StringBuilder();
+                for (int i = 0; i < s.length(); i++)
+                    if (!deleted.contains(i)) res.append(s.charAt(i));
+
+                if (res.length() > 0) {
+                    String ans = compress(res.toString());
+                    return ans.length();
+                }
+                return 0;
+            }
+
+
+            String key = k + ":" + ind + ":" + Arrays.toString(deleted.stream().mapToInt(x -> x).toArray());
+            if (dp.containsKey(key)) return dp.get(key);
+
+            int r = Integer.MAX_VALUE;
+            for (int i = ind; i < s.length(); i++) {
+                // remove
+                if (k > 0) {
+                    deleted.add(i);
+                    r = Math.min(r, helper(s, k - 1, i + 1, deleted, dp));
+                    deleted.remove(new Integer(i)); //backtrack
+                }
+            }
+            dp.put(key, r);
+            return dp.get(key);
+        }
+    }
+
 }
