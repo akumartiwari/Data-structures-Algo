@@ -1,7 +1,9 @@
 package CF_Templates;
 
 import java.io.*;
-import java.util.HashMap;import java.util.HashMap;import java.util.*;
+import java.util.HashMap;
+import java.util.HashMap;
+import java.util.*;
 
 import static java.lang.Math.floor;
 import static java.lang.Math.sqrt;

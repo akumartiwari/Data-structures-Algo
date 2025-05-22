@@ -23,7 +23,6 @@ public class ArrayOperations {
             int n = Integer.parseInt(number.split(" ")[0]);
             int k = Integer.parseInt(number.split(" ")[1]);
             Integer[] array = Arrays.stream(sc.next().split(" ")).toArray(Integer[]::new);
-
             operations(n, k, array);
         }
     }
