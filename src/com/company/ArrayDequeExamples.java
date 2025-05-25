@@ -16,7 +16,7 @@ public class ArrayDequeExamples {
      - Iterate through all elements of array
      - check if stack top consist of greater element OR Last element it means all element to left  are also greater
       It means it can be a valid subArray
-     - To check if its valid we need get smallest element *  size of subArray > threshold --> return Valid Subarray
+     - To check if its valid we need get the smallest element *  size of subArray > threshold --> return Valid Subarray
      */
     public int validSubarraySize(int[] nums, int threshold) {
         Deque<Integer> stack = new ArrayDeque<>(); // ArrayDeque is used a stack

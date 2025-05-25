@@ -617,4 +617,55 @@ public class BinarySearch {
         return ans;
     }
 
+
+    /*
+    You are given an integer array bloomDay, an integer m and an integer k.
+    You want to make m bouquets. To make a bouquet, you need to use k adjacent flowers from the garden.
+    The garden consists of n flowers, the ith flower will bloom in the bloomDay[i]
+    and then can be used in exactly one bouquet.
+    Return the minimum number of days you need to wait to be able to make m bouquets from the garden.
+     If it is impossible to make m bouquets return -1.
+
+    Example 1:
+
+    Input: bloomDay = [1,10,3,10,2], m = 3, k = 2
+    Output: 3
+
+    [1,2,10,45,89,0,45,2,3,50,61,72]  m=3, k=3
+    [1,2,10]
+    [0,45,2]
+    [3,50,61]
+
+     */
+    // binarry search problem
+    // TC= O(nlogn), SC=O(1)
+    public static void main(String[] args) {
+        int[] arr = {1, 10, 3, 10, 2};
+        int m = 2, k = 2;
+        int max = Arrays.stream(arr).max().getAsInt();
+        int l = 1, h = max;
+        while (l <= h) {
+            int mid = (l + h) / 2;
+            if (isPossible(arr, m, k, mid)) {
+                h = mid - 1;
+            } else
+                l = mid + 1;
+        }
+
+        System.out.print("min days to bloom=" + (l > max ? -1 : l));
+    }
+
+    public static Boolean isPossible(int[] arr, int m, int k, int x) {
+        int sz = 0, count = 0;
+        for (int a : arr) {
+            sz++;
+            if (a > x)
+                return false;
+            if (sz == k) {
+                sz = 0;
+                count++;
+            }
+        }
+        return count >= m;
+    }
 }
