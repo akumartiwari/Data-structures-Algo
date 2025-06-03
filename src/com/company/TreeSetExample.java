@@ -47,7 +47,7 @@ public class TreeSetExample {
 
         //O(1)
         public int find(int number) {
-            return map.containsKey(number) && map.get(number).size() > 0 ? map.get(number).first() : -1;
+            return map.containsKey(number) && !map.get(number).isEmpty() ? map.get(number).first() : -1;
         }
     }
 
@@ -84,7 +84,7 @@ public class TreeSetExample {
             if (FR.containsKey(food) && CRF.get(FC.get(food)).get(FR.get(food)) != null)
                 CRF.get(FC.get(food)).get(FR.get(food)).remove(food);
 
-            if (CRF.get(FC.get(food)).get(FR.get(food)).size() == 0) CRF.get(FC.get(food)).remove(FR.get(food));
+            if (CRF.get(FC.get(food)).get(FR.get(food)).isEmpty()) CRF.get(FC.get(food)).remove(FR.get(food));
 
             FR.put(food, newRating);
             if (!CRF.containsKey(FC.get(food))) CRF.put(FC.get(food), new TreeMap<>());
@@ -94,7 +94,7 @@ public class TreeSetExample {
         }
 
         public String highestRated(String cuisine) {
-            return CRF.containsKey(cuisine) && CRF.get(cuisine).size() > 0 && CRF.get(cuisine).lastEntry().getValue().size() > 0 ? CRF.get(cuisine).lastEntry().getValue().first() : null;
+            return CRF.containsKey(cuisine) && !CRF.get(cuisine).isEmpty() && !CRF.get(cuisine).lastEntry().getValue().isEmpty() ? CRF.get(cuisine).lastEntry().getValue().first() : null;
         }
     }
 
