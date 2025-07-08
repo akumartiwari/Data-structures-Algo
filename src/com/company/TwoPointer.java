@@ -1,9 +1,89 @@
 package com.company;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class TwoPointer {
+
+
+    /*
+    Example 1:
+    Input: str1 = "abc", str2 = "ad"
+    Output: true
+    Explanation: Select index 2 in str1.
+    Increment str1[2] to become 'd'.
+    Hence, str1 becomes "abd" and str2 is now a subsequence. Therefore, true is returned.
+
+    Example 2:
+    Input: str1 = "zc", str2 = "ad"
+    Output: true
+    Explanation: Select indices 0 and 1 in str1.
+    Increment str1[0] to become 'a'.
+    Increment str1[1] to become 'd'.
+    Hence, str1 becomes "ad" and str2 is now a subsequence. Therefore, true is returned.
+
+     */
+    class Solution {
+
+        //TC = O(N+contant)
+        // SC = O(N*26)
+        class RelativePos {
+            int pos;
+            List<Integer> indices;
+
+            RelativePos(int pos, List<Integer> indices) {
+                this.pos = pos;
+                this.indices = indices;
+            }
+        }
+
+        public boolean canMakeSubsequence(String str1, String str2) {
+            Map<Character, RelativePos> map = new LinkedHashMap<>();
+            for (int i = 0; i < str1.length(); i++) {
+                char c = str1.charAt(i);
+                if (!map.containsKey(c)) map.put(c, new RelativePos(0, new ArrayList<>()));
+                RelativePos rp = map.get(c);
+                rp.indices.add(i);
+                map.put(c, rp);
+            }
+
+            System.out.println(map);
+
+            //Traverse and check the remaining string
+            //Might require recursion based technique as we need  to check the pending string
+            return recursion(str1, str2, map, 0);
+        }
+
+        /**
+         * This function return if possible or not
+         *
+         * @return
+         */
+        private boolean recursion(String str1, String str2, Map<Character, RelativePos> map, int ind) {
+            for (int i = ind; i < str2.length(); i++) {
+                char c = str2.charAt(i);
+                if (!map.containsKey(c) && !map.containsKey((char) (c - 1))) {
+                    return false;
+                } else if (map.containsKey(c)) {
+                    List<Integer> indices = map.get(c).indices;
+                    int pos = map.get(c).pos;
+                    if (pos > ind) continue;
+                    else pos++;
+                    map.put(c, new RelativePos(pos, indices));
+                } else if (map.containsKey((char) (c - 1))) {
+                    List<Integer> indices = map.get((char) (c - 1)).indices;
+                    int pos = map.get((char) (c - 1)).pos;
+                    if (pos > ind) continue;
+                    else pos++;
+                    map.put((char) (c - 1), new RelativePos(pos, indices));
+                }
+
+                recursion(str1, str2, map, i);
+            }
+
+            return true;
+        }
+    }
+
 
     /*
 
