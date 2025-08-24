@@ -157,56 +157,31 @@ public class MonotonicStack {
     }
 
     /*
-    Input: nums = [2,1,3]
+    This is a good problem,
+    Basically we can evaluate prefix max and suffix min array and then do the evalution.
 
-    TODO:I think this is double stack problem
-    we need to calculate rightmost lower value in logn time complexity
+     Approach
+    The Idea is that if we have a max value to the left of current element then for sure that is the answer,
+    but if max value till now is greater than min value to right the right of next index It means we can jump to then next right min value
+    and then jump left to max value (that is max value to the right index).
      */
-
     public int[] maxValue(int[] nums) {
-        TreeMap<Integer, TreeMap<Integer, List<Integer>>> treeMap = new TreeMap<>();
-        for (int i = nums.length - 1; i >= 0; i--) {
-            treeMap.put((i), new TreeMap<>());
-            TreeMap<Integer, List<Integer>> otm = treeMap.containsKey(i + 1) ? treeMap.get(i + 1) : new TreeMap<>();
-
-            System.out.println("otm=" + otm);
-
-            TreeMap<Integer, List<Integer>> ntm = new TreeMap<>();
-            ntm.putAll(otm);
-            ntm.put(nums[i], new ArrayList<>(Collections.singletonList(i)));
-            treeMap.put((i), ntm);
-            System.out.println("ntm+=" + ntm);
-
-            System.out.println("treeMap=" + treeMap);
+        int n = nums.length;
+        int[] pref = new int[n], suff = new int[n], res = new int[n];
+        int max = -1, min = Integer.MAX_VALUE;
+        for (int i = 0; i < n; i++) {
+            max = Math.max(max, nums[i]);
+            pref[i] = max;
+            min = Math.min(min, nums[n - 1 - i]);
+            suff[i] = min;
         }
 
-
-        // compute max till now array
-        List<Integer> maxArray = new ArrayList<>();
-        int max = 1;
-        for (int num : nums) {
-            max = Math.max(max, num);
-            maxArray.add(max);
+        res[n - 1] = pref[n - 1];
+        for (int i = n - 1; i >= 0; i--) {
+            res[i] = pref[i];
+            if (pref[i] > suff[i + 1]) res[i] = res[i + 1];
         }
-
-        System.out.println("maxArray=" + maxArray);
-
-        List<Integer> ans = new ArrayList<>();
-        for (int i = 0; i < nums.length; i++) {
-            TreeMap<Integer, List<Integer>> tm = treeMap.get(i);
-
-            List<Integer> entry = tm.lowerEntry(nums[i]) == null ? new ArrayList<>(Collections.singletonList(i)) :
-                    tm.lowerEntry(nums[i]).getValue();
-
-            System.out.println("entry=" + entry);
-            int index = !entry.isEmpty() ? entry.get(0) : i;
-            System.out.println("index=" + index);
-
-            int maxValue = maxArray.get(index);
-            ans.add(maxValue);
-        }
-
-        return ans.stream().mapToInt(Integer::intValue).toArray();
+        return res;
     }
 
 }
