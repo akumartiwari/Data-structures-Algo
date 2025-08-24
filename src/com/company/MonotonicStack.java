@@ -1,7 +1,6 @@
 package com.company;
 
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class MonotonicStack {
 
@@ -85,7 +84,7 @@ public class MonotonicStack {
         }
         return count;
     }
-    
+
     private static final int mod = 1_000_000_000 + 7;
 
     // TODO :- Need to solved again
@@ -151,8 +150,63 @@ public class MonotonicStack {
             return subArraySize;
         }
     }
+
     //Use monotonic stack
     public long maximumSumOfHeights(List<Integer> maxHeights) {
         return 0L;
     }
+
+    /*
+    Input: nums = [2,1,3]
+
+    TODO:I think this is double stack problem
+    we need to calculate rightmost lower value in logn time complexity
+     */
+
+    public int[] maxValue(int[] nums) {
+        TreeMap<Integer, TreeMap<Integer, List<Integer>>> treeMap = new TreeMap<>();
+        for (int i = nums.length - 1; i >= 0; i--) {
+            treeMap.put((i), new TreeMap<>());
+            TreeMap<Integer, List<Integer>> otm = treeMap.containsKey(i + 1) ? treeMap.get(i + 1) : new TreeMap<>();
+
+            System.out.println("otm=" + otm);
+
+            TreeMap<Integer, List<Integer>> ntm = new TreeMap<>();
+            ntm.putAll(otm);
+            ntm.put(nums[i], new ArrayList<>(Collections.singletonList(i)));
+            treeMap.put((i), ntm);
+            System.out.println("ntm+=" + ntm);
+
+            System.out.println("treeMap=" + treeMap);
+        }
+
+
+        // compute max till now array
+        List<Integer> maxArray = new ArrayList<>();
+        int max = 1;
+        for (int num : nums) {
+            max = Math.max(max, num);
+            maxArray.add(max);
+        }
+
+        System.out.println("maxArray=" + maxArray);
+
+        List<Integer> ans = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            TreeMap<Integer, List<Integer>> tm = treeMap.get(i);
+
+            List<Integer> entry = tm.lowerEntry(nums[i]) == null ? new ArrayList<>(Collections.singletonList(i)) :
+                    tm.lowerEntry(nums[i]).getValue();
+
+            System.out.println("entry=" + entry);
+            int index = !entry.isEmpty() ? entry.get(0) : i;
+            System.out.println("index=" + index);
+
+            int maxValue = maxArray.get(index);
+            ans.add(maxValue);
+        }
+
+        return ans.stream().mapToInt(Integer::intValue).toArray();
+    }
+
 }
