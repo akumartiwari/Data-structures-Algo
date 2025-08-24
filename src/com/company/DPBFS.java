@@ -100,7 +100,7 @@ public class DPBFS {
         return ans;
     }
 
-    //TODO: think this mught be dfs based problem
+    //TODO: think this might be dfs based problem
     public int maxWalls(int[] robots, int[] distance, int[] walls) {
         int ans = 0;
 
