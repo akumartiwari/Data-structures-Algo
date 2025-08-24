@@ -1,6 +1,7 @@
 package com.company;
 
-import java.util.HashMap;import java.util.*;
+import java.util.HashMap;
+import java.util.*;
 
 public class DPBFS {
     // TODO: Solve it again
@@ -95,6 +96,13 @@ public class DPBFS {
         for (int a : res) {
             ans = Math.max(ans, a);
         }
+
+        return ans;
+    }
+
+    //TODO: think this mught be dfs based problem
+    public int maxWalls(int[] robots, int[] distance, int[] walls) {
+        int ans = 0;
 
         return ans;
     }
