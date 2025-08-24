@@ -1,6 +1,7 @@
 package com.company;
 
 import java.util.*;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 public class PractiseProblems {
@@ -64,4 +65,25 @@ public class PractiseProblems {
         return new ArrayList<>(set1).stream().sorted().collect(Collectors.toList());
     }
 
+    /*
+
+    [35,39,65,101,101,54,1,111,8,107,96,90,91,54,
+    115,36,46,76,111,39,29,122,4,113,101,73,125,39,124,33,82,39]
+
+
+    {65=1, 1=1, 4=1, 8=1, 73=1, 76=1, 82=1, 90=1, 91=1, 29=1,
+    96=1, 33=1, 35=1, 36=1, 101=3, 39=4, 107=1, 46=1, 111=2, 113=1, 115=1, 54=2, 122=1, 124=1, 125=1}
+
+     */
+    public boolean partitionArray(int[] nums, int k) {
+        int n = nums.length;
+        if (k == 1) return true;
+        int v = n / k;
+        if (n % k != 0) return false;
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int num : nums) map.put(num, map.getOrDefault(num, 0) + 1);
+        if (map.keySet().size() < k) return false;
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) if (entry.getValue() > v) return false;
+        return true;
+    }
 }
