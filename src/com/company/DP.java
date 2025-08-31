@@ -2224,4 +2224,31 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         }
     }
 
+    //Solve using DP pattern of repeating same number multiple times in an array
+    class SolutionMinDifference {
+        public int[] minDifference(int n, int k) {
+            System.out.println(printDivisors(100000));
+            return new int[3];
+        }
+
+        public ArrayList<Integer> printDivisors(int n) {
+            // Note that this loop runs till square root
+
+            ArrayList<Integer> list = new ArrayList<>();
+
+            for (int i = 1; i <= Math.sqrt(n); i++) {
+                if (n % i == 0) {
+                    // If divisors are equal, print only one
+                    if (n / i == i)
+                        list.add(i);
+
+                    else // Otherwise print both
+                        list.add(i);
+                    list.add(n / i);
+                }
+            }
+
+            return list;
+        }
+    }
 }

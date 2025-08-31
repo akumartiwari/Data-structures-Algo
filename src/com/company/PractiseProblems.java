@@ -1,5 +1,6 @@
 package com.company;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.HashMap;
 import java.util.stream.Collectors;
@@ -85,5 +86,66 @@ public class PractiseProblems {
         if (map.keySet().size() < k) return false;
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) if (entry.getValue() > v) return false;
         return true;
+    }
+
+    public int getLeastFrequentDigit(int n) {
+        Map<Integer, Integer> tm = new HashMap<>();
+        for (char c : String.valueOf(n).toCharArray()) {
+            int d = c - '0';
+            tm.put(d, tm.getOrDefault(d, 0) + 1);
+        }
+
+        int min = Integer.MAX_VALUE, freq = Integer.MAX_VALUE;
+        for (Map.Entry<Integer, Integer> entry : tm.entrySet()) {
+            if (freq > entry.getValue()) {
+                freq = entry.getValue();
+                min = entry.getKey();
+            }
+            if (freq == entry.getValue()) {
+                min = Math.min(min, entry.getKey());
+            }
+        }
+
+        return min;
+    }
+
+    //Not a good quality problem, Can skip it
+    public int score(String[] cards, char x) {
+        Set<String> bothSameSet = new HashSet<>(), leftSameSet = new HashSet<>(), rightSameSet = new HashSet<>();
+        int bothSame = 0, leftSame = 0, rightSame = 0;
+        for (String card : cards) {
+            char l = card.charAt(0), r = card.charAt(1);
+            if (l == x && r == x) {
+                bothSame++;
+                bothSameSet.add(card);
+            } else if (l == x) {
+                leftSame++;
+                leftSameSet.add(card);
+            } else if (r == x) {
+                rightSame++;
+                rightSameSet.add(card);
+            }
+        }
+
+        if (bothSame == 0 && leftSameSet.size() <= 1 && rightSameSet.size() <= 1) return 0;
+        if (bothSame == 0 && (leftSame == 0 || rightSame == 0)) {
+            if (leftSameSet.size() == 1 || rightSameSet.size() == 1) return 0;
+            return Math.max(leftSame, rightSame) / 2;
+        }
+
+        if (bothSame == leftSame + rightSame) return bothSame;
+        return Math.min(bothSameSet.size(), Math.abs(rightSameSet.size() - leftSameSet.size())) + Math.min(rightSameSet.size(), leftSameSet.size());
+    }
+
+
+    public int[] recoverOrder(int[] order, int[] friends) {
+        int[] ans = new int[friends.length];
+        Arrays.fill(ans, 0);
+        int idx = 0;
+        Set<Integer> set = Arrays.stream(friends).boxed().collect(Collectors.toSet());
+        for (int o : order) {
+            if (set.contains(o)) ans[idx++] = o;
+        }
+        return ans;
     }
 }
