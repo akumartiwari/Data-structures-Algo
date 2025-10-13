@@ -148,4 +148,62 @@ public class PractiseProblems {
         }
         return ans;
     }
+
+    class Solution {
+        private boolean possible(int[] arr, int k) {
+                boolean[] dp = new boolean[k + 1];
+                int[] prev = new int[k + 1];
+                dp[0] = true;
+
+                for (int i = 0; i < arr.length; i++) {
+                    for (int j = k; j >= arr[i]; j--) {
+                        if (dp[j - arr[i]]) {
+                            dp[j] = true;
+                            prev[j] = i; // Track the index of the element contributing to the sum
+                        }
+                    }
+                }
+
+                if (!dp[k]) return false; // If sum k is not achievable
+                return true;
+            }
+
+        public boolean[] subsequenceSumAfterCapping(int[] nums, int k) {
+            int n = nums.length, idx = 0;
+            boolean[] ans  = new boolean[n];
+            for (int x=1; x<=n ; x++){
+                List<Integer> na = new ArrayList<>();
+                for (int num: nums){
+                      int nn = Math.min(num, x);
+                      na.add(nn);
+                }
+                ans[idx++] = (na.stream().mapToInt(e -> e).toArray(), k);
+            }
+            return ans;
+        }
+    }
+
+
+    //TODO: Fix stack overflow
+    // add DP to optimise solution
+
+        public int minimumOperations(List<Integer> nums) {
+            int[] dp = new int[nums.size()];
+            Arrays.fill(dp, -1);
+            return mo(nums, 0, -1, 0);
+        }
+
+        private int mo(List<Integer> nums, int ind, int prev, int max) {
+            // base case
+            if (ind >= nums.size()) return 0;
+
+            int cnt = 0 ;
+            prev = nums.get(ind);
+            //take
+            if (nums.get(ind) > prev) cnt ++;
+            else max = Math.max(cnt, max);
+            mo(nums, ind++, prev, max);
+            return max;
+        }
+
 }

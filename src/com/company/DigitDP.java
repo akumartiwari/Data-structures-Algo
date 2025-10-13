@@ -36,20 +36,12 @@ public class DigitDP {
             //take the curr digit
             int curr = high.charAt(i);
             for (int j = 0; j < curr; j++) {
-                if (sb.length() == 0) {
+                if (sb.length() == 0 || Math.abs(sb.charAt(sb.length() - 1) - j) == 1) {
                     sb.append(j);
                     cnt = (cnt + helper(low, high, sb, ind - 1, dp)) % mod;
                     //backtrack
                     sb.deleteCharAt(sb.length() - 1);
-                } else {
-                    if (Math.abs(sb.charAt(sb.length() - 1) - j) == 1) {
-                        sb.append(j);
-                        cnt = (cnt + helper(low, high, sb, ind - 1, dp)) % mod;
-                        //backtrack
-                        sb.deleteCharAt(sb.length() - 1);
-                    }
                 }
-
                 //skip i.e. not-take the current digit
                 cnt = (cnt + helper(low, high, sb, ind - 1, dp)) % mod;
             }

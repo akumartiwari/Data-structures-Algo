@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 class CombinationSum {
     // TC = O(2^n), SC = O(2^n)
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
-        // Arrays.sort(candidates);
+        Arrays.sort(candidates);
         List<List<Integer>> ans = new ArrayList<>();
         bfs(new ArrayList<>(), 0, 0, ans, target, candidates);
         return ans;
