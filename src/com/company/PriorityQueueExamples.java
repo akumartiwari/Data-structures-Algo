@@ -110,13 +110,10 @@ public class PriorityQueueExamples {
     public int mostBooked(int n, int[][] meetings) {
 
         // Sort rooms based on endTime of the meeting and roomId
-        PriorityQueue<Node> pq = new PriorityQueue<Node>(
-                (a, b) -> {
-                    if (a.endTime != b.endTime)
-                        return a.endTime - b.endTime;
-                    return a.roomId - b.roomId;
-                }
-        );
+        PriorityQueue<Node> pq = new PriorityQueue<Node>((a, b) -> {
+            if (a.endTime != b.endTime) return a.endTime - b.endTime;
+            return a.roomId - b.roomId;
+        });
 
         TreeSet<Integer> ar = new TreeSet<>();
         for (int i = 0; i < n; ++i) ar.add(i);
@@ -232,8 +229,7 @@ public class PriorityQueueExamples {
     public int minGroups(int[][] intervals) {
 
         Arrays.sort(intervals, (a, b) -> {
-            if (a[0] != b[0])
-                return a[0] - b[0];
+            if (a[0] != b[0]) return a[0] - b[0];
             return Math.min(a[1], b[1]);
         });
 
@@ -477,4 +473,40 @@ public class PriorityQueueExamples {
             return tb >= 0;
         }
     }
+
+    //LC 18th jan
+    public int vowelConsonantScore(String s) {
+        int v = 0, c = 0;
+        for (char ch : s.toCharArray()) {
+            if (ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u') v++;
+            else if (Character.isAlphabetic(ch)) c++;
+        }
+        if (c > 0) {
+            return (int) (double) (v / c);
+        } else return 0;
+    }
+
+
+    public char getNextChar(char c) {
+        return (char) ((c + 1) % 26);
+    }
+
+    public boolean canMakeSubsequence(String str1, String str2) {
+        int i, j;
+        for (i = 0, j = 0; i < str1.length() && j < str2.length(); ) {
+            if (str1.charAt(i) == str2.charAt(j)) {
+                j++;
+                i++;
+            } else if (getNextChar(str1.charAt(i)) == str2.charAt(j)) {
+                i++;
+                j++;
+            } else {
+                i++;
+            }
+        }
+
+        if (j == str2.length()) return true;
+        return false;
+    }
+
 }
