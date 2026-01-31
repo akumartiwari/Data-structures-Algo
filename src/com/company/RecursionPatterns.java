@@ -2,7 +2,8 @@ package com.company;
 
 import javafx.util.Pair;
 
-import java.util.HashMap;import java.util.*;
+import java.util.HashMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class RecursionPatterns {
@@ -402,6 +403,67 @@ public class RecursionPatterns {
         }
 
         return total;
+    }
+
+
+    //TODO: We need to acumukate all possible longest subsequences with non-zero AND
+    class Solution {
+        public int longestSubsequence(int[] nums) {
+            Set<Integer> ans = LIS(Arrays.stream(nums).boxed().collect(Collectors.toList()));
+
+            System.out.println("ans=" + ans);
+
+            List<Integer> result = new ArrayList<>();
+            for (int bit = 0; bit < 32; bit++) {
+                List<Integer> temp = new ArrayList<>();
+                for (int num : ans) {
+                    if (((num >> bit) & 1) == 1) {
+                        temp.add(num);
+                    }
+                }
+                if (temp.size() > result.size()) {
+                    result = temp;
+                }
+            }
+
+            System.out.println(result);
+            return result.size();
+        }
+
+        private Set<Integer> LIS(List<Integer> part) {
+            List<Integer> ans = new ArrayList<>();
+            int lastItem = part.get(0);
+            for (Integer integer : part) {
+                if (integer >= lastItem) {
+                    ans.add(integer);
+                } else {
+                    // next greater element than current one in the ans list
+                    int idx = nextGreaterElementNonZeroAND(ans, integer);
+
+
+                    System.out.println(ans.get(idx) + ", " + integer);
+                    if ((ans.get(idx) & integer) > 0) ans.set(idx, integer);
+                }
+                lastItem = ans.get(ans.size() - 1);
+            }
+
+            return new HashSet<>(ans);
+        }
+
+        private int nextGreaterElementNonZeroAND(List<Integer> ans, Integer item) {
+
+            int l = 0, r = ans.size() - 1;
+            while (l < r) {
+                int mid = Math.abs(l + (r - l) / 2);
+                if (ans.get(mid) <= item) {
+                    l = mid + 1;
+                } else {
+                    r = mid;
+                }
+            }
+
+            return l;
+        }
     }
 
     private int LIS(List<Integer> part) {
