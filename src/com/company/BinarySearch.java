@@ -1,7 +1,8 @@
 package com.company;
 
 import java.util.HashMap;
-import java.util.HashMap;import java.util.*;
+import java.util.HashMap;
+import java.util.*;
 
 public class BinarySearch {
 
@@ -146,6 +147,34 @@ public class BinarySearch {
             else h = mid;
         }
         return l;
+    }
+
+
+    public int minimumK(int[] nums) {
+        int low = 1;
+        int high = 9999;
+        int mid = high;
+        int res = 0;
+        Set<Integer> mids = new HashSet<>();
+        while (mid >= 1 && !mids.contains(mid)) {
+            mids.add(mid);
+            mid = low + (high - low) / 2;
+            if (possible(mid, nums.length, nums)) {
+                high = mid - 1;
+                res = mid;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return res;
+    }
+
+    public boolean possible(int val, int n, int[] arr) {
+        long op = 0;
+        for (int i = n - 1; i >= 0; i--) {
+            op += (arr[i] / val) + (arr[i] % val == 0 ? 0 : 1);
+        }
+        return op <= val * val;
     }
 
     /*
