@@ -385,6 +385,18 @@ public class RecursionPatterns {
 //        then the final answer is overall combination of parts operations.
 //        [12,6,12,6,14,2,13,17,3,8,11,7,4,11,18,8,8,3]
 //        1
+
+    public int lengthOfLIS(int[] nums) {
+        if (nums.length == 0) return 0;
+        List<Integer> lis = new ArrayList<>();
+        for (int num : nums) {
+            int idx = Collections.binarySearch(lis, num);
+            if (idx < 0) idx = -(idx + 1);
+            if (idx == lis.size()) lis.add(num);
+            else lis.set(idx, num);
+        }
+    }
+
     // TC = O(nlogn), SC = O(n)
     public int kIncreasing(int[] arr, int k) {
         int n = arr.length;
@@ -406,13 +418,10 @@ public class RecursionPatterns {
     }
 
 
-    //TODO: We need to acumukate all possible longest subsequences with non-zero AND
+    //TODO: We need to acumulate all possible longest subsequences with non-zero AND
     class Solution {
         public int longestSubsequence(int[] nums) {
             Set<Integer> ans = LIS(Arrays.stream(nums).boxed().collect(Collectors.toList()));
-
-            System.out.println("ans=" + ans);
-
             List<Integer> result = new ArrayList<>();
             for (int bit = 0; bit < 32; bit++) {
                 List<Integer> temp = new ArrayList<>();
@@ -440,9 +449,10 @@ public class RecursionPatterns {
                     // next greater element than current one in the ans list
                     int idx = nextGreaterElementNonZeroAND(ans, integer);
 
+                    if (idx < 0) idx = -(idx + 1);
+                    if (idx == ans.size()) ans.add(integer);
+                    else ans.set(idx, integer);
 
-                    System.out.println(ans.get(idx) + ", " + integer);
-                    if ((ans.get(idx) & integer) > 0) ans.set(idx, integer);
                 }
                 lastItem = ans.get(ans.size() - 1);
             }
@@ -466,16 +476,26 @@ public class RecursionPatterns {
         }
     }
 
-    private int LIS(List<Integer> part) {
+    public int longestSubsequence(int[] nums) {
         List<Integer> ans = new ArrayList<>();
+        List<Integer> part = Arrays.stream(nums).boxed().collect(Collectors.toList());
         int lastItem = part.get(0);
+        int res = -1;
         for (Integer integer : part) {
-            if (integer >= lastItem) {
+            if (res == -1) {
                 ans.add(integer);
-            } else {
+                res = integer;
+            } else if (integer >= lastItem && ((res & integer) > 0)) {
+                ans.add(integer);
+                res &= integer;
+            } else if ((res & integer) > 0) {
                 // next greater element than current one in the ans list
                 int idx = nextGreaterElement(ans, integer);
-                ans.set(idx, integer);
+                if (idx < 0) idx = -(idx + 1);
+
+                if (ans.size() == idx) ans.add(integer);
+                else ans.set(idx, integer);
+                res &= integer;
             }
             lastItem = ans.get(ans.size() - 1);
         }
@@ -497,6 +517,7 @@ public class RecursionPatterns {
 
         return l;
     }
+
 
     // Recursion
     // Apply memoisation
@@ -672,7 +693,7 @@ public class RecursionPatterns {
 
     // Recursion pattern
     // TC = O(n2), SC = O(N*2)
-    public int lengthOfLIS(int[] nums) {
+    public int lengthOfLISDP(int[] nums) {
         if (nums.length == 0) return 0;
         int[][] dp = new int[nums.length][nums.length + 1];
         for (int[] d : dp) Arrays.fill(d, -1);

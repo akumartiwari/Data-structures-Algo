@@ -1,7 +1,6 @@
 package com.company;
 
 import java.util.HashMap;
-import java.util.HashMap;
 import java.util.*;
 
 public class BinarySearch {
@@ -263,7 +262,7 @@ public class BinarySearch {
         return r;
     }
 
-    public int lengthOfLIS(int[] arr) {
+    public int lengthOfLISLB(int[] arr) {
         List<Integer> lis = new ArrayList<>();
         int len = 0;
         for (int a : arr) {
@@ -646,4 +645,35 @@ public class BinarySearch {
         return ans;
     }
 
+    /*
+    Given an integer array nums,
+    return the length of the longest strictly increasing subsequence.
+    Input: nums = [10,9,2,5,3,7,101,18]
+    Output: 4
+    Explanation: The longest increasing subsequence is [2,3,7,101], therefore the length is 4.
+    Example 2:
+
+    Input: nums = [0,1,0,3,2,3]
+    Output: 4
+
+     */
+    public int lengthOfLIS(int[] nums) {
+
+        List<Integer> ans = new ArrayList<>();
+        int len = 0;
+        for (int num : nums) {
+            if (len == 0 || num > ans.get(len - 1)) {
+                ans.add(num);
+                len++;
+            } else {
+                // next greater element than current one in the ans list
+                int idx = Collections.binarySearch(ans, num);
+                if (idx < 0) idx = -(idx + 1);
+                if (ans.size() == idx) ans.add(num);
+                else ans.set(idx, num);
+            }
+        }
+
+        return len;
+    }
 }

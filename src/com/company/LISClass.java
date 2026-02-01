@@ -1,18 +1,23 @@
 package com.company;
 
-import java.util.HashMap;import java.util.*;
+import java.util.HashMap;
+import java.util.*;
 
-public class LIS {
+public class LISClass {
     private int LIS(List<Integer> part) {
         List<Integer> ans = new ArrayList<>();
         int lastItem = part.get(0);
+
         for (Integer integer : part) {
             if (integer >= lastItem) {
                 ans.add(integer);
             } else {
                 // next greater element than current one in the ans list
                 int idx = nextGreaterElement(ans, integer);
-                ans.set(idx, integer);
+                if (idx < 0) idx = -(idx + 1);
+                if (idx == ans.size()) {
+                    ans.add(integer);
+                } else ans.set(idx, integer);
             }
             lastItem = ans.get(ans.size() - 1);
         }
@@ -25,11 +30,11 @@ public class LIS {
         int l = 0, r = ans.size() - 1;
         while (l < r) {
             int mid = (int) Math.abs(l + (r - l) / 2);
-            if (ans.get(mid) <= item) {
+            if (ans.get(mid) < item) {
                 l = mid + 1;
-            } else {
-                r = mid;
-            }
+            } else if (ans.get(mid) == item) {
+                return l;
+            } else r = mid;
         }
 
         return l;
