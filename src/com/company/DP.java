@@ -192,19 +192,19 @@ public class DP {
      */
     public int longestSubsequence(int[] nums) {
         Map<String, Integer> dp = new HashMap<>();
-        return recurse(nums, -1, 0, -1, dp);
+        return lsrecurse(nums, -1, 0, -1, dp);
     }
 
-    private int recurse(int[] nums, int prev, int idx, long res, Map<String, Integer> dp) {
+    private int lsrecurse(int[] nums, int prev, int idx, long res, Map<String, Integer> dp) {
         // base case
         if (idx == nums.length) return 0;
         String key = prev + "-" + idx + "-" + res;
         if (dp.containsKey(key)) return dp.get(key);
         // not take
-        int len = recurse(nums, prev, idx + 1, res, dp);
+        int len = lsrecurse(nums, prev, idx + 1, res, dp);
         //take
         if (prev == -1 || res == -1 || ((nums[idx] > prev) && ((res & nums[idx]) > 0))) {
-            len = Math.max(len, 1 + recurse(nums, nums[idx], idx + 1, res == -1 ? nums[idx] : res & nums[idx], dp));
+            len = Math.max(len, 1 + lsrecurse(nums, nums[idx], idx + 1, res == -1 ? nums[idx] : res & nums[idx], dp));
         }
         dp.put(key, len);
         return len;
