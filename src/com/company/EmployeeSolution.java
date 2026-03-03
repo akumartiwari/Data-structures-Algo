@@ -1978,6 +1978,37 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+
+    //Author: Anand
+    public List<List<Integer>> threeSum(int[] nums) {
+        Set<List<Integer>> list = new HashSet<>();
+        Map<Integer, Integer> mp = new HashMap<>(); // Two sum problem
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                for (int k = j + 1; k < nums.length; k++) {
+                    int sum = nums[i] + nums[j];
+                    if (mp.containsKey(-sum)) {
+                        int ind = mp.get(-sum);
+                        if (ind != i && ind != j && ind != k) {
+                            List<Integer> nl = new ArrayList(Arrays.asList(nums[i], nums[j], nums[k]));
+                            Collections.sort(nl);
+                            list.add(nl);
+                        }
+                    }
+                    mp.put(nums[i], i);
+                    mp.put(nums[j], j);
+                    mp.put(nums[k], k);
+                    if (nums[i] + nums[j] + nums[k] == 0) {
+                        List<Integer> nl = new ArrayList(Arrays.asList(nums[i], nums[j], nums[k]));
+                        Collections.sort(nl);
+                        list.add(nl);
+                    }
+                }
+            }
+        }
+        return new ArrayList<>(list);
+    }
+
     // Author: Anand
     public int prefixCount(String[] words, String pref) {
         int cnt = 0;
