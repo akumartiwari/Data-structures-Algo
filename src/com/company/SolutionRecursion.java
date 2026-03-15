@@ -71,22 +71,6 @@ class SolutionRecursion {
         return ans;
     }
     //         int[] arr = {100,10,89,40,1,80,97};
-
-    private static List<Integer> countcolderDays1(int[] temperatures) {
-        int n = temperatures.length;
-        List<Integer> nextWarmerday = new ArrayList<>();
-
-        Stack<Integer> stk = new Stack<>();// to store index of next warmer day in stack
-        for (int i = 0; i < n; i++) {
-            while (!stk.isEmpty() && temperatures[stk.peek()] < temperatures[i]) {
-                int idx = stk.pop();
-                nextWarmerday.add(i - idx);
-            }
-            stk.push(i);
-        }
-        return nextWarmerday;
-    }
-
     public int maxSum(int[] nums1, int[] nums2) {
         return maxSum(nums1, nums2, 0, 0, 0);
     }

@@ -76,7 +76,7 @@ class TreeNode {
 
     /*
     Use Recursion to traverse subTree of a node and place braces around them
-    Traverse the right subtree only of node is present and place braces in the string
+    Traverse the right subtree only if node is present and place braces in the string
      */
     public String tree2str(TreeNode root) {
         String ans = "";
@@ -148,39 +148,6 @@ class TreeNode {
         return node;
     }
 
-    public int[] dailyTemperatures(int[] temperatures) {
-        // base cases
-           /*
-            int n = temperatures.length;
-
-            int[] ans = new int[n];
-            // iterate throught all element
-            for (int i = 0; i < n; i++) {
-                int count = 0;
-                for (int j = i + 1; j < n; j++) {
-                    count++;
-                    if (temperatures[j] > temperatures[i]) ans[i] = count;
-                }
-            }
-
-            return ans;
-        }
-        */
-
-
-        int n = temperatures.length;
-        int[] nextWarmerday = new int[n];
-        Stack<Integer> stk = new Stack<>();// to store index of next warmer day in stack
-
-        for (int i = 0; i < n; i++) {
-            while (!stk.isEmpty() && temperatures[stk.peek()] < temperatures[i]) {
-                int idx = stk.pop();
-                nextWarmerday[idx] = idx - i;
-            }
-            stk.push(i);
-        }
-        return nextWarmerday;
-    }
 
     public int[] nextGreaterElement(int[] nums1, int[] nums2) {
         int n1 = nums1.length;

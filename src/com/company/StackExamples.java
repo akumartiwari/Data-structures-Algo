@@ -5,6 +5,51 @@ import java.util.*;
 
 public class StackExamples {
 
+    /*
+    Given an array of integers temperatures represents the daily temperatures,
+    return an array answer such that answer[i] is the number of days you have to wait after
+    the ith day to get a warmer temperature. If there is no future day for which this is possible,
+    keep answer[i] == 0 instead.
+
+
+    Ex1:-
+    Input: temperatures = [73,74,75,71,69,72,76,73]
+    Output: [1,1,4,2,1,1,0,0]
+     */
+    public int[] dailyTemperatures(int[] temperatures) {
+        // base cases
+           /*
+            int n = temperatures.length;
+
+            int[] ans = new int[n];
+            // iterate throughout all element
+            for (int i = 0; i < n; i++) {
+                int count = 0;
+                for (int j = i + 1; j < n; j++) {
+                    count++;
+                    if (temperatures[j] > temperatures[i]) ans[i] = count;
+                }
+            }
+
+            return ans;
+        }
+        */
+
+
+        int n = temperatures.length;
+        int[] nextWarmerday = new int[n];
+        Stack<Integer> stk = new Stack<>();// to store index of next warmer day in stack
+
+        for (int i = 0; i < n; i++) {
+            while (!stk.isEmpty() && temperatures[stk.peek()] < temperatures[i]) {
+                int idx = stk.pop();
+                nextWarmerday[idx] = idx - i;
+            }
+            stk.push(i);
+        }
+        return nextWarmerday;
+    }
+
     //Author: Anand
     public int[] nextGreaterElement(int[] nums1, int[] nums2) {
 
@@ -187,6 +232,21 @@ public class StackExamples {
         return false;
     }
 
+
+    private static List<Integer> countcolderDays1(int[] temperatures) {
+        int n = temperatures.length;
+        List<Integer> nextWarmerday = new ArrayList<>();
+
+        Stack<Integer> stk = new Stack<>();// to store index of next warmer day in stack
+        for (int i = 0; i < n; i++) {
+            while (!stk.isEmpty() && temperatures[stk.peek()] < temperatures[i]) {
+                int idx = stk.pop();
+                nextWarmerday.add(i - idx);
+            }
+            stk.push(i);
+        }
+        return nextWarmerday;
+    }
 
 }
 
