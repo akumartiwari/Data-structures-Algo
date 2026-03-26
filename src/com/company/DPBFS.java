@@ -1,14 +1,35 @@
 package com.company;
 
-import java.util.HashMap;import java.util.*;
+import javafx.util.Pair;
+
+import java.util.HashMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class DPBFS {
+    @SuppressWarnings("ALL")
+    private class Node implements Comparable<Node> {
+        int position;
+        long cost;
+
+        public Node(int dis, long val) {
+            this.position = dis;
+            this.cost = val;
+        }
+
+
+        @Override
+        public int compareTo(final Node o) {
+            return Long.compare(this.cost, o.cost);
+        }
+    }
+
     // TODO: Solve it again
     class WaysToArriveAtDestnation {
         public int countPaths(int n, int[][] roads) {
             final List<List<Node>> graph = new ArrayList<>(n);
             for (int i = 0; i < n; i++) {
-                graph.add(new ArrayList());
+                graph.add(new ArrayList<>());
             }
             for (final int[] arr : roads) {
                 graph.get(arr[0]).add(new Node(arr[1], arr[2]));
@@ -46,22 +67,6 @@ public class DPBFS {
             return (int) ways[n - 1];
         }
 
-        @SuppressWarnings("ALL")
-        private class Node implements Comparable<Node> {
-            int position;
-            long cost;
-
-            public Node(int dis, long val) {
-                this.position = dis;
-                this.cost = val;
-            }
-
-
-            @Override
-            public int compareTo(final Node o) {
-                return Long.compare(this.cost, o.cost);
-            }
-        }
     }
 
     public int maxIncreasingCells(int[][] mat) {

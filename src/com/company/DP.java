@@ -2224,4 +2224,70 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         }
     }
 
+    class SolutionMinDifference {
+        Set<List<Integer>> ans = new HashSet<>();
+
+        public int[] printDivisors(int n) {
+            // Note that this loop runs till square root
+
+            ArrayList<Integer> list = new ArrayList<>();
+
+            for (int i = 1; i <= Math.sqrt(n); i++) {
+                if (n % i == 0) {
+                    // If divisors are equal, print only one
+                    if (n / i == i)
+                        list.add(i);
+
+                    else // Otherwise print both
+                        list.add(i);
+                    list.add(n / i);
+                }
+            }
+
+            return list.stream().mapToInt(x -> x).toArray();
+        }
+
+        public int[] minDifference(int n, int k) {
+            int[] candidates = printDivisors(n);
+            Arrays.sort(candidates);
+            List<Integer> ds = new ArrayList<>();
+            bfs(candidates, n, 0, 1, ds, k);
+            List<Integer> result = new ArrayList<>();
+
+            int minDiff = Integer.MAX_VALUE;
+            for (List<Integer> res : ans) {
+
+                int max = Integer.MIN_VALUE, min = Integer.MAX_VALUE;
+                for (int e : res) {
+                    max = Math.max(max, e);
+                    min = Math.min(min, e);
+                }
+
+                if (max - min < minDiff) {
+                    minDiff = max - min;
+                    result = res;
+                }
+            }
+
+            return result.stream().mapToInt(x -> x).toArray();
+        }
+
+        private void bfs(int[] arr, int n, int idx, int prod, List<Integer> ds, int k) {
+
+            if (ds.size() > k || prod > n) return;
+            // base case
+            if (prod == n && ds.size() == k) {
+                ans.add(new ArrayList<>(ds));
+            } else {
+                for (int i = idx; i < arr.length; i++) {
+                    // take
+                    prod *= arr[i];
+                    ds.add(arr[i]);
+                    bfs(arr, n, i, prod, ds, k);
+                    prod /= arr[i];
+                    ds.remove(new Integer(arr[i])); // remove last element
+                }
+            }
+        }
+    }
 }

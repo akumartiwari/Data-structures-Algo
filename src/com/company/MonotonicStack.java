@@ -1,7 +1,6 @@
 package com.company;
 
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class MonotonicStack {
 
@@ -85,7 +84,7 @@ public class MonotonicStack {
         }
         return count;
     }
-    
+
     private static final int mod = 1_000_000_000 + 7;
 
     // TODO :- Need to solved again
@@ -151,8 +150,38 @@ public class MonotonicStack {
             return subArraySize;
         }
     }
+
     //Use monotonic stack
     public long maximumSumOfHeights(List<Integer> maxHeights) {
         return 0L;
     }
+
+    /*
+    This is a good problem,
+    Basically we can evaluate prefix max and suffix min array and then do the evalution.
+
+     Approach
+    The Idea is that if we have a max value to the left of current element then for sure that is the answer,
+    but if max value till now is greater than min value to right the right of next index It means we can jump to then next right min value
+    and then jump left to max value (that is max value to the right index).
+     */
+    public int[] maxValue(int[] nums) {
+        int n = nums.length;
+        int[] pref = new int[n], suff = new int[n], res = new int[n];
+        int max = -1, min = Integer.MAX_VALUE;
+        for (int i = 0; i < n; i++) {
+            max = Math.max(max, nums[i]);
+            pref[i] = max;
+            min = Math.min(min, nums[n - 1 - i]);
+            suff[i] = min;
+        }
+
+        res[n - 1] = pref[n - 1];
+        for (int i = n - 1; i >= 0; i--) {
+            res[i] = pref[i];
+            if (pref[i] > suff[i + 1]) res[i] = res[i + 1];
+        }
+        return res;
+    }
+
 }
