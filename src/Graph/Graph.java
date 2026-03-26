@@ -547,7 +547,7 @@ public class Graph {
             int count = -1;
             for (int i = 0; i < n; ++i) {
                 visited = new int[n];
-                count =  1 + DFS(i, graph, visited);
+                count = 1 + DFS(i, graph, visited);
                 ans[i] = count;
             }
             return ans;

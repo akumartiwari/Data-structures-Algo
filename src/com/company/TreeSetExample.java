@@ -1,6 +1,7 @@
 package com.company;
 
-import java.util.HashMap;import java.util.*;
+import java.util.HashMap;
+import java.util.*;
 
 public class TreeSetExample {
 
@@ -46,7 +47,7 @@ public class TreeSetExample {
 
         //O(1)
         public int find(int number) {
-            return map.containsKey(number) && map.get(number).size() > 0 ? map.get(number).first() : -1;
+            return map.containsKey(number) && !map.get(number).isEmpty() ? map.get(number).first() : -1;
         }
     }
 
@@ -83,7 +84,7 @@ public class TreeSetExample {
             if (FR.containsKey(food) && CRF.get(FC.get(food)).get(FR.get(food)) != null)
                 CRF.get(FC.get(food)).get(FR.get(food)).remove(food);
 
-            if (CRF.get(FC.get(food)).get(FR.get(food)).size() == 0) CRF.get(FC.get(food)).remove(FR.get(food));
+            if (CRF.get(FC.get(food)).get(FR.get(food)).isEmpty()) CRF.get(FC.get(food)).remove(FR.get(food));
 
             FR.put(food, newRating);
             if (!CRF.containsKey(FC.get(food))) CRF.put(FC.get(food), new TreeMap<>());
@@ -93,7 +94,7 @@ public class TreeSetExample {
         }
 
         public String highestRated(String cuisine) {
-            return CRF.containsKey(cuisine) && CRF.get(cuisine).size() > 0 && CRF.get(cuisine).lastEntry().getValue().size() > 0 ? CRF.get(cuisine).lastEntry().getValue().first() : null;
+            return CRF.containsKey(cuisine) && !CRF.get(cuisine).isEmpty() && !CRF.get(cuisine).lastEntry().getValue().isEmpty() ? CRF.get(cuisine).lastEntry().getValue().first() : null;
         }
     }
 
@@ -142,5 +143,83 @@ public class TreeSetExample {
             vis.add(num);
         }
         return ans;
+    }
+
+    public long sumOfLargestPrimes(String s) {
+        Set<Long> pq = new TreeSet<>(Collections.reverseOrder()); // max pq
+
+        int n = s.length();
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j <= n; j++) {
+                String subString = s.substring(i, j);
+                long number = Long.parseLong(subString);
+                if (isPrime(number)) pq.add(number);
+            }
+        }
+
+        long sum = 0, cnt = 0;
+        for (long e : pq) {
+            sum += e;
+            if (++cnt == 3) break;
+        }
+        return sum;
+    }
+
+    public boolean isPrime(long n) {
+        if (n == 1) return false;
+        if (n == 2) return true;
+        if (n % 2 == 0) return false;
+        for (int i = 3; i <= Math.sqrt(n); i += 2) {
+            if (n % i == 0) return false;
+        }
+        return true;
+    }
+
+    public int maxSubstrings(String word) {
+        Set<Long> pq = new TreeSet<>(Collections.reverseOrder()); // max pq
+
+        int n = word.length();
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j <= n; j++) {
+                String subString = word.substring(i, j);
+                long number = Long.parseLong(subString);
+                if (isPrime(number)) pq.add(number);
+            }
+        }
+
+        long sum = 0, cnt = 0;
+        for (long e : pq) {
+            sum += e;
+            if (++cnt == 3) break;
+        }
+        return (int) sum;
+    }
+
+
+    /*
+
+    abcdeafdef
+
+     */
+
+    //TODO
+    class Solution {
+        public int maxSubstrings(String word) {
+            Map<Character, List<Integer>> map = new LinkedHashMap<>();
+            int cnt = 0;
+            for (int i = 0; i < word.length(); i++) {
+                char c = word.charAt(i);
+                if (!map.containsKey(c)) map.put(c, new ArrayList<>(Collections.singletonList(i)));
+                else {
+                    int li = map.get(c).get(0);
+                    if (i-li >= 4) {
+                        cnt++;
+                        System.out.println(word.substring(li,i+1));
+                        map.put(c, new ArrayList<>(Arrays.asList()));
+                    }
+                }
+            }
+            return cnt;
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.company;
 
-import java.util.HashMap;import java.util.*;
+import java.util.HashMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 class SolutionRecursion {
@@ -181,11 +182,7 @@ class SolutionRecursion {
         TreeMap<Integer, Pair<Integer, Integer>> pairIndex = new TreeMap<>();
         // to store key, pair(index,value)
 
-        Map<Integer, Integer> valueSorted =
-                map.entrySet().stream()
-                        .sorted(Map.Entry.comparingByValue())
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                                (e1, e2) -> e1, LinkedHashMap::new));
+        Map<Integer, Integer> valueSorted = map.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
 
         int[] unoccupied = new int[row];
@@ -355,8 +352,7 @@ class SolutionRecursion {
         }
         Collections.reverse(nums);
         int k = nums.size() - 2;
-        while (k >= 0 && nums.get(k) >= nums.get(k + 1))
-            k--;
+        while (k >= 0 && nums.get(k) >= nums.get(k + 1)) k--;
         if (k == -1) {
             return -1;
         }
@@ -1047,4 +1043,51 @@ Output: [5,4,3,2,1]
         nodelist.remove(node);
 
     }
+
+    public long removeZeros(long n) {
+        String s = String.valueOf(n);
+        StringBuilder sb = new StringBuilder();
+        for (char c : s.toCharArray()) {
+            if (c != '0') sb.append(c);
+        }
+        return Long.valueOf(sb.toString());
+    }
+
+    public long maxAlternatingSum(int[] nums) {
+        long ms = 0L;
+        int n = nums.length;
+        Integer[] boxedNumbers = Arrays.stream(nums).boxed().toArray(Integer[]::new);
+        Arrays.sort(boxedNumbers, (a, b) -> Math.abs(b) - Math.abs(a));
+        int ind = n % 2 == 0 ? Math.abs(n / 2) : Math.abs((n / 2) + 1);
+        for (int num : boxedNumbers) {
+            if (ind-- > 0) ms += (long) num * num;
+            else ms -= (long) num * num;
+        }
+        return ms;
+    }
+
+
+    //TOOO : TLE
+    public long countStableSubarrays(int[] capacity) {
+        int n = capacity.length;
+        int count = 0;
+
+        // Iterate through all possible starting indices
+        for (int l = 0; l < n - 2; l++) {
+            long sum = 0;
+
+            // Iterate through all possible ending indices
+            for (int r = l + 2; r < n; r++) {
+                // Add the element at r - 1 to the sum of elements in between
+                sum += capacity[r - 1];
+
+                // Check the stability condition
+                if (capacity[l] == sum && capacity[r] == sum) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
 }
+
