@@ -1,7 +1,9 @@
 package com.company;
 
 import java.util.HashMap;
-import java.util.HashMap;import java.util.*;
+import java.util.HashMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class BinarySearch {
 
@@ -667,5 +669,42 @@ public class BinarySearch {
             }
         }
         return count >= m;
+    }
+
+
+    //TODO : solve for correct ans
+    // https://leetcode.com/problems/maximum-walls-destroyed-by-robots/submissions/1751614655/
+    class MaxWallsDestroyedByRobot {
+        public int maxWalls(int[] robots, int[] distance, int[] walls) {
+            int maxWalls = 0;
+            Set<Integer> wallSet = Arrays.stream(walls).boxed().collect(Collectors.toSet());
+            for (int i = 0; i < robots.length; i++) {
+                int robot = robots[i];
+                maxWalls += dfs(robot, distance[i], wallSet);
+            }
+
+            return maxWalls;
+        }
+
+        private int bs(List<Integer> xc, int key) {
+
+            int l = 0, h = xc.size() - 1;
+            int idx = -1;
+            while (l <= h) {
+                int m = l + (h - l) / 2;
+                if (xc.get(m) >= key) {
+                    idx = m;
+                    h = m - 1;
+                } else l = m + 1;
+            }
+
+            return idx < 0 ? 0 : xc.size() - idx;
+        }
+
+        private int dfs(int pos, int distance, Set<Integer> wallSet) {
+            int left = bs(new ArrayList<Integer>(wallSet), pos - distance);
+            int right = bs(new ArrayList<Integer>(wallSet), pos + distance);
+            return Math.max(left, right);
+        }
     }
 }

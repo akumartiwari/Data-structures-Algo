@@ -1,8 +1,28 @@
 package com.company;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 
 public class TreeMapExample {
+
+    public int countPairs(List<Integer> nums, int target) {
+        TreeMap<Integer, Integer> tm = new TreeMap<>(); // {element, position}
+
+        int cnt = 0;
+        for (int i = 0; i < nums.size(); i++) {
+            int curr = nums.get(i);
+            System.out.println("i=" + i);
+
+            if (tm.lowerKey(target - curr) != null) {
+                int pos = new ArrayList<>(tm.keySet()).indexOf(tm.lowerKey(target - curr)) + 1;
+                System.out.println("pos=" + pos);
+                cnt += pos;
+            }
+            tm.put(nums.get(i), i + 1);
+        }
+        return cnt;
+    }
 
     /*
        Input
