@@ -2,6 +2,31 @@ package Graph;
 
 import java.util.Arrays;
 
+/*
+ * ============================================================
+ * Algorithm: Bellman-Ford — Single Source Shortest Path
+ * ============================================================
+ * DESCRIPTION:
+ *   Finds shortest distances from a source vertex to ALL other
+ *   vertices in a weighted directed graph. Unlike Dijkstra,
+ *   works with NEGATIVE edge weights and detects negative cycles.
+ *
+ * EXAMPLE:
+ *   V=5, edges: 0→1(-1), 0→2(4), 1→2(3), 1→3(2), 1→4(2),
+ *               3→2(5), 3→1(1), 4→3(-3)
+ *   From src=0: dist = [0, -1, 2, -2, 1]
+ *
+ * ALGORITHM:
+ *   1. Init dist[src]=0, all others = INF.
+ *   2. Relax ALL edges V-1 times:
+ *      if dist[src] + w < dist[dest] → update dist[dest]
+ *   3. Run one more pass — if any edge still relaxes,
+ *      a negative-weight cycle exists.
+ *
+ * TC: O(V * E)   — V = vertices, E = edges
+ * SC: O(V)       — distance array
+ * ============================================================
+ */
 public class BellmanFord {
     int V;
     int E;
@@ -72,8 +97,6 @@ public class BellmanFord {
         graph.edge[7].weight = -3;
 
         graph.BF(graph, 0);
-
-
     }
 
     private void BF(BellmanFord graph, int src) {
@@ -127,16 +150,30 @@ public class BellmanFord {
             System.out.println(i + "\t\t" + dist[i]);
     }
 
-    //problem
     /*
-    You are given a network of n nodes, labeled from 1 to n.
-    You are also given times, a list of travel times as directed edges times[i] = (ui, vi, wi),
-    where ui is the source node, vi is the target node, and wi is the time it takes for a signal to travel from source to target.
-
-    Input: times = [[2,1,1],[2,3,1],[3,4,1]], n = 4, k = 2
-    Output: 2
+     * ============================================================
+     * Problem: Network Delay Time (LC 743) — Medium
+     * ============================================================
+     * DESCRIPTION:
+     *   A signal is sent from node k in a directed weighted graph of n nodes.
+     *   Find the time it takes for ALL nodes to receive the signal.
+     *   Return -1 if it's impossible (some node unreachable).
+     *
+     * EXAMPLE:
+     *   times=[[2,1,1],[2,3,1],[3,4,1]], n=4, k=2
+     *   Signal: 2→1(1ms), 2→3(1ms), 3→4(1ms)
+     *   All nodes reached at t=2  → Output: 2
+     *
+     * ALGORITHM (Bellman-Ford):
+     *   1. Init dist[k-1]=0, all others = INF.
+     *   2. Relax all edges n-1 times.
+     *   3. If any dist[i] == INF → unreachable → return -1.
+     *   4. Return max(dist) — the last node to receive the signal.
+     *
+     * TC: O(V * E)   — V = n nodes, E = times.length
+     * SC: O(V)       — distance array
+     * ============================================================
      */
-
     // Bellman ford
     public int networkDelayTime(int[][] times, int n, int k) {
         int[] dist = new int[n];
