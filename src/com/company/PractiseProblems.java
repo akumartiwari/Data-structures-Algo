@@ -35,27 +35,6 @@ public class PractiseProblems {
         return j == str2.length();
     }
 
-    /*
-    Based on Recursion to traverse all possibilties
-    Example 1-
-    Input: nums = [2,1,3,2,1]
-    Output: 3
-    Explanation:
-    One of the optimal solutions is to remove nums[0], nums[2] and nums[3].
-    Example 2-
-    nums = [2,3,1,2]
-     */
-
-    public int minimumOperations(List<Integer> nums) {
-        int last = nums.get(0);
-        int cnt = 0;
-        for (int i = 1; i < nums.size(); i++) {
-            if (nums.get(i) < last) cnt++;
-            last = nums.get(i);
-        }
-        return cnt;
-    }
-
     public List<Integer> intersection(int[][] nums) {
         Set<Integer> set1 = new HashSet<>();
         for (int[] num : nums) {
@@ -167,20 +146,6 @@ public class PractiseProblems {
                 if (!dp[k]) return false; // If sum k is not achievable
                 return true;
             }
-
-        public boolean[] subsequenceSumAfterCapping(int[] nums, int k) {
-            int n = nums.length, idx = 0;
-            boolean[] ans  = new boolean[n];
-            for (int x=1; x<=n ; x++){
-                List<Integer> na = new ArrayList<>();
-                for (int num: nums){
-                      int nn = Math.min(num, x);
-                      na.add(nn);
-                }
-                ans[idx++] = (na.stream().mapToInt(e -> e).toArray(), k);
-            }
-            return ans;
-        }
     }
 
 

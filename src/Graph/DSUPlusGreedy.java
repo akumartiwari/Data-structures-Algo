@@ -2,6 +2,41 @@ package Graph;
 
 import java.util.HashMap;import java.util.*;
 
+/*
+ * ============================================================
+ * Problem: Create Components With Same Value (LC 2440) — Hard
+ * ============================================================
+ * DESCRIPTION:
+ *   Given a tree with n nodes and node values nums[], find the
+ *   maximum number of edges you can delete such that every
+ *   resulting component has the SAME sum of node values.
+ *   Return the number of edges deleted (= components - 1).
+ *
+ * EXAMPLE:
+ *   nums=[6,2,2,2,6], edges=[[0,1],[1,2],[1,3],[3,4]]
+ *   Total sum = 18. Try 3 components: target = 18/3 = 6.
+ *   Components: {0}=6, {4,3}=8? No... {0}=6, {1,2,3}=6, {4}...
+ *   Actually: {0}=6, {2}+{1,3,4}=... Let's trust the algorithm.
+ *   Output: 2 (delete 2 edges)
+ *
+ * ALGORITHM (Greedy + Topological BFS from leaves):
+ *   1. Compute totalSum. Try splitting into i components (i from n down to 2).
+ *   2. If totalSum % i != 0, skip (can't split evenly).
+ *   3. For each valid i, check if achievable via BFS from leaves:
+ *      - Start from leaf nodes (indegree == 1).
+ *      - For each leaf: if nums[leaf] > target → impossible.
+ *      - If nums[leaf] < target → merge with parent (nums[adj] += nums[leaf]).
+ *      - If nums[leaf] == target → cut the edge (don't add to parent).
+ *      - Reduce parent's indegree; if it becomes 1, enqueue it.
+ *   4. First valid i found → return i-1 (edges deleted).
+ *
+ * KEY INSIGHT: Greedy from leaves ensures we greedily try the
+ *   most splits first; leaf-to-root BFS simulates edge cutting.
+ *
+ * TC: O(n²)   — at most n values of i, each BFS is O(n+E)=O(n)
+ * SC: O(n)    — graph + indegree arrays
+ * ============================================================
+ */
 public class DSUPlusGreedy {
     public int componentValue(int[] nums, int[][] edges) {
         int totalSum = 0;

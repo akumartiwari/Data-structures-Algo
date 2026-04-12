@@ -487,6 +487,30 @@ public class PriorityQueueExamples {
     }
 
 
+    public String reverseByType(String s) {
+        StringBuilder chars = new StringBuilder();
+        StringBuilder special = new StringBuilder();
+
+        for (char ch : s.toCharArray()) {
+            if (Character.isAlphabetic(ch)) chars.append(ch);
+            else special.append(ch);
+        }
+
+        chars.reverse();
+        special.reverse();
+        int i = 0, j = 0;
+
+        StringBuilder result = new StringBuilder();
+        for (char ch : s.toCharArray()) {
+            if (Character.isAlphabetic(ch)) result.append(chars.charAt(i++));
+            else result.append(special.charAt(j++));
+        }
+
+
+        return result.toString();
+    }
+
+
     public char getNextChar(char c) {
         return (char) ((c + 1) % 26);
     }

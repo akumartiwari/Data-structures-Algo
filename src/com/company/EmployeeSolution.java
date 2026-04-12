@@ -1978,6 +1978,37 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+
+    //Author: Anand
+    public List<List<Integer>> threeSum(int[] nums) {
+        Set<List<Integer>> list = new HashSet<>();
+        Map<Integer, Integer> mp = new HashMap<>(); // Two sum problem
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                for (int k = j + 1; k < nums.length; k++) {
+                    int sum = nums[i] + nums[j];
+                    if (mp.containsKey(-sum)) {
+                        int ind = mp.get(-sum);
+                        if (ind != i && ind != j && ind != k) {
+                            List<Integer> nl = new ArrayList(Arrays.asList(nums[i], nums[j], nums[k]));
+                            Collections.sort(nl);
+                            list.add(nl);
+                        }
+                    }
+                    mp.put(nums[i], i);
+                    mp.put(nums[j], j);
+                    mp.put(nums[k], k);
+                    if (nums[i] + nums[j] + nums[k] == 0) {
+                        List<Integer> nl = new ArrayList(Arrays.asList(nums[i], nums[j], nums[k]));
+                        Collections.sort(nl);
+                        list.add(nl);
+                    }
+                }
+            }
+        }
+        return new ArrayList<>(list);
+    }
+
     // Author: Anand
     public int prefixCount(String[] words, String pref) {
         int cnt = 0;
@@ -9549,6 +9580,81 @@ Output: [1,2,2,3,5,6]
         }
         return true;
     }
+
+    class BinarySearchProblem {
+
+        class Tuple2 {
+            boolean result;
+            boolean suffcient;
+
+            Tuple2(boolean result, boolean suffcient) {
+                this.result = result;
+                this.suffcient = suffcient;
+            }
+
+            Tuple2() {
+            }
+        }
+
+        class P {
+            boolean res;
+            int op;
+
+            P(boolean res, int op) {
+                this.res = res;
+                this.op = op;
+            }
+
+            P() {
+            }
+        }
+
+        public int minimumSize(int[] nums, int maxOperations) {
+            int l = 1, h = Arrays.stream(nums).max().getAsInt();
+
+            int ans = Integer.MAX_VALUE;
+            while (l < h) {
+                int mid = (l + h) / 2;
+                Tuple2 tuple2 = minG(nums, maxOperations, mid);
+                System.out.println(tuple2.result + ":" + tuple2.suffcient);
+                if (tuple2.suffcient && mid > 2) {
+                    h = mid - 1;
+                    if (tuple2.result) ans = Math.min(ans, mid);
+                } else if (tuple2.result) {
+                    h = mid - 1;
+                    ans = Math.min(ans, mid);
+                } else if (!tuple2.suffcient && !tuple2.result) h = mid - 1;
+                else l = mid + 1;
+            }
+            return ans;
+        }
+
+        private Tuple2 minG(int[] nums, int maxOperations, int target) {
+
+            boolean success = true;
+            for (int num : nums) {
+                P pow = pow(num, target);
+                maxOperations -= pow.op;
+                if (target > num) return new Tuple2(false, false);
+                if (!pow.res) success = false;
+                if (maxOperations < 0) return new Tuple2(false, false);
+            }
+
+            return new Tuple2(success, maxOperations >= 0);
+        }
+
+        private P pow(int num, int target) {
+            int cnt = 0;
+            while (target < num) {
+                target *= target;
+                cnt++;
+            }
+
+            return new P(target == num, target == num ? cnt + 1 : cnt);
+        }
+
+
+    }
 }
 /*
     // in some cases, player needs to push the box further in order to change its direction; hence, tracking the box itself isn't enough,
@@ -9611,5 +9717,6 @@ Output: [1,2,2,3,5,6]
         }
         return false;
     }
+
 
  */
