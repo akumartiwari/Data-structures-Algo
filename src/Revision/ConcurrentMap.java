@@ -7,15 +7,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ConcurrentMap {
 
-    /*
-    To Avoid ConcurrentModificationException in multi-threaded environment
-
-     - You can convert the list to an array and then iterate on the array.
-     - This approach works well for small or medium size list but if the list is large then it will affect the performance a lot.
-     - You can lock the list while iterating by putting it in a synchronized block. This approach is not recommended because it will cease the benefits of multithreading.
-     - Concurrent Collection classes can be modified safely, they will not throw ConcurrentModificationException.
-     - In case of CopyOnWriteArrayList, iterator doesn’t accommodate the changes in the list and works on the original list.
-
+        /*
+     * PROBLEM: Number of People Aware of a Secret (LeetCode 2327)
+     * Simulate secret spreading over n days where each person shares after delay days and forgets after forget days.
+     *
+     * ALGORITHM: Simulation with ConcurrentHashMap
+     * TC: O(n^2) | SC: O(n)
      */
     public int peopleAwareOfSecret(int n, int delay, int forget) {
         final int mod = 1_000_000_007;

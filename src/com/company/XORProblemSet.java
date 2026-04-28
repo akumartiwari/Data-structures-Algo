@@ -8,6 +8,13 @@ public class XORProblemSet {
     // Use XOR property a^a=0 then for all segments between i to j there must be a pivot (p) such that i^...p == p+1^...k.
     // Hence the total number of pairs would be count of those pivot ie. j-i;
     // TC = O(n2), SC = O(1)
+    /*
+     * PROBLEM: Count Triplets That Can Form Two Arrays of Equal XOR (LeetCode 1442)
+     * Count triplets (i, j, k) where XOR(a[i..j-1]) == XOR(a[j..k]).
+     *
+     * ALGORITHM: Brute Force O(n²) with prefix XOR
+     * TC: O(n²) | SC: O(1)
+     */
     public int countTriplets(int[] arr) {
         int n = arr.length;
         int cnt = 0;
@@ -47,6 +54,13 @@ public class XORProblemSet {
     (i1 + i2 + i3) = sum of all the indices where x has occurred previously.
      */
     // TC = O(N), SC = O(N)
+    /*
+     * PROBLEM: Count Triplets That Can Form Two Arrays of Equal XOR (LeetCode 1442)
+     * Count triplets (i, j, k) where XOR(a[i..j-1]) == XOR(a[j..k]) using prefix XOR optimization.
+     *
+     * ALGORITHM: Prefix XOR with HashMap (count and index-sum tracking)
+     * TC: O(n) | SC: O(n)
+     */
     public int countTripletsOptimised(int[] arr) {
         int n = arr.length;
         int cnt = 0;

@@ -6,29 +6,43 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 //      Definition for a binary tree node.
-class TreeNode {
-    int val;
-    TreeNode left;
-    TreeNode right;
+public class TreeNode {
+    public int val;
+    public TreeNode left;
+    public TreeNode right;
 
-    TreeNode() {
+    public TreeNode() {
     }
 
-    TreeNode(int val) {
+    public TreeNode(int val) {
         this.val = val;
     }
 
-    TreeNode(int val, TreeNode left, TreeNode right) {
+    public TreeNode(int val, TreeNode left, TreeNode right) {
         this.val = val;
         this.left = left;
         this.right = right;
     }
 
+    /*
+     * PROBLEM: Unique Binary Search Trees II (LeetCode 95)
+     * Generate all structurally unique BSTs with values 1..n.
+     *
+     * ALGORITHM: Recursive enumeration of all BSTs
+     * TC: O(4^n / n^(3/2)) | SC: O(4^n / n^(3/2))
+     */
     public List<TreeNode> generateTrees(int n) {
         List<TreeNode> ans = new ArrayList<>();
         return generateTree(1, n, ans);
     }
 
+    /*
+     * PROBLEM: Generate BST Recursive (Helper)
+     * Recursively build all valid BSTs for the range [start, end].
+     *
+     * ALGORITHM: Divide and conquer on each root choice
+     * TC: O(4^n / n^(3/2)) | SC: O(4^n / n^(3/2))
+     */
     private List<TreeNode> generateTree(int start, int end, List<TreeNode> ans) {
 
         if (start > end) {
@@ -59,6 +73,13 @@ class TreeNode {
     }
 
 
+    /*
+     * PROBLEM: Leaf-Similar Trees (LeetCode 872)
+     * Check whether two binary trees have the same leaf value sequence.
+     *
+     * ALGORITHM: DFS leaf collection then list comparison
+     * TC: O(n1 + n2) | SC: O(n1 + n2)
+     */
     public boolean leafSimilar(TreeNode root1, TreeNode root2) {
         List<Integer> leaves1 = new ArrayList<>();
         List<Integer> leaves2 = new ArrayList<>();
@@ -67,6 +88,13 @@ class TreeNode {
         return leaves1.equals(leaves2);
     }
 
+    /*
+     * PROBLEM: Leaf Collection DFS (Helper)
+     * Collect all leaf values via DFS into a list.
+     *
+     * ALGORITHM: DFS pre-order
+     * TC: O(n) | SC: O(n)
+     */
     private void dfs(TreeNode root, List<Integer> leaves) {
         if (root == null) return;
         if (root.left == null && root.right == null) leaves.add(root.val);
@@ -78,6 +106,13 @@ class TreeNode {
     Use Recursion to traverse subTree of a node and place braces around them
     Traverse the right subtree only if node is present and place braces in the string
      */
+    /*
+     * PROBLEM: Construct String from Binary Tree (LeetCode 606)
+     * Create a string representation of a binary tree with brackets, omitting unnecessary empty brackets.
+     *
+     * ALGORITHM: DFS pre-order with recursive string building
+     * TC: O(n) | SC: O(n)
+     */
     public String tree2str(TreeNode root) {
         String ans = "";
         if (root == null) return "";
@@ -88,6 +123,13 @@ class TreeNode {
         return ans;
     }
 
+    /*
+     * PROBLEM: Generate BST with Memoization (Helper)
+     * Memoized recursion to generate all unique BSTs for range [start, end].
+     *
+     * ALGORITHM: Recursion + DP memoization
+     * TC: O(4^n / n^(3/2)) | SC: O(n^2)
+     */
     List<TreeNode> recursion(int start, int end, int[][] dp) {
         List<TreeNode> list = new ArrayList<>();
         if (dp[start][end] != -1) {
@@ -119,12 +161,26 @@ class TreeNode {
         return list;
     }
 
+    /*
+     * PROBLEM: Unique Binary Search Trees (LeetCode 96)
+     * Count the number of structurally unique BSTs with n nodes.
+     *
+     * ALGORITHM: DP memoization (top-down)
+     * TC: O(n^2) | SC: O(n^2)
+     */
     public int numTrees(int n) {
         int[][] dp = new int[n + 1][n + 1];
         Arrays.fill(dp, -1);
         return recursion(1, n, dp).size();
     }
 
+    /*
+     * PROBLEM: Flatten Binary Tree to Linked List (LeetCode 114)
+     * Flatten a binary tree to a linked list in-place using pre-order traversal.
+     *
+     * ALGORITHM: Iterative Morris-like: find rightmost node of left subtree and re-link
+     * TC: O(n) | SC: O(1)
+     */
     // left --> right --> root
     public void flatten(TreeNode root) {
         TreeNode curr = root;
@@ -143,12 +199,26 @@ class TreeNode {
         ans.stream().forEach(System.out::println);
     }
 
+    /*
+     * PROBLEM: Get Rightmost Node (Helper)
+     * Traverse right pointers until reaching the rightmost node in a subtree.
+     *
+     * ALGORITHM: Linear traversal
+     * TC: O(n) | SC: O(1)
+     */
     public TreeNode getRightMost(TreeNode node) {
         while (node.right != null) node = node.right;
         return node;
     }
 
 
+    /*
+     * PROBLEM: Next Greater Element I (LeetCode 496)
+     * For each element of nums1, find the next greater element in nums2.
+     *
+     * ALGORITHM: HashMap lookup + linear search from position
+     * TC: O(n1 * n2) | SC: O(n2)
+     */
     public int[] nextGreaterElement(int[] nums1, int[] nums2) {
         int n1 = nums1.length;
         int n2 = nums2.length;
@@ -169,6 +239,13 @@ class TreeNode {
         return ans;
     }
 
+    /*
+     * PROBLEM: Next Greater Element II (LeetCode 503)
+     * Given a circular array, find the next greater element for each position.
+     *
+     * ALGORITHM: Double-pass linear scan with wrap-around
+     * TC: O(n) | SC: O(n)
+     */
     public int[] nextGreaterElements(int[] nums) {
         int n = nums.length;
         int[] ans = new int[n];
@@ -190,6 +267,13 @@ class TreeNode {
         return ans;
     }
 
+    /*
+     * PROBLEM: Count Pythagorean Triples (Helper)
+     * Count triples (a, b, c) where 1≤a,b,c≤n and a²+b²=c².
+     *
+     * ALGORITHM: HashMap of squares + nested loop
+     * TC: O(n^2) | SC: O(n)
+     */
     public int countTriples(int n) {
         if (n == 0 || n == 1) return 0;
 
@@ -211,6 +295,13 @@ class TreeNode {
         return ans;
     }
 
+    /*
+     * PROBLEM: Sum Game (LeetCode 1927)
+     * Determine if Alice wins a game where she and Bob fill '?' with digits to equalize sums.
+     *
+     * ALGORITHM: Greedy / positional analysis
+     * TC: O(n) | SC: O(1)
+     */
     public boolean sumGame(String num) {
         int n = num.length();
         if (n == 0) return false;
@@ -243,6 +334,13 @@ class TreeNode {
         return false;
     }
 
+    /*
+     * PROBLEM: Merge BSTs to Create Single BST (LeetCode 1932)
+     * Merge a list of BST roots into a single valid BST.
+     *
+     * ALGORITHM: Iterative merge via inorder lists + sorted merge + array-to-BST
+     * TC: O(n log n) | SC: O(n)
+     */
     public TreeNode canMerge(List<TreeNode> trees) {
         TreeNode node = null;
         for (int i = 0; i < trees.size(); i++) {
@@ -280,6 +378,13 @@ class TreeNode {
         return node;
     }
 
+    /*
+     * PROBLEM: Array List to BST (Helper)
+     * Convert a sorted ArrayList into a balanced BST.
+     *
+     * ALGORITHM: Recursive mid-point construction
+     * TC: O(n) | SC: O(log n)
+     */
     // Method that converts an ArrayList to a BST
     TreeNode ALtoBST(ArrayList<Integer> list, int start, int end) {
         // Base case
@@ -301,6 +406,13 @@ class TreeNode {
         return node;
     }
 
+    /*
+     * PROBLEM: Merge Two Sorted ArrayLists (Helper)
+     * Merge two sorted ArrayLists into one sorted ArrayList.
+     *
+     * ALGORITHM: Two-pointer merge
+     * TC: O(m+n) | SC: O(m+n)
+     */
     // Method that merges two ArrayLists into one.
     ArrayList<Integer> merge(ArrayList<Integer> list1, ArrayList<Integer> list2, int m, int n) {
         // list3 will contain the merge of list1 and list2
@@ -333,6 +445,13 @@ class TreeNode {
         return list3;
     }
 
+    /*
+     * PROBLEM: Store Inorder Traversal (Helper)
+     * Collect all values from a BST via inorder traversal into an ArrayList.
+     *
+     * ALGORITHM: DFS inorder
+     * TC: O(n) | SC: O(n)
+     */
     // Method that stores inorder traversal of a tree
     ArrayList<Integer> storeInorder(TreeNode node) {
         ArrayList<Integer> list1 = new ArrayList<>();
@@ -340,6 +459,13 @@ class TreeNode {
         return list2;
     }
 
+    /*
+     * PROBLEM: Store Inorder Utility (Helper)
+     * Recursive utility to collect inorder values into a provided ArrayList.
+     *
+     * ALGORITHM: DFS inorder
+     * TC: O(n) | SC: O(n)
+     */
     // A Utility Method that stores inorder traversal of a tree
     public ArrayList<Integer> storeInorderUtil(TreeNode node, ArrayList<Integer> list) {
         if (node == null)
@@ -357,10 +483,24 @@ class TreeNode {
         return list;
     }
 
+    /*
+     * PROBLEM: Color the Grid (LeetCode 1931)
+     * Count valid coloring configurations for an m x n grid with 3 colors.
+     *
+     * ALGORITHM: Mathematical formula (placeholder approximation)
+     * TC: O(1) | SC: O(1)
+     */
     public int colorTheGrid(int m, int n) {
         return (int) (Math.pow(Math.pow(m, n), 3) % 1000000007);
     }
 
+    /*
+     * PROBLEM: Find Maximum Index (Helper)
+     * Find the index of the maximum element in nums[start..end].
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(n) | SC: O(1)
+     */
     private int maxIndex(int start, int end, int[] nums) {
         int index = Integer.MIN_VALUE;
         int max = Integer.MIN_VALUE;
@@ -388,6 +528,13 @@ class TreeNode {
      * this.right = right;
      * }
      * }
+     */
+    /*
+     * PROBLEM: Maximum Binary Tree (LeetCode 654)
+     * Construct a maximum binary tree from an array where each node is the max of its subarray.
+     *
+     * ALGORITHM: Iterative insertion with right-spine traversal
+     * TC: O(n) | SC: O(n)
      */
     public TreeNode insertIntoMaxTree(TreeNode root, int val) {
         TreeNode node = new TreeNode(val);
@@ -417,12 +564,26 @@ class TreeNode {
         return root;
     }
 
+    /*
+     * PROBLEM: Find Duplicate Subtrees (LeetCode 652)
+     * Find all subtrees in the binary tree that appear more than once.
+     *
+     * ALGORITHM: DFS serialization + HashMap for duplicate detection
+     * TC: O(n^2) | SC: O(n^2)
+     */
     public List<TreeNode> findDuplicateSubtrees(TreeNode root) {
         List<TreeNode> ans = new ArrayList<>();
         getAllSubTrees(root, new HashMap<>(), ans);
         return ans;
     }
 
+    /*
+     * PROBLEM: Serialize Subtree and Detect Duplicates (Helper)
+     * Serialize subtree to string and add to result if seen twice.
+     *
+     * ALGORITHM: DFS post-order serialization
+     * TC: O(n^2) | SC: O(n^2)
+     */
     private String getAllSubTrees(TreeNode root, HashMap<String, Integer> map, List<TreeNode> ans) {
 
         if (root == null) return " ";
@@ -459,6 +620,13 @@ class TreeNode {
     [1,4,4]
     3
      */
+    /*
+     * PROBLEM: Split Array Largest Sum - Optimised (LeetCode 410)
+     * Split array into at most m parts to minimise the largest subarray sum.
+     *
+     * ALGORITHM: Binary search on answer + greedy validation
+     * TC: O(n log(sum)) | SC: O(1)
+     */
     public int splitArrayOpt(int[] nums, int m) {
         int low = IntStream.of(nums).max().orElse(0);
         int high = IntStream.of(nums).sum();
@@ -473,6 +641,13 @@ class TreeNode {
         return low;
     }
 
+    /*
+     * PROBLEM: Split Array Validation (Helper)
+     * Count minimum parts needed when no part's sum exceeds the given sum threshold.
+     *
+     * ALGORITHM: Greedy linear scan
+     * TC: O(n) | SC: O(1)
+     */
     private int split(int[] nums, int sum) {
         int ret = 1;
         int currentSum = 0;
@@ -489,6 +664,13 @@ class TreeNode {
     /*
     Input: nums = [7,2,5,10,8], m = 2
     Output: 18
+     */
+    /*
+     * PROBLEM: Split Array Largest Sum - Brute Force (LeetCode 410)
+     * Split array into m parts and minimise the largest subarray sum (brute force).
+     *
+     * ALGORITHM: Brute force enumeration of split positions
+     * TC: O(n^2 * m) | SC: O(n)
      */
     public int splitArray(int[] nums, int m) {
         int n = nums.length;
@@ -522,6 +704,13 @@ class TreeNode {
         return min;
     }
 
+    /*
+     * PROBLEM: Best Time to Buy and Sell Stock (LeetCode 121)
+     * Find the maximum profit from a single buy-sell transaction.
+     *
+     * ALGORITHM: DP (track running minimum price)
+     * TC: O(n) | SC: O(n)
+     */
     public int maxProfit(int[] prices) {
         int n = prices.length;
         int[] dp = new int[n];
@@ -536,6 +725,13 @@ class TreeNode {
         return dp[n - 1];
     }
 
+    /*
+     * PROBLEM: Reverse Linked List II (LeetCode 92)
+     * Reverse nodes of a linked list from position left to right.
+     *
+     * ALGORITHM: Two-pointer iterative reversal in-place
+     * TC: O(n) | SC: O(1)
+     */
     public ListNode reverseBetween(ListNode head, int left, int right) {
 
         // base case
@@ -577,10 +773,24 @@ class TreeNode {
         return head;
     }
 
+    /*
+     * PROBLEM: Two Sum IV - Input is a BST (LeetCode 653)
+     * Find if there exist two nodes in BST whose values sum to k.
+     *
+     * ALGORITHM: DFS + HashSet for complement lookup
+     * TC: O(n) | SC: O(n)
+     */
     public boolean findTarget(TreeNode root, int k) {
         return getAllNodes(root, new HashSet<>(), k);
     }
 
+    /*
+     * PROBLEM: Two Sum BST DFS (Helper)
+     * DFS helper to check if any two nodes in the BST sum to k.
+     *
+     * ALGORITHM: DFS + HashSet
+     * TC: O(n) | SC: O(n)
+     */
     private Boolean getAllNodes(TreeNode root, Set<Integer> set, int k) {
         if (root == null) return false;
         if (set.contains(k - root.val)) return true;
@@ -590,11 +800,25 @@ class TreeNode {
         return left || right;
     }
 
+    /*
+     * PROBLEM: Maximum Binary Tree (LeetCode 654)
+     * Construct a maximum binary tree from nums, where each root is the maximum of its subarray.
+     *
+     * ALGORITHM: Recursive divide and conquer
+     * TC: O(n^2) | SC: O(n)
+     */
     //Author: Anand
     public TreeNode constructMaximumBinaryTree(int[] nums) {
         return cmt(0, nums.length - 1, nums);
     }
 
+    /*
+     * PROBLEM: Construct Maximum Binary Tree Recursive (Helper)
+     * Recursively build the maximum binary tree for range [start, end].
+     *
+     * ALGORITHM: Recursive max-finding + tree construction
+     * TC: O(n^2) | SC: O(n)
+     */
     private TreeNode cmt(int start, int end, int[] nums) {
         if (start > end) return null;
         if (start == end) return new TreeNode(nums[start]);

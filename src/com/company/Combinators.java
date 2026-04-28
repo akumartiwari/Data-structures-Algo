@@ -6,6 +6,13 @@ import java.util.Map;
 
 public class Combinators {
     /*
+     * PROBLEM: Naming a Company (LeetCode 2306)
+     * Count distinct valid company names by swapping first letters of idea pairs.
+     *
+     * ALGORITHM: Grouping by suffix + pairwise intersection counting
+     * TC: O(26*26*n) | SC: O(26*n)
+     */
+    /*
     Any idea = first letter + postfix string.
     We can group all ideas by their first letter.
 
@@ -41,6 +48,13 @@ public class Combinators {
     }
 
     // Author: Anand
+    /*
+     * PROBLEM: Number of Ways to Select Buildings (LeetCode 2222)
+     * Count subsequences of the form "010" or "101" in the string.
+     *
+     * ALGORITHM: Single-pass counting with prefix tracking
+     * TC: O(n) | SC: O(1)
+     */
     public long numberOfWays(String s) {
         long ans = 0;
 
@@ -65,6 +79,13 @@ public class Combinators {
     }
 
     //Author: Anand
+    /*
+     * PROBLEM: Maximize Number of Subsequences in a String (LeetCode 2207)
+     * Greedily add one character to maximize the count of pattern subsequences in text.
+     *
+     * ALGORITHM: Greedy + HashMap counting
+     * TC: O(n) | SC: O(n)
+     */
     public long maximumSubsequenceCount(String text, String pattern) {
         int n = text.length();
         char f = pattern.charAt(0);

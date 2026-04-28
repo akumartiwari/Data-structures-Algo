@@ -7,8 +7,13 @@ import java.util.List;
 
 class SolutionMaxTime {
 
-    // Function to return the updated frequency map
-    // for the array passed as argument
+    /*
+     * PROBLEM: Build Frequency Map (Helper)
+     * Build and return a frequency map counting occurrences of each integer in the array.
+     *
+     * ALGORITHM: HashMap traversal
+     * TC: O(n) | SC: O(n)
+     */
     static HashMap<Integer, Integer> getFrequencyMap(int arr[]) {
         HashMap<Integer, Integer> hashMap = new HashMap<>();
         for (int i = 0; i < arr.length; i++) {
@@ -21,8 +26,13 @@ class SolutionMaxTime {
         return hashMap;
     }
 
-    // Function that returns true if the passed digit is present
-    // in the map after decrementing it's frequency by 1
+    /*
+     * PROBLEM: Check and Consume Digit from Map (Helper)
+     * Return true if the digit exists in the frequency map, and decrement its count by 1.
+     *
+     * ALGORITHM: HashMap lookup
+     * TC: O(1) | SC: O(1)
+     */
     static boolean hasDigit(HashMap<Integer, Integer> hashMap, int digit) {
 
         // If map contains the digit
@@ -39,7 +49,13 @@ class SolutionMaxTime {
         return false;
     }
 
-    // Function to return the maximum possible time in 24-Hours format
+    /*
+     * PROBLEM: Largest Time for Given Digits (LeetCode 949)
+     * Form the maximum valid 24-hour time from the given 4 digits using greedy digit selection.
+     *
+     * ALGORITHM: Greedy digit selection
+     * TC: O(1) | SC: O(1)
+     */
     public String largestTimeFromDigits(int[] arr) {
         boolean iszero = false;
         for (int a : arr) {
@@ -132,6 +148,13 @@ class SolutionMaxTime {
         return time;
     }
 
+    /*
+     * PROBLEM: Largest Time for Given Digits (LeetCode 949)
+     * Find the largest valid 24-hour time by generating and sorting all digit permutations.
+     *
+     * ALGORITHM: Permutation enumeration
+     * TC: O(4!) | SC: O(4!)
+     */
     public static String getLargestTime(int[] input) {
         String largestTime = "00:00";
         String str = input[0] + "" + input[1] + "" + input[2] + "" + input[3];
@@ -156,10 +179,24 @@ class SolutionMaxTime {
         return largestTime;
     }
 
+    /*
+     * PROBLEM: Generate All Permutations (Helper)
+     * Generate all permutations of the given string and collect them into the provided list.
+     *
+     * ALGORITHM: Recursive backtracking
+     * TC: O(n!) | SC: O(n!)
+     */
     public static void permutation(String str, List<String> list) {
         permutation("", str, list);
     }
 
+    /*
+     * PROBLEM: Recursive Permutation Generator (Helper)
+     * Recursively generate all permutations by building prefix and reducing remaining string.
+     *
+     * ALGORITHM: Recursive backtracking
+     * TC: O(n!) | SC: O(n!)
+     */
     private static void permutation(String prefix, String str, List<String> list) {
         int n = str.length();
         if (n == 0) list.add(prefix);

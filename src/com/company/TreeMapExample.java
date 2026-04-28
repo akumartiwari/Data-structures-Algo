@@ -6,6 +6,13 @@ import java.util.TreeMap;
 
 public class TreeMapExample {
 
+    /*
+     * PROBLEM: Count Pairs Whose Sum is Less Than Target (LeetCode 2824)
+     * Count pairs (i, j) where i < j and nums[i] + nums[j] < target.
+     *
+     * ALGORITHM: TreeMap Binary Search
+     * TC: O(n log n) | SC: O(n)
+     */
     public int countPairs(List<Integer> nums, int target) {
         TreeMap<Integer, Integer> tm = new TreeMap<>(); // {element, position}
 
@@ -56,6 +63,13 @@ public class TreeMapExample {
         count = 0;
     }
 
+    /*
+     * PROBLEM: Count Integers in Intervals - Add Interval (LeetCode 2276)
+     * Merge the new interval [left, right] into the set and update the integer count.
+     *
+     * ALGORITHM: TreeMap interval merge (remove overlapping, insert merged)
+     * TC: O(log n + k) amortized | SC: O(1)
+     */
     public void add(int left, int right) {
         // Add interval if there is no overlapping.
         if (s.floorKey(right) == null || s.get(s.floorKey(right)) < left) {
@@ -84,6 +98,13 @@ public class TreeMapExample {
         }
     }
 
+    /*
+     * PROBLEM: Count Integers in Intervals - Count (LeetCode 2276)
+     * Return the total count of integers covered by all added intervals.
+     *
+     * ALGORITHM: Return cached count (updated in add())
+     * TC: O(1) | SC: O(1)
+     */
     public int count() {
         return count;
     }

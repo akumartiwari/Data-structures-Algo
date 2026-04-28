@@ -34,6 +34,13 @@ public class TreeSetExample {
             iN = new HashMap<>();
         }
 
+        /*
+         * PROBLEM: Number Containers - Change (LeetCode 2349)
+         * Set or replace the number at a given index in the container.
+         *
+         * ALGORITHM: HashMap + TreeSet (index → number, number → sorted set of indices)
+         * TC: O(log n) | SC: O(n)
+         */
         public void change(int index, int number) {
             if (iN.containsKey(index)) {
                 map.get(iN.get(index)).remove(index);
@@ -45,6 +52,13 @@ public class TreeSetExample {
             map.get(number).add(index);
         }
 
+        /*
+         * PROBLEM: Number Containers - Find (LeetCode 2349)
+         * Return the smallest index filled with the given number, or -1 if none.
+         *
+         * ALGORITHM: O(1) lookup via TreeSet.first()
+         * TC: O(1) | SC: O(1)
+         */
         //O(1)
         public int find(int number) {
             return map.containsKey(number) && !map.get(number).isEmpty() ? map.get(number).first() : -1;
@@ -80,6 +94,13 @@ public class TreeSetExample {
 
         }
 
+        /*
+         * PROBLEM: Design a Food Rating System - changeRating (LeetCode 2353)
+         * Update the rating of a food item in the system.
+         *
+         * ALGORITHM: TreeMap update (remove old rating, insert new)
+         * TC: O(log n) | SC: O(1)
+         */
         public void changeRating(String food, int newRating) {
             if (FR.containsKey(food) && CRF.get(FC.get(food)).get(FR.get(food)) != null)
                 CRF.get(FC.get(food)).get(FR.get(food)).remove(food);
@@ -93,6 +114,13 @@ public class TreeSetExample {
             CRF.get(FC.get(food)).get(newRating).add(food);
         }
 
+        /*
+         * PROBLEM: Design a Food Rating System - highestRated (LeetCode 2353)
+         * Return the food with the highest rating for the given cuisine (alphabetically first if tie).
+         *
+         * ALGORITHM: TreeMap lookup (lastEntry for max rating, TreeSet for alphabetical order)
+         * TC: O(log n) | SC: O(1)
+         */
         public String highestRated(String cuisine) {
             return CRF.containsKey(cuisine) && !CRF.get(cuisine).isEmpty() && !CRF.get(cuisine).lastEntry().getValue().isEmpty() ? CRF.get(cuisine).lastEntry().getValue().first() : null;
         }
@@ -114,6 +142,13 @@ public class TreeSetExample {
     - (2, 3) and (3, 2). (2 AND 3) is equal to (10) in binary, and (2 OR 3) is equal to (11) in binary. The total number of set bits is 1 + 2 = 3.
     - (1, 3) and (3, 1). (1 AND 3) is equal to (01) in binary, and (1 OR 3) is equal to (11) in binary. The total number of set bits is 1 + 2 = 3.
     So the number of excellent pairs is 5.
+     */
+    /*
+     * PROBLEM: Count Excellent Pairs (LeetCode 2354)
+     * Count pairs (i,j) where bitCount(nums[i] AND nums[j]) + bitCount(nums[i] OR nums[j]) >= k.
+     *
+     * ALGORITHM: TreeMap + HashSet (group by bit count, avoid duplicates)
+     * TC: O(32*n) | SC: O(n)
      */
     // TC = O(32*n)
     // The idea is to avoid solving the problem in O(n2) by using map
@@ -145,6 +180,13 @@ public class TreeSetExample {
         return ans;
     }
 
+    /*
+     * PROBLEM: Sum of Largest 3 Primes from String (Helper)
+     * Find the three largest prime numbers that can be formed from substrings of s.
+     *
+     * ALGORITHM: Brute Force prime check on all substrings + max TreeSet
+     * TC: O(n² * sqrt(maxNum)) | SC: O(n²)
+     */
     public long sumOfLargestPrimes(String s) {
         Set<Long> pq = new TreeSet<>(Collections.reverseOrder()); // max pq
 
@@ -165,6 +207,13 @@ public class TreeSetExample {
         return sum;
     }
 
+    /*
+     * PROBLEM: Is Prime Check (Helper)
+     * Determine whether n is a prime number.
+     *
+     * ALGORITHM: Trial Division up to sqrt(n)
+     * TC: O(sqrt(n)) | SC: O(1)
+     */
     public boolean isPrime(long n) {
         if (n == 1) return false;
         if (n == 2) return true;
@@ -175,6 +224,13 @@ public class TreeSetExample {
         return true;
     }
 
+    /*
+     * PROBLEM: Max Substrings (Helper)
+     * Find sum of the three largest prime substrings of word (outer class version).
+     *
+     * ALGORITHM: Brute Force prime check on all substrings
+     * TC: O(n² * sqrt(maxNum)) | SC: O(n²)
+     */
     public int maxSubstrings(String word) {
         Set<Long> pq = new TreeSet<>(Collections.reverseOrder()); // max pq
 
@@ -204,6 +260,13 @@ public class TreeSetExample {
 
     //TODO
     class Solution {
+        /*
+         * PROBLEM: Max Substrings (LeetCode-like)
+         * Count non-overlapping substrings where each char appears at distance >= 4.
+         *
+         * ALGORITHM: Greedy with LinkedHashMap (first-last occurrence tracking)
+         * TC: O(n) | SC: O(26)
+         */
         public int maxSubstrings(String word) {
             Map<Character, List<Integer>> map = new LinkedHashMap<>();
             int cnt = 0;

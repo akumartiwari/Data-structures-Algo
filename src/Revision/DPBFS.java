@@ -1,6 +1,6 @@
 package com.company;
 
-import javafx.util.Pair;
+import common.Pair;
 
 import java.util.HashMap;
 import java.util.*;
@@ -26,6 +26,13 @@ public class DPBFS {
 
     // TODO: Solve it again
     class WaysToArriveAtDestnation {
+        /*
+         * PROBLEM: Number of Ways to Arrive at Destination (LeetCode 1976)
+         * Count the number of ways to travel from node 0 to node n-1 in minimum time on a weighted undirected graph.
+         *
+         * ALGORITHM: Modified Dijkstra – builds adjacency list then delegates to dfs() for shortest-path counting
+         * TC: O((V + E) log V) | SC: O(V + E)
+         */
         public int countPaths(int n, int[][] roads) {
             final List<List<Node>> graph = new ArrayList<>(n);
             for (int i = 0; i < n; i++) {
@@ -38,6 +45,14 @@ public class DPBFS {
             return this.dfs(graph, n);
         }
 
+        /*
+         * PROBLEM: Number of Ways to Arrive at Destination – Dijkstra core (Helper)
+         * Runs modified Dijkstra on the pre-built adjacency list, simultaneously tracking minimum cost
+         * and the number of distinct minimum-cost paths to each node.
+         *
+         * ALGORITHM: Priority-queue Dijkstra with parallel ways[] array (modular arithmetic)
+         * TC: O((V + E) log V) | SC: O(V)
+         */
         public int dfs(final List<List<Node>> adj, int n) {
             final int mod = 1_000_000_007;
             final Queue<Node> queue = new PriorityQueue<>(n);
@@ -69,6 +84,15 @@ public class DPBFS {
 
     }
 
+    /*
+     * PROBLEM: Maximum Strictly Increasing Cells in a Matrix (LeetCode 2713)
+     * Find the maximum number of cells that can be visited in a matrix by always moving to a strictly larger value
+     * in the same row or column.
+     *
+     * ALGORITHM: DP + sorted grouping by cell value (TreeMap) – process cells in non-decreasing value order,
+     *            updating per-row and per-column best reachable counts to avoid re-visiting equal values.
+     * TC: O(M * N * log(M * N)) | SC: O(M * N)
+     */
     public int maxIncreasingCells(int[][] mat) {
         int m = mat.length, n = mat[0].length;
 

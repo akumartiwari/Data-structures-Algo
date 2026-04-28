@@ -20,6 +20,13 @@ public class SlidingWindow {
     // Sliding window
     // TC = O(26N)
     //Author: Anand
+    /*
+     * PROBLEM: Total Appeal of All Substrings (LeetCode 2262)
+     * Compute the sum of appeal (number of distinct chars) of all substrings of s.
+     *
+     * ALGORITHM: Sliding Window with per-character occurrence positions
+     * TC: O(26*n) | SC: O(26*n)
+     */
     public long appealSum(String s) {
         int n = s.length();
         List<Integer>[] oc = new ArrayList[26];
@@ -43,6 +50,13 @@ public class SlidingWindow {
         return total;
     }
 
+    /*
+     * PROBLEM: Maximum White Tiles Covered by a Carpet (LeetCode 2271)
+     * Find the maximum number of white tiles a carpet of length len can cover.
+     *
+     * ALGORITHM: Sliding Window on sorted tile intervals
+     * TC: O(n log n) | SC: O(1)
+     */
     /*
     Input: tiles = [[1,5],[10,11],[12,18],[20,25],[30,32]], carpetLen = 10
     Output: 9
@@ -74,6 +88,13 @@ public class SlidingWindow {
     }
 
 
+    /*
+     * PROBLEM: Subarray Product Less Than K (LeetCode 713)
+     * Count the number of contiguous subarrays whose product is strictly less than k.
+     *
+     * ALGORITHM: Sliding Window (two pointers)
+     * TC: O(n) | SC: O(1)
+     */
     // Author: Anand
     //    Sliding window approach
     //    The idea is to keep moving i till condition is satisfied. The moment it fails
@@ -98,6 +119,13 @@ public class SlidingWindow {
     }
 
 
+    /*
+     * PROBLEM: Count Continuous Subarrays (LeetCode 2762)
+     * Count subarrays where max - min <= 2.
+     *
+     * ALGORITHM: Sliding Window with TreeMap (maintains sorted frequency)
+     * TC: O(n log n) | SC: O(n)
+     */
     public long continuousSubarrays(int[] nums) {
         long cnt = 0L;
         int smallest = Integer.MAX_VALUE, largest = Integer.MIN_VALUE;
@@ -121,6 +149,13 @@ public class SlidingWindow {
         return cnt;
     }
 
+    /*
+     * PROBLEM: Count Subarrays with Score Less Than K (LeetCode 2302)
+     * Count subarrays whose score (sum × length) is strictly less than k.
+     *
+     * ALGORITHM: Sliding Window (two pointers)
+     * TC: O(n) | SC: O(1)
+     */
     /*
     Input: nums = [2,1,4,3,5], k = 10
     Output: 6
@@ -150,6 +185,13 @@ public class SlidingWindow {
         return cnt;
     }
 
+    /*
+     * PROBLEM: Minimum Size Subarray in Infinite Array (LeetCode 2875)
+     * Find the minimum length subarray of the infinite repeated array that sums to target.
+     *
+     * ALGORITHM: Sliding Window with modular target
+     * TC: O(n) | SC: O(n)
+     */
     public int minSizeSubarray(int[] nums, int target) {
 
         int ts = Arrays.stream(nums).sum();
@@ -192,6 +234,13 @@ public class SlidingWindow {
     }
 
     /*
+     * PROBLEM: Count Interesting Subarrays (LeetCode 2845)
+     * Count subarrays where (count of nums[i] % modulo == k) % modulo == k.
+     *
+     * ALGORITHM: Sliding Window with prefix count modulo
+     * TC: O(n) | SC: O(1)
+     */
+    /*
      nums[i] % modulo == k. Then, cnt % modulo == k.
      Solve using sliding window algorithm
      */
@@ -212,6 +261,13 @@ public class SlidingWindow {
 
     int MOD = (int) (1e9 + 7);
 
+    /*
+     * PROBLEM: Count Number of Homogenous Substrings (LeetCode 1759)
+     * Count substrings where all characters are the same.
+     *
+     * ALGORITHM: Sliding Window (count consecutive same chars)
+     * TC: O(n) | SC: O(1)
+     */
     public int countHomogenous(String s) {
         int cnt = 0;
         for (int i = 0, j = 0; i < s.length(); ++i) {
@@ -221,6 +277,13 @@ public class SlidingWindow {
         return cnt;
     }
 
+    /*
+     * PROBLEM: Number of 1 Bits Substrings (LeetCode 1513)
+     * Count substrings that consist only of '1's.
+     *
+     * ALGORITHM: Sliding Window (count consecutive '1' chars)
+     * TC: O(n) | SC: O(1)
+     */
     public int numSub(String s) {
         int cnt = 0;
         for (int i = 0, j = 0; i < s.length(); ++i) {
@@ -230,6 +293,13 @@ public class SlidingWindow {
         return cnt;
     }
 
+    /*
+     * PROBLEM: Sum of Subarray Minimums (Helper)
+     * Compute sum of (max - min) for all subarrays.
+     *
+     * ALGORITHM: Brute Force O(n²)
+     * TC: O(n²) | SC: O(1)
+     */
     public int sumSubarrayMins(int[] nums) {
         int sum = 0;
         for (int i = 0; i < nums.length; i++) {
@@ -245,6 +315,13 @@ public class SlidingWindow {
     }
 
 
+    /*
+     * PROBLEM: Maximum Ascending Subarray Sum (LeetCode 1800)
+     * Find the maximum sum of a contiguous strictly ascending subarray.
+     *
+     * ALGORITHM: Greedy Linear Scan
+     * TC: O(n) | SC: O(1)
+     */
     public int maxAscendingSum(int[] nums) {
         int max = 0, sum = 0;
         for (int i = 0; i < nums.length; ++i) {
@@ -262,6 +339,13 @@ public class SlidingWindow {
     }
 
 
+    /*
+     * PROBLEM: Consecutive Characters (LeetCode 1446)
+     * Find the length of the longest substring with all identical characters.
+     *
+     * ALGORITHM: Sliding Window
+     * TC: O(n) | SC: O(1)
+     */
     public int maxPower(String s) {
         int max = 0;
         for (int i = 0, j = 0; i < s.length(); ++i) {
@@ -271,6 +355,13 @@ public class SlidingWindow {
         return max;
     }
 
+    /*
+     * PROBLEM: Subarray LCM Equal K (LeetCode 2470)
+     * Count subarrays whose LCM equals k.
+     *
+     * ALGORITHM: Brute Force with LCM computation
+     * TC: O(n² log k) | SC: O(1)
+     */
     public int subarrayLCM(int[] nums, int k) {
         int cnt = 0;
         int lcm = -1;
@@ -289,10 +380,24 @@ public class SlidingWindow {
         return cnt;
     }
 
+    /*
+     * PROBLEM: LCM Computation (Helper)
+     * Compute the least common multiple of two integers.
+     *
+     * ALGORITHM: Math (LCM = a*b / GCD)
+     * TC: O(log(min(a,b))) | SC: O(1)
+     */
     public int lcm(int a, int b) {
         return (a * b) / gcd(a, b);
     }
 
+    /*
+     * PROBLEM: GCD Computation (Helper)
+     * Compute the greatest common divisor of two integers.
+     *
+     * ALGORITHM: Euclidean Algorithm (recursive)
+     * TC: O(log(min(a,b))) | SC: O(log(min(a,b)))
+     */
     //int version for gcd
     public int gcd(int a, int b) {
         if (b == 0)
@@ -302,6 +407,13 @@ public class SlidingWindow {
 
     }
 
+    /*
+     * PROBLEM: Number of Zero-Filled Subarrays (LeetCode 2348)
+     * Count the total number of subarrays filled with zeros.
+     *
+     * ALGORITHM: Sliding Window (count consecutive zeros)
+     * TC: O(n) | SC: O(1)
+     */
     /*
     Input: nums = [1,3,0,0,2,0,0,4]
     Output: 6
@@ -320,6 +432,13 @@ public class SlidingWindow {
         return cnt;
     }
 
+    /*
+     * PROBLEM: Maximum Subarray Sum With Length Divisible by K (LeetCode 2461)
+     * Find the maximum sum of a subarray of exactly length k with all distinct elements.
+     *
+     * ALGORITHM: Sliding Window with HashMap (frequency tracking)
+     * TC: O(n) | SC: O(k)
+     */
     public long maximumSubarraySum(int[] nums, int k) {
         long sum = 0L;
         boolean duplicate = false;

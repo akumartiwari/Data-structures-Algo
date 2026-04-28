@@ -34,6 +34,13 @@ class House {
             this.second = val;
         }
 
+        /*
+         * PROBLEM: Compare Pair by first-second (Helper)
+         * Compares this Pair to another by computing this.first - other.second.
+         *
+         * ALGORITHM: Direct arithmetic comparison
+         * TC: O(1) | SC: O(1)
+         */
         @Override
         public int compareTo(Pair<Number, Number> pair) {
             return this.first - pair.second;
@@ -41,6 +48,13 @@ class House {
     }
 
 
+    /*
+     * PROBLEM: House Robber III - DFS helper (LeetCode 337)
+     * DFS returning a {rob, skip} pair for each node to enable tree DP.
+     *
+     * ALGORITHM: Post-order DFS (Tree DP)
+     * TC: O(n) | SC: O(h)
+     */
     public Pair<Number, Number> dfs1(TreeNode root) {
         if (root == null) return new Pair<>(0, 0);
         Pair<Number, Number> left = dfs1(root.left);
@@ -49,6 +63,13 @@ class House {
         return new Pair<Number, Number>((root.val + left.second + right.second), (Math.max(left.first, left.second) + Math.max(right.first, right.second)));
     }
 
+    /*
+     * PROBLEM: House Robber III (LeetCode 337)
+     * Max money robbing from a binary tree without robbing adjacent (parent-child) nodes.
+     *
+     * ALGORITHM: Tree DP via post-order DFS
+     * TC: O(n) | SC: O(h)
+     */
     public int rob(TreeNode root) {
         Pair<Number, Number> ans = dfs1(root);
         return Math.max(ans.first, ans.second);
@@ -76,10 +97,11 @@ class House {
      */
 
     /*
-    [1,3,1,3,100]
-    robRec(nums, 2, 1, 1);
-    O(n) O(1)
-    2 pointer approach
+     * PROBLEM: House Robber II (LeetCode 213)
+     * Max money robbing from a circular array where first and last houses are adjacent.
+     *
+     * ALGORITHM: Two-pass linear DP (once skipping first, once skipping last)
+     * TC: O(n) | SC: O(1)
      */
     public int rob(int[] nums) {
         if (nums.length == 1) return nums[0];
@@ -87,6 +109,13 @@ class House {
         return Math.max(robRec(nums, 0, nums.length - 2), robRec(nums, 1, nums.length - 1));
     }
 
+    /*
+     * PROBLEM: House Robber linear range helper (Helper)
+     * Robs houses in a linear sub-range [l, r] of nums using two-variable DP.
+     *
+     * ALGORITHM: Linear DP with constant space (two variables)
+     * TC: O(n) | SC: O(1)
+     */
     public int robRec(int[] nums, int l, int r) {
         int prev = 0, prepre = 0, curr = 0;
         for (int i = l; i <= r; i++) {
@@ -197,6 +226,13 @@ class House {
         int[] nums;
         int n;
 
+        /*
+         * PROBLEM: House Robber II (LeetCode 213)
+         * Max money robbing from a circular array (bottom-up DP, constant space).
+         *
+         * ALGORITHM: Bottom-up DP with O(1) space, two passes (skip first or skip last)
+         * TC: O(n) | SC: O(1)
+         */
         public int rob(int[] nums) {
             this.nums = nums;
             n = nums.length;
@@ -206,6 +242,13 @@ class House {
             return Math.max(recurse(0, n - 1), recurse(1, n));
         }
 
+        /*
+         * PROBLEM: House Robber linear range DP helper (Helper)
+         * Bottom-up DP for robbing houses in range [start, end) with constant space.
+         *
+         * ALGORITHM: Bottom-up DP with two variables
+         * TC: O(n) | SC: O(1)
+         */
         public int recurse(int start, int end) {
             int prev = 0, prepre = 0;
             if (end > start + 1) {
@@ -235,6 +278,13 @@ dpv[1]=1
 n == 2
          */
 
+        /*
+         * PROBLEM: Divisor Game (LeetCode 1025)
+         * Determine if Alice wins; she always wins when n is even.
+         *
+         * ALGORITHM: DP simulation (alternating turns)
+         * TC: O(n) | SC: O(n)
+         */
         public boolean divisorGame(int n) {
             if (n == 0) return false;
 
@@ -276,6 +326,13 @@ n == 2
         }
 
 
+        /*
+         * PROBLEM: Matrix Block Sum (LeetCode 1314)
+         * Compute answer matrix where each cell equals the sum of all elements in its k-radius block.
+         *
+         * ALGORITHM: 2D prefix sum (stub)
+         * TC: O(m*n) | SC: O(m*n)
+         */
         public int[][] matrixBlockSum(int[][] mat, int k) {
             int rows = mat.length;
             int cols = mat[0].length;
@@ -297,7 +354,13 @@ n == 2
 
         int[] arr;
 
-        // Complete the maxSubsetSum function below.
+        /*
+         * PROBLEM: Max Subset Sum (HackerRank)
+         * Find the maximum sum of a subset where no two selected elements are adjacent.
+         *
+         * ALGORITHM: DP on non-adjacent elements
+         * TC: O(n) | SC: O(n)
+         */
         int maxSubsetSum(int[] arr) {
             this.arr = arr;
             n = arr.length;
@@ -308,6 +371,13 @@ n == 2
 
         }
 
+        /*
+         * PROBLEM: Max subset sum DP helper (Helper)
+         * DP helper computing max non-adjacent sum for array range [start, end).
+         *
+         * ALGORITHM: Linear DP with dp array
+         * TC: O(n) | SC: O(n)
+         */
         public int maxSum(int start, int end) {
             int[] dp = new int[end];
             dp[start] = nums[start];
@@ -322,6 +392,13 @@ n == 2
         }
 
 
+        /*
+         * PROBLEM: Max Subset Sum space-optimized (Helper)
+         * Space-optimized in-place DP for max non-adjacent element sum.
+         *
+         * ALGORITHM: In-place DP (modifies input array)
+         * TC: O(n) | SC: O(1)
+         */
         public int maxSubsetSum1(int[] arr) {
             if (arr.length == 0) return 0;
             arr[0] = Math.max(0, arr[0]);
@@ -374,6 +451,13 @@ Sample Output 2
          */
 
 
+        /*
+         * PROBLEM: Beautiful Pairs (HackerRank)
+         * Maximize matching pairs between lists A and B after at most one element swap in B.
+         *
+         * ALGORITHM: Sort + binary search with one allowed swap
+         * TC: O(n log n) | SC: O(1)
+         */
         public int beautifulPairs(List<Integer> A, List<Integer> B) {
             int ans = 0;
             boolean isSwitched = false;
@@ -399,6 +483,13 @@ Sample Output 2
         }
 
 
+        /*
+         * PROBLEM: Candies (HackerRank)
+         * Minimum candies to distribute to n children satisfying left-right ordering constraints.
+         *
+         * ALGORITHM: Greedy single-pass with ascending/descending sequence tracking
+         * TC: O(n) | SC: O(1)
+         */
         public long candies(int n, List<Integer> arr) {
             int descending_seq = 0;
             long sum = 0;
@@ -441,6 +532,13 @@ Sample Output 2
     }
 
 
+    /*
+     * PROBLEM: Count Beautiful Substrings / Vowel Substrings (LeetCode 1641 / 2401)
+     * Count substrings that contain all five vowels (a, e, i, o, u).
+     *
+     * ALGORITHM: Brute-force enumerate all substrings, check each for all vowels
+     * TC: O(n^2) | SC: O(n^2)
+     */
     public static int vowelsubstring(String s) {
         int n = s.length();
         if (n < 5) return 0;
@@ -493,6 +591,13 @@ Sample Output 2
     }
 
 
+    /*
+     * PROBLEM: Select Stocks to Maximize Profit (Helper)
+     * Select non-adjacent stocks to maximize profit given a savings budget constraint.
+     *
+     * ALGORITHM: DP on non-adjacent selection with budget constraint
+     * TC: O(n^2) | SC: O(1)
+     */
     public static int selectStock(int saving, List<Integer> currentValue, List<Integer> futureValue) {
         int n = currentValue.size();
         int maxProfit = 0;
@@ -514,6 +619,13 @@ Sample Output 2
     }
 
 
+    /*
+     * PROBLEM: Reach the End of Grid (Helper)
+     * Determine if the bottom-right corner of a grid can be reached within maxTime steps.
+     *
+     * ALGORITHM: DFS exploring all paths
+     * TC: O(2^(m*n)) | SC: O(m*n)
+     */
     public static String reachTheEnd(List<String> grid, int maxTime) {
         // Write your code here
 
@@ -535,6 +647,13 @@ Sample Output 2
     }
 
 
+    /*
+     * PROBLEM: DFS min path in matrix (Helper)
+     * DFS to find the minimum-length path from top-left to bottom-right in a matrix.
+     *
+     * ALGORITHM: DFS with path tracking
+     * TC: O(2^(m*n)) | SC: O(m*n)
+     */
     private static int dfs(int mat[][], int m, int n,
                            int i, int j, int path[], int idx, int min) {
         path[idx] = mat[i][j];
@@ -571,6 +690,13 @@ Sample Output 2
         return min;
     }
 
+    /*
+     * PROBLEM: Matrix DFS stub (Helper)
+     * Stub for DFS traversal of a 2D matrix (unimplemented).
+     *
+     * ALGORITHM: DFS (stub)
+     * TC: O(1) | SC: O(1)
+     */
     public static int dfs(int[][] matrix, int row, int col) {
 
 //        int n = matrix.length;
@@ -602,6 +728,13 @@ Sample Output 2
 
     int[] nums;
 
+    /*
+     * PROBLEM: Minimum Absolute Difference Queries (LeetCode 1906)
+     * For each range query [l, r], find the minimum absolute difference between any two distinct elements.
+     *
+     * ALGORITHM: Per-query subarray sort and linear scan
+     * TC: O(q*n log n) | SC: O(n)
+     */
     public int[] minDifference(int[] nums, int[][] queries) {
         this.nums = nums;
         int[] ans = new int[queries.length];
@@ -616,6 +749,13 @@ Sample Output 2
         return ans;
     }
 
+    /*
+     * PROBLEM: Process single range query for min absolute difference (Helper)
+     * Extracts the subarray for a query range, sorts it, and scans for the minimum absolute difference.
+     *
+     * ALGORITHM: Subarray extraction + sort + linear scan
+     * TC: O(n log n) | SC: O(n)
+     */
     protected int processQuery(int[] query) {
         int min = Integer.MAX_VALUE;
         int start = query[0];
@@ -645,6 +785,13 @@ Sample Output 2
         return min;
     }
 
+    /*
+     * PROBLEM: Count Sub Islands (LeetCode 1905)
+     * Count islands in grid2 that are fully contained within islands of grid1.
+     *
+     * ALGORITHM: DFS (stub)
+     * TC: O(m*n) | SC: O(m*n)
+     */
     public int countSubIslands(int[][] grid1, int[][] grid2) {
 
         int[] dp1 = new int[grid1.length];
@@ -655,6 +802,13 @@ Sample Output 2
 
     }
 
+    /*
+     * PROBLEM: Largest Odd Number in String (LeetCode 1903)
+     * Return the longest prefix of the numeric string that represents an odd number.
+     *
+     * ALGORITHM: Linear scan, keep last odd-digit prefix
+     * TC: O(n) | SC: O(1)
+     */
     public String largestOddNumber(String num) {
         String largest = "";
         if (num.length() == 0) return "";
@@ -667,6 +821,13 @@ Sample Output 2
         return largest;
     }
 
+    /*
+     * PROBLEM: Number of Full Rounds You Have Played (LeetCode 1904)
+     * Count how many complete 15-minute rounds fit between a start and finish time.
+     *
+     * ALGORITHM: Time arithmetic with modular rounding
+     * TC: O(1) | SC: O(1)
+     */
     public int numberOfRounds(String startTime, String finishTime) {
         int before = 0, after = 0;
         if (Integer.parseInt(startTime.split(":")[1]) % 15 != 0) { // Time can't be taken
@@ -696,6 +857,13 @@ Sample Output 2
 
     PriorityQueue<Integer> pq = new PriorityQueue<Integer>();
 
+    /*
+     * PROBLEM: Kth Smallest Element in a BST (LeetCode 230)
+     * Find the k-th smallest value in a BST using DFS and a min-heap.
+     *
+     * ALGORITHM: DFS + min-heap (priority queue)
+     * TC: O(n) | SC: O(n)
+     */
     public int kthSmallest(TreeNode root, int k) {
         dfs(root);
         int prev = pq.peek() != null ? pq.peek() : 0;
@@ -709,6 +877,13 @@ Sample Output 2
         return prev;
     }
 
+    /*
+     * PROBLEM: BST DFS traversal into priority queue (Helper)
+     * Recursively traverses all tree nodes, adding each node's value to the min-heap.
+     *
+     * ALGORITHM: Pre-order DFS
+     * TC: O(n) | SC: O(n)
+     */
     public void dfs(TreeNode root) {
 
         if (root == null)
@@ -732,6 +907,13 @@ Sample Output 2
     // left root  right
     List<Integer> ans = new ArrayList<>();
 
+    /*
+     * PROBLEM: Binary Tree Inorder Traversal (LeetCode 94)
+     * Return the inorder (left-root-right) traversal of a binary tree as a list.
+     *
+     * ALGORITHM: Recursive inorder DFS
+     * TC: O(n) | SC: O(n)
+     */
     public List<Integer> inorderTraversal(TreeNode root) {
 
         inorder(root);
@@ -739,6 +921,13 @@ Sample Output 2
     }
 
 
+    /*
+     * PROBLEM: Recursive inorder traversal helper (Helper)
+     * Recursively visits left subtree, root, then right subtree, appending values to the result list.
+     *
+     * ALGORITHM: Recursive inorder DFS
+     * TC: O(n) | SC: O(h)
+     */
     public void inorder(TreeNode root) {
 
         if (root == null)
@@ -797,6 +986,13 @@ Sample Output 2
 
     List<Double> answer = new ArrayList<>();
 
+    /*
+     * PROBLEM: Average of Levels in Binary Tree (LeetCode 637)
+     * Return the average value of nodes at each level of a binary tree.
+     *
+     * ALGORITHM: BFS level-order traversal
+     * TC: O(n) | SC: O(n)
+     */
     public List<Double> averageOfLevels(TreeNode root) {
 
         if (root == null)
@@ -830,11 +1026,25 @@ Sample Output 2
         return answer;
     }
 
+    /*
+     * PROBLEM: Convert BST to Greater Tree (LeetCode 538 / 1038)
+     * Replace each node's value with the sum of all values greater than or equal to it in the BST.
+     *
+     * ALGORITHM: Reverse inorder traversal (right-root-left) with running sum
+     * TC: O(n) | SC: O(h)
+     */
     public TreeNode convertBST(TreeNode root) {
         convertBSTRec(root, 0);
         return root;
     }
 
+    /*
+     * PROBLEM: BST to Greater Tree recursive helper (Helper)
+     * Recursively accumulates the sum from the right subtree and updates each node's value.
+     *
+     * ALGORITHM: Reverse inorder DFS with accumulated parent value
+     * TC: O(n) | SC: O(h)
+     */
     private int convertBSTRec(TreeNode root, int parentVal) {
         if (root == null) return 0;
         int rightVal = convertBSTRec(root.right, parentVal);

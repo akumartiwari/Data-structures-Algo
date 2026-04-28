@@ -33,6 +33,13 @@ public class DP {
 
     // DP to tabulation:-= Bottom-up approach
     // TC = O(n), SC = O(n)
+    /*
+     * PROBLEM: Frog Jump (GFG/Striver)
+     * Minimum cost for a frog to jump from stone 0 to stone n-1.
+     *
+     * ALGORITHM: DP (Tabulation)
+     * TC: O(n) | SC: O(n)
+     */
     public static int frogJump(int n, int[] heights) {
         int[] dp = new int[n];
         dp[0] = 0;
@@ -49,6 +56,13 @@ public class DP {
         return dp[n - 1];
     }
 
+    /*
+     * PROBLEM: Maximum Subsequence Sum (Helper/Custom)
+     * Returns the max sum of an increasing subsequence of size k.
+     *
+     * ALGORITHM: Backtracking (Brute Force)
+     * TC: O(2^n) | SC: O(n)
+     */
     public static long maximumSum(ArrayList<Integer> nums, int k) {
         maxSum = Long.MIN_VALUE;
 
@@ -59,6 +73,13 @@ public class DP {
         return maxSum == Long.MIN_VALUE ? -1 : maxSum;
     }
 
+    /*
+     * PROBLEM: Maximum Subsequence Backtrack (Helper)
+     * Recursive helper for maximumSum building increasing subsequences.
+     *
+     * ALGORITHM: Backtracking
+     * TC: O(2^n) | SC: O(n)
+     */
     private static void sub(ArrayList<Integer> nums, int k, int ind, long sum, long prev) {
         // base case
         if (k == 0) {
@@ -80,6 +101,13 @@ public class DP {
         } else sub(nums, k, ind + 1, sum, prev);
     }
 
+    /*
+     * PROBLEM: Maximum Subsequence Sum Optimised (Helper)
+     * DP version of max sum increasing subsequence of size k.
+     *
+     * ALGORITHM: DP (bottom-up 2D)
+     * TC: O(n^2*k) | SC: O(n*k)
+     */
     public static long maximumSumOptimised(ArrayList<Integer> nums, int k) {
 
         int n = nums.size();
@@ -116,6 +144,13 @@ public class DP {
     }
 
     // TC = O(m*n*2), SC=O(n)
+    /*
+     * PROBLEM: Sell Maximum Apartments (Helper/Custom)
+     * Max apartments that can be sold within ±k size tolerance.
+     *
+     * ALGORITHM: Backtracking + Memoization
+     * TC: O(m*n*2) | SC: O(n)
+     */
     public static int sellMaximum(ArrayList<Integer> desiredSize, ArrayList<Integer> apartmentSize, int k) {
         int n = desiredSize.size();
         int m = apartmentSize.size();
@@ -127,6 +162,13 @@ public class DP {
         return ans;
     }
 
+    /*
+     * PROBLEM: Sell Max Helper (Helper)
+     * Recursive helper for sellMaximum counting valid apartment sales.
+     *
+     * ALGORITHM: Backtracking
+     * TC: O(m*n*2) | SC: O(n)
+     */
     private static int sellMax(ArrayList<Integer> desiredSize, ArrayList<Integer> apartmentSize, int k, int ind, int ca, List<Integer> taken, int[] dp) {
         int n = desiredSize.size();
         int m = apartmentSize.size();
@@ -156,6 +198,13 @@ public class DP {
     // TOP-DOWN DP
     // TC = O(n2*k)
     // SC = O(n*k)
+    /*
+     * PROBLEM: Longest Subsequence With Limited Sum Helper (Helper)
+     * Returns longest binary subsequence with binary value ≤ k.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n^2) | SC: O(n)
+     */
     private static int ls(int ind, int[] arr, int num, int k, int len, int[] dp) {
         if (ind < 0) {
             if (num <= k) {
@@ -190,11 +239,25 @@ public class DP {
      Output: 3
      One longest strictly increasing subsequence is [5, 7]. The bitwise AND is 5 AND 7 = 5, which is non-zero.
      */
+    /*
+     * PROBLEM: Longest Subsequence With Non-Zero Bitwise AND (Helper/LC)
+     * Longest strictly increasing subsequence with non-zero bitwise AND of all elements.
+     *
+     * ALGORITHM: DP (top-down memoization)
+     * TC: O(n^2) | SC: O(n)
+     */
     public int longestSubsequence(int[] nums) {
         Map<String, Integer> dp = new HashMap<>();
         return lsrecurse(nums, -1, 0, -1, dp);
     }
 
+    /*
+     * PROBLEM: Longest Subsequence Recurse (Helper)
+     * Memoized recursive helper for longestSubsequence.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n^2) | SC: O(n^2)
+     */
     private int lsrecurse(int[] nums, int prev, int idx, long res, Map<String, Integer> dp) {
         // base case
         if (idx == nums.length) return 0;
@@ -212,11 +275,25 @@ public class DP {
     }
 
 
+    /*
+     * PROBLEM: Delete Operations for Two Strings (LeetCode 1048 variant)
+     * Max delete operations on string by repeating equal halves.
+     *
+     * ALGORITHM: DP (top-down memoization)
+     * TC: O(n^2) | SC: O(n^2)
+     */
     public int deleteString(String s) {
         dp = new Integer[s.length()];
         return helper(s.toCharArray(), 0);
     }
 
+    /*
+     * PROBLEM: Delete String Helper (Helper)
+     * Memoized helper for deleteString.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n^2) | SC: O(n^2)
+     */
     private int helper(char[] s, int index) {
         if (index >= s.length) return 0;
 
@@ -235,6 +312,13 @@ public class DP {
         return dp[index] = res;
     }
 
+    /*
+     * PROBLEM: Is Substring Equal (Helper)
+     * Checks if two substrings of char array s are equal.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(n) | SC: O(1)
+     */
     private boolean isEqual(char[] s, int st1, int en1, int st2, int en2) {
         boolean ans = true;
         for (int i = st1, j = st2; i < en1 && j < en2; i++, j++) {
@@ -250,12 +334,26 @@ public class DP {
     // Solution using DP
     // TC = O(n)
     // Add memoization to  improve TC
+    /*
+     * PROBLEM: Fibonacci Number (LeetCode 509)
+     * Returns the nth Fibonacci number.
+     *
+     * ALGORITHM: DP (top-down memoization)
+     * TC: O(n) | SC: O(n)
+     */
     public int fib(int n) {
         int[] dp = new int[n + 1];
         Arrays.fill(dp, -1);
         return eval(n, dp);
     }
 
+    /*
+     * PROBLEM: Fibonacci Eval (Helper)
+     * Memoized helper for fib.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n) | SC: O(n)
+     */
     private int eval(int n, int[] dp) {
         if (n == 0) return 0;
         if (n == 1) return 1;
@@ -266,6 +364,13 @@ public class DP {
 
     // DP based solution
     // TC = O(n * no. of states * no. of different recursive calls)
+    /*
+     * PROBLEM: Number of Ways to Divide a Long Corridor (LeetCode 2147)
+     * Count ways to divide corridor with exactly 2 seats between each divider.
+     *
+     * ALGORITHM: DP (top-down memoization)
+     * TC: O(n) | SC: O(n)
+     */
     public int numberOfWays(String corridor) {
         int n = corridor.length();
         if (n == 1) return 0;
@@ -281,6 +386,13 @@ public class DP {
     }
 
     // Let's assume we place barrier before index `ind` everytime
+    /*
+     * PROBLEM: Number of Ways Recurse (Helper)
+     * Memoized recursive helper for numberOfWays(String corridor).
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n) | SC: O(n)
+     */
     private int recurse(int ind, int seats, String corridor, int[][] dp) {
         // base case
         if (ind > corridor.length()) return 0;
@@ -350,6 +462,13 @@ public class DP {
     // Author: Anand
     //    [0,1,2,3,0]
     //    weekly-contest-236/problems
+    /*
+     * PROBLEM: Minimum Sideway Jumps (LeetCode 1824)
+     * Minimum side jumps to reach the end of a 3-lane road avoiding obstacles.
+     *
+     * ALGORITHM: DP (top-down memoization)
+     * TC: O(n) | SC: O(n)
+     */
     public int minSideJump(int[] obstacles) {
         int ans = 0;
         int lane = 2; // lane can have values  = {1 2 3}
@@ -357,6 +476,13 @@ public class DP {
         return recurse(obstacles, 0, ans, lane, map);
     }
 
+    /*
+     * PROBLEM: Min Side Jump Recurse (Helper)
+     * Memoized helper for minSideJump.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n) | SC: O(n)
+     */
     private int recurse(int[] obstacles, int i, int ans, int lane, Map<String, Integer> map) {
 
         // base case
@@ -429,6 +555,13 @@ public class DP {
 
     // Author: Anand
     // TC = O(n)
+    /*
+     * PROBLEM: Minimum Sideway Jumps Iterative (LeetCode 1824)
+     * Iterative DP solution for minimum side jumps.
+     *
+     * ALGORITHM: DP (Tabulation)
+     * TC: O(n) | SC: O(n)
+     */
     public int minSideJumpsIterative(int[] obstacles) {
         int n = obstacles.length;
         int[][] dp = new int[n][3];
@@ -484,6 +617,13 @@ public class DP {
      */
     // Author: Anand
     // TC = O(n)
+    /*
+     * PROBLEM: Minimum Time to Remove All Cars Containing Illegal Goods (LeetCode 2167)
+     * Minimum operations to remove all illegal-goods cars from a string.
+     *
+     * ALGORITHM: DP (prefix+suffix arrays)
+     * TC: O(n) | SC: O(n)
+     */
     public int minimumTime(String s) {
 
         int n = s.length();
@@ -521,6 +661,13 @@ public class DP {
 
     // Author: Anand
     // TC = O(mn)
+    /*
+     * PROBLEM: Maximum Value of K Coins From Piles (LeetCode 2218)
+     * Max coins collectible picking at most k coins from tops of piles.
+     *
+     * ALGORITHM: DP (top-down memoization)
+     * TC: O(piles*k*maxPileSize) | SC: O(piles*k)
+     */
     public int maxValueOfCoins(List<List<Integer>> piles, int k) {
         int[][] dp = new int[piles.size()][k + 1];
         for (int[] e : dp) Arrays.fill(e, -1);
@@ -528,6 +675,13 @@ public class DP {
         return (int) f(piles, 0, k, dp);
     }
 
+    /*
+     * PROBLEM: Max Value of Coins Helper (Helper)
+     * Memoized helper for maxValueOfCoins.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(piles*k*maxPileSize) | SC: O(piles*k)
+     */
     private long f(List<List<Integer>> piles, int idx, int k, int[][] dp) {
         // base case
         if (idx >= piles.size() || k <= 0) return 0;
@@ -546,6 +700,13 @@ public class DP {
     }
 
     // Author: Anand
+    /*
+     * PROBLEM: Count Number of Texts (LeetCode 2266)
+     * Count possible original messages given phone keypad multi-tap input.
+     *
+     * ALGORITHM: DP (top-down)
+     * TC: O(n) | SC: O(n)
+     */
     public long numberOfWaysDp(String s) {
         long[][][] dp = new long[100003][3][4];
         for (long[][] r : dp) {
@@ -555,6 +716,13 @@ public class DP {
         return cntWays(s, 0, 0, 9, dp);
     }
 
+    /*
+     * PROBLEM: Count Ways DP Helper (Helper)
+     * Memoized helper counting valid 3-segment strings for numberOfWaysDp.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n) | SC: O(n)
+     */
     private long cntWays(String s, int i, int cnt, int prev, long[][][] dp) {
         // base case
         if (cnt == 3) return 1;
@@ -580,6 +748,13 @@ public class DP {
    */
     // Author: Anand
     // TC = O(2n)
+    /*
+     * PROBLEM: Count Good Triplets in an Array (LeetCode 2179)
+     * Count triplets that appear as an increasing subsequence in both arrays.
+     *
+     * ALGORITHM: DP (memoization)
+     * TC: O(n) | SC: O(n)
+     */
     public long goodTriplets(int[] nums1, int[] nums2) {
         Map<Integer, Integer> map = new HashMap<>();// To look-up elements in nums2
         int idx = 0;
@@ -589,6 +764,13 @@ public class DP {
         return recurse(nums1, 0, 3, true, map, new ArrayList<>(), dp);
     }
 
+    /*
+     * PROBLEM: Good Triplets Recurse (Helper)
+     * Recursive helper counting valid triplets for goodTriplets.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n) | SC: O(n)
+     */
     private long recurse(int[] nums1, int idx, int t, boolean valid, Map<Integer, Integer> map, List<Integer> choices, Map<String, Long> dp) {
         // base case
         if (t == 0) {
@@ -619,11 +801,25 @@ public class DP {
 
     //Author : Anand
     // TODO : Complete this
+    /*
+     * PROBLEM: Maximum Beauty of a Garden (Helper/Custom)
+     * Maximize beauty score by allocating new flowers to existing gardens.
+     *
+     * ALGORITHM: DP (top-down)
+     * TC: O(n*target) | SC: O(n)
+     */
     public long maximumBeauty(int[] flowers, long newFlowers, int target, int full, int partial) {
         Arrays.sort(flowers);
         return mb(flowers, newFlowers, full, partial, target, 0, 0);
     }
 
+    /*
+     * PROBLEM: Maximum Beauty Helper (Helper)
+     * Recursive helper for maximumBeauty.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n*target) | SC: O(n)
+     */
     private long mb(int[] flowers, long newFlowers, int full, int partial, int target, int idx, long sum) {
         // base case
 
@@ -653,6 +849,13 @@ public class DP {
     So the total cost of the path is 6 + 3 + 8 = 17.
 `     */
     //Author: Anand
+    /*
+     * PROBLEM: Minimum Path Cost in a Grid (LeetCode 2304)
+     * Find min-cost path from first row to last row of grid.
+     *
+     * ALGORITHM: DP (tabulation, row by row)
+     * TC: O(m*n^2) | SC: O(m*n)
+     */
     public int minPathCost(int[][] grid, int[][] moveCost) {
         int row = grid.length;
         int col = grid[0].length;
@@ -675,6 +878,13 @@ public class DP {
         return result;
     }
 
+    /*
+     * PROBLEM: Get Min Path Cost (Helper)
+     * Computes the minimum cost to reach cell (row,col) from any cell in the previous row.
+     *
+     * ALGORITHM: Linear scan previous row
+     * TC: O(n) | SC: O(1)
+     */
     private int getMin(int[][] grid, int[][] moveCost, int[][] dp, int row, int col) {
         // base case
         int min = Integer.MAX_VALUE, prevRow = row - 1;
@@ -697,11 +907,25 @@ public class DP {
 
     TC = O(n2)
     */
+    /*
+     * PROBLEM: Fair Distribution of Cookies (LeetCode 2305)
+     * Distribute cookies to k children minimizing the maximum cookies held by any child.
+     *
+     * ALGORITHM: Backtracking
+     * TC: O(n^k) | SC: O(k)
+     */
     public int distributeCookies(int[] cookies, int k) {
         int[] cc = new int[k];
         return helper(cookies, k, cc, 0);
     }
 
+    /*
+     * PROBLEM: Distribute Cookies Helper (Helper)
+     * Recursive helper distributing cookies to minimize the maximum.
+     *
+     * ALGORITHM: Backtracking
+     * TC: O(n^k) | SC: O(k)
+     */
     private int helper(int[] cookies, int k, int[] cc, int ind) {
         // base case
         if (ind == cookies.length) // all cookies are distributed
@@ -732,6 +956,13 @@ public class DP {
     The length of this subsequence is 5, so 5 is returned.
     */
     //Author: Anand
+    /*
+     * PROBLEM: Longest Subsequence With Limited Binary Value (LeetCode 1698 variant)
+     * Longest subsequence of binary string with value ≤ k.
+     *
+     * ALGORITHM: DP (top-down)
+     * TC: O(n^2) | SC: O(n)
+     */
     public int longestSubsequence(String s, int k) {
         int[] dp = new int[s.length()];
         Arrays.fill(dp, -1);
@@ -739,6 +970,13 @@ public class DP {
     }
 
 
+    /*
+     * PROBLEM: GCD (Helper)
+     * Euclidean GCD helper used internally by distinctSequences.
+     *
+     * ALGORITHM: Euclidean Recursion
+     * TC: O(log(min(a,b))) | SC: O(log(min(a,b)))
+     */
     private int gcd(int a, int b) {
         if (b == 0)
             return a;
@@ -752,6 +990,13 @@ public class DP {
     backtracking is not needed to count total number of ways.
     TC = O(n*6*6*6); n*6*6 based on states of  recursive call and one more 6 is for loop inside recursive function
     */
+    /*
+     * PROBLEM: Distinct Sequences (LeetCode 2318)
+     * Count distinct sequences of length n following dice-roll adjacency rules.
+     *
+     * ALGORITHM: DP (top-down 3D memoization)
+     * TC: O(n*6*6) | SC: O(n*6*6)
+     */
     //
     public int distinctSequences(int n) {
         int[][][] dp = new int[10007][7][7];
@@ -763,6 +1008,13 @@ public class DP {
         return ds(0, 0, 0, n, dp);
     }
 
+    /*
+     * PROBLEM: Distinct Sequences Helper (Helper)
+     * Memoized helper for distinctSequences.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n*6*6) | SC: O(n*6*6)
+     */
     private int ds(int ind, int l1, int l2, int n, int[][][] dp) {
         // base case
         if (ind >= n) {
@@ -796,12 +1048,26 @@ public class DP {
      */
 
     //Author: Anand
+    /*
+     * PROBLEM: Count House Placements (LeetCode 2320)
+     * Count ways to place houses on both sides of street without adjacent houses.
+     *
+     * ALGORITHM: DP (top-down memoization)
+     * TC: O(n) | SC: O(n)
+     */
     public int countHousePlacements(int n) {
         Map<String, Integer> dp = new HashMap<>();
         long ways = (count_ways_on_one_side(n, false, dp) + count_ways_on_one_side(n, true, dp)) % MOD;
         return (int) ((ways * ways) % MOD);
     }
 
+    /*
+     * PROBLEM: Count House One Side (Helper)
+     * Counts valid house placements on one side of the street.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n) | SC: O(n)
+     */
     private int count_ways_on_one_side(int ind, boolean filled, Map<String, Integer> dp) {
         // base case
         if (ind <= 1) return 1;
@@ -824,6 +1090,13 @@ public class DP {
     Return Maximum of ans1, ans2
     */
     //Author: Anand
+    /*
+     * PROBLEM: Maximum Spliced Array DP (LeetCode 2321)
+     * DP version - maximize max(sum1,sum2) after swapping a contiguous subarray.
+     *
+     * ALGORITHM: DP (top-down 3D)
+     * TC: O(n) | SC: O(n)
+     */
     public int maximumsSplicedArray(int[] nums1, int[] nums2) {
         int[][][] dp = new int[nums1.length][2][2];
         for (int[][] d : dp) {
@@ -854,6 +1127,13 @@ public class DP {
         return Math.max(ans1, ans2);
     }
 
+    /*
+     * PROBLEM: Spliced Array DP Helper (Helper)
+     * Memoized helper for maximumsSplicedArray in DP class.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n) | SC: O(n)
+     */
     private int DP(int[] nums1, int[] nums2, int pos, int state, boolean prev_swap, boolean swapped, int[] suff_sum1, int[] suff_sum2, int[][][] dp) {
         // base case
         if (pos == nums1.length) return 0;
@@ -882,6 +1162,13 @@ public class DP {
      Note that "acfgbd" is not ideal because 'c' and 'f' have a difference of 3 in alphabet order.
     */
     //Author: Anand
+    /*
+     * PROBLEM: Longest Ideal Subsequence (LeetCode 2370)
+     * Longest ideal subsequence where adjacent chars differ by at most k.
+     *
+     * ALGORITHM: DP (top-down memoization)
+     * TC: O(n*26) | SC: O(n*64)
+     */
     public int longestIdealString(String s, int k) {
 
         int[][] dp = new int[s.length()][64];
@@ -889,6 +1176,13 @@ public class DP {
         return Math.max(1 + ls(s, k, 1, s.charAt(0), dp), ls(s, k, 1, '#', dp));
     }
 
+    /*
+     * PROBLEM: Longest Ideal String Helper (Helper)
+     * Memoized helper for longestIdealString.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n*26) | SC: O(n*64)
+     */
     private int ls(String s, int k, int ind, char prev, int[][] dp) {
         // base case
         if (ind >= s.length()) return 0;
@@ -913,6 +1207,14 @@ public class DP {
        (That is, if i will oddly jump to k, and if we know k can evenly jump to final, then i can oddly jump to final. Similarly, if i will evenly jump to k, and if k can evenly jump to final, then i can evenly jump to final)
    4. Remember to add (key = A[i], value=i) in TreeMap,
        so that we can get A[i]'s position (smallest index if duplicated values)
+     */
+    //Author: Anand
+    /*
+     * PROBLEM: Odd Even Jump (LeetCode 975)
+     * Count start indices from which you can reach the end via odd/even jumps.
+     *
+     * ALGORITHM: DP + TreeMap (track reachability)
+     * TC: O(n log n) | SC: O(n)
      */
     public int oddEvenJumps(int[] arr) {
         int n = arr.length;
@@ -944,6 +1246,13 @@ public class DP {
 
     }
 
+    /*
+     * PROBLEM: Number of Ways to Reach a Position After Exactly k Steps (LeetCode 2400)
+     * Count ways to move from startPos to endPos in exactly k steps.
+     *
+     * ALGORITHM: DP (top-down memoization)
+     * TC: O(k^2) | SC: O(k^2)
+     */
     public int numberOfWays(int startPos, int endPos, int k) {
         sp = startPos;
         op = k;
@@ -953,6 +1262,13 @@ public class DP {
     }
 
 
+    /*
+     * PROBLEM: Number of Ways K Steps Helper (Helper)
+     * Memoized helper for numberOfWays(startPos, endPos, k).
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(k^2) | SC: O(k^2)
+     */
     private int helper(int currPos, int endPos, int k, int[][] dp) {
         // base case
         if (currPos == endPos && k == 0) return 1;
@@ -975,6 +1291,13 @@ public class DP {
         return dp[newPos][k] = (left + right) % mod;
     }
 
+    /*
+     * PROBLEM: Number of Paths With Max Score (LeetCode 1301 variant)
+     * Count paths in grid where sum is divisible by k.
+     *
+     * ALGORITHM: DP (top-down 3D)
+     * TC: O(m*n*k) | SC: O(m*n*k)
+     */
     public int numberOfPaths(int[][] grid, int k) {
         m = grid.length;
         n = grid[0].length;
@@ -988,6 +1311,13 @@ public class DP {
         return helper(grid, k, m - 1, n - 1, 0, dp);
     }
 
+    /*
+     * PROBLEM: Number of Paths Helper (Helper)
+     * Memoized helper for numberOfPaths.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(m*n*k) | SC: O(m*n*k)
+     */
     private int helper(int[][] grid, int k, int m, int n, int sum, int[][][] dp) {
         // base case
         if (n == 0 && m == 0) {
@@ -1019,6 +1349,13 @@ public class DP {
     // TC  = (2^n)
     // SC = O(n)
 
+    /*
+     * PROBLEM: Grid Bounds Check (Helper)
+     * Checks if cell (i,j) is within grid bounds.
+     *
+     * ALGORITHM: Bounds check
+     * TC: O(1) | SC: O(1)
+     */
     private boolean isSafe(int[][] grid, int i, int j) {
         int m = grid.length;
         int n = grid[0].length;
@@ -1063,6 +1400,13 @@ public class DP {
 	  problem boils down to finding a subsequence of length len1
 	  with sum equals sumA
 	*/
+    /*
+     * PROBLEM: Split Array With Same Average (LeetCode 805)
+     * Check if array can be split into two parts with equal average.
+     *
+     * ALGORITHM: DP (memoization) + Math
+     * TC: O(n^2*sum) | SC: O(n*sum)
+     */
     public boolean splitArraySameAverage(int[] nums) {
         int n = nums.length, total = 0;
         for (int i = 0; i < n; i++) total += nums[i];
@@ -1076,6 +1420,13 @@ public class DP {
         return false;
     }
 
+    /*
+     * PROBLEM: Split Array Helper (Helper)
+     * Checks if a subsequence of given length and sum exists.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n*len*sum) | SC: O(n*len*sum)
+     */
     private boolean isPossible(int[] nums, int ind, int len, int sum, HashMap<String, Boolean> map) {
         int n = nums.length;
         // base case
@@ -1109,6 +1460,13 @@ public class DP {
     // Input: word1 = "sea", word2 = "eat"
     // Output: 2
     // TC = O(n1*n2), SC =  O(n1*n2)
+    /*
+     * PROBLEM: Delete Operation for Two Strings (LeetCode 583)
+     * Minimum deletions to make two strings equal (LCS-based).
+     *
+     * ALGORITHM: DP (tabulation, LCS)
+     * TC: O(n1*n2) | SC: O(n1*n2)
+     */
     public int minDistance(String word1, String word2) {
         int n1 = word1.length();
         int n2 = word2.length();
@@ -1136,6 +1494,13 @@ public class DP {
         return dp[n1][n2];
     }
 
+    /*
+     * PROBLEM: Cheapest Flights Helper (Helper)
+     * Memoized helper for cheapest flight within k stops.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n*k) | SC: O(n*k)
+     */
     int find(int src, int dest, int k) {
         if (k < 0) return 1000_000_00;
         if (src == dest) return 0;
@@ -1147,6 +1512,13 @@ public class DP {
         return cpDP[src][k] = max;
     }
 
+    /*
+     * PROBLEM: Cheapest Flights Within K Stops (LeetCode 787)
+     * Minimum cost flight from src to dst within K stops.
+     *
+     * ALGORITHM: DP (top-down memoization)
+     * TC: O(n*k) | SC: O(n*k)
+     */
     public int findCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
         map = new HashMap<>();
         cpDP = new Integer[n + 1][K + 2];
@@ -1158,6 +1530,13 @@ public class DP {
         return temp >= 1000_000_00 ? -1 : temp;
     }
 
+    /*
+     * PROBLEM: Minimum Number of Operations to Make a Tree (Helper/custom)
+     * Find the maximum number of components achievable by tree cuts with equal value.
+     *
+     * ALGORITHM: DFS + DP
+     * TC: O(n^2) | SC: O(n)
+     */
     public int componentValue(int[] nums, int[][] edges) {
 
         Map<Integer, List<Integer>> graph = new HashMap<>();
@@ -1177,7 +1556,13 @@ public class DP {
     }
 
     //Knapsack based problem
-
+    /*
+     * PROBLEM: Component Value Helper (Helper)
+     * Knapsack-based DFS helper for componentValue.
+     *
+     * ALGORITHM: DFS + Knapsack
+     * TC: O(n^2) | SC: O(n)
+     */
     private int helper(int start, int[] nums, Map<Integer, List<Integer>> graph, int currentSum, int expectedSum) {
         // base case
         if (currentSum == expectedSum) return 1;
@@ -1201,12 +1586,26 @@ public class DP {
    Explanation: We can at most get 9 A's on screen by pressing following key sequence:
    A, A, A, Ctrl A, Ctrl C, Ctrl V, Ctrl V
  */
+    /*
+     * PROBLEM: 4 Keys Keyboard (LeetCode 651)
+     * Maximum 'A's on screen using n keystrokes with Copy/Paste operations.
+     *
+     * ALGORITHM: DP (top-down)
+     * TC: O(n) | SC: O(n)
+     */
     public int maxA(int n) {
         int[] dp = new int[n + 1];
         Arrays.fill(dp, -1);
         return rec(n, dp);
     }
 
+    /*
+     * PROBLEM: 4 Keys Keyboard Helper (Helper)
+     * Memoized helper for maxA.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n^2) | SC: O(n)
+     */
     private int rec(int n, int[] dp) {
         // base case
         if (n < 3) return Math.max(0, n);
@@ -1243,6 +1642,13 @@ public class DP {
         Time Complexity: O(n * n * n)
         Space Complexity: O(n * n * n)
      */
+    /*
+     * PROBLEM: Minimum Total Distance Traveled (LeetCode 2463)
+     * Assign robots to factories to minimize total travel distance.
+     *
+     * ALGORITHM: DP (Knapsack-type, top-down)
+     * TC: O(n^3) | SC: O(n^3)
+     */
     public long minimumTotalDistance(List<Integer> robot, int[][] factory) {
         this.robot = robot;
         this.factory = factory;
@@ -1256,6 +1662,13 @@ public class DP {
         return helper(0, 0, factory[0][1], dp);
     }
 
+    /*
+     * PROBLEM: Minimum Total Distance Helper (Helper)
+     * Memoized knapsack helper for minimumTotalDistance.
+     *
+     * ALGORITHM: Top-Down DP (Knapsack)
+     * TC: O(n^3) | SC: O(n^3)
+     */
     private long helper(int robot_index, int factory_index, int capacity, long[][][] dp) {
         // base case
         if (robot_index == this.robot.size()) return 0L;
@@ -1281,18 +1694,11 @@ public class DP {
 
     // TC = O(10*10*N)
     /*
-       To create a 5 digit palindrome we do not need to care about the middle element.
-       We just need to find subsequence of pattern XY_YX.
-       Calculate number of subsequences of type XY and subsequences of type YX around any given point i and multiply them to find number of subsequences of type XY_YX.
-       Since string only has digits, the time complexity will be 100*n.
-
-    Approach -
-    We will be maintaing the counts of digit in the list cnts
-    Keep 2 arrays pre and suf to store the number of prefixes of type XY and suffixes of type YX. pre[i-1][1][2] means prefixes of type 12 before index i.
-    Similarly suf[i+1][1][2] means suffixes of type 21 after index i
-    Remember given string is made of digits that is 0123456789.
-    That's a total of 10 unique characters
-    Once we have calculated the prefix and suffix lists we just need to multiply pre[i - 1][j][k] with suf[i + 1][j][k] to find number of palindromic subsequences
+     * PROBLEM: Count Palindromic Subsequences (LeetCode 2484)
+     * Count 5-digit palindromic subsequences of the form XY_YX.
+     *
+     * ALGORITHM: DP (prefix-suffix counting)
+     * TC: O(10*10*n) | SC: O(10*10*n)
      */
     public int countPalindromes(String s) {
         int n = s.length(), ans = 0;
@@ -1339,6 +1745,13 @@ public class DP {
         return ans;
     }
 
+    /*
+     * PROBLEM: Count Good Strings (LeetCode 2466)
+     * Count strings of length between low and high built from zeros and ones blocks.
+     *
+     * ALGORITHM: DP (top-down memoization)
+     * TC: O(high) | SC: O(high)
+     */
     public int countGoodStrings(int low, int high, int zero, int one) {
         String z = str('0', zero);
         String o = str('1', one);
@@ -1346,6 +1759,13 @@ public class DP {
         return rec(low, high, z, o, new StringBuilder(), dp);
     }
 
+    /*
+     * PROBLEM: Count Good Strings Helper (Helper)
+     * Memoized recursive helper for countGoodStrings.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(high) | SC: O(high)
+     */
     private int rec(int low, int high, String zero, String one, StringBuilder sb, Map<Integer, Integer> dp) {
         // base case
         if (sb.length() > high) return 0;
@@ -1370,18 +1790,39 @@ public class DP {
 
     }
 
+    /*
+     * PROBLEM: Str Repeat Helper (Helper)
+     * Builds a string of given char repeated times.
+     *
+     * ALGORITHM: Utility
+     * TC: O(times) | SC: O(times)
+     */
     private String str(char c, int times) {
         char[] repeat = new char[times];
         Arrays.fill(repeat, c);
         return new String(repeat);
     }
 
+    /*
+     * PROBLEM: Valid Length Range Check (Helper)
+     * Checks if current StringBuilder length is in [low, high].
+     *
+     * ALGORITHM: Utility
+     * TC: O(1) | SC: O(1)
+     */
     private boolean valid(StringBuilder sb, int low, int high) {
         return sb.length() >= low && sb.length() <= high;
     }
 
 
     //Optimal solution
+    /*
+     * PROBLEM: Maximum Palindromes After Operations - Optimal (LeetCode 2896 variant)
+     * Maximum palindromes of length k in s using optimal DP.
+     *
+     * ALGORITHM: DP (tabulation)
+     * TC: O(n*k) | SC: O(n)
+     */
     public int maxPalindromesOptimal(String s, int k) {
         int ans = 0, n = s.length();
         int[] dp = new int[n + 1];
@@ -1393,6 +1834,13 @@ public class DP {
         return dp[n];
     }
 
+    /*
+     * PROBLEM: Palindrome Check Helper (Helper)
+     * Checks if substring s[l..r] is a palindrome.
+     *
+     * ALGORITHM: Two Pointer
+     * TC: O(r-l) | SC: O(1)
+     */
     boolean helper(String s, int l, int r) {
         while (l < r) {
             if (s.charAt(l) != s.charAt(r)) return false;
@@ -1404,6 +1852,13 @@ public class DP {
 
 
     // My Solution
+    /*
+     * PROBLEM: Maximum Palindromes After Operations (LeetCode 2896 variant)
+     * Count maximum non-overlapping palindromic substrings of length >= k.
+     *
+     * ALGORITHM: DP (top-down memoization) + palindrome precomputation
+     * TC: O(n^2*k) | SC: O(n^2)
+     */
     public int maxPalindromes(String s, int k) {
         int n = s.length();
         int[][] dp = new int[n][n + 1];
@@ -1424,6 +1879,13 @@ public class DP {
     }
 
 
+    /*
+     * PROBLEM: Max Palindromes Recursion Helper (Helper)
+     * Memoized helper for maxPalindromes.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n^2*k) | SC: O(n^2)
+     */
     private int rec(String s, int k, int i, int j, boolean[][] palind, int[][] dp) {
         int n = s.length();
         int ind = i;
@@ -1457,6 +1919,13 @@ public class DP {
     }
 
 
+    /*
+     * PROBLEM: Is Palindrome Helper (Helper)
+     * Memoized palindrome check for substring s[i..j].
+     *
+     * ALGORITHM: Memoization
+     * TC: O(n^2) | SC: O(n^2)
+     */
     private boolean isPalindrome(String s, int i, int j, boolean[][] memob) {
         if (i == j || i > j) return true;
         if (memob[i][j]) return memob[i][j];
@@ -1480,13 +1949,26 @@ Explanation: There are 3 square-free subsets in this example:
 It can be proven that there are no more than 3 square-free subsets in the given array.
 */
     //DO with DP 6 bitmask
-
+    /*
+     * PROBLEM: Square Free Subsets (LeetCode 2572)
+     * Count subsets whose element product is square-free.
+     *
+     * ALGORITHM: DP (top-down memoization with product key)
+     * TC: O(n * 2^10) | SC: O(n * 2^10)
+     */
     public int squareFreeSubsets(int[] nums) {
         Map<String, Integer> dp = new HashMap<>();
         return helper(nums, 0, 1L, dp);
     }
 
 
+    /*
+     * PROBLEM: Square Free Subsets Helper (Helper)
+     * Memoized helper for squareFreeSubsets.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n * 2^10) | SC: O(n * 2^10)
+     */
     private int helper(int[] nums, int ind, long prod, Map<String, Integer> dp) {
         if (ind >= nums.length) return 0;
         int t = 0, nt = 0;
@@ -1504,6 +1986,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
     }
 
     //function that checks if the given number is square free or not
+    /*
+     * PROBLEM: Is Square Free (Helper)
+     * Checks if a number has no perfect square factor other than 1.
+     *
+     * ALGORITHM: Trial Division
+     * TC: O(sqrt(n)) | SC: O(1)
+     */
     private boolean isSquareFree(long num) {
         //finds the remainder
         if (num % 2 == 0)
@@ -1525,12 +2014,26 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return true;
     }
 
+    /*
+     * PROBLEM: Ways to Reach Target Score (LeetCode 2585)
+     * Count ways to reach exact target score using given type counts/values.
+     *
+     * ALGORITHM: DP (top-down memoization, bounded knapsack)
+     * TC: O(target * types) | SC: O(target * types)
+     */
     public int waysToReachTarget(int target, int[][] types) {
         int[][] dp = new int[target + 1][types.length + 1];
         for (int[] d : dp) Arrays.fill(d, -1);
         return helper(target, types, 0, dp);
     }
 
+    /*
+     * PROBLEM: Ways to Reach Target Helper (Helper)
+     * Memoized helper for waysToReachTarget.
+     *
+     * ALGORITHM: Top-Down DP (Bounded Knapsack)
+     * TC: O(target * types) | SC: O(target * types)
+     */
     private int helper(int target, int[][] types, int ind, int[][] dp) {
         // base case
         if (target == 0) return 1;
@@ -1551,11 +2054,25 @@ It can be proven that there are no more than 3 square-free subsets in the given 
     }
 
     //DP
+    /*
+     * PROBLEM: Count Quadruplets (Custom DP)
+     * Count increasing quadruplets from array using DP memoization.
+     *
+     * ALGORITHM: DP (top-down)
+     * TC: O(n^4) | SC: O(n^4)
+     */
     public long countQuadruplets(int[] nums) {
         Map<String, Long> dp = new HashMap<>();
         return helper(nums, 0, new ArrayList<>(), dp);
     }
 
+    /*
+     * PROBLEM: Count Quadruplets Helper (Helper)
+     * Memoized helper for countQuadruplets.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n^4) | SC: O(n^4)
+     */
     private long helper(int[] nums, int ind, List<Integer> selected, Map<String, Long> dp) {
 
         String key = String.valueOf(ind);
@@ -1603,6 +2120,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
     Explanation: We can break s in two substrings: "leet" from index 0 to 3 and "code" from index 5 to 8.
      There is only 1 unused character (at index 4), so we return 1.
      */
+    /*
+     * PROBLEM: Minimum Extra Characters After Breaking String (LeetCode 2707 helper)
+     * Memoized helper to find minimum extra characters.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n^2) | SC: O(n)
+     */
     public int func(int idx, String s, Set<String> st, int[] dp) {
         if (idx == s.length())
             return 0;
@@ -1619,6 +2143,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return dp[idx] = res;
     }
 
+    /*
+     * PROBLEM: Minimum Extra Characters After Breaking String (LeetCode 2707)
+     * Minimum extra characters left after breaking s using dictionary words.
+     *
+     * ALGORITHM: DP (top-down)
+     * TC: O(n^2) | SC: O(n)
+     */
     public int minExtraChar(String s, String[] dictionary) {
         int[] dp = new int[s.length() + 1];
         Arrays.fill(dp, -1);
@@ -1626,6 +2157,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return func(0, s, st, dp);
     }
 
+    /*
+     * PROBLEM: Maximum Jumps to End of Array (LeetCode 2770)
+     * Maximum number of jumps from index 0 to n-1 with bounded difference.
+     *
+     * ALGORITHM: DP (top-down memoization)
+     * TC: O(n^2) | SC: O(n)
+     */
     public int maximumJumps(int[] nums, int target) {
         int[] dp = new int[nums.length];
         Arrays.fill(dp, Integer.MIN_VALUE);
@@ -1642,6 +2180,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
     It can be proven that there is no other jumping sequence that goes from 0 to n - 1 with more than 3 jumps. Hence, the answer is 3.
      */
 
+    /*
+     * PROBLEM: Maximum Jumps Helper (Helper)
+     * Memoized helper for maximumJumps.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n^2) | SC: O(n)
+     */
     private int mj(int[] nums, int target, int ind, int last, int[] dp) {
 
         // base case
@@ -1677,6 +2222,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
 
      */
     //TC = O(3N), SC = O(3n)
+    /*
+     * PROBLEM: Max Non-Decreasing Length (LeetCode 2770 variant)
+     * Find longest non-decreasing subarray choosing from nums1 or nums2.
+     *
+     * ALGORITHM: DP (top-down memoization, 2D)
+     * TC: O(3n) | SC: O(3n)
+     */
     public int maxNonDecreasingLength(int[] nums1, int[] nums2) {
 
         int[][] dp = new int[nums1.length][3];
@@ -1684,6 +2236,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return helper(0, nums1, nums2, 0, dp);
     }
 
+    /*
+     * PROBLEM: Max Non-Decreasing Length Helper (Helper)
+     * Memoized helper for maxNonDecreasingLength.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(3n) | SC: O(3n)
+     */
     private int helper(int ind, int[] nums1, int[] nums2, int choice, int[][] dp) {
         // base case
         if (ind >= nums1.length) return 0;
@@ -1712,6 +2271,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return dp[ind][choice] = maxLen;
     }
 
+    /*
+     * PROBLEM: Max Score With Same Parity (LeetCode 2786)
+     * Maximum score by selecting elements where same-parity is free, different parity costs x.
+     *
+     * ALGORITHM: DP (top-down memoization)
+     * TC: O(n) | SC: O(n)
+     */
     public long maxScore(int[] nums, int x) {
         long[][] dp = new long[nums.length][2];
         for (long[] d : dp) Arrays.fill(d, -1L);
@@ -1719,6 +2285,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return nums[0] + helper(nums, x, 0, nums[0] % 2, dp);
     }
 
+    /*
+     * PROBLEM: Max Score Helper (Helper)
+     * Memoized helper for maxScore.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n) | SC: O(n)
+     */
     private long helper(int[] nums, int x, int ind, int parity, long[][] dp) {
 
         // base case
@@ -1738,6 +2311,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return dp[ind][parity] = max;
     }
 
+    /*
+     * PROBLEM: House Robber (LeetCode 198)
+     * Maximum money from non-adjacent houses.
+     *
+     * ALGORITHM: DP (top-down memoization)
+     * TC: O(n) | SC: O(n)
+     */
     public int rob(int[] nums) {
         int[] dp = new int[nums.length];
         Arrays.fill(dp, -1);
@@ -1745,6 +2325,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
                 nums.length > 1 ? nums[1] + helper(nums, 1, dp) : 0);
     }
 
+    /*
+     * PROBLEM: House Robber Helper (Helper)
+     * Memoized helper for rob.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n) | SC: O(n)
+     */
     private int helper(int[] nums, int ind, int[] dp) {
 
         // base case
@@ -1765,6 +2352,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
     Output: true
     Explanation: We can split the array into [2, 2] and [1] in the first step. Then, in the second step, we can split [2, 2] into [2] and [2]. As a result, the answer is true.
      */
+    /*
+     * PROBLEM: Can Split Array (LeetCode 2811)
+     * Check if array can be split recursively with each subarray sum >= m.
+     *
+     * ALGORITHM: DP (top-down, prefix sums)
+     * TC: O(n^3) | SC: O(n^2)
+     */
     public boolean canSplitArray(List<Integer> nums, int m) {
         int n = nums.size();
         int[] ps = new int[n];
@@ -1775,6 +2369,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return f(0, n - 1, m, ps, dp);
     }
 
+    /*
+     * PROBLEM: Can Split Array Helper (Helper)
+     * Memoized helper for canSplitArray.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n^3) | SC: O(n^2)
+     */
     private boolean f(int i, int j, int m, int[] ps, int[][] dp) {
         // base case
         if (i == j) return true;
@@ -1796,6 +2397,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return false;
     }
 
+    /*
+     * PROBLEM: Number of Ways to Wear Hats (LeetCode 1434) - Top Down
+     * Count ways to assign distinct hats to people (bottom-up DP with bitmask).
+     *
+     * ALGORITHM: DP (bottom-up, bitmask)
+     * TC: O(40 * 2^n) | SC: O(2^n)
+     */
     public int numberWaysTopDown(List<List<Integer>> hats) {
         int n = hats.size();
         int[] dp = new int[1 << n]; // {mask of selected person, ways}
@@ -1834,6 +2442,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
     // The problem asks us to find largest subsequence that have sum equal to target
     // Algo:-
     // We need to iterate over list and use take, not-take based recursive approach and then memomise
+    /*
+     * PROBLEM: Length of Longest Subsequence With Sum Equal Target (LeetCode 2915)
+     * Longest subsequence whose elements sum to exactly target.
+     *
+     * ALGORITHM: DP (top-down, take/not-take)
+     * TC: O(n*target) | SC: O(n*target)
+     */
     public int lengthOfLongestSubsequence(List<Integer> nums, int target) {
         Collections.sort(nums);
         int[][] dp = new int[target + 1][nums.size() + 1];
@@ -1842,6 +2457,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return Math.max(ans, -1);
     }
 
+    /*
+     * PROBLEM: Length of Longest Subsequence Helper (Helper)
+     * Memoized helper for lengthOfLongestSubsequence.
+     *
+     * ALGORITHM: Top-Down DP (Take/Not-Take)
+     * TC: O(n*target) | SC: O(n*target)
+     */
     private int helper(List<Integer> nums, int target, int ind, int[][] dp) {
         // base case
         if (target == 0) return 0;
@@ -1854,6 +2476,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
     }
 
 
+    /*
+     * PROBLEM: Number of Ways to Wear Hats Recursive (LeetCode 1434)
+     * Count ways to assign distinct hats to people (top-down DFS bitmask).
+     *
+     * ALGORITHM: DFS + Bitmask DP
+     * TC: O(40 * 2^n) | SC: O(40 * 2^n)
+     */
     public int numberWaysRecursive(List<List<Integer>> hats) {
         int n = hats.size();
         Integer[][] dp = new Integer[41][1 << 10]; // {Pair(cap, mask of selected person), ways}
@@ -1869,6 +2498,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return dfs((1 << n) - 1, 0, 1, hattToP, dp); // start with 1st hat and traverse through all
     }
 
+    /*
+     * PROBLEM: DFS Hats Helper (Helper)
+     * DFS helper for numberWaysRecursive using bitmask.
+     *
+     * ALGORITHM: DFS + Bitmask DP
+     * TC: O(40 * 2^n) | SC: O(40 * 2^n)
+     */
     private int dfs(int allMask,
                     int assignedPeople,
                     int hat,
@@ -1898,6 +2534,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
     Output: true
     Explanation: We can split the array into [2, 2] and [1] in the first step. Then, in the second step, we can split [2, 2] into [2] and [2]. As a result, the answer is true.
      */
+    /*
+     * PROBLEM: Can Split Array Top-Down DP (LeetCode 2811 variant)
+     * Tabulation version of canSplitArray.
+     *
+     * ALGORITHM: DP (bottom-up tabulation)
+     * TC: O(n^3) | SC: O(n^2)
+     */
     public boolean canSplitArrayTopDownDP(List<Integer> nums, int m) {
         int n = nums.size();
         int[] ps = new int[n];
@@ -1907,6 +2550,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return f(m, ps, dp);
     }
 
+    /*
+     * PROBLEM: Can Split Array Tabulation Helper (Helper)
+     * Bottom-up DP helper for canSplitArrayTopDownDP.
+     *
+     * ALGORITHM: DP (Tabulation)
+     * TC: O(n^3) | SC: O(n^2)
+     */
     private boolean f(int m, int[] ps, boolean[][] dp) {
         int n = ps.length;
         boolean left = false, right = false;
@@ -1933,6 +2583,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
     TC = O(N2*3), SC = O(N2)
     As N ~=100 that should be fine
     */
+    /*
+     * PROBLEM: Minimum Operations to Make Array Non-Decreasing (Custom DP)
+     * Minimum number of operations to make list non-decreasing.
+     *
+     * ALGORITHM: DP (tabulation with replacement)
+     * TC: O(n^2 * 3) | SC: O(n^2)
+     */
     public int minimumOperations(List<Integer> nums) {
         int op = 0;
         List<Integer> clone = new ArrayList<>();
@@ -1962,12 +2619,26 @@ It can be proven that there are no more than 3 square-free subsets in the given 
     }
 
 
+    /*
+     * PROBLEM: Number of Dice Rolls With Target Sum (LeetCode 1155)
+     * Count ways to get target sum with n k-faced dice.
+     *
+     * ALGORITHM: DP (top-down memoization)
+     * TC: O(n*k*target) | SC: O(n*target)
+     */
     public int numRollsToTarget(int n, int k, int target) {
         int[][] dp = new int[target + 1][n + 1];
         for (int[] d : dp) Arrays.fill(d, -1);
         return helper(n, k, target, 0, dp);
     }
 
+    /*
+     * PROBLEM: Num Rolls To Target Helper (Helper)
+     * Memoized helper for numRollsToTarget.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n*k*target) | SC: O(n*target)
+     */
     private int helper(int n, int k, int target, int sum, int[][] dp) {
         if (sum > target) return 0;
         // base case
@@ -1983,6 +2654,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
 
     // DP + BS
     // Upsolve
+    /*
+     * PROBLEM: Maximize the Profit as the Businessman (LeetCode 2830)
+     * Maximum profit by choosing non-overlapping offers on houses.
+     *
+     * ALGORITHM: DP + Binary Search
+     * TC: O(n log n) | SC: O(n)
+     */
     public int maximizeTheProfit(int n, List<List<Integer>> offers) {
         Collections.sort(offers, new Comparator<List<Integer>>() {
             @Override
@@ -1994,6 +2672,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return helper(0, -1, n, offers);
     }
 
+    /*
+     * PROBLEM: Maximize Profit Helper (Helper)
+     * Recursive helper for maximizeTheProfit.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n log n) | SC: O(n)
+     */
     private int helper(int ind, int li, int n, List<List<Integer>> offers) {
         if (ind >= offers.size()) return 0;
 
@@ -2027,6 +2712,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
 
 
     //TODO: Cleanup solution & solve for correct answer
+    /*
+     * PROBLEM: Minimum Increment Operations (LeetCode 2919)
+     * Minimum cost to make every subarray of length 3 have max >= k.
+     *
+     * ALGORITHM: DP (top-down, greedy)
+     * TC: O(n) | SC: O(n)
+     */
     public long minIncrementOperations(int[] nums, int k) {
 
         if (nums.length == 3) {
@@ -2053,6 +2745,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
 
     }
 
+    /*
+     * PROBLEM: Min Increment Operations Helper (Helper)
+     * Recursive helper for minIncrementOperations.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n) | SC: O(n)
+     */
     private long helper(int[] nums, int k, int ind, HashSet<Integer> changedIndex) {
         // base case
         if (ind < 0) return 0;
@@ -2081,6 +2780,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
     }
 
     //TODO:TBD
+    /*
+     * PROBLEM: Minimum Swaps to Make Sequences Increasing (LeetCode 801)
+     * Minimum swaps to make both nums1 and nums2 strictly increasing.
+     *
+     * ALGORITHM: DP (top-down, swap/no-swap)
+     * TC: O(n) | SC: O(n)
+     */
     public int minOperations(int[] nums1, int[] nums2) {
         if (Arrays.stream(nums1).max().getAsInt() == nums1[nums1.length - 1]
                 && Arrays.stream(nums2).max().getAsInt() == nums2[nums2.length - 1]
@@ -2113,6 +2819,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return helper(nums1, nums2, 0);
     }
 
+    /*
+     * PROBLEM: Min Operations Helper (Helper)
+     * Recursive helper for minOperations.
+     *
+     * ALGORITHM: Top-Down DP
+     * TC: O(n) | SC: O(n)
+     */
     private int helper(int[] nums1, int[] nums2, int ind) {
         // base case
         if (ind >= nums1.length) {
@@ -2147,6 +2860,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
 
     //TLE
     // O(N3) valid when N ~ 100
+    /*
+     * PROBLEM: Number of Ways to Split Array (LeetCode 2270)
+     * Count ways to split array into 3 non-empty parts with non-decreasing prefix sums.
+     *
+     * ALGORITHM: DP (memoization) + Prefix Sum
+     * TC: O(n^3) | SC: O(n^2)
+     */
     public int waysToSplit(int[] nums) {
         int[] prefix = new int[nums.length];
         for (int i = 0; i < nums.length; i++)
@@ -2155,6 +2875,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
         return ways(nums, prefix, new ArrayList<>(), 0, dp);
     }
 
+    /*
+     * PROBLEM: Ways to Split Helper (Helper)
+     * Memoized recursive helper for waysToSplit.
+     *
+     * ALGORITHM: Top-Down DP + Prefix Sum
+     * TC: O(n^3) | SC: O(n^2)
+     */
     private int ways(int[] nums, int[] prefix, List<Integer> indexes, int i, Map<String, Integer> dp) {
         // base case
         if (i >= nums.length) return 0;
@@ -2189,6 +2916,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
 
     //TLE
     class StringCompressionII {
+        /*
+         * PROBLEM: String Compression Helper (Helper)
+         * Compresses a run-length string.
+         *
+         * ALGORITHM: Run-Length Encoding
+         * TC: O(n) | SC: O(n)
+         */
         private String compress(String color) {
             StringBuilder sb = new StringBuilder();
 
@@ -2208,6 +2942,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
             return sb.toString();
         }
 
+        /*
+         * PROBLEM: String Compression II (LeetCode 1531)
+         * Minimum length of run-length encoding after deleting at most k characters.
+         *
+         * ALGORITHM: DP (top-down memoization)
+         * TC: O(n^2 * k) | SC: O(n^2 * k)
+         */
         public int getLengthOfOptimalCompression(String s, int k) {
             Map<String, Integer> dp = new HashMap<>();
             // If all characters are unique then return s.length()-k;
@@ -2222,6 +2963,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
             return s.length() - k;
         }
 
+        /*
+         * PROBLEM: String Compression II Helper (Helper)
+         * Memoized helper for getLengthOfOptimalCompression.
+         *
+         * ALGORITHM: Top-Down DP
+         * TC: O(n^2 * k) | SC: O(n^2 * k)
+         */
         private int helper(String s, int k, int ind, Set<Integer> deleted, Map<String, Integer> dp) {
             // base case
             if (k == 0) {
@@ -2257,6 +3005,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
     class SolutionMinDifference {
         Set<List<Integer>> ans = new HashSet<>();
 
+        /*
+         * PROBLEM: Print Divisors Helper (Helper)
+         * Returns all divisors of n as an array.
+         *
+         * ALGORITHM: Trial Division up to sqrt(n)
+         * TC: O(sqrt(n)) | SC: O(sqrt(n))
+         */
         public int[] printDivisors(int n) {
             // Note that this loop runs till square root
 
@@ -2277,6 +3032,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
             return list.stream().mapToInt(x -> x).toArray();
         }
 
+        /*
+         * PROBLEM: Minimum Difference of Divisors (Custom DP)
+         * Find k divisors of n whose max-min difference is minimal.
+         *
+         * ALGORITHM: BFS/DFS + Backtracking on divisors
+         * TC: O(d(n)^k) | SC: O(k)
+         */
         public int[] minDifference(int n, int k) {
             int[] candidates = printDivisors(n);
             Arrays.sort(candidates);
@@ -2302,6 +3064,13 @@ It can be proven that there are no more than 3 square-free subsets in the given 
             return result.stream().mapToInt(x -> x).toArray();
         }
 
+        /*
+         * PROBLEM: BFS Divisor Combinations (Helper)
+         * Backtracking helper to enumerate all k-divisor product combinations.
+         *
+         * ALGORITHM: DFS/Backtracking
+         * TC: O(d(n)^k) | SC: O(k)
+         */
         private void bfs(int[] arr, int n, int idx, int prod, List<Integer> ds, int k) {
 
             if (ds.size() > k || prod > n) return;

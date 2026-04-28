@@ -4,6 +4,13 @@ import java.util.HashMap;import java.util.*;
 import java.util.stream.Collectors;
 
 class SolutionMax {
+    /*
+     * PROBLEM: Next Permutation (LeetCode 31)
+     * Rearrange nums into the next lexicographically greater permutation in-place.
+     *
+     * ALGORITHM: Linear scan from right to find the first descent, then swap and reverse suffix
+     * TC: O(n) | SC: O(1)
+     */
     public void nextPermutation(int[] nums) {
         int elem = Integer.MIN_VALUE;
         int index = 0;
@@ -43,6 +50,13 @@ class SolutionMax {
     }
 
 
+    /*
+     * PROBLEM: Swap Elements (Helper)
+     * Swap elements at indices i and j in the given array.
+     *
+     * ALGORITHM: Temp-variable swap
+     * TC: O(1) | SC: O(1)
+     */
     public void swap(int[] nums, int i, int j) {
         int temp;
         temp = nums[i];
@@ -70,6 +84,13 @@ class SolutionMax {
         }
      */
 
+    /*
+     * PROBLEM: Permutations (LeetCode 46)
+     * Return all possible permutations of a distinct integer array.
+     *
+     * ALGORITHM: Backtracking — swap elements from current position to end, recurse, then swap back
+     * TC: O(n! * n) | SC: O(n! * n)
+     */
     public List<List<Integer>> permute(int[] nums) {
 
         List<List<Integer>> result = new ArrayList<>();
@@ -77,6 +98,13 @@ class SolutionMax {
         return result;
     }
 
+    /*
+     * PROBLEM: Recursive Permutation Generator (Helper)
+     * Recursively generate all permutations of nums[l..r] by backtracking.
+     *
+     * ALGORITHM: Backtracking — swap l with each i in [l,r], recurse on l+1, undo swap
+     * TC: O(n!) | SC: O(n)
+     */
     private void permute(int[] nums, int l, int r, List<List<Integer>> result) {
         if (l == r) {
             List<Integer> list = Arrays.stream(nums).boxed().collect(Collectors.toList());
@@ -91,6 +119,13 @@ class SolutionMax {
     }
 
 
+    /*
+     * PROBLEM: Number of Squareful Arrays (LeetCode 996)
+     * Count permutations of nums where every adjacent pair sums to a perfect square.
+     *
+     * ALGORITHM: Generate all unique permutations via backtracking, then filter for squareful property
+     * TC: O(n!) | SC: O(n!)
+     */
     public int numSquarefulPerms(int[] nums) {
 
         if (nums.length == 0) return 0;
@@ -141,6 +176,13 @@ class SolutionMax {
         return result.size();
     }
 
+    /*
+     * PROBLEM: Stickers to Spell Word (LeetCode 691)
+     * Find the minimum number of stickers required to spell the target string.
+     *
+     * ALGORITHM: Bitmask DP over subsets of target characters (stub/incomplete implementation)
+     * TC: O(2^n * |stickers|) | SC: O(2^n)
+     */
     public int minStickers(String[] stickers, String target) {
         int min = 0;
         int n = target.length();
@@ -157,6 +199,13 @@ class SolutionMax {
         return min;
     }
 
+    /*
+     * PROBLEM: Permutation Sequence (LeetCode 60)
+     * Return the k-th permutation sequence of integers 1..n.
+     *
+     * ALGORITHM: Generate all permutations into a min-heap and return the k-th smallest
+     * TC: O(n^2) | SC: O(n)
+     */
     public String getPermutation(int n, int k) {
         int[] nums = new int[n];
         for (int i = 1; i <= n; i++) {
@@ -172,6 +221,13 @@ class SolutionMax {
         return null;
     }
 
+    /*
+     * PROBLEM: Numeric Permutation Generator (Helper)
+     * Recursively generate all numeric permutations of nums into a priority queue.
+     *
+     * ALGORITHM: Backtracking — swap, recurse, swap back; collect formed numbers into a min-heap
+     * TC: O(n!) | SC: O(n!)
+     */
     private void permuteNum(int[] nums, int l, int r, PriorityQueue<Integer> result) {
         if (l == r) {
             StringBuilder number = new StringBuilder();
@@ -189,6 +245,13 @@ class SolutionMax {
         }
     }
 
+    /*
+     * PROBLEM: Swap Elements Numeric Variant (Helper)
+     * Swap elements at indices i and j in the given integer array.
+     *
+     * ALGORITHM: Temp-variable swap
+     * TC: O(1) | SC: O(1)
+     */
     public void swapNum(int[] nums, int i, int j) {
         int temp;
         temp = nums[i];
@@ -218,10 +281,13 @@ class SolutionMax {
 //    }
 
     /*
-    4
-2
-1234
-gs(sb, "1234", 1)
+     * PROBLEM: Generate Combinations of Size k (Helper)
+     * Generate all combinations of size k from the digits in builder.
+     *
+     * ALGORITHM: Nested iteration over digit positions to build combinations of length k
+     * TC: O(n^2) | SC: O(n^2)
+     *
+     * Example: n=4, k=2, builder="1234" → gs(sb, "1234", 1)
      */
     public List<List<Integer>> getSequence(StringBuilder prefix, StringBuilder builder, int k) {
         int n = builder.toString().length();
@@ -242,13 +308,14 @@ gs(sb, "1234", 1)
 
 
     /*
-    Input: nums = [5,1,3]
-Output: 3
-
-[135]
-[133]
-[113]
-[111]
+     * PROBLEM: Reduction Operations to Make the Array Elements Equal (LeetCode 1887)
+     * Count the minimum operations to make all elements equal by repeatedly replacing
+     * the maximum element with the next largest value.
+     *
+     * ALGORITHM: Sort array; for each distinct value boundary, accumulate step counts
+     * TC: O(n log n) | SC: O(1)
+     *
+     * Example: nums=[5,1,3] → Output: 3  ([135]→[133]→[113]→[111])
      */
     public int reductionOperations(int[] nums) {
         Arrays.sort(nums);
@@ -279,6 +346,13 @@ Output: 3
         return 0;
     }
 
+    /*
+     * PROBLEM: Find Second Largest Element (Helper)
+     * Find the second largest distinct element and its index in the array.
+     *
+     * ALGORITHM: Linear scan from the right, stop at first adjacent distinct pair
+     * TC: O(n) | SC: O(1)
+     */
     public int[] nextLargest(int[] nums) {
         int[] ans = new int[2];
         for (int i = nums.length - 1; i > 0; i--) {
@@ -291,6 +365,13 @@ Output: 3
         return ans;
     }
 
+    /*
+     * PROBLEM: Find Largest Element and Index (Helper)
+     * Find the largest element and its index in the array.
+     *
+     * ALGORITHM: Linear scan from the right, returning at first distinct boundary
+     * TC: O(n) | SC: O(1)
+     */
     public int[] largest(int[] nums) {
         int[] ans = new int[2];
         ans[1] = Integer.MIN_VALUE;
@@ -304,13 +385,15 @@ Output: 3
     }
 
     /*
-    [[50,50]]
-1
-50
-
-[[1,2],[3,4],[5,6]]
+     * PROBLEM: Check if All the Integers in a Range Are Covered (LeetCode 1893)
+     * Check if every integer in [left, right] is covered by at least one of the given ranges.
+     *
+     * ALGORITHM: Mark all covered integers in a hash map, then verify each integer in [left, right]
+     * TC: O(n * r) | SC: O(r)
+     *
+     * Example: ranges=[[1,2],[3,4],[5,6]], left=2, right=5 → true
+     *          ranges=[[50,50]], left=1, right=50 → false
      */
-
     public boolean isCovered(int[][] ranges, int left, int right) {
         HashMap<Integer, Integer> map = new HashMap<>();
         int n = ranges.length;
@@ -329,18 +412,15 @@ Output: 3
     }
 
     /*
-    Input: chalk = [3,4,1,2], k = 25
-
-25-c[0] = 25-3 = 22
-
-[5,1,5]
-22
-
-22-5-1-5 = 11-5= 6-1 = 5-5 = 0
-index =3
-index = 0
+     * PROBLEM: Find the Student that Will Replace the Chalk (LeetCode 1894)
+     * Find the index of the student who runs out of chalk given k total pieces.
+     *
+     * ALGORITHM: Compute total sum, reduce k modulo sum, then linear scan to find the student
+     * TC: O(n) | SC: O(1)
+     *
+     * Example: chalk=[3,4,1,2], k=25 → student at index 1
+     *   25 % (3+4+1+2=10) = 5 → 5-3=2 → 2-4 < 0 → index=1
      */
-
     public int chalkReplacer(int[] chalk, int k) {
         int n = chalk.length;
         if (n == 0) return 0;
@@ -431,25 +511,15 @@ index = 0
     }
 
     /*
-    Input: groupSizes = [3,3,3,3,3,1,3]
-    Output: [[5],[0,1,2],[3,4,6]]
-     TC = O(n + n-logn) ~ O(nlogn)
-
-     */
-
-    /*
-    Input: nums = [1,-3,2,3,-4]
-Output: 5
-     */
-
-
-    /*
-    dp[0]=1
-    prev= -3+1 = -2
-    dp[1] = -2
-    [1,-3,2,3,-4]
-    a = -2
-    b = -3
+     * PROBLEM: Maximum Absolute Sum of Any Subarray (LeetCode 1749)
+     * Find the maximum absolute sum of any (contiguous) subarray of nums.
+     *
+     * ALGORITHM: Kadane's algorithm applied twice — once for max subarray, once for min subarray;
+     * answer is max(globalMax, -globalMin)
+     * TC: O(n) | SC: O(1)
+     *
+     * Example: nums=[1,-3,2,3,-4] → Output: 5
+     *   max subarray sum = 5 (subarray [2,3]), min subarray sum = -4, answer = max(5,4) = 5
      */
     public int maxAbsoluteSum(int[] nums) {
 
@@ -487,6 +557,14 @@ Output: 5
         return Math.max(gMax, -gMin);
     }
 
+    /*
+     * PROBLEM: Queries on a Permutation With Key (LeetCode 1409)
+     * Process queries on a permutation [1..m]: for each query find its index, record it,
+     * then move the element to the front.
+     *
+     * ALGORITHM: Linear scan for each query + front-shift reshuffle
+     * TC: O(n * m) | SC: O(m)
+     */
     public int[] processQueries(int[] queries, int m) {
         int n = queries.length;
         int[] ans = new int[n];
@@ -505,6 +583,13 @@ Output: 5
         return ans;
     }
 
+    /*
+     * PROBLEM: Move Element to Front (Helper)
+     * Move the element at position pos to the front of perm, shifting elements [0,pos-1] right by one.
+     *
+     * ALGORITHM: Copy array, place perm[pos] at index 0, shift left portion right
+     * TC: O(n) | SC: O(n)
+     */
     private void reshuffle(int[] perm, int pos) {
         int[] copy = Arrays.copyOfRange(perm, 0, perm.length);
         perm[0] = perm[pos];
@@ -514,6 +599,13 @@ Output: 5
     }
 
 
+    /*
+     * PROBLEM: Group the People Given the Group Size They Belong To (LeetCode 1282)
+     * Group people such that each group has exactly groupSizes[i] members.
+     *
+     * ALGORITHM: HashMap to bucket people by their required group size; flush full buckets into answer
+     * TC: O(n) | SC: O(n)
+     */
     public List<List<Integer>> groupThePeople(int[] groupSizes) {
         int n = groupSizes.length;
         HashMap<Integer, List<Integer>> map = new HashMap<>(); // map to store persion i with size of group
@@ -555,6 +647,13 @@ Output: 5
     }
 
 
+    /*
+     * PROBLEM: Compute Depth and Deepest Level Sum (Helper)
+     * Recursively compute the depth of the deepest level and the sum of node values at that level.
+     *
+     * ALGORITHM: Post-order DFS; returns int[]{depth, sum} — compare left/right depths to accumulate
+     * TC: O(n) | SC: O(h)
+     */
     public int[] getDepthAndSum(TreeNode node) {
         int[] ans = new int[2];
         int[] left_ans;
@@ -590,17 +689,38 @@ Output: 5
         return ans;
     }
 
+    /*
+     * PROBLEM: Deepest Leaves Sum (LeetCode 1302)
+     * Return the sum of values of all deepest leaf nodes in the binary tree.
+     *
+     * ALGORITHM: Delegate to getDepthAndSum helper which tracks max depth and corresponding sum via DFS
+     * TC: O(n) | SC: O(h)
+     */
     public int deepestLeavesSum(TreeNode root) {
         return getDepthAndSum(root)[1];
     }
 
 
+    /*
+     * PROBLEM: Minimum Cost to Change the Final Value of Expression (LeetCode 1896)
+     * Find minimum operations to flip the final boolean value of a parenthesized expression (stub).
+     *
+     * ALGORITHM: DP on expression parse tree (stub/incomplete implementation)
+     * TC: O(n) | SC: O(n)
+     */
     //dp based
     public int minOperationsToFlip(String expression) {
         return 0;
     }
 
 
+    /*
+     * PROBLEM: Largest Magic Square (LeetCode 1895)
+     * Find the largest k×k subgrid that forms a magic square (all row, column, and diagonal sums equal).
+     *
+     * ALGORITHM: Iterate over all subgrids using prefix sums and validate with ms() helper
+     * TC: O(n^3) | SC: O(n^2)
+     */
     public int largestMagicSquare(int[][] grid) {
         int max = 0;
         int n = grid.length;
@@ -618,6 +738,13 @@ Output: 5
         return max;
     }
 
+    /*
+     * PROBLEM: Check Magic Square (Helper)
+     * Check if a matrix is a magic square by comparing its two diagonal sums.
+     *
+     * ALGORITHM: Linear scan over both diagonals; return matrix size - 1 if equal, else 0
+     * TC: O(n) | SC: O(1)
+     */
     public int ms(int[][] magicSquare) {
         int N = magicSquare.length;
         // sumd1 and sumd2 are the sum of the two diagonals

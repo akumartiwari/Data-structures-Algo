@@ -7,7 +7,13 @@ import java.io.PrintWriter;
 import java.util.HashMap;import java.util.*;
 
 public class Main {
-    /*These are one of the fast methods of reading input and writing output*/
+    /*
+     * PROBLEM: Entry point (Main)
+     * Fast I/O template reading test cases from stdin and dispatching to logic methods.
+     *
+     * ALGORITHM: Fast I/O (BufferedReader + StringTokenizer)
+     * TC: O(t * n log n) | SC: O(n)
+     */
     public static void main(String[] args) {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -43,7 +49,13 @@ public class Main {
 
     }
 
-    // Handle the case for duplicates in array
+    /*
+     * PROBLEM: Minimum Possible Score (Helper)
+     * Compute minimum possible score by repeatedly taking floor division of the smallest/largest pair.
+     *
+     * ALGORITHM: Greedy + Sort
+     * TC: O(n log n) | SC: O(n)
+     */
     private static void minimumPossibleScore(Integer[] arr, int score, int k) {
         // Math.floor(ai/aj) to your score, where ⌊xy⌋ is the maximum integer not exceeding xy.
         Arrays.sort(arr);

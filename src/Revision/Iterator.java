@@ -15,14 +15,35 @@ class Iterator {
         class IterState implements Comparable<IterState> {
             private java.util.Iterator<T> iterator;
 
+            /*
+             * PROBLEM: Get current value (Helper)
+             * Get current value of iterator state.
+             *
+             * ALGORITHM: Direct field access
+             * TC: O(1) | SC: O(1)
+             */
             public T getCurrVal() {
                 return currVal;
             }
 
+            /*
+             * PROBLEM: Check has next (Helper)
+             * Check if underlying iterator has more elements.
+             *
+             * ALGORITHM: Delegate to iterator
+             * TC: O(1) | SC: O(1)
+             */
             public boolean hasNext() {
                 return iterator.hasNext();
             }
 
+            /*
+             * PROBLEM: Advance iterator (Helper)
+             * Advance to next element, setting currVal to null if exhausted.
+             *
+             * ALGORITHM: Iterator traversal
+             * TC: O(1) | SC: O(1)
+             */
             public void next() {
                 if (iterator.hasNext()) currVal = iterator.next();
                 else currVal = null;
@@ -36,11 +57,25 @@ class Iterator {
             }
 
 
+            /*
+             * PROBLEM: Compare iterator states (Helper)
+             * Compare by current value for priority queue ordering.
+             *
+             * ALGORITHM: Natural ordering via Comparable
+             * TC: O(1) | SC: O(1)
+             */
             @Override
             public int compareTo(IterState iterState) {
                 return currVal.compareTo(iterState.getCurrVal());
             }
 
+            /*
+             * PROBLEM: Merge init (Helper)
+             * Initialize priority queue with all list iterators.
+             *
+             * ALGORITHM: Min-heap initialization
+             * TC: O(n log n) | SC: O(n)
+             */
             public void MyIter(List<List<T>> lists) {
                 states = new PriorityQueue<IterState>();
                 for (List<T> list : lists) {
@@ -55,11 +90,25 @@ class Iterator {
 
         private PriorityQueue<IterState> states;
 
+        /*
+         * PROBLEM: Check merged iterator has next (Helper)
+         * Check if merged iterator has more elements.
+         *
+         * ALGORITHM: Priority queue empty check
+         * TC: O(1) | SC: O(1)
+         */
         @Override
         public boolean hasNext() {
             return !states.isEmpty();
         }
 
+        /*
+         * PROBLEM: Merge k Sorted Lists (Helper)
+         * Return next smallest element from k sorted lists.
+         *
+         * ALGORITHM: Min-heap (Priority Queue)
+         * TC: O(log k) | SC: O(k)
+         */
         @Override
         public T next() {
 
@@ -76,6 +125,13 @@ class Iterator {
         }
     }
 
+    /*
+     * PROBLEM: Convert sorted lists to array (Helper)
+     * Convert k sorted lists to merged sorted array using the MyIter iterator.
+     *
+     * ALGORITHM: Merge via iterator
+     * TC: O(n log k) | SC: O(n)
+     */
     private static <T extends Comparable> ArrayList toArray(List<List<T>> lists) {
 
         MyIter<T> i = new MyIter<T>(lists);
@@ -86,6 +142,13 @@ class Iterator {
         return (ArrayList) retVal;
     }
 
+    /*
+     * PROBLEM: Entry point (Main)
+     * Tests the merged iterator with multiple sorted lists.
+     *
+     * ALGORITHM: N/A
+     * TC: O(n log k) | SC: O(n)
+     */
     public static void main(String[] args) {
 
         System.out.println("Hello world!");
@@ -108,6 +171,13 @@ class Iterator {
 
     }
 
+    /*
+     * PROBLEM: Two Sum (LeetCode 1)
+     * Find indices of two numbers in the array that add up to target.
+     *
+     * ALGORITHM: HashMap
+     * TC: O(n) | SC: O(n)
+     */
     public static int[] twoSum(int[] nums, int target) {
         HashMap<Integer, Integer> map = new HashMap<>();
         int index = 0;
@@ -124,11 +194,25 @@ class Iterator {
     }
 
 
+    /*
+     * PROBLEM: Calculate range sum (Helper)
+     * Calculate sum from start to end using arithmetic series formula.
+     *
+     * ALGORITHM: Arithmetic series formula
+     * TC: O(1) | SC: O(1)
+     */
     int calSum(int start, int end) {
         int n = end - start;
         return n * (n + 1) / 2;
     }
 
+    /*
+     * PROBLEM: Find subarrays less than k (Helper)
+     * Find all contiguous subarrays whose elements are all less than k.
+     *
+     * ALGORITHM: Two-pointer sliding window
+     * TC: O(n^2) | SC: O(n^2)
+     */
     public List<List<Integer>> findSubarrays(int[] nums, int k) {
         int n = nums.length;
         if (n == 0) return new ArrayList<>();
@@ -184,13 +268,25 @@ class Iterator {
 //        }
 //    }
 
+    /*
+     * PROBLEM: Reverse first k elements (Helper)
+     * Reverse first k elements of array in-place.
+     *
+     * ALGORITHM: Collections.reverse
+     * TC: O(k) | SC: O(k)
+     */
     public Object[] reverse(Object[] arr, int k) {
         Collections.reverse(Collections.singletonList(arr).subList(0, k));
         return arr;
     }
 
-    // sorting of function using reverse function embedded
-    // O(n*n)
+    /*
+     * PROBLEM: Sort using reverse (Helper)
+     * Sort array using embedded reverse function.
+     *
+     * ALGORITHM: Custom sort with reverse
+     * TC: O(n^2) | SC: O(n)
+     */
     public void sort(int[] arr, int k) {
         int n = arr.length;
         if (n == 0) return;
@@ -226,6 +322,13 @@ Given a length n, count the number of strings of length n that can be made using
     final static int n = 10;
     final static int[][] memo = new int[n][n];
 
+    /*
+     * PROBLEM: Count strings with limited b and c (Helper)
+     * Count strings of length n using 'a','b','c' with at most bCount 'b's and cCount 'c's.
+     *
+     * ALGORITHM: Memoized recursion (Combination DP)
+     * TC: O(n^3) | SC: O(n^2)
+     */
     static int countStr(int n, int bCount, int cCount) {
         // base case
         if (bCount < 0 || cCount < 0) return 0;
@@ -238,6 +341,13 @@ Given a length n, count the number of strings of length n that can be made using
     // Efficient solution
 
     static class GFG {
+        /*
+         * PROBLEM: Entry point (Main)
+         * Entry point for GFG test class — tests countStrEff.
+         *
+         * ALGORITHM: N/A
+         * TC: O(n*b*c) | SC: O(n*b*c)
+         */
         public static void main(String[] args) {
             int n = 3; // Total number of characters
             int bCount = 1, cCount = 2;
@@ -245,6 +355,13 @@ Given a length n, count the number of strings of length n that can be made using
         }
     }
 
+    /*
+     * PROBLEM: Count strings with limited b and c — efficient (Helper)
+     * Efficient version of countStr using 3D DP table.
+     *
+     * ALGORITHM: 3D DP (top-down memoization)
+     * TC: O(n*b*c) | SC: O(n*b*c)
+     */
     private static int countStrEff(int n, int bCount, int cCount) {
         int[][][] dp = new int[n + 1][2][3];
         for (int i = 0; i < n; i++) {
@@ -257,6 +374,13 @@ Given a length n, count the number of strings of length n that can be made using
         return countStrEffUtil(dp, n, bCount, cCount);
     }
 
+    /*
+     * PROBLEM: DP utility for countStrEff (Helper)
+     * Recursive DP utility that computes the count using a prebuilt 3D memo table.
+     *
+     * ALGORITHM: 3D DP memoized recursion
+     * TC: O(n*b*c) | SC: O(1) per call
+     */
     private static int countStrEffUtil(int[][][] dp, int n, int bCount, int cCount) {
         // base case
         if (bCount < 0 || cCount < 0) return 0;
@@ -271,12 +395,12 @@ Given a length n, count the number of strings of length n that can be made using
     }
 
     /*
-  Input:  s = "aab", p = "c*a*b"
-Output: true
-"aaa"
-"aaaa"
+     * PROBLEM: Find the Index of the First Occurrence in a String (LeetCode 28)
+     * Return the index of the first occurrence of needle in haystack, or -1 if not found.
+     *
+     * ALGORITHM: Sliding window / brute force
+     * TC: O(n*m) | SC: O(1)
      */
-
     public int strStr(String haystack, String needle) {
 
         int n = haystack.length();
@@ -304,6 +428,13 @@ Output: true
         return -1;
     }
 
+    /*
+     * PROBLEM: Wildcard Matching (LeetCode 44)
+     * Match string s against pattern p containing '?' (any single char) and '*' (any sequence).
+     *
+     * ALGORITHM: 2D DP (bottom-up)
+     * TC: O(m*n) | SC: O(m*n)
+     */
     public boolean regexMatch(String s, String p) {
         boolean[][] dp = new boolean[p.length() + 1][s.length() + 1];
         for (int i = 0; i < dp.length; i++) {
@@ -322,6 +453,13 @@ Output: true
         return dp[dp.length - 1][dp[0].length - 1];
     }
 
+    /*
+     * PROBLEM: Regular Expression Matching (LeetCode 10)
+     * Match string s against regex pattern p with '.' (any char) and '*' (zero or more of preceding).
+     *
+     * ALGORITHM: 2D DP (bottom-up)
+     * TC: O(m*n) | SC: O(m*n)
+     */
     public boolean isMatch(String s, String p) {
         boolean[][] dp = new boolean[p.length() + 1][s.length() + 1];
         for (int i = 0; i < dp.length; i++) {
@@ -342,6 +480,13 @@ Output: true
     }
 
 
+    /*
+     * PROBLEM: Longest Palindromic Substring (LeetCode 5)
+     * Find the longest palindromic substring in s (attempt using DP array).
+     *
+     * ALGORITHM: DP (attempt)
+     * TC: O(n^2) | SC: O(n)
+     */
     public String longestPalindrome(String s) {
         int n = s.length();
 
@@ -392,6 +537,13 @@ Output: true
         return dp[n - 1];
     }
 
+    /*
+     * PROBLEM: Longest Palindromic Substring (LeetCode 5)
+     * Find the longest palindromic substring by expanding around each center.
+     *
+     * ALGORITHM: Expand around center
+     * TC: O(n^2) | SC: O(1)
+     */
     public String longestPalindromSubstring(String s) {
         int n = s.length();
         if (n == 0) return "";
@@ -404,6 +556,13 @@ Output: true
         return s.substring(start, start + maxLength);
     }
 
+    /*
+     * PROBLEM: Get palindrome length from center (Helper)
+     * Get palindrome length by expanding outward from a given center position.
+     *
+     * ALGORITHM: Two-pointer expansion
+     * TC: O(n) | SC: O(1)
+     */
     private int getLength(int start, int end, String s) {
         int length = 0;
         while (start > 0 && end < n) {
@@ -418,6 +577,13 @@ Output: true
     }
 
 
+    /*
+     * PROBLEM: Recursive palindrome length checker (Helper)
+     * Recursively compute palindrome length expanding from center, with deletion fallback.
+     *
+     * ALGORITHM: Recursive expansion with backtracking
+     * TC: O(n^2) | SC: O(n)
+     */
     private int getLengthRec(int start, int end, String s) {
         if (end >= s.length()) return 0;
         int length = (start == end) ? -1 : 0;
@@ -442,6 +608,13 @@ Output: true
 //    int[][] memoTable = new int[n][n];
 //        for(int[] val:memoTable) Arrays.fill(val, -1);
 
+    /*
+     * PROBLEM: Longest Palindromic Subsequence (LeetCode 516)
+     * Compute length of longest palindromic subsequence in s[i..j] using memoization.
+     *
+     * ALGORITHM: Top-down memoized recursion
+     * TC: O(n^2) | SC: O(n^2)
+     */
     public int s2(String s, int i, int j, int[][] memoTable) {
 
         if (i == j) return 1;
@@ -467,25 +640,11 @@ Output: true
     boolean[][] memob = new boolean[n][n];
 
     /*
-    Input: s = "abc"
-Output: 3
-
-  int max_sum = Integer.MIN_VALUE;
-
-        // Consider all blocks starting with i.
-        for (int i = 0; i < n - k + 1; i++) {
-            int current_sum = 0;
-            for (int j = 0; j < k; j++)
-                current_sum = current_sum + arr[i + j];
-
-            // Update result if required.
-            max_sum = Math.max(current_sum, max_sum);
-        }
-
-        return max_sum;
-
-
-   aaa
+     * PROBLEM: Palindromic Substrings (LeetCode 647)
+     * Count all palindromic substrings in s.
+     *
+     * ALGORITHM: DP with memoized palindrome check
+     * TC: O(n^2) | SC: O(n^2)
      */
     public int countSubstrings(String s) {
         int n = s.length();
@@ -500,6 +659,13 @@ Output: 3
         return count;
     }
 
+    /*
+     * PROBLEM: Longest Palindromic Subsequence (LeetCode 516)
+     * Bottom-up DP to compute length of longest palindromic subsequence in s[0..n-1].
+     *
+     * ALGORITHM: Bottom-up 2D DP
+     * TC: O(n^2) | SC: O(n^2)
+     */
     public int s3(String s, int n) {
 
         int[][] dp = new int[n][n];
@@ -521,9 +687,11 @@ Output: 3
     }
 
     /*
-    Input: s = "aaa"
-Output: 6
-
+     * PROBLEM: Count Palindromic Substrings (LeetCode 647)
+     * Count all palindromic substrings in s (alternate implementation).
+     *
+     * ALGORITHM: DP with memoized palindrome check
+     * TC: O(n^2) | SC: O(n^2)
      */
     public int countPalindromSubstrings(String s) {
         int n = s.length();
@@ -538,6 +706,13 @@ Output: 6
         return count;
     }
 
+    /*
+     * PROBLEM: Memoized palindrome check (Helper)
+     * Check if s[i..j] is a palindrome using a memoization table.
+     *
+     * ALGORITHM: Memoized recursion
+     * TC: O(n^2) | SC: O(n^2)
+     */
     private boolean isPalindrome(String s, int i, int j, boolean[][] memob) {
         if (i == j || i > j) return true;
         if (memob[i][j]) return memob[i][j];

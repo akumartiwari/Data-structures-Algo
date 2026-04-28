@@ -1,6 +1,6 @@
 package com.company;
 
-import javafx.util.Pair;
+import common.Pair;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -11,6 +11,13 @@ public class PriorityQueueExamples {
 
     Map<Integer, Long> map = new TreeMap<>(); // {roomId, count}
 
+    /*
+     * PROBLEM: Find the K-Sum of an Array (LeetCode 2386)
+     * Find the k-th largest sum of any subsequence of nums.
+     *
+     * ALGORITHM: Max Priority Queue with greedy include/exclude
+     * TC: O(n log n + k log k) | SC: O(k)
+     */
     /*
     Input: nums = [2,4,-2], k = 5
     Output: 2
@@ -44,6 +51,13 @@ public class PriorityQueueExamples {
         return result;
     }
 
+    /*
+     * PROBLEM: Minimum Number of Operations to Halve Array Sum (LeetCode 2208)
+     * Find the minimum number of operations to reduce array sum by at least half.
+     *
+     * ALGORITHM: Greedy with Max Priority Queue
+     * TC: O(n log n) | SC: O(n)
+     */
     // Author: Anand
     public int halveArray(int[] nums) {
         PriorityQueue<BigDecimal> pq = new PriorityQueue<>(Collections.reverseOrder());
@@ -67,6 +81,13 @@ public class PriorityQueueExamples {
         return cnt;
     }
 
+    /*
+     * PROBLEM: Maximum Product After K Increments (LeetCode 2233)
+     * Increment k elements (each by 1) to maximize the product of all array elements.
+     *
+     * ALGORITHM: Greedy with Min Priority Queue
+     * TC: O((n + k) log n) | SC: O(n)
+     */
     // Author: Anand
     public int maximumProduct(int[] nums, int k) {
         int MOD = 1_000_000_000 + 7;
@@ -87,6 +108,13 @@ public class PriorityQueueExamples {
         return (int) prod;
     }
 
+    /*
+     * PROBLEM: Modular Multiplication (Helper)
+     * Compute (a * b) % m safely to avoid overflow.
+     *
+     * ALGORITHM: Modular Arithmetic
+     * TC: O(1) | SC: O(1)
+     */
     //***********
 
     public long mod_mul(long a, long b, long m) {
@@ -95,6 +123,13 @@ public class PriorityQueueExamples {
         return (((a * b) % m) + m) % m;
     }
 
+    /*
+     * PROBLEM: Meeting Rooms III (LeetCode 2402)
+     * Find the room that hosts the most meetings given n rooms and a schedule.
+     *
+     * ALGORITHM: Two Priority Queues simulation (free rooms + busy rooms)
+     * TC: O(m log n) | SC: O(n)
+     */
     /*
     Input: n = 2, meetings = [[0,10],[1,5],[2,7],[3,4]]
     Output: 0
@@ -147,6 +182,13 @@ public class PriorityQueueExamples {
     //O(n*log(n)) time and O(n*log(n)) space
 
     /*
+     * PROBLEM: Make Two Arrays Equal by Reversing Subarrays (LeetCode 2449)
+     * Find the minimum number of operations to make nums equal to target.
+     *
+     * ALGORITHM: Greedy with Priority Queues (separate even/odd parity)
+     * TC: O(n log n) | SC: O(n)
+     */
+    /*
     Input: nums = [8,12,6], target = [2,14,10]
     Output: 2
     Explanation: It is possible to make nums similar to target in two operations:
@@ -175,6 +217,13 @@ public class PriorityQueueExamples {
         return even[0] + odd[0];
     }
 
+    /*
+     * PROBLEM: makeSimilar Greedy Pairing (Helper)
+     * Greedily pair smallest elements of pqNums with pqTarget to minimize total operations needed.
+     *
+     * ALGORITHM: Greedy pairing with carry-forward add/sub counts
+     * TC: O(n log n) | SC: O(1)
+     */
     private long[] helper(PriorityQueue<Integer> pqNums, PriorityQueue<Integer> pqTarget, long add, long sub) {
         //greedy solution
         long out = 0;
@@ -214,6 +263,13 @@ public class PriorityQueueExamples {
     }
 
 
+    /*
+     * PROBLEM: Find Room with Max Count (Helper)
+     * Return the room ID with the maximum meeting count.
+     *
+     * ALGORITHM: Linear scan of TreeMap entries
+     * TC: O(n) | SC: O(1)
+     */
     private int maxCount() {
         int room = -1;
         long count = Long.MIN_VALUE;
@@ -226,6 +282,13 @@ public class PriorityQueueExamples {
         return room;
     }
 
+    /*
+     * PROBLEM: Divide Intervals Into Minimum Number of Groups (LeetCode 2406)
+     * Find the minimum number of groups such that no two intervals in the same group overlap.
+     *
+     * ALGORITHM: Greedy with Min Priority Queue (interval scheduling)
+     * TC: O(n log n) | SC: O(n)
+     */
     public int minGroups(int[][] intervals) {
 
         Arrays.sort(intervals, (a, b) -> {
@@ -250,6 +313,13 @@ public class PriorityQueueExamples {
         return pq.size();
     }
 
+    /*
+     * PROBLEM: Destroy Sequential Targets (LeetCode 2453)
+     * Choose a seed to destroy the maximum number of targets; return the minimum such seed.
+     *
+     * ALGORITHM: HashMap grouping by remainder (num % space)
+     * TC: O(n log n) | SC: O(n)
+     */
     /*
     Input: nums = [3,7,8,1,1,5], space = 2
     Output: 1
@@ -279,6 +349,13 @@ public class PriorityQueueExamples {
         return pq.poll().getValue().get(0);
     }
 
+    /*
+     * PROBLEM: Total Cost to Hire K Workers (LeetCode 2462)
+     * Hire k workers with minimum total cost using candidates from each end.
+     *
+     * ALGORITHM: Two-pointer with Min Priority Queue
+     * TC: O((k + candidates) log candidates) | SC: O(candidates)
+     */
     public long totalCost(int[] costs, int k, int candidates) {
         // element, index
         PriorityQueue<Pair<Pair<Integer, Integer>, Boolean>> pq = new PriorityQueue<>((o1, o2) -> {
@@ -329,6 +406,13 @@ public class PriorityQueueExamples {
         return minCost;
     }
 
+    /*
+     * PROBLEM: Minimum Array Length After Pair Removals (LeetCode 2856)
+     * Remove pairs (i < j, nums[i] < nums[j]) to minimise array length; return minimum.
+     *
+     * ALGORITHM: Greedy with Max Priority Queue (always pair largest two distinct values)
+     * TC: O(n log n) | SC: O(n)
+     */
     /*
 
     Statement:-
@@ -408,6 +492,13 @@ public class PriorityQueueExamples {
     //TBD
     //TC = O(n2logn)
     class Solution {
+        /*
+         * PROBLEM: Maximum Number of Alloys (LeetCode 2861)
+         * Find the maximum number of alloys one machine can create within the given budget.
+         *
+         * ALGORITHM: Binary Search + Greedy feasibility check
+         * TC: O(k * n * log(budget)) | SC: O(n)
+         */
         public int maxNumberOfAlloys(int n, int k, int budget, List<List<Integer>> composition, List<Integer> stock, List<Integer> cost) {
 
             long max = 0;
@@ -461,6 +552,13 @@ public class PriorityQueueExamples {
             return (int) max;
         }
 
+        /*
+         * PROBLEM: canDistribute (Helper)
+         * Check if `attempt` alloys can be produced given current stock, requirement, and budget.
+         *
+         * ALGORITHM: Feasibility check for binary search
+         * TC: O(n) | SC: O(1)
+         */
         private boolean canDistribute(long attempt, List<Integer> ssc, List<Integer> requirement, int tb, List<Integer> cost) {
             for (int j = 0; j < ssc.size(); j++) {
                 if (requirement.get(j) * attempt > ssc.get(j))
@@ -474,6 +572,13 @@ public class PriorityQueueExamples {
         }
     }
 
+    /*
+     * PROBLEM: Vowel/Consonant Ratio (Helper)
+     * Compute integer ratio of vowels to consonants in string s.
+     *
+     * ALGORITHM: Linear Scan
+     * TC: O(n) | SC: O(1)
+     */
     //LC 18th jan
     public int vowelConsonantScore(String s) {
         int v = 0, c = 0;
@@ -487,6 +592,13 @@ public class PriorityQueueExamples {
     }
 
 
+    /*
+     * PROBLEM: Reverse By Type (Helper)
+     * Reverse alphabetic characters and special characters separately in their original positions.
+     *
+     * ALGORITHM: Two-pass reversal with StringBuilder
+     * TC: O(n) | SC: O(n)
+     */
     public String reverseByType(String s) {
         StringBuilder chars = new StringBuilder();
         StringBuilder special = new StringBuilder();
@@ -511,10 +623,24 @@ public class PriorityQueueExamples {
     }
 
 
+    /*
+     * PROBLEM: Get Next Character in Alphabet (Helper)
+     * Return the next character cyclically (z wraps to a).
+     *
+     * ALGORITHM: Modular Arithmetic
+     * TC: O(1) | SC: O(1)
+     */
     public char getNextChar(char c) {
         return (char) ((c + 1) % 26);
     }
 
+    /*
+     * PROBLEM: Make String a Subsequence Using Cyclic Increments (LeetCode 2486)
+     * Check if str2 can be made a subsequence of str1 by cyclically incrementing some chars.
+     *
+     * ALGORITHM: Two Pointers (greedy matching with cyclic next-char check)
+     * TC: O(n) | SC: O(1)
+     */
     public boolean canMakeSubsequence(String str1, String str2) {
         int i, j;
         for (i = 0, j = 0; i < str1.length() && j < str2.length(); ) {

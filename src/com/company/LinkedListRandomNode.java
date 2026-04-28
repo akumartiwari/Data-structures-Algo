@@ -12,6 +12,13 @@ class LinkedListRandomNode {
     ListNode head;
     Random generator;
 
+    /*
+     * PROBLEM: Linked List Random Node (LeetCode 382)
+     * Initialize reservoir sampling; stores head and random generator.
+     *
+     * ALGORITHM: Constructor initialization
+     * TC: O(1) | SC: O(1)
+     */
     public LinkedListRandomNode(ListNode head) {
         this.head = head;
         this.generator = new Random();
@@ -19,6 +26,13 @@ class LinkedListRandomNode {
 
     /**
      * Returns a random node's value.
+     */
+    /*
+     * PROBLEM: Linked List Random Node (LeetCode 382)
+     * Returns a random node's value with equal probability using reservoir sampling.
+     *
+     * ALGORITHM: Reservoir Sampling
+     * TC: O(n) | SC: O(1)
      */
     public int getRandom() {
         int elem = -1, index = -1;

@@ -40,6 +40,13 @@ public class BinaryTree {
     }
 
     // Author: Anand
+    /*
+     * PROBLEM: Diameter of Binary Tree (LeetCode 543)
+     * Returns length of the longest path between any two nodes in the tree.
+     *
+     * ALGORITHM: Recursive DFS + Height computation
+     * TC: O(n^2) | SC: O(n)
+     */
     public int diameterOfBinaryTree(TreeNode root) {
         int ans = 0;
         if (root == null) return 0;
@@ -51,20 +58,39 @@ public class BinaryTree {
         return Math.max(lh + rh, Math.max(ld, rd));
     }
 
+    /*
+     * PROBLEM: Height of Binary Tree (Helper)
+     * Returns the height of the subtree rooted at the given node.
+     *
+     * ALGORITHM: Recursive DFS
+     * TC: O(n) | SC: O(n)
+     */
     private int height(TreeNode root) {
         if (root == null) return 0;
         return 1 + Math.max(height(root.left), height(root.right));
     }
 
     // Author: Anand
-    int ans = 0;
-
+    /*
+     * PROBLEM: Diameter of N-Ary Tree (LeetCode 1522)
+     * Returns the diameter (longest path between any two nodes) of an N-ary tree.
+     *
+     * ALGORITHM: Recursive DFS, track top-2 max heights
+     * TC: O(n) | SC: O(n)
+     */
     public int diameter(Node root) {
         if (root == null || root.children.size() == 0) return 0;
         maxDiamterNArray(root);
         return ans;
     }
 
+    /*
+     * PROBLEM: Diameter of N-Ary Tree Helper (Helper)
+     * Returns height of subtree and updates the global diameter for N-ary tree.
+     *
+     * ALGORITHM: Recursive DFS
+     * TC: O(n) | SC: O(n)
+     */
     private int maxDiamterNArray(Node root) {
         // base case
         if (root.children.size() == 0) return 0;
@@ -101,6 +127,13 @@ public class BinaryTree {
     int res;
 
     // Author: Anand
+    /*
+     * PROBLEM: Longest Path With Different Adjacent Characters (LeetCode 2246)
+     * Returns the length of the longest path where adjacent nodes have different characters.
+     *
+     * ALGORITHM: DFS + Max-PQ
+     * TC: O(n log n) | SC: O(n)
+     */
     public int longestPath(int[] parent, String s) {
         int n = parent.length;
         List<Integer>[] graph = new ArrayList[n];
@@ -113,6 +146,13 @@ public class BinaryTree {
     }
 
 
+    /*
+     * PROBLEM: Longest Path DFS (Helper)
+     * DFS helper returning the longest path length starting from node idx.
+     *
+     * ALGORITHM: DFS + MaxHeap
+     * TC: O(n log n) | SC: O(n)
+     */
     private int dfs(List<Integer>[] graph, String s, int idx) {
         PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder()); //max-pq
         for (int j : graph[idx]) {
@@ -140,10 +180,24 @@ public class BinaryTree {
     For the node with value 3: The sum of its descendants is 2+1 = 3.
      */
     // Author: Anand
+    /*
+     * PROBLEM: Count Nodes Equal to Sum of Descendants (LeetCode 2049)
+     * Counts nodes whose value equals the sum of all descendant values.
+     *
+     * ALGORITHM: Post-order DFS with Tuple
+     * TC: O(n) | SC: O(n)
+     */
     public int equalToDescendants(TreeNode root) {
         return helper(root).nodes;
     }
 
+    /*
+     * PROBLEM: Equal to Descendants Helper (Helper)
+     * Returns a tuple of (subtree sum, qualifying node count).
+     *
+     * ALGORITHM: Post-order DFS
+     * TC: O(n) | SC: O(n)
+     */
     private Tuple helper(TreeNode root) {
         // base case
         if (root == null) return new Tuple(0, 0);
@@ -182,10 +236,24 @@ public class BinaryTree {
     For the node with value 6: The average of its subtree is 6 / 1 = 6.
      */
     // Author: Anand
+    /*
+     * PROBLEM: Count Nodes Equal to Average of Subtree (LeetCode 2265)
+     * Counts nodes whose value equals the integer average of its subtree.
+     *
+     * ALGORITHM: Post-order DFS with Tuple3
+     * TC: O(n) | SC: O(n)
+     */
     public int averageOfSubtree(TreeNode root) {
         return helperAvg(root).avgCount;
     }
 
+    /*
+     * PROBLEM: Average of Subtree Helper (Helper)
+     * Returns a tuple of (sum, count, avgCount) for the subtree rooted at root.
+     *
+     * ALGORITHM: Post-order DFS
+     * TC: O(n) | SC: O(n)
+     */
     private Tuple3 helperAvg(TreeNode root) {
         // base case
         if (root == null) return new Tuple3(0, 0, 0);
@@ -235,6 +303,13 @@ public class BinaryTree {
      * }
      * }
      */
+    /*
+     * PROBLEM: Create Binary Tree from Descriptions (LeetCode 2196)
+     * Builds a binary tree from parent-child-isLeft description triplets.
+     *
+     * ALGORITHM: HashMap + Root Detection
+     * TC: O(n) | SC: O(n)
+     */
     public TreeNode createBinaryTree(int[][] descriptions) {
         Map<Integer, TreeNode> map = new HashMap<>();
         Set<Integer> children = new HashSet<>();
@@ -269,6 +344,13 @@ public class BinaryTree {
     }
 
     // Check if 2 BT are same
+    /*
+     * PROBLEM: Same Tree (LeetCode 100)
+     * Checks if two binary trees are structurally identical with the same node values.
+     *
+     * ALGORITHM: Recursive DFS
+     * TC: O(n) | SC: O(n)
+     */
     public boolean isSameTree(TreeNode p, TreeNode q) {
         if (p == null && q == null) return true;
         if (p == null || q == null) return false;
@@ -277,6 +359,13 @@ public class BinaryTree {
     }
 
 
+    /*
+     * PROBLEM: Preorder Tree Traversal (Helper)
+     * Populates a frequency map of node values via preorder traversal.
+     *
+     * ALGORITHM: Preorder DFS
+     * TC: O(n) | SC: O(n)
+     */
     private void preorder(TreeNode root, TreeMap<Integer, Integer> tm) {
         if (root == null) {
             return;
@@ -290,6 +379,13 @@ public class BinaryTree {
         preorder(root.right, tm);
     }
 
+    /*
+     * PROBLEM: Closest Nodes Queries in a Binary Search Tree (LeetCode 2476)
+     * For each query returns [floor, ceiling] values present in the BST.
+     *
+     * ALGORITHM: Preorder DFS + TreeMap floor/ceiling
+     * TC: O(n + q log n) | SC: O(n)
+     */
     public List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
         List<List<Integer>> ans = new ArrayList<>();
         TreeMap<Integer, Integer> tm = new TreeMap();

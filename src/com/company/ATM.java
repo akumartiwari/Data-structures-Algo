@@ -16,6 +16,13 @@ public class ATM {
         notes.put(500, 0L);
     }
 
+    /*
+     * PROBLEM: ATM Machine (LeetCode 2241)
+     * Deposits banknotes of denominations [20,50,100,200,500] into the ATM.
+     *
+     * ALGORITHM: HashMap Iteration
+     * TC: O(1) | SC: O(1)
+     */
     public void deposit(int[] banknotesCount) {
         int idx = 0;
         for (Map.Entry<Integer, Long> entry : notes.entrySet()) {
@@ -23,6 +30,13 @@ public class ATM {
         }
     }
 
+    /*
+     * PROBLEM: ATM Machine (LeetCode 2241)
+     * Withdraws amount using largest denominations first; returns [-1] if impossible.
+     *
+     * ALGORITHM: Greedy + TreeMap Reverse Order
+     * TC: O(1) | SC: O(1)
+     */
     public int[] withdraw(int amount) {
         int[] ans = new int[5];
         int idx = 4;

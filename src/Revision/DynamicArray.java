@@ -15,6 +15,13 @@ public class DynamicArray {
         this.index = count;
     }
 
+    /*
+     * PROBLEM: Add Element (Helper)
+     * Add an element to the dynamic array, growing the array if capacity is full.
+     *
+     * ALGORITHM: Amortized Array Growth
+     * TC: O(1) amortized | SC: O(n)
+     */
     public void add(int data) {
         // check if size of array overflows
         if (array.length == size) {
@@ -24,6 +31,13 @@ public class DynamicArray {
         index++;
     }
 
+    /*
+     * PROBLEM: Grow Array Size (Helper)
+     * Double the capacity of the dynamic array by allocating a new array and copying elements.
+     *
+     * ALGORITHM: Array Copy
+     * TC: O(n) | SC: O(n)
+     */
     private void growSize(int[] array) {
         int[] temp = null;
         if (index == size) {
@@ -35,6 +49,13 @@ public class DynamicArray {
         size *= 2;
     }
 
+    /*
+     * PROBLEM: Insert At Index (Helper)
+     * Insert an element at a specific index, shifting all subsequent elements right.
+     *
+     * ALGORITHM: Array Shift
+     * TC: O(n) | SC: O(1)
+     */
     public void insertAt(int data, int index) {
 
         // check if size of array overflows
@@ -50,7 +71,13 @@ public class DynamicArray {
         this.index++;
     }
 
-    // This function will shrink the array to its actual size
+    /*
+     * PROBLEM: Shrink Array Size (Helper)
+     * Trim the internal array to exactly the number of used elements.
+     *
+     * ALGORITHM: Array Copy
+     * TC: O(n) | SC: O(n)
+     */
     public void shrinkSize() {
         int[] temp = null;
 
@@ -63,8 +90,13 @@ public class DynamicArray {
         }
     }
 
-    // function remove last element or put
-    // zero at last index
+    /*
+     * PROBLEM: Remove Last Element (Helper)
+     * Remove the last element from the dynamic array by zeroing it and decrementing the count.
+     *
+     * ALGORITHM: Direct Index Access
+     * TC: O(1) | SC: O(1)
+     */
     public void remove() {
         if (index > 0) {
             array[index - 1] = 0;
@@ -111,6 +143,13 @@ public class DynamicArray {
 
     // function shift all element of right
     // side from given index in left
+    /*
+     * PROBLEM: Remove At Index (Helper)
+     * Remove the element at a given index and shift all subsequent elements left.
+     *
+     * ALGORITHM: Array Shift
+     * TC: O(n) | SC: O(1)
+     */
     public void removeAt(int index) throws Exception {
         // check if size of array overflows
         if (array.length <= index) {
@@ -128,11 +167,25 @@ public class DynamicArray {
         this.index--;
     }
 
+    /*
+     * PROBLEM: Get Map Value At Index (Helper)
+     * Retrieve the key-value pair at a given insertion-order index from a LinkedHashMap.
+     *
+     * ALGORITHM: Entry Set Array Access
+     * TC: O(n) | SC: O(1)
+     */
     private int[] getMapValueAt(LinkedHashMap<Integer, Integer> hashMap, int index) {
         Map.Entry<Integer, Integer> entry = (Map.Entry<Integer, Integer>) hashMap.entrySet().toArray()[index];
         return new int[]{entry.getKey(), entry.getValue()};
     }
 
+    /*
+     * PROBLEM: K-th Smallest Prime Fraction (LeetCode 786)
+     * Given a sorted array of primes, find the k-th smallest fraction formed by arr[i]/arr[j] where i < j.
+     *
+     * ALGORITHM: Two Pointers
+     * TC: O(n^2) | SC: O(n)
+     */
     public int[] kthSmallestPrimeFraction(int[] arr, int k) {
         int n = arr.length;
         int l = 0;
@@ -165,6 +218,13 @@ public class DynamicArray {
         return ans;
     }
 
+    /*
+     * PROBLEM: Kth Smallest Number in Multiplication Table (LeetCode 668)
+     * Find the k-th smallest element in an m x n multiplication table.
+     *
+     * ALGORITHM: Brute Force Sort
+     * TC: O(m*n log(m*n)) | SC: O(m*n)
+     */
     public int findKthNumber(int m, int n, int k) {
         int index = 0;
         int[] ans = new int[m * n];
@@ -178,6 +238,13 @@ public class DynamicArray {
         return ans[k - 1];
     }
 
+    /*
+     * PROBLEM: Kth Smallest Element in a Sorted Matrix (LeetCode 378)
+     * Find the k-th smallest element in an n x n matrix where each row and column is sorted.
+     *
+     * ALGORITHM: Flatten and Sort
+     * TC: O(n^2 log n) | SC: O(n^2)
+     */
     public int kthSmallest(int[][] matrix, int k) {
 
         int index = 0;
@@ -193,6 +260,13 @@ public class DynamicArray {
         return ans[k - 1];
     }
 
+    /*
+     * PROBLEM: Find K Pairs with Smallest Sums (LeetCode 373)
+     * Return k pairs (u, v) with smallest sums from two sorted arrays nums1 and nums2.
+     *
+     * ALGORITHM: Sort + TreeMap
+     * TC: O(n log n) | SC: O(n)
+     */
     public List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) throws Exception {
         List<List<Integer>> ans = new ArrayList<>();
         HashMap<Integer, Pair> map = new HashMap<>();
@@ -239,6 +313,13 @@ public class DynamicArray {
     //O(words*s*log(t))
     // O(words*s))
 
+    /*
+     * PROBLEM: Number of Matching Subsequences (LeetCode 792)
+     * Count how many words in the array are subsequences of string s.
+     *
+     * ALGORITHM: Subsequence Check per Word
+     * TC: O(words * s) | SC: O(words)
+     */
     public int numMatchingSubseq(String s, String[] words) {
         int ans = 0;
         for (String word : words) {
@@ -256,6 +337,13 @@ public class DynamicArray {
     "kguhsugfxvwxakdcovjeczhqvbevkhlixsrhumxykbkihjdfxxxwragzcbhngbzgasxysxdtwntvbpdihtvkffacmxhbxxqniyqm"
     ["ykbkihjdfxxxwragzcbhngbzgasxysxdtwn","wxakdcovjeczhqvbevkhlixsrhumxykbkihj","diht","covjeczhqvbevkhlixsrhumxykbkihjdfxxxwragzcbhngbz","ovjeczhqvbevkhlixsrhumxykbkihjdfxxxwragzcbhng","qhzucvqxalfrtlrdjverseuldzymzbunhugekoyyghmkpkfqmd","eydmbsorvjnnifqxsyuypsrijzrosukrhtbneprpyyoawbvoki","uanfzlfmmtvhzzebrazyuslbapsfzwtlvqbhqxsfmqagwxetro","fffaawedchlcyqvzzxbzczbwyfjkllpsjhoozyresqemmawban","astrknwzefcmuswdxalooatmiduspjuofthtomoqilgdojwhon"]
 
+     */
+    /*
+     * PROBLEM: Is Subsequence (LeetCode 392)
+     * Check whether string s is a subsequence of string t.
+     *
+     * ALGORITHM: Two Pointers with Memoization
+     * TC: O(n) | SC: O(n)
      */
     public boolean isSubsequence(String s, String t) {
         if (s.length() > t.length()) {
@@ -300,8 +388,13 @@ public class DynamicArray {
         return true;
     }
 
-    //  [[2000,3200], [200,1300], [1000,1250], [100,200]]
-    //courses[i] = [durationi, lastDayi]
+    /*
+     * PROBLEM: Course Schedule III (LeetCode 630)
+     * Find the maximum number of courses you can take given each course's duration and last day deadline.
+     *
+     * ALGORITHM: Greedy + Max-Heap
+     * TC: O(n log n) | SC: O(n)
+     */
     public int scheduleCourse(int[][] courses) {
         // sort arrays based on lastday to complete a course in desc
         Arrays.sort(courses, (a, b) -> a[1] - b[1]);
@@ -328,6 +421,13 @@ Output: 3
 E
      */
 
+    /*
+     * PROBLEM: Determine Whether Matrix Can Be Obtained By Rotation (LeetCode 1886)
+     * Check if matrix mat can equal target after 0, 1, 2, or 3 clockwise 90-degree rotations.
+     *
+     * ALGORITHM: Iterative Rotation Comparison
+     * TC: O(n^2) | SC: O(n^2)
+     */
     public boolean findRotation(int[][] mat, int[][] target) {
 
 
@@ -349,6 +449,13 @@ E
     [[1,0],[0,1]]
     */
 
+    /*
+     * PROBLEM: Rotate Array (LeetCode 189)
+     * Rotate array nums to the right by k steps.
+     *
+     * ALGORITHM: String Substring Rotation
+     * TC: O(n) | SC: O(n)
+     */
     public void rotate(int[] nums, int k) {
         int n = nums.length;
         String str = "";
@@ -381,6 +488,13 @@ E
 
      */
 
+    /*
+     * PROBLEM: Rotate Image (LeetCode 48)
+     * Rotate an n x n matrix 90 degrees clockwise in-place.
+     *
+     * ALGORITHM: New Matrix Transposition
+     * TC: O(n^2) | SC: O(n^2)
+     */
     public int[][] rotate(int[][] matrix) {
         int n = matrix.length;
         int[][] nmatrix = new int[n][n];
@@ -397,12 +511,26 @@ E
 
     }
 
+    /*
+     * PROBLEM: Reduction Operations to Make the Array Elements Equal (LeetCode 1887)
+     * Count the number of reduction operations needed to make all array elements equal.
+     *
+     * ALGORITHM: Sort + Count Levels (stub)
+     * TC: O(n log n) | SC: O(1)
+     */
     public int reductionOperations(int[] nums) {
 
 
         return 0;
     }
 
+    /*
+     * PROBLEM: Determine Whether Matrix Can Be Obtained By Rotation (Helper)
+     * Alternative rotation check using 0/1 count and diagonal comparison heuristic.
+     *
+     * ALGORITHM: Count Comparison + Diagonal Check
+     * TC: O(n^2) | SC: O(1)
+     */
     public boolean findRotation1(int[][] mat, int[][] target) {
         int countzerom = 0;
         int countonem = 0;
@@ -444,6 +572,13 @@ E
         return true;
     }
 
+    /*
+     * PROBLEM: Minimum Changes To Make Alternating Binary String (LeetCode 1758)
+     * Find the minimum number of character flips to make string s alternate between 0 and 1.
+     *
+     * ALGORITHM: Linear Scan
+     * TC: O(n) | SC: O(1)
+     */
     public int minFlips(String s) {
         char last = ' ';
         int res = 0;
@@ -463,6 +598,13 @@ E
 
     // [1,2,3,5]
     // [1,5,4 2,5,4, 3,5,4 5,5,4]
+    /*
+     * PROBLEM: K-th Smallest Prime Fraction (LeetCode 786)
+     * Given a sorted array of primes, find the k-th smallest fraction formed by arr[i]/arr[j] where i < j.
+     *
+     * ALGORITHM: Min-Heap
+     * TC: O(n log k) | SC: O(n)
+     */
     public int[] kthArraySmallestPrimeFraction(int[] arr, int k) {
         //min-heap with increasing order of fraction magnitude
         PriorityQueue<int[]> pq = new PriorityQueue<int[]>((a, b) -> a[0] * b[1] - a[1] * b[0]);
@@ -508,6 +650,13 @@ E
             this.val = val;
         }
 
+        /*
+         * PROBLEM: Compare Pairs by Value (Helper)
+         * Compare this Pair to another by their val field for natural ordering.
+         *
+         * ALGORITHM: Integer Subtraction Comparator
+         * TC: O(1) | SC: O(1)
+         */
         @Override
         public int compareTo(Pair pair) {
             return this.val - pair.val;

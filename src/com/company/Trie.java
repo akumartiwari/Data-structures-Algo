@@ -1,6 +1,6 @@
 package com.company;
 
-import javafx.util.Pair;
+import common.Pair;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -8,12 +8,26 @@ import java.util.Comparator;
 public class Trie {
     static Node root;
 
+    /*
+     * PROBLEM: Entry point (Main)
+     * Demonstrates the wordCount Trie-based algorithm.
+     *
+     * ALGORITHM: N/A
+     * TC: O(n log n) | SC: O(n)
+     */
     public static void main(String[] args) {
         String[] startWords = {"ant", "act", "tack"};
         String[] targetWords = {"tack", "act", "acti"};
         System.out.println(wordCount(startWords, targetWords));
     }
 
+    /*
+     * PROBLEM: Count Words That Can Be Formed by Adding a Letter (LeetCode 2135)
+     * Count target words that can be formed by adding exactly one letter to a start word and rearranging.
+     *
+     * ALGORITHM: Trie + Sort (insert sorted start words; for each target, try removing one letter)
+     * TC: O(n * L log L) | SC: O(n * L)
+     */
     /*
         Input: startWords = ["ant","act","tack"], targetWords = ["tack","act","acti"]
         Output: 2
@@ -62,6 +76,13 @@ public class Trie {
         }
     }
 
+    /*
+     * PROBLEM: Insert Word into Trie (Helper)
+     * Insert a string into the character trie node by node.
+     *
+     * ALGORITHM: Trie Insertion
+     * TC: O(L) | SC: O(L)
+     */
     public static void insert(Node root, String str) {
 
         int n = str.length();
@@ -76,6 +97,13 @@ public class Trie {
         temp.isEnd = true;
     }
 
+    /*
+     * PROBLEM: Search Word in Trie (Helper)
+     * Check whether a string exists in the character trie.
+     *
+     * ALGORITHM: Trie Search
+     * TC: O(L) | SC: O(1)
+     */
     public static boolean search(Node root, String str) {
 
         int n = str.length();
@@ -104,6 +132,13 @@ public class Trie {
             }
         }
 
+        /*
+         * PROBLEM: Insert Number into Binary Trie (Helper)
+         * Insert an integer into the binary trie bit by bit (MSB first).
+         *
+         * ALGORITHM: Binary Trie Insertion (32-bit iteration)
+         * TC: O(32) | SC: O(32)
+         */
         //Insert by iteration
         public void insert(TrieNode root, int num) {
             TrieNode curr = root;
@@ -124,6 +159,13 @@ public class Trie {
             }
         }
 
+        /*
+         * PROBLEM: Get Maximum XOR from Binary Trie (Helper)
+         * Traverse the binary trie greedily to find the number giving max XOR with num.
+         *
+         * ALGORITHM: Binary Trie Traversal (greedy bit selection)
+         * TC: O(32) | SC: O(1)
+         */
         public Pair<Integer, Integer> getMaxXor(TrieNode root, int num) {
             TrieNode curr = root;
             int maxXor = 0;
@@ -150,6 +192,13 @@ public class Trie {
             return new Pair<>(maxXor, curr.val);
         }
 
+        /*
+         * PROBLEM: Maximum Strong Pair XOR I (LeetCode 2932)
+         * Find the maximum XOR of a strong pair (i,j) where |nums[i]-nums[j]| <= min(nums[i],nums[j]).
+         *
+         * ALGORITHM: Binary Trie XOR maximization
+         * TC: O(n * 32) | SC: O(n * 32)
+         */
         public int maximumStrongPairXor(int[] nums) {
             TrieNode root = new TrieNode(0);
             int maxXor = 0;

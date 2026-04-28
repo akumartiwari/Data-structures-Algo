@@ -7,6 +7,13 @@ import java.util.Set;
 public class Matrix {
     //Author: Anand
     /*
+     * PROBLEM: Check if Matrix Is X-Matrix (LeetCode 2319)
+     * Verify that diagonal cells are non-zero and all other cells are zero.
+     *
+     * ALGORITHM: Matrix Traversal
+     * TC: O(n²) | SC: O(1)
+     */
+    /*
     Diagonal elements of matrix are found for below cases :-
     # i == j
     # i+j == n-1
@@ -23,6 +30,13 @@ public class Matrix {
         return true;
     }
 
+    /*
+     * PROBLEM: Diagonal Traverse (LeetCode 498)
+     * Traverse an m×n matrix in diagonal order alternating up-right and down-left.
+     *
+     * ALGORITHM: Simulation with direction changes at boundaries
+     * TC: O(m*n) | SC: O(m*n)
+     */
     /*
     Input: mat = [[1,2,3],[4,5,6],[7,8,9]]
     Output: [1,2,4,7,5,3,6,8,9]
@@ -72,6 +86,13 @@ public class Matrix {
     }
 
 
+    /*
+     * PROBLEM: Maximum Matrix Sum (LeetCode 1975)
+     * Maximize the sum of a matrix by flipping signs of adjacent elements any number of times.
+     *
+     * ALGORITHM: Greedy (count negatives; if odd, subtract 2*min)
+     * TC: O(m*n) | SC: O(1)
+     */
     public long maxMatrixSum(int[][] matrix) {
         int m = matrix.length;
         int n = matrix[0].length;
@@ -89,6 +110,13 @@ public class Matrix {
         return sum - 2 * mini;
     }
 
+    /*
+     * PROBLEM: Apply Operations to a Matrix (LeetCode 2536)
+     * Apply range increment queries to an n×n zero matrix and return the result.
+     *
+     * ALGORITHM: Brute Force Range Update
+     * TC: O(q * n²) | SC: O(n²)
+     */
     /*
 
 
@@ -117,6 +145,13 @@ public class Matrix {
         return ans;
     }
 
+    /*
+     * PROBLEM: Difference of Number of Distinct Values on Diagonals (LeetCode 2711)
+     * For each cell, compute |distinct values top-left diagonal - distinct values bottom-right diagonal|.
+     *
+     * ALGORITHM: Diagonal Traversal with HashSet
+     * TC: O(m*n*min(m,n)) | SC: O(m*n)
+     */
     public int[][] differenceOfDistinctValues(int[][] grid) {
 
         int m = grid.length, n = grid[0].length;
@@ -131,6 +166,13 @@ public class Matrix {
         return ans;
     }
 
+    /*
+     * PROBLEM: Diagonal Distinct Values (Helper)
+     * Count distinct values in top-left and bottom-right diagonals of cell (i,j) and return their absolute difference.
+     *
+     * ALGORITHM: Two-pass diagonal scan with HashSet
+     * TC: O(min(m,n)) | SC: O(min(m,n))
+     */
     private int helper(int i, int j, int[][] grid) {
         int m = grid.length, n = grid[0].length;
 
