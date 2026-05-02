@@ -2,6 +2,8 @@ package com.company;
 
 import java.util.HashMap;import java.util.*;
 
+import static com.company.DP.ans;
+
 public class BinaryTree {
     /**
      * Definition for a binary tree node.
@@ -80,8 +82,7 @@ public class BinaryTree {
      */
     public int diameter(Node root) {
         if (root == null || root.children.size() == 0) return 0;
-        maxDiamterNArray(root);
-        return ans;
+        return maxDiamterNArray(root);
     }
 
     /*
