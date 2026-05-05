@@ -1,9 +1,17 @@
 package com.company;
 
-import java.util.HashMap;import java.util.*;
+import java.util.HashMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 class SubSet2 {
+    /*
+     * PROBLEM: Subsets II (LeetCode 90)
+     * Return all possible subsets of an array that may contain duplicates, without duplicate subsets.
+     *
+     * ALGORITHM: Backtracking with sorted input to skip duplicates
+     * TC: O(2^n) | SC: O(2^n)
+     */
     // TC = O(2^n), SC = exponential in nature
     // backtracking basesd solution
     public List<List<Integer>> subsetsWithDup(int[] nums) {
@@ -13,7 +21,14 @@ class SubSet2 {
         return result;
     }
 
-    private void bfs(int[] nums, int index, List<List<Integer>> result, List<Integer> res) {
+        /*
+         * PROBLEM: Subsets II BFS Helper (Helper)
+         * Recursive BFS helper to generate unique subsets and accumulate into result.
+         *
+         * ALGORITHM: Backtracking
+         * TC: O(2^n) | SC: O(n)
+         */
+        private void bfs(int[] nums, int index, List<List<Integer>> result, List<Integer> res) {
         // base case
         if (!result.contains(res)) result.add(new ArrayList<>(res));
 
@@ -21,14 +36,20 @@ class SubSet2 {
             int num = nums[i];
             res.add(num);
             bfs(nums, i + 1, result, res);
-            res.remove(new Integer(num));
+            res.remove(num);
         }
     }
 
 
     class Subsets {
+        /*
+         * PROBLEM: Subsets (LeetCode 78)
+         * Return all possible subsets of a distinct integer array.
+         *
+         * ALGORITHM: Iterative BFS-style expansion per element
+         * TC: O(n * 2^n) | SC: O(n * 2^n)
+         */
         // TC = O(n), SC = O(n)
-
         public List<List<Integer>> subsets(int[] nums) {
             int n = nums.length;
             LinkedList<List<Integer>> result = new LinkedList<>();
@@ -38,6 +59,13 @@ class SubSet2 {
             return result;
         }
 
+        /*
+         * PROBLEM: Subsets Recursive Helper (Helper)
+         * Recursively expand each existing subset with the element at the current index.
+         *
+         * ALGORITHM: Backtracking / BFS expansion
+         * TC: O(n * 2^n) | SC: O(n)
+         */
         private void permuate(int[] nums, int index, LinkedList<List<Integer>> result) {
             int n = nums.length;
             // base case
@@ -78,6 +106,13 @@ class SubSet2 {
     */
 // Recursive approach
     class LetterCasePermutation {
+        /*
+         * PROBLEM: Letter Case Permutation (LeetCode 784)
+         * Generate all strings by changing each letter to uppercase or lowercase.
+         *
+         * ALGORITHM: Backtracking (recursive exploration of upper/lower cases)
+         * TC: O(2^n * n) | SC: O(n)
+         */
         // TC = O(2*n), SC = O(n!)
         public List<String> letterCasePermutation(String s) {
             int n = s.length();
@@ -88,6 +123,13 @@ class SubSet2 {
             return ans;
         }
 
+        /*
+         * PROBLEM: Letter Case Permutation Recursive (Helper)
+         * Recursive helper to build each permutation character by character.
+         *
+         * ALGORITHM: Backtracking
+         * TC: O(2^n) | SC: O(n)
+         */
         private void permuate(String s, StringBuilder sb, int index, List<String> ans) {
             int n = s.length();
             // base case
@@ -170,6 +212,13 @@ class SubSet2 {
             }
         }
 
+        /*
+         * PROBLEM: Random Pick with Blacklist (LeetCode 710)
+         * Pick a random integer from [0, n) excluding blacklisted values.
+         *
+         * ALGORITHM: HashMap remapping of blacklist indices + random uniform selection
+         * TC: O(1) per pick | SC: O(|blacklist|)
+         */
         public int pick() {
             int random = generator.nextInt(ul);
             if (map.containsKey(random))
@@ -192,6 +241,13 @@ class SubSet2 {
                 "1", "0"
         };
 
+        /*
+         * PROBLEM: Find Unique Binary String (LeetCode 1980)
+         * Find a binary string of length n that is not present in the given list.
+         *
+         * ALGORITHM: Backtracking + HashSet lookup
+         * TC: O(2^n * n) | SC: O(n)
+         */
         public String findDifferentBinaryString(String[] nums) {
             len = nums.length;
             set = new HashSet<>();
@@ -200,6 +256,13 @@ class SubSet2 {
             return res;
         }
 
+        /*
+         * PROBLEM: Find Unique Binary String Recursive (Helper)
+         * Recursively try placing '1' or '0' at each position until a unique string is found.
+         *
+         * ALGORITHM: Backtracking
+         * TC: O(2^n * n) | SC: O(n)
+         */
         private Boolean diff(int index, String str) {
             // base case
             if (index == set.size()) {
@@ -223,6 +286,13 @@ class SubSet2 {
 
     class MaxTaxiEarningsDP {
 
+        /*
+         * PROBLEM: Maximum Earnings From Taxi (LeetCode 2008)
+         * Find maximum earnings by selecting non-overlapping rides.
+         *
+         * ALGORITHM: DP (bottom-up) + sorted rides by start time
+         * TC: O(n+k) | SC: O(n)
+         */
         // DP + Iteration based solution
         public long maxTaxiEarnings(int n, int[][] rides) {
             // sort rides  matrix based on  start time
@@ -254,6 +324,13 @@ class SubSet2 {
 
 
     class FindOriginalArray {
+        /*
+         * PROBLEM: Find Original Array From Doubled Array (LeetCode 2007)
+         * Given a doubled array, recover the original array.
+         *
+         * ALGORITHM: Sort + HashMap to match pairs
+         * TC: O(n log n) | SC: O(n)
+         */
         public int[] findOriginalArray(int[] changed) {
             int n = changed.length, cnt = 0;
             List<Integer> ans = new ArrayList<>();
@@ -294,6 +371,13 @@ class SubSet2 {
     class SplitIntoFibonacci {
         List<Integer> al = new ArrayList<>();
 
+        /*
+         * PROBLEM: Split Array into Fibonacci Sequence (LeetCode 842)
+         * Split a numeric string into a valid Fibonacci sequence.
+         *
+         * ALGORITHM: Backtracking with brute-force first two number selection
+         * TC: O(n^2) | SC: O(n)
+         */
         public List<Integer> splitIntoFibonacci(String num) {
             for (int i = 0; i < num.length(); i++) {
                 if (i > 0 && num.charAt(0) == '0') return new ArrayList<Integer>();
@@ -313,6 +397,13 @@ class SubSet2 {
             return new ArrayList<Integer>();
         }
 
+        /*
+         * PROBLEM: Fibonacci Solve Recursive (Helper)
+         * Verify and extend the Fibonacci sequence from position index in the string.
+         *
+         * ALGORITHM: Recursion + string prefix matching
+         * TC: O(n) | SC: O(n)
+         */
         public boolean solve(int a, int b, String num, int index) {
             if (index == num.length()) return true;
             String sum = String.valueOf(a + b);
@@ -344,6 +435,13 @@ class SubSet2 {
         // find src and dest points
         Point src, dest;
 
+        /*
+         * PROBLEM: Unique Paths III (LeetCode 980)
+         * Count paths from start to end that walk over every non-obstacle cell exactly once.
+         *
+         * ALGORITHM: Backtracking (DFS) with visited tracking
+         * TC: O(4^(m*n)) | SC: O(m*n)
+         */
         public int uniquePathsIII(int[][] obstacleGrid) {
             m = obstacleGrid.length;
             n = obstacleGrid[0].length;
@@ -380,11 +478,25 @@ class SubSet2 {
             return k;
         }
 
+        /*
+         * PROBLEM: Is Safe to Visit (Helper)
+         * Check if cell (r,c) is within bounds and not an obstacle.
+         *
+         * ALGORITHM: Boundary and value check
+         * TC: O(1) | SC: O(1)
+         */
         // this function will tell that the current node is safe to be visited or not
         private boolean isSafe(int r, int c) {
             return (r < m && c < n && r >= 0 && c >= 0 && (obstacleGrid[r][c] != -1));
         }
 
+        /*
+         * PROBLEM: Unique Paths III Recursive (Helper)
+         * Recursively explore all 4-directional paths, backtracking when dead ends are reached.
+         *
+         * ALGORITHM: DFS backtracking
+         * TC: O(4^(m*n)) | SC: O(m*n)
+         */
         private void recursive(int m, int n, int r, int c, int cells) {
             // base cases
             if (r == this.dest.x && c == this.dest.y && cells == space) {
@@ -421,6 +533,16 @@ class SubSet2 {
 
     //TODO: Revisit
     class SQRTBinarySeach {
+        // Fields used by findAllPeople and findEvenNumbers
+        Map<Integer, Map<Integer, List<Integer>>> g = new HashMap<>();
+        Set<Integer> set = new TreeSet<>();
+        /*
+         * PROBLEM: Sqrt(x) (LeetCode 69)
+         * Compute the integer square root of x without using sqrt().
+         *
+         * ALGORITHM: Binary Search
+         * TC: O(log n) | SC: O(1)
+         */
         public int mySqrt(int num) {
 
             if (num < 2) {
@@ -439,10 +561,16 @@ class SubSet2 {
         }
 
 
+        /*
+         * PROBLEM: Find Peak Element (LeetCode 162)
+         * Find an index of a peak element (greater than its neighbours) in O(log n).
+         *
+         * ALGORITHM: Binary Search
+         * TC: O(log n) | SC: O(1)
+         */
         // This is based on binary search of peak element
         // Input: nums = [1,2,3,1]
         // Output: 2
-        // Explanation: 3 is a peak element and your function should return the index number 2.
         // TC = O(logn), SC = O(1)
         public int findPeakElement(int[] nums) {
             int n = nums.length;
@@ -455,6 +583,13 @@ class SubSet2 {
             return l;
         }
 
+        /*
+         * PROBLEM: Search in Rotated Sorted Array (LeetCode 33)
+         * Search for a target in a rotated sorted array in O(log n).
+         *
+         * ALGORITHM: Binary Search with sorted-half detection
+         * TC: O(log n) | SC: O(1)
+         */
         // O(logn)
         // We have to iteratively partition array into haves and evavluate which half is sorted
         // and then apply BS for the element
@@ -483,11 +618,14 @@ class SubSet2 {
 
         }
 
+        /*
+         * PROBLEM: Find All People With Secret (LeetCode 2092)
+         * Find all people who ultimately learn the secret given meetings ordered by time.
+         *
+         * ALGORITHM: BFS + MinPriorityQueue ordered by meeting time
+         * TC: O((n+m) log n) | SC: O(n+m)
+         */
         // PQ + BFS
-        // This is a astandard application for PQ and application of BFS
-        //[[u,v] = meeting times list]
-        Map<Integer, Map<Integer, List<Integer>>> g = new HashMap<>();
-
         public List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
 
             int[] notified = new int[n];
@@ -533,6 +671,13 @@ class SubSet2 {
             return res;
         }
 
+        /*
+         * PROBLEM: Get Meeting Times (Helper)
+         * Get or create the shared list of meeting times between persons u and v.
+         *
+         * ALGORITHM: HashMap lookup
+         * TC: O(1) | SC: O(1)
+         */
         private List<Integer> getMeetingTimes(int u, int v) {
             List<Integer> times = g.get(u).get(v);
             if (times == null) {
@@ -544,11 +689,14 @@ class SubSet2 {
         }
 
 
+        /*
+         * PROBLEM: Find All Three-Digit Even Numbers (LeetCode 2094)
+         * Return all unique 3-digit even integers formed by using 3 of the given digits.
+         *
+         * ALGORITHM: Backtracking with constraints (no leading zero, must be even)
+         * TC: O(n^3) | SC: O(n)
+         */
         // TC = O(2^n), SC = O(2^n)
-        // this is based on generating all possivble permuatation of an array of desired length
-//    via backtracking
-        Set<Integer> set = new HashSet<>();
-
         public int[] findEvenNumbers(int[] digits) {
             int n = digits.length;
             boolean[] seen = new boolean[n];
@@ -556,6 +704,13 @@ class SubSet2 {
             return set.stream().mapToInt(x -> x).sorted().toArray();
         }
 
+        /*
+         * PROBLEM: Find Even Numbers Backtracking (Helper)
+         * Recursively build 3-digit numbers from the digit array respecting constraints.
+         *
+         * ALGORITHM: Backtracking
+         * TC: O(n^3) | SC: O(n)
+         */
         private void permute(int idx, int[] digits, String curr, boolean[] seen) {
 
             //base cases
@@ -573,6 +728,13 @@ class SubSet2 {
         }
 
 
+        /*
+         * PROBLEM: Delete the Middle Node of a Linked List (LeetCode 2095)
+         * Remove the middle node of a singly linked list.
+         *
+         * ALGORITHM: Two pointers (slow/fast)
+         * TC: O(n/2) | SC: O(1)
+         */
         // TC = (n/2), SC = O(1)
         public ListNode deleteMiddle(ListNode head) {
             if (head.next == null) return null;
@@ -587,6 +749,13 @@ class SubSet2 {
         }
 
 
+        /*
+         * PROBLEM: Delete Middle Node Simple Approach (Helper)
+         * Alternative approach to delete middle node tracking previous pointer.
+         *
+         * ALGORITHM: Two pointers (slow/fast with prev tracking)
+         * TC: O(n) | SC: O(1)
+         */
         private ListNode deleteMiddleSimpleApproach(ListNode head) {
             if (head == null || head.next == null) return null;
             ListNode curr = head;
@@ -603,6 +772,13 @@ class SubSet2 {
         }
 
 
+        /*
+         * PROBLEM: Lowest Common Ancestor (LeetCode 236)
+         * Find the lowest common ancestor of two nodes s and d in a binary tree.
+         *
+         * ALGORITHM: DFS post-order
+         * TC: O(n) | SC: O(h)
+         */
         // LCA based solution
         public TreeNode findLCA(TreeNode node, int s, int d) {
             if (node == null) return null;
@@ -616,6 +792,13 @@ class SubSet2 {
             else return left;
         }
 
+        /*
+         * PROBLEM: Step-By-Step Directions From Binary Tree (LeetCode 2096)
+         * Return directions from startValue node to destValue node in the binary tree.
+         *
+         * ALGORITHM: LCA + DFS path finding
+         * TC: O(n) | SC: O(n)
+         */
         public String getDirections(TreeNode root, int startValue, int destValue) {
             TreeNode CA = findLCA(root, startValue, destValue);
             StringBuilder ans = new StringBuilder();
@@ -630,6 +813,13 @@ class SubSet2 {
             return ans.toString();
         }
 
+        /*
+         * PROBLEM: Path to Node Helper (Helper)
+         * DFS to find the path from a tree node to the target value, recording L/R directions.
+         *
+         * ALGORITHM: DFS with backtracking
+         * TC: O(n) | SC: O(h)
+         */
         private boolean helper(TreeNode n, int v, ArrayDeque<String> q) {
             if (n == null) return false;
             if (n.val == v) return true;
@@ -651,6 +841,13 @@ class SubSet2 {
         ListNode curr = null;
         ListNode tail = null;
 
+        /*
+         * PROBLEM: Add Node to Linked List (Helper)
+         * Append a new node with the given data to the end of the singly linked list.
+         *
+         * ALGORITHM: Linked list tail insertion
+         * TC: O(1) | SC: O(1)
+         */
         //addNode() will add a new node to the list
         public void addNode(int data) {
             //Create a new node
@@ -669,6 +866,13 @@ class SubSet2 {
             }
         }
 
+        /*
+         * PROBLEM: Merge Nodes in Between Zeros (LeetCode 2181)
+         * Sum values between consecutive 0-nodes and return new list of sums.
+         *
+         * ALGORITHM: Linear scan with running sum
+         * TC: O(n) | SC: O(n)
+         */
         // Author: Anand
         public ListNode mergeNodes(ListNode head) {
             int sum = 0;
@@ -693,6 +897,13 @@ class SubSet2 {
     }
 
     class combinationSum4BottomUpDP {
+        /*
+         * PROBLEM: Combination Sum IV (LeetCode 377)
+         * Count the number of combinations that add up to target (order matters).
+         *
+         * ALGORITHM: DP bottom-up
+         * TC: O(n * target) | SC: O(target)
+         */
         // TC = O(n*target), SC = O(1)
         // Bottom up approach
         public int combinationSum4(int[] nums, int target) {

@@ -5,6 +5,13 @@ import java.util.*;
 public class LinkedListProblems {
     //Author: Anand
     /*
+     * PROBLEM: Intersection of Two Linked Lists (LeetCode 160)
+     * Find the intersection node of two singly linked lists.
+     *
+     * ALGORITHM: Two Pointers (switch lists at end)
+     * TC: O(m+n) | SC: O(1)
+     */
+    /*
     ## Intersection of tow linked list##
     The idea is to keep on traversing lists until intersection point is found
     Proof : We are bound to get intersection point beacause every time greater list ends it will swich
@@ -40,6 +47,13 @@ public class LinkedListProblems {
      * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
      * }
      */
+    /*
+     * PROBLEM: Reverse Linked List (LeetCode 206)
+     * Reverse a singly linked list in-place.
+     *
+     * ALGORITHM: Iterative Three-Pointer
+     * TC: O(n) | SC: O(1)
+     */
     public ListNode reverseList(ListNode head) {
         if (head == null) return head;
         ListNode curr = head, prev = null, next;
@@ -65,12 +79,26 @@ public class LinkedListProblems {
      * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
      * }
      */
+    /*
+     * PROBLEM: Reverse Nodes in k-Group (LeetCode 25)
+     * Reverse linked list nodes in groups of k; leave remaining nodes as-is.
+     *
+     * ALGORITHM: Recursive reversal with length tracking
+     * TC: O(n) | SC: O(n/k)
+     */
     public ListNode reverseKGroup(ListNode head, int k) {
         if (head == null) return head;
         int len = getLength(head);
         return reverse(head, k, len);
     }
 
+    /*
+     * PROBLEM: Get List Length (Helper)
+     * Returns the total number of nodes in the linked list.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(n) | SC: O(1)
+     */
     private int getLength(ListNode curr) {
         int cnt = 0;
         while (curr != null) {
@@ -81,6 +109,13 @@ public class LinkedListProblems {
     }
 
     // Recursive function to reverse in groups
+    /*
+     * PROBLEM: Reverse in K-Group Helper (Helper)
+     * Recursively reverses k nodes and connects to the next reversed group.
+     *
+     * ALGORITHM: Recursive reversal
+     * TC: O(n) | SC: O(n/k)
+     */
     private ListNode reverse(ListNode head, int k, int len) {
         // base case
         if (len < k) return head;
@@ -99,6 +134,13 @@ public class LinkedListProblems {
         return prev;
     }
 
+    /*
+     * PROBLEM: Remove Nodes From Linked List (LeetCode 2487)
+     * Remove every node that has a greater-valued node to its right.
+     *
+     * ALGORITHM: Reverse traversal + TreeMap tracking
+     * TC: O(n log n) | SC: O(n)
+     */
     public ListNode removeNodes(ListNode head) {
 
         TreeMap<Integer, Integer> tm = new TreeMap<>();
@@ -142,6 +184,13 @@ public class LinkedListProblems {
     }
 
     // Insert a node in linked list
+    /*
+     * PROBLEM: Insert Greatest Common Divisors in Linked List (LeetCode 2807)
+     * Insert a GCD node between every two adjacent nodes in the linked list.
+     *
+     * ALGORITHM: Linear scan + node insertion
+     * TC: O(n log(max)) | SC: O(1)
+     */
     public ListNode insertGreatestCommonDivisors(ListNode head) {
         ListNode ptr = head;
 
@@ -158,6 +207,13 @@ public class LinkedListProblems {
         return head;
     }
 
+    /*
+     * PROBLEM: GCD (Helper)
+     * Computes the GCD of two integers using the Euclidean algorithm.
+     *
+     * ALGORITHM: Euclidean Algorithm (Recursive)
+     * TC: O(log(min(a,b))) | SC: O(log(min(a,b)))
+     */
     public int gcd(int a, int b) {
         if (a == 0)
             return b;
@@ -175,7 +231,13 @@ public class LinkedListProblems {
      * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
      * }
      */
-
+    /*
+     * PROBLEM: Append Node to Linked List (Helper)
+     * Appends a new node with the given data to the end of the list.
+     *
+     * ALGORITHM: Linear traversal to tail
+     * TC: O(n) | SC: O(1)
+     */
     private ListNode append(ListNode head_ref, int new_data) {
         /* 1. allocate node */
         ListNode new_node = new ListNode();
@@ -208,6 +270,13 @@ public class LinkedListProblems {
     }
 
 
+    /*
+     * PROBLEM: Double a Number Represented as a Linked List (LeetCode 2816)
+     * Doubles the number represented by the linked list and returns the new list.
+     *
+     * ALGORITHM: String manipulation + carry propagation
+     * TC: O(n) | SC: O(n)
+     */
     public ListNode doubleIt(ListNode head) {
 
         StringBuilder sb = new StringBuilder();
@@ -257,6 +326,13 @@ public class LinkedListProblems {
     }
 
 
+    /*
+     * PROBLEM: Minimum Absolute Difference Between Elements With Constraint (LeetCode 2817)
+     * Find minimum |nums[i]-nums[j]| for pairs where |i-j| >= x.
+     *
+     * ALGORITHM: Sliding Window + TreeMap
+     * TC: O(n log n) | SC: O(n)
+     */
     public int minAbsoluteDifference(List<Integer> nums, int x) {
 
         TreeMap<Integer, Integer> freq = new TreeMap<>();

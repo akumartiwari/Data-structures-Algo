@@ -24,6 +24,13 @@ package com.company;
  */
 class BinarySystem {
 
+    /*
+     * PROBLEM: Entry point (Main)
+     * Demonstrates binary addition using both recursive and iterative approaches.
+     *
+     * ALGORITHM: Direct call
+     * TC: O(1) | SC: O(1)
+     */
     public static void main(String[] args) {
         String s1 = "110";// "0000100";// "110";// "1011"; // "101";
         String s2 = "1000";// "101";// "1000"; // "100";
@@ -33,6 +40,13 @@ class BinarySystem {
         System.out.println(s1 + " + " + s2 + " = " + res);
     }
 
+    /*
+     * PROBLEM: Add Binary (LeetCode 67)
+     * Adds two binary strings without converting to integer using recursion.
+     *
+     * ALGORITHM: Recursion (process LSB to MSB via call stack)
+     * TC: O(max(N,M)) | SC: O(max(N,M))
+     */
     /*
      * APPROACH 1 — Recursive
      * ---------------------------------------------------------------
@@ -60,6 +74,13 @@ class BinarySystem {
         return add(A, B, i - 1, j - 1, sum / 2, result);
     }
 
+    /*
+     * PROBLEM: Add Binary (LeetCode 67)
+     * Adds two binary strings iteratively using two-pointer approach.
+     *
+     * ALGORITHM: Iterative Two Pointers + StringBuilder
+     * TC: O(max(N,M)) | SC: O(max(N,M))
+     */
     /*
      * APPROACH 2 — Iterative (preferred)
      * ---------------------------------------------------------------

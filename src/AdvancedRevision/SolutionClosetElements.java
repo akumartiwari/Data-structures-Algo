@@ -1,4 +1,5 @@
 package AdvancedRevision;
+import com.company.ListNode;
 
 import java.util.HashMap;import java.util.*;
 import java.util.stream.Collectors;

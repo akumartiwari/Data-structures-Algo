@@ -1,6 +1,6 @@
 package com.company;
 
-import javafx.util.Pair;
+import common.Pair;
 
 import java.util.HashMap;import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -10,6 +10,13 @@ public class Dijisktra {
     // Author : Anand
     List<int[]>[] nextgraph, pregraph;
 
+    /*
+     * PROBLEM: Minimum Weighted Subgraph With Required Paths (LeetCode 2203)
+     * Find minimum weight connected subgraph containing paths src1->dest and src2->dest.
+     *
+     * ALGORITHM: Dijkstra from src1, src2, and dest (reversed graph)
+     * TC: O((V+E) log V) | SC: O(V+E)
+     */
     public long minimumWeight(int n, int[][] edges, int src1, int src2, int dest) {
         buildGraph(n, edges);
 
@@ -40,6 +47,13 @@ public class Dijisktra {
     }
 
     // Dijkstra algorithm to find the shortest distance b/w each node
+    /*
+     * PROBLEM: Dijkstra Shortest Path (Helper)
+     * Runs Dijkstra from src over an adjacency list graph (List<int[]>[]).
+     *
+     * ALGORITHM: Dijkstra with MinPQ
+     * TC: O((V+E) log V) | SC: O(V)
+     */
     private void shortestPath(int src, long[] srcTo, List<int[]>[] graph) {
         // min PQ to find SD b/w src, dest
         PriorityQueue<long[]> queue = new PriorityQueue<>((a, b) -> Long.compare(a[1], b[1]));
@@ -60,6 +74,13 @@ public class Dijisktra {
         }
     }
 
+    /*
+     * PROBLEM: Build Directed Weighted Graph (Helper)
+     * Builds forward and reverse adjacency lists from edge list.
+     *
+     * ALGORITHM: Array iteration
+     * TC: O(E) | SC: O(V+E)
+     */
     private void buildGraph(int n, int[][] edges) {
         nextgraph = new ArrayList[n];
         pregraph = new ArrayList[n];
@@ -88,6 +109,13 @@ public class Dijisktra {
     // TC = O(mn), SC = O(mn)
     // Dijkstra on graph
     //  The idea is to find the path with min number of obstacles need to be removed
+    /*
+     * PROBLEM: Minimum Obstacle Removal to Reach Corner (LeetCode 2290)
+     * Find minimum obstacles to remove to travel from (0,0) to (m-1,n-1).
+     *
+     * ALGORITHM: Dijkstra on grid (0-1 BFS)
+     * TC: O(mn) | SC: O(mn)
+     */
     public int minimumObstacles(int[][] grid) {
 
         int m = grid.length;
@@ -136,6 +164,13 @@ public class Dijisktra {
      */
     List<List<Integer>> graph;
 
+    /*
+     * PROBLEM: Find Closest Node to Given Two Nodes (LeetCode 2359)
+     * Find the node reachable from both given nodes minimizing the max distance.
+     *
+     * ALGORITHM: Dijkstra from both nodes + linear scan
+     * TC: O(V+E) | SC: O(V)
+     */
     public int closestMeetingNode(int[] edges, int node1, int node2) {
         int n = edges.length;
         buildGraph(edges);
@@ -162,6 +197,13 @@ public class Dijisktra {
     }
 
     // Dijkstra algorithm to find the shortest distance b/w each node
+    /*
+     * PROBLEM: Dijkstra Shortest Path Unweighted (Helper)
+     * Runs Dijkstra from src for unweighted graph (List<List<Integer>>).
+     *
+     * ALGORITHM: Dijkstra with MinPQ
+     * TC: O((V+E) log V) | SC: O(V)
+     */
     private void shortestPath(int src, long[] srcTo, List<List<Integer>> graph) {
         // min PQ to find SD b/w src, dest
         PriorityQueue<long[]> queue = new PriorityQueue<>((a, b) -> Long.compare(a[1], b[1]));
@@ -181,6 +223,13 @@ public class Dijisktra {
         }
     }
 
+    /*
+     * PROBLEM: Build Simple Graph from Edge Array (Helper)
+     * Builds an adjacency list from a simple edges array (each element is next node).
+     *
+     * ALGORITHM: Array iteration
+     * TC: O(V) | SC: O(V)
+     */
     private void buildGraph(int[] edges) {
         graph = new ArrayList<>();
         for (int e : edges) graph.add(new ArrayList<>());
@@ -192,6 +241,13 @@ public class Dijisktra {
     Output: 2
     Explanation: The distance from node 0 to node 2 is 1, and the distance from node 1 to node 2 is 1.
     The maximum of those two distances is 1. It can be proven that we cannot get a node with a smaller maximum distance than 1, so we return node 2.
+     */
+    /*
+     * PROBLEM: Longest Cycle in a Graph (LeetCode 2360)
+     * Find the length of the longest cycle in a directed graph.
+     *
+     * ALGORITHM: DFS + Cycle detection
+     * TC: O(V+E) | SC: O(V)
      */
     public int longestCycle(int[] edges) {
         int n = edges.length;
@@ -217,6 +273,13 @@ public class Dijisktra {
     }
 
     // return : new int[] {cycleSize, entryPoint}
+    /*
+     * PROBLEM: Find Cycle from Start Node (Helper)
+     * Finds cycle size starting at a given node using visited tracking.
+     *
+     * ALGORITHM: Iterative cycle detection
+     * TC: O(V) | SC: O(V)
+     */
     private int[] findCycle(int startPoint, int[] edges, Set<Integer> visited) {
         int next = startPoint;
         int entryPoint = -1;
@@ -244,6 +307,13 @@ public class Dijisktra {
     }
 
 
+    /*
+     * PROBLEM: Minimum Score of a Path Between Two Cities (LeetCode 2492)
+     * Find the minimum edge weight on any path from node 1 to node n.
+     *
+     * ALGORITHM: Dijkstra tracking minimum distance seen
+     * TC: O((V+E) log V) | SC: O(V+E)
+     */
     public int minScore(int n, int[][] edges) {
 
         Map<Integer, List<Integer>> graph = new HashMap<>();
@@ -279,6 +349,13 @@ public class Dijisktra {
 
 
     // Dijkstra algorithm to find the shortest distance b/w each node
+    /*
+     * PROBLEM: Dijkstra With Min-Edge Tracking (Helper)
+     * Dijkstra tracking the minimum edge weight seen along the path.
+     *
+     * ALGORITHM: Dijkstra with MinPQ
+     * TC: O((V+E) log V) | SC: O(V)
+     */
     private void shortestPath(int src, long[] srcTo, Map<Integer, List<Integer>> graph, Map<Pair<Integer, Integer>, Integer> dm) {
         // min PQ to find SD b/w src, dest
         PriorityQueue<long[]> queue = new PriorityQueue<>((a, b) -> Long.compare(a[1], b[1]));
@@ -316,6 +393,13 @@ public class Dijisktra {
         // Author : Anand
         List<int[]>[] nextgraph, pregraph;
         int[] prices;
+        /*
+         * PROBLEM: Minimum Total Price of Trips (LeetCode 2646)
+         * Find minimum total price by halving some non-adjacent nodes before trips.
+         *
+         * ALGORITHM: Dijkstra + greedy halving
+         * TC: O((V+E) log V) | SC: O(V+E)
+         */
         public int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
             this.prices=price;
             buildGraph(n, edges);
@@ -369,6 +453,13 @@ public class Dijisktra {
         }
 
         // Dijkstra algorithm to find the shortest distance b/w each node
+        /*
+         * PROBLEM: Dijkstra Shortest Path Inner (Helper)
+         * Same as outer shortestPath for inner Solution class.
+         *
+         * ALGORITHM: Dijkstra with MinPQ
+         * TC: O((V+E) log V) | SC: O(V)
+         */
         private void shortestPath(int src, long[] srcTo, List<int[]>[] graph) {
             // min PQ to find SD b/w src, dest
             PriorityQueue<long[]> queue = new PriorityQueue<>((a, b) -> Long.compare(a[1], b[1]));
@@ -389,6 +480,13 @@ public class Dijisktra {
             }
         }
 
+        /*
+         * PROBLEM: Build Graph Inner (Helper)
+         * Builds adjacency lists for the inner Solution class.
+         *
+         * ALGORITHM: Array iteration
+         * TC: O(E) | SC: O(V+E)
+         */
         private void buildGraph(int n, int[][] edges) {
             nextgraph = new ArrayList[n];
             pregraph = new ArrayList[n];

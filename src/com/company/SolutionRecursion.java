@@ -8,6 +8,13 @@ class SolutionRecursion {
 
     Map<String, List<Integer>> map;
 
+    /*
+     * PROBLEM: Sort Array Using Recursion (Helper)
+     * Sort an integer array via recursive insertion sort.
+     *
+     * ALGORITHM: Recursive Insertion Sort
+     * TC: O(n^2) | SC: O(n)
+     */
     // using Recursion
     public int[] sortArray(int[] nums) {
         int n = nums.length;
@@ -18,6 +25,13 @@ class SolutionRecursion {
         return sorted.stream().mapToInt(x -> x).toArray();
     }
 
+    /*
+     * PROBLEM: Recursive Sort (Helper)
+     * Recursively sort a list by removing the last element, sorting the remainder, then inserting.
+     *
+     * ALGORITHM: Recursive Insertion Sort
+     * TC: O(n^2) | SC: O(n)
+     */
     private List<Integer> sort(List<Integer> nums) {
         int n = nums.size();
         if (n == 0 || n == 1) return nums;
@@ -29,6 +43,13 @@ class SolutionRecursion {
         return insert(nums, temp);
     }
 
+    /*
+     * PROBLEM: Recursive Insert in Sorted List (Helper)
+     * Insert num into a sorted list in the correct position recursively.
+     *
+     * ALGORITHM: Recursive insertion
+     * TC: O(n) | SC: O(n)
+     */
     private List<Integer> insert(List<Integer> sorted, int num) {
         // base case
         int n = sorted.size();
@@ -53,6 +74,13 @@ class SolutionRecursion {
     }
 
 
+    /*
+     * PROBLEM: Count Colder Days (Helper)
+     * For each index, count elements in the running stack smaller than current.
+     *
+     * ALGORITHM: Monotonic Stack
+     * TC: O(n) | SC: O(n)
+     */
     private static List<Integer> countcolderDays(int[] arr) {
         Stack<Integer> stk = new Stack<>();
         // used to store elements greater than the current element
@@ -71,6 +99,13 @@ class SolutionRecursion {
 
         return ans;
     }
+    /*
+     * PROBLEM: Get Maximum Sum From Two Arrays With Common Points (LeetCode 1537)
+     * Return the maximum path sum traversing two arrays, switching at common elements.
+     *
+     * ALGORITHM: Recursion + Binary Search for intersection
+     * TC: O(n log n) | SC: O(n)
+     */
     //         int[] arr = {100,10,89,40,1,80,97};
     public int maxSum(int[] nums1, int[] nums2) {
         return maxSum(nums1, nums2, 0, 0, 0);
@@ -109,6 +144,13 @@ class SolutionRecursion {
         return max;
     }
 
+    /*
+     * PROBLEM: All Possible Full Binary Trees (LeetCode 894)
+     * Return all structurally unique full binary trees with n nodes.
+     *
+     * ALGORITHM: Recursion + Enumerate left/right subtree sizes
+     * TC: O(2^n) | SC: O(2^n)
+     */
     public List<TreeNode> allPossibleFBT(int n) {
         List<TreeNode> ans = new ArrayList<>();
         // base cases
@@ -133,6 +175,13 @@ class SolutionRecursion {
     }
 
 
+    /*
+     * PROBLEM: Check If All Characters Have Equal Number of Occurrences (LeetCode 1941)
+     * Return true if all characters in the string have equal frequency.
+     *
+     * ALGORITHM: HashMap frequency count + equality check
+     * TC: O(n) | SC: O(1)
+     */
     public boolean areOccurrencesEqual(String s) {
         int n = s.length();
         HashMap<Character, Integer> freq = new HashMap<>();
@@ -165,6 +214,13 @@ class SolutionRecursion {
         }
     }
 
+    /*
+     * PROBLEM: The Number of the Smallest Unoccupied Chair (LeetCode 1942)
+     * Find the smallest chair number that the target friend sits in.
+     *
+     * ALGORITHM: TreeMap + sorted arrival/leave tracking
+     * TC: O(n^2) | SC: O(n)
+     */
     public int smallestChair(int[][] times, int targetFriend) {
         int row = times.length;
         // arrival and leave time
@@ -212,6 +268,13 @@ class SolutionRecursion {
         return 0;
     }
 
+    /*
+     * PROBLEM: Get First Unoccupied Chair (Helper)
+     * Scan the unoccupied array to find the first free chair.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(n) | SC: O(1)
+     */
     private int getChair(int[] unoccupied) {
         int chair = 0;
         for (int c : unoccupied) {
@@ -236,6 +299,13 @@ class SolutionRecursion {
         return ans;
     }
 
+    /*
+     * PROBLEM: Number of Visible People in a Queue (LeetCode 1944)
+     * For each person, count how many others they can see to their right (TLE solution).
+     *
+     * ALGORITHM: Brute force O(n^2)
+     * TC: O(n^2) | SC: O(n)
+     */
     // TLE
 
     public int[] canSeePersonsCount(int[] heights) {
@@ -271,6 +341,13 @@ class SolutionRecursion {
     }
 
     /*
+     * PROBLEM: Number of Visible People in a Queue Optimized (LeetCode 1944)
+     * Optimized O(n^2) traversal from right to left tracking max height.
+     *
+     * ALGORITHM: Brute force right-to-left scan
+     * TC: O(n^2) | SC: O(n)
+     */
+    /*
     Input: heights = [10,6,8,5,11,9]
     Output: [3,1,2,1,1,0]
 
@@ -302,6 +379,13 @@ class SolutionRecursion {
     class Solution {
         PriorityQueue<Integer> res;
 
+        /*
+         * PROBLEM: Next Greater Element III (LeetCode 556)
+         * Find the smallest integer greater than n using the same digits.
+         *
+         * ALGORITHM: Permutation brute force + PriorityQueue
+         * TC: O(n! log n) | SC: O(n!)
+         */
         public int nextGreaterElement(int n) {
             String str = Integer.toString(n);
             res = new PriorityQueue<>();
@@ -311,6 +395,13 @@ class SolutionRecursion {
             return res.peek() != null ? res.poll() : -1;
         }
 
+        /*
+         * PROBLEM: Generate Digit Permutations (Helper)
+         * Recursively generate all permutations of digit array and add to priority queue.
+         *
+         * ALGORITHM: Backtracking
+         * TC: O(n!) | SC: O(n)
+         */
         private void permutation(char[] str, int l, int r) {
             if (l == r) {
                 StringBuilder list = new StringBuilder();
@@ -326,6 +417,13 @@ class SolutionRecursion {
             }
         }
 
+        /*
+         * PROBLEM: Swap Characters (Helper)
+         * Swap characters at positions i and j in a char array.
+         *
+         * ALGORITHM: In-place swap
+         * TC: O(1) | SC: O(1)
+         */
         private void swap(char[] str, int i, int j) {
             char temp = str[i];
             str[i] = str[j];
@@ -333,6 +431,13 @@ class SolutionRecursion {
         }
     }
 
+    /*
+     * PROBLEM: Reverse Sublist (Helper)
+     * Reverse a portion of a list from start to end index.
+     *
+     * ALGORITHM: Two-pointer in-place reversal
+     * TC: O(n) | SC: O(1)
+     */
     public static void reverse(int start, int end, List<Integer> nums) {
         while (start < end) {
             int temp = nums.get(start);
@@ -343,6 +448,13 @@ class SolutionRecursion {
         }
     }
 
+    /*
+     * PROBLEM: Next Greater Element III (LeetCode 556)
+     * Find the next permutation of n's digits that is greater than n.
+     *
+     * ALGORITHM: Next permutation (find decreasing suffix, swap, reverse)
+     * TC: O(n) | SC: O(n)
+     */
     public int nextGreaterElement(int n) {
         List<Integer> nums = new ArrayList<>();
         while (n != 0) {
@@ -373,6 +485,13 @@ class SolutionRecursion {
         return (num <= Integer.MAX_VALUE) ? (int) num : -1;
     }
 
+    /*
+     * PROBLEM: Find the Unsorted Subarray (LeetCode 581)
+     * Find the length of the shortest subarray that if sorted makes the whole array sorted.
+     *
+     * ALGORITHM: Monotonic Stack (two passes)
+     * TC: O(n) | SC: O(n)
+     */
     public int findUnsortedSubarray(int[] nums) {
         Stack<Integer> s = new Stack<>(); // To store index of elements greater than current one in stack
         int n = nums.length;
@@ -397,6 +516,13 @@ class SolutionRecursion {
         return right - left > 0 ? right - left + 1 : 0;
     }
 
+    /*
+     * PROBLEM: Smallest Range Covering Elements from K Lists (LeetCode 632)
+     * Find the smallest range that includes at least one number from each of k lists.
+     *
+     * ALGORITHM: Monotonic Stack on merged view (incomplete)
+     * TC: O(n) | SC: O(n)
+     */
     public int[] smallestRange(List<List<Integer>> nums) {
         int n = nums.size();
 
@@ -446,14 +572,35 @@ class SolutionRecursion {
             }
         }
 
+        /*
+         * PROBLEM: AVL Tree Node Size (Helper)
+         * Return the size of a subtree, or 0 for null.
+         *
+         * ALGORITHM: Null check
+         * TC: O(1) | SC: O(1)
+         */
         public int size(final TreeNode node) {
             return node == null ? 0 : node.size;
         }
 
+        /*
+         * PROBLEM: AVL Tree Node Height (Helper)
+         * Return the height of a subtree, or 0 for null.
+         *
+         * ALGORITHM: Null check
+         * TC: O(1) | SC: O(1)
+         */
         public int height(final TreeNode node) {
             return node == null ? 0 : node.height;
         }
 
+        /*
+         * PROBLEM: AVL Rotate Left (Helper)
+         * Perform a left rotation to rebalance the AVL tree.
+         *
+         * ALGORITHM: AVL rotation
+         * TC: O(1) | SC: O(1)
+         */
         public TreeNode rotateLeft(final TreeNode root) {
             final TreeNode newRoot = root.right;
             final TreeNode leftSubTree = newRoot.left;
@@ -470,6 +617,13 @@ class SolutionRecursion {
             return newRoot;
         }
 
+        /*
+         * PROBLEM: AVL Rotate Right (Helper)
+         * Perform a right rotation to rebalance the AVL tree.
+         *
+         * ALGORITHM: AVL rotation
+         * TC: O(1) | SC: O(1)
+         */
         public TreeNode rotateRight(final TreeNode root) {
             final TreeNode newRoot = root.left;
             final TreeNode rightSubTree = newRoot.right;
@@ -486,10 +640,24 @@ class SolutionRecursion {
             return newRoot;
         }
 
+        /*
+         * PROBLEM: Max of Two Integers (Helper)
+         * Return the greater of two integers.
+         *
+         * ALGORITHM: Comparison
+         * TC: O(1) | SC: O(1)
+         */
         public int max(final int a, final int b) {
             return a >= b ? a : b;
         }
 
+        /*
+         * PROBLEM: Count Smaller Numbers on the Right (LeetCode 315) — AVL Insert (Helper)
+         * Insert a key into AVL tree, updating the count of smaller elements seen so far.
+         *
+         * ALGORITHM: AVL Tree insertion with rank tracking
+         * TC: O(log n) | SC: O(n)
+         */
         public TreeNode insertIntoAVL(final TreeNode node, final int key, final int count[], final int index) {
             if (node == null) {
                 return new TreeNode(key);
@@ -532,6 +700,13 @@ class SolutionRecursion {
             return node;
         }
 
+        /*
+         * PROBLEM: Count Smaller Numbers on the Right (LeetCode 315)
+         * For each element, count how many elements to its right are smaller.
+         *
+         * ALGORITHM: AVL Tree insertion (right-to-left) with rank tracking
+         * TC: O(n log n) | SC: O(n)
+         */
         public int[] countSmallerOnRight(final int[] in) {
             final int[] smaller = new int[in.length];
 
@@ -544,6 +719,13 @@ class SolutionRecursion {
         }
 
 
+        /*
+         * PROBLEM: HelloWorld Main Entry Point (Main)
+         * Demonstrate countSmallerOnRight with sample input.
+         *
+         * ALGORITHM: Entry point
+         * TC: O(n log n) | SC: O(n)
+         */
         public void main(String[] args) {
             System.out.println("Hello World");
 
@@ -580,6 +762,13 @@ class SolutionRecursion {
 */
 
 
+    /*
+     * PROBLEM: Maximum Width of Binary Tree (LeetCode 662)
+     * Return the maximum width (number of nodes between leftmost and rightmost) at any level.
+     *
+     * ALGORITHM: DFS with level array tracking node count per level
+     * TC: O(n^2) | SC: O(n)
+     */
     // TC = O(n^2), SC = O(n)
     // Fn to get max width of tree
     public int widthOfBinaryTree(TreeNode root) {
@@ -593,6 +782,13 @@ class SolutionRecursion {
         return getMax(arr);
     }
 
+    /*
+     * PROBLEM: Max of Array (Helper)
+     * Find the maximum value in an integer array.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(n) | SC: O(1)
+     */
     // O(n)
     private int getMax(int[] arr) {
         int max = Integer.MIN_VALUE;
@@ -602,6 +798,13 @@ class SolutionRecursion {
         return max;
     }
 
+    /*
+     * PROBLEM: Get Max Width Per Level Recursively (Helper)
+     * Preorder DFS to increment node count for each level.
+     *
+     * ALGORITHM: DFS preorder traversal
+     * TC: O(n) | SC: O(h)
+     */
     // O(n^2) --> as for every pass we are getting 1 more pass for all nodes on that level
     // Preorder tree traversal to get all nodes on a level
     private void getMaxWidthRecursively(TreeNode root, int[] arr, int level) {
@@ -613,6 +816,13 @@ class SolutionRecursion {
         }
     }
 
+    /*
+     * PROBLEM: Binary Tree Height (Helper)
+     * Compute the height (number of levels) of a binary tree.
+     *
+     * ALGORITHM: DFS postorder
+     * TC: O(n) | SC: O(h)
+     */
     // Fn to get height of tree
     private int height(TreeNode root) {
         if (root == null) return 0;
@@ -621,6 +831,13 @@ class SolutionRecursion {
         return 1 + Math.max(lh, rh);
     }
 
+    /*
+     * PROBLEM: Maximum Width of Binary Tree BFS (LeetCode 662)
+     * Compute maximum width using BFS with virtual index labeling.
+     *
+     * ALGORITHM: BFS level-order with index numbering
+     * TC: O(n) | SC: O(n)
+     */
     private int maxWidthBfs(TreeNode root) {
         Queue<TreeNode> q = new LinkedList<>();
         root.val = 0;
@@ -653,6 +870,13 @@ class SolutionRecursion {
     }
 
 
+    /*
+     * PROBLEM: Linked List in Binary Tree (LeetCode 1367)
+     * Check if a linked list corresponds to a downward path in the binary tree.
+     *
+     * ALGORITHM: DFS + subpath matching
+     * TC: O(n * m) | SC: O(h)
+     */
     public boolean isSubPath(ListNode head, TreeNode root) {
 
         if (head == null) return true;
@@ -661,6 +885,13 @@ class SolutionRecursion {
         return isPath(head, root) && isSubPath(head, root.left) && isSubPath(head, root.right);
     }
 
+    /*
+     * PROBLEM: Is Path Matching (Helper)
+     * Check if linked list starting at head matches a downward path from tree node root.
+     *
+     * ALGORITHM: Recursive path check
+     * TC: O(m) | SC: O(m)
+     */
     private boolean isPath(ListNode head, TreeNode root) {
         if (head == null) return true;
         if (root == null) return false;
@@ -669,6 +900,13 @@ class SolutionRecursion {
     }
 
 
+    /*
+     * PROBLEM: Tree Diameter (LeetCode 1245)
+     * Find the diameter (longest path) in a tree represented as edge list.
+     *
+     * ALGORITHM: Double BFS (find farthest node, then find farthest from it)
+     * TC: O(n) | SC: O(n)
+     */
     // recursive soln
     public int treeDiameter(int[][] edges) {
         int n = edges.length;
@@ -688,6 +926,13 @@ class SolutionRecursion {
         return distance[1];
     }
 
+    /*
+     * PROBLEM: BFS on Graph (Helper)
+     * Run BFS from start node, returning {farthest node, distance}.
+     *
+     * ALGORITHM: BFS level-order traversal
+     * TC: O(n) | SC: O(n)
+     */
     private int[] bfs(List<Set<Integer>> graph, int start) {
 
         boolean[] visited = new boolean[graph.size()];
@@ -720,6 +965,13 @@ class SolutionRecursion {
         return new int[]{lastNode, distance};
     }
 
+    /*
+     * PROBLEM: Factorial (Helper)
+     * Compute n! recursively.
+     *
+     * ALGORITHM: Recursion
+     * TC: O(n) | SC: O(n)
+     */
     public int factorial(int n) {
         // base case
         if (n == 0) return 1;
@@ -738,6 +990,13 @@ class SolutionRecursion {
         Ot = 1 + d(10212) = 2 + d(1021) = 3 + d(102) = 4 + d(10) = 4 + d(10) = 5 + d(1) = 6 + d(0) = 6
 
      */
+    /*
+     * PROBLEM: Count Digits (Helper)
+     * Count the number of digits in integer n recursively.
+     *
+     * ALGORITHM: Recursion by dividing by 10
+     * TC: O(log n) | SC: O(log n)
+     */
     public int digits(int n) {
         if (n <= 0) return 0;
         return 1 + digits(n / 10);
@@ -747,6 +1006,13 @@ class SolutionRecursion {
     /*
        n = 10
        10 9 8  7 ....1
+     */
+    /*
+     * PROBLEM: Print Numbers Descending (Helper)
+     * Print numbers from n down to 2 recursively.
+     *
+     * ALGORITHM: Recursion (head recursion)
+     * TC: O(n) | SC: O(n)
      */
     public void printNumbersDec(int n) {
         // base case
@@ -760,6 +1026,13 @@ class SolutionRecursion {
        n = 10
        1 2  3 4 5 6 ... 10
      */
+    /*
+     * PROBLEM: Print Numbers Ascending (Helper)
+     * Print numbers from 2 up to n recursively.
+     *
+     * ALGORITHM: Recursion (tail recursion)
+     * TC: O(n) | SC: O(n)
+     */
     public void printNumbersAsc(int n) {
         // base case
         if (n == 1) return;
@@ -767,6 +1040,13 @@ class SolutionRecursion {
         System.out.println(n);
     }
 
+    /*
+     * PROBLEM: Tower of Hanoi (Helper)
+     * Recursively solve Tower of Hanoi for n disks.
+     *
+     * ALGORITHM: Recursion
+     * TC: O(2^n) | SC: O(n)
+     */
     private void towerOfHanoi(int n, char source, char destination, char helper) {
 
         // base case
@@ -783,6 +1063,13 @@ class SolutionRecursion {
         towerOfHanoi(n - 1, helper, destination, source);
     }
 
+    /*
+     * PROBLEM: Keypad Get Options (Helper)
+     * Return the letters corresponding to a phone keypad digit.
+     *
+     * ALGORITHM: Switch-case lookup
+     * TC: O(1) | SC: O(1)
+     */
     private static String getOptions(int n) {
         switch (n) {
             case 1:
@@ -808,6 +1095,13 @@ class SolutionRecursion {
         }
     }
 
+    /*
+     * PROBLEM: Letter Combinations of a Phone Number (LeetCode 17)
+     * Return all possible letter combinations for the given phone number digits.
+     *
+     * ALGORITHM: Recursion (build combinations by appending options for each digit)
+     * TC: O(4^n * n) | SC: O(4^n * n)
+     */
     private static String[] keypad(int n) {
         // base-case
         if (n == 0) {
@@ -835,6 +1129,13 @@ class SolutionRecursion {
         return result;
     }
 
+    /*
+     * PROBLEM: Determine Gender in Binary Tree (Helper)
+     * Given a perfect binary tree depth n with alternating gender children, find gender of kth node.
+     *
+     * ALGORITHM: Recursion on binary tree structure
+     * TC: O(n) | SC: O(n)
+     */
     private static String gender(int n, int k, String rootGender) {
         // base-case
         if (n == 1) return rootGender;
@@ -862,6 +1163,13 @@ Output: [3,2,1,4,5]
 reverseKnodes(2, 2, 3) -->
      */
 
+    /*
+     * PROBLEM: Reverse Nodes in k-Group (LeetCode 25)
+     * Reverse every k consecutive nodes in a linked list.
+     *
+     * ALGORITHM: Recursion
+     * TC: O(n) | SC: O(n/k)
+     */
     public ListNode reverseKGroup(ListNode head, int k) {
         // base case
         if (head == null) return null;
@@ -869,6 +1177,13 @@ reverseKnodes(2, 2, 3) -->
         return reverseKGroup(curr, k);
     }
 
+    /*
+     * PROBLEM: Reverse K Nodes Helper (Helper)
+     * Recursively reverse the first k nodes of a linked list.
+     *
+     * ALGORITHM: Recursion
+     * TC: O(k) | SC: O(k)
+     */
     // Fn. to revert first k nodes of list
     private ListNode reverseKnodes(ListNode head, int k) {
         // base case
@@ -888,6 +1203,13 @@ Output: [5,4,3,2,1]
 
      */
 
+    /*
+     * PROBLEM: Reverse Linked List (LeetCode 206)
+     * Reverse a singly linked list recursively.
+     *
+     * ALGORITHM: Recursion
+     * TC: O(n) | SC: O(n)
+     */
     public ListNode reverseList(ListNode head) {
         // base  case
         if (head == null || head.next == null) return head;
@@ -901,6 +1223,13 @@ Output: [5,4,3,2,1]
         return p;
     }
 
+    /*
+     * PROBLEM: Correct a Binary Tree (LeetCode 1660)
+     * Remove the invalid node from a binary tree where one node points to a previously seen node.
+     *
+     * ALGORITHM: BFS level-order with parent tracking and duplicate detection
+     * TC: O(n) | SC: O(n)
+     */
     public TreeNode correctBinaryTree(TreeNode root) {
 
         if (root == null) return root;
@@ -942,6 +1271,13 @@ Output: [5,4,3,2,1]
         return root;
     }
 
+    /*
+     * PROBLEM: Time Needed to Inform All Employees (LeetCode 1376)
+     * Find the total time to inform all employees in a company hierarchy.
+     *
+     * ALGORITHM: DFS with adjacency list
+     * TC: O(n) | SC: O(n)
+     */
     public int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
         List<Integer>[] list = new ArrayList[n];
         for (int i = 0; i < n; i++) list[i] = new ArrayList<>();
@@ -956,6 +1292,13 @@ Output: [5,4,3,2,1]
         return helper(src, list, informTime);
     }
 
+    /*
+     * PROBLEM: Inform Employees DFS (Helper)
+     * DFS from a manager node, accumulating inform time.
+     *
+     * ALGORITHM: DFS
+     * TC: O(n) | SC: O(n)
+     */
     private int helper(int src, List<Integer>[] list, int[] informTime) {
         int max = 0;
         for (int e : list[src]) {
@@ -966,11 +1309,25 @@ Output: [5,4,3,2,1]
 
     int max = Integer.MIN_VALUE;
 
+    /*
+     * PROBLEM: Binary Tree Maximum Path Sum (LeetCode 124)
+     * Find the maximum path sum in a binary tree where a path can start/end at any node.
+     *
+     * ALGORITHM: DFS postorder with global max tracking
+     * TC: O(n) | SC: O(h)
+     */
     public int maxPathSum(TreeNode root) {
         maxGain(root);
         return max;
     }
 
+    /*
+     * PROBLEM: Max Gain From Node (Helper)
+     * Return maximum gain starting from this node; update global max if path through node is bigger.
+     *
+     * ALGORITHM: DFS postorder
+     * TC: O(n) | SC: O(h)
+     */
     private int maxGain(TreeNode root) {
         if (root == null) return 0;
 
@@ -983,10 +1340,24 @@ Output: [5,4,3,2,1]
         return root.val + Math.max(left, right);
     }
 
+    /*
+     * PROBLEM: Path Sum (LeetCode 112)
+     * Check if a root-to-leaf path exists with the given target sum.
+     *
+     * ALGORITHM: DFS
+     * TC: O(n) | SC: O(h)
+     */
     public boolean hasPathSum(TreeNode root, int targetSum) {
         return getTargetSum(root, new ArrayList<>(), targetSum);
     }
 
+    /*
+     * PROBLEM: Path Sum DFS (Helper)
+     * Recursive DFS that tracks path nodes and checks leaf sum against target.
+     *
+     * ALGORITHM: DFS backtracking
+     * TC: O(n) | SC: O(h)
+     */
     private boolean getTargetSum(TreeNode node, ArrayList<TreeNode> nodelist, int targetSum) {
         if (node != null) {
             nodelist.add(node);
@@ -1011,6 +1382,13 @@ Output: [5,4,3,2,1]
 
     List<String> paths = new ArrayList<>();
 
+    /*
+     * PROBLEM: Sum Root to Leaf Numbers (LeetCode 129)
+     * Treat each root-to-leaf path as a number and return sum of all such numbers.
+     *
+     * ALGORITHM: DFS path collection + sum
+     * TC: O(n) | SC: O(h)
+     */
     public int sumNumbers(TreeNode root) {
         printAllPossiblePath(root, new ArrayList<TreeNode>());
         int sum = 0;
@@ -1022,6 +1400,13 @@ Output: [5,4,3,2,1]
     }
 
 
+    /*
+     * PROBLEM: Print All Root-to-Leaf Paths (Helper)
+     * Collect all root-to-leaf number paths into the paths list.
+     *
+     * ALGORITHM: DFS backtracking
+     * TC: O(n) | SC: O(h)
+     */
     private void printAllPossiblePath(TreeNode node, ArrayList<TreeNode> nodelist) {
         if (node != null) {
             nodelist.add(node);
@@ -1044,6 +1429,13 @@ Output: [5,4,3,2,1]
 
     }
 
+    /*
+     * PROBLEM: Remove Zeros from Number (Helper)
+     * Return long n with all '0' digits removed.
+     *
+     * ALGORITHM: String manipulation
+     * TC: O(n) | SC: O(n)
+     */
     public long removeZeros(long n) {
         String s = String.valueOf(n);
         StringBuilder sb = new StringBuilder();
@@ -1053,6 +1445,13 @@ Output: [5,4,3,2,1]
         return Long.valueOf(sb.toString());
     }
 
+    /*
+     * PROBLEM: Maximum Alternating Sum of a Subarray (LeetCode 1911)
+     * Find the maximum alternating sum of any subsequence of nums.
+     *
+     * ALGORITHM: Sort by absolute value + alternate sign summation
+     * TC: O(n log n) | SC: O(n)
+     */
     public long maxAlternatingSum(int[] nums) {
         long ms = 0L;
         int n = nums.length;
@@ -1067,6 +1466,13 @@ Output: [5,4,3,2,1]
     }
 
 
+    /*
+     * PROBLEM: Count Stable Subarrays (Helper)
+     * Count subarrays where capacity[l] == capacity[r] == sum of elements in between.
+     *
+     * ALGORITHM: Brute force O(n^2)
+     * TC: O(n^2) | SC: O(1)
+     */
     //TOOO : TLE
     public long countStableSubarrays(int[] capacity) {
         int n = capacity.length;

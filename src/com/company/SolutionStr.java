@@ -6,6 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 
 class SolutionStr {
+    /*
+     * PROBLEM: Build Frequency Map (Helper)
+     * Build a frequency count map from an integer array.
+     *
+     * ALGORITHM: HashMap population
+     * TC: O(n) | SC: O(n)
+     */
     // Function to return the updated frequency map
     // for the array passed as argument
     static HashMap<Integer, Integer> getFrequencyMap(int arr[]) {
@@ -20,6 +27,13 @@ class SolutionStr {
         return hashMap;
     }
 
+    /*
+     * PROBLEM: Check and Consume Digit from Map (Helper)
+     * Check if a digit exists in the frequency map; if so, decrement and return true.
+     *
+     * ALGORITHM: HashMap lookup and update
+     * TC: O(1) | SC: O(1)
+     */
     // Function that returns true if the passed digit is present
     // in the map after decrementing it's frequency by 1
     static boolean hasDigit(HashMap<Integer, Integer> hashMap, int digit) {
@@ -38,6 +52,13 @@ class SolutionStr {
         return false;
     }
 
+    /*
+     * PROBLEM: Largest Time for Given Digits (LeetCode 949)
+     * Given 4 digits, return the largest 24-hour time that can be made, or "" if impossible.
+     *
+     * ALGORITHM: Greedy with permutation fallback
+     * TC: O(1) (at most 4! = 24 permutations) | SC: O(1)
+     */
     public String largestTimeFromDigits(int[] input) {
         int iszero = 0;
         for (int a : input) {
@@ -156,10 +177,24 @@ class SolutionStr {
 
     }
 
+    /*
+     * PROBLEM: Generate All Permutations (Helper)
+     * Generate all permutations of string str and collect them in list.
+     *
+     * ALGORITHM: Recursive Backtracking
+     * TC: O(n! * n) | SC: O(n! * n)
+     */
     public static void permutation(String str, List<String> list) {
         permutation("", str, list);
     }
 
+    /*
+     * PROBLEM: Generate Permutations Recursive (Helper)
+     * Recursively build permutations by choosing each character as prefix.
+     *
+     * ALGORITHM: Recursive Backtracking
+     * TC: O(n! * n) | SC: O(n)
+     */
     private static void permutation(String prefix, String str, List<String> list) {
         int n = str.length();
         if (n == 0) list.add(prefix);
@@ -173,6 +208,13 @@ class SolutionStr {
 
     int[] prefix = new int[nums.length];
 
+    /*
+     * PROBLEM: Range Sum Query (LeetCode 307) initialization
+     * Initialize the prefix sum array for range sum queries.
+     *
+     * ALGORITHM: Prefix Sum initialization
+     * TC: O(n) | SC: O(n)
+     */
     public void NumArray(int[] nums) {
         this.nums = nums;
         int index = 0;
@@ -184,6 +226,13 @@ class SolutionStr {
         return;
     }
 
+    /*
+     * PROBLEM: Range Sum Query Update (LeetCode 307)
+     * Update element at index and adjust prefix sum accordingly.
+     *
+     * ALGORITHM: Prefix Sum point update
+     * TC: O(1) | SC: O(1)
+     */
     public void update(int index, int val) {
         this.nums[index] = val;
         prefix[index] -= this.nums[index];
@@ -191,6 +240,13 @@ class SolutionStr {
         return;
     }
 
+    /*
+     * PROBLEM: Range Sum Query (LeetCode 307)
+     * Return the sum of elements between indices left and right (inclusive).
+     *
+     * ALGORITHM: Prefix Sum query
+     * TC: O(1) | SC: O(1)
+     */
     public int sumRange(int left, int right) {
         return prefix[right] - prefix[left];
     }

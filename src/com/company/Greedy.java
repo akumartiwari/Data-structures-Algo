@@ -8,6 +8,13 @@ import java.util.HashMap;
 public class Greedy {
 
     /*
+     * PROBLEM: Maximum Element After Decreasing and Rearranging (LeetCode 2789)
+     * Merge adjacent elements greedily from right to left to maximize the last element.
+     *
+     * ALGORITHM: Greedy (right-to-left scan)
+     * TC: O(n) | SC: O(1)
+     */
+    /*
     Input: nums = [2,3,7,9,3]
     Output: 21
     Explanation: We can apply the following operations on the array:
@@ -27,6 +34,13 @@ public class Greedy {
 
     //Solved via recursion
 
+    /*
+     * PROBLEM: Max Array Value Recursive (Helper)
+     * Recursive version (placeholder/incomplete).
+     *
+     * ALGORITHM: Recursion (TODO)
+     * TC: O(?) | SC: O(?)
+     */
     public long maxArrayValueRec(int[] nums) {
 
         return 0;
@@ -35,6 +49,13 @@ public class Greedy {
     // TC = O(n)
     // Author: Anand
     // Ladder based greedy problem
+    /*
+     * PROBLEM: Jump Game II (LeetCode 45)
+     * Find the minimum number of jumps to reach the end of the array.
+     *
+     * ALGORITHM: Greedy Ladder / BFS
+     * TC: O(n) | SC: O(1)
+     */
     public static int minJumps(int[] arr) {
         int n = arr.length;
 
@@ -77,6 +98,13 @@ public class Greedy {
          if it is not greater than the previous, assign current element value to prev.
     */
     //Author: Anand
+    /*
+     * PROBLEM: Minimum Number of Operations to Make Array Sorted (LeetCode 2366)
+     * Minimum element replacements to make the array non-decreasing.
+     *
+     * ALGORITHM: Greedy (right-to-left)
+     * TC: O(n) | SC: O(1)
+     */
     public long minimumReplacement(int[] nums) {
         int prev = Integer.MAX_VALUE;
         long op = 0L;
@@ -91,6 +119,13 @@ public class Greedy {
         return op;
     }
 
+    /*
+     * PROBLEM: Earliest Possible Day of Full Bloom (LeetCode 2136)
+     * Minimize the day all flowers are fully bloomed by choosing plant order.
+     *
+     * ALGORITHM: Greedy - sort by descending grow time
+     * TC: O(n log n) | SC: O(n)
+     */
     /*
     Input: plantTime = [1,4,3], growTime = [2,3,1]
     Output: 9
@@ -120,6 +155,13 @@ public class Greedy {
 
     // Author: Anand
     // TC= O(n)
+    /*
+     * PROBLEM: Divide a String Into Groups of Size k (LeetCode 2138)
+     * Divide string into groups of k, padding the last group with fill char if needed.
+     *
+     * ALGORITHM: Greedy/Sliding Window
+     * TC: O(n) | SC: O(n)
+     */
     public String[] divideString(String s, int k, char fill) {
         int n = s.length();
         String[] ans = new String[(int) (Math.floor(n / k)) + (n % k == 0 ? 0 : 1)];
@@ -142,6 +184,13 @@ public class Greedy {
 
     // TC = O(logn)
     // Author: Anand
+    /*
+     * PROBLEM: Minimum Moves to Reach Target Score (LeetCode 2139)
+     * Minimum operations (increment or double) to reach target from 1.
+     *
+     * ALGORITHM: Greedy (work backwards, reverse halving)
+     * TC: O(log target) | SC: O(1)
+     */
        /*
     Input: target = 19, maxDoubles = 2
     Output: 7
@@ -172,6 +221,13 @@ public class Greedy {
     }
 
     // TC = O(nlogn)
+    /*
+     * PROBLEM: Maximum Running Time of N Computers (LeetCode 2141)
+     * Find maximum time n computers can run simultaneously given battery capacities.
+     *
+     * ALGORITHM: Greedy + Sort
+     * TC: O(m log m) | SC: O(1)
+     */
     public long maxRunTime(int n, int[] batteries) {
         long sum = 0L;
         for (int b : batteries) sum += b;
@@ -184,6 +240,13 @@ public class Greedy {
         return sum / (n - k);
     }
 
+    /*
+     * PROBLEM: Minimum Number of Moves to Make Palindrome (LeetCode 2193)
+     * Minimum adjacent swaps to make the string a palindrome.
+     *
+     * ALGORITHM: Greedy Two-pointer
+     * TC: O(n^2) | SC: O(n)
+     */
     /*
     Input: s = "aabb"
     Output: 2
@@ -231,6 +294,13 @@ public class Greedy {
 
     // Author: Anand
     // TODO:- Complete it
+    /*
+     * PROBLEM: Minimum White Tiles After Covering With Carpets (LeetCode 2209)
+     * Minimum white tiles visible after placing carpets on the floor (TODO/incomplete).
+     *
+     * ALGORITHM: Greedy + HashMap (TODO/incomplete)
+     * TC: O(?) | SC: O(n)
+     */
     public int minimumWhiteTiles(String floor, int numCarpets, int carpetLen) {
         // Store c
         HashMap<Point, Integer> map = new HashMap<>(); // ((s-e), length)
@@ -269,6 +339,13 @@ public class Greedy {
         return -1;
     }
 
+    /*
+     * PROBLEM: Sort HashMap by Value (Helper)
+     * Sorts HashMap entries by value in ascending order.
+     *
+     * ALGORITHM: List sort + LinkedHashMap rebuild
+     * TC: O(n log n) | SC: O(n)
+     */
     public HashMap<Point, Integer> sortByValue(HashMap<Point, Integer> hm) {
 
 
@@ -289,6 +366,13 @@ public class Greedy {
         return temp;
     }
 
+    /*
+     * PROBLEM: Longest Subsequence With Limited Sum (LeetCode 2311 variant)
+     * Longest binary subsequence with binary value ≤ k.
+     *
+     * ALGORITHM: Greedy (right-to-left, take all 0s + valid 1s)
+     * TC: O(n) | SC: O(1)
+     */
     /*
     Traverse from right to left of string and take all possible zeros
     by updating the count of 1 in the process
@@ -329,6 +413,13 @@ public class Greedy {
      */
     // Author: Anand
     // Greedy approach
+    /*
+     * PROBLEM: Construct Smallest Number From DI String (LeetCode 2375)
+     * Build the smallest digit string satisfying the increase/decrease pattern.
+     *
+     * ALGORITHM: Greedy + Sliding Window reverse
+     * TC: O(n) | SC: O(n)
+     */
     public String smallestNumber(String pattern) {
         StringBuilder ans = new StringBuilder();
         for (int i = 0, j = 0; i <= pattern.length(); ++i) {
@@ -355,6 +446,13 @@ public class Greedy {
     In step 3, we use Paste operation to get 'AAA'.
      */
     //Author: Anand
+    /*
+     * PROBLEM: 2 Keys Keyboard (LeetCode 651)
+     * Minimum operations (Copy All / Paste) to get exactly n 'A's on screen.
+     *
+     * ALGORITHM: Greedy + Prime Factorization
+     * TC: O(sqrt(n)) | SC: O(log n)
+     */
     public int minSteps(int n) {
         if (n == 1) return 0;
 
@@ -382,6 +480,13 @@ public class Greedy {
         return op;
     }
 
+    /*
+     * PROBLEM: Get Prime Factors (Helper)
+     * Recursively collects prime factors of n into the list.
+     *
+     * ALGORITHM: Trial Division
+     * TC: O(sqrt(n)) | SC: O(log n)
+     */
     private void gf(int n, List<Integer> factors) {
         // base case
         if (n == 1) return;
@@ -399,6 +504,13 @@ public class Greedy {
     Always ban your next pos opponent while traversal from left to right
      */
     //Author: Anand
+    /*
+     * PROBLEM: Dota2 Senate (LeetCode 649)
+     * Predict the winning party in the senate, where each senator greedily bans opponents.
+     *
+     * ALGORITHM: Greedy + TreeMap
+     * TC: O(n^2) | SC: O(n)
+     */
     public String predictPartyVictory(String senate) {
 
         int n = senate.length();

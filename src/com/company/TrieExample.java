@@ -13,6 +13,13 @@ public class TrieExample {
             letter = new TrieNode[26];
         }
 
+        /*
+         * PROBLEM: Add Word to Trie (Helper)
+         * Insert a word character by character into the TrieNode tree.
+         *
+         * ALGORITHM: Trie Insertion
+         * TC: O(L) | SC: O(L)
+         */
         public void add(String word) {
             TrieNode p = this;
             for (int i = 0; i < word.length(); i++) {
@@ -67,6 +74,13 @@ public class TrieExample {
         For each character c in the string, we find the index i satisfying keys[i] == c in keys.
         Replace c with values[i] in the string.
         */
+        /*
+         * PROBLEM: Design an Encrypter Widget - encrypt (LeetCode 2227)
+         * Encrypt word1 by replacing each character with its mapped 2-char value.
+         *
+         * ALGORITHM: Character substitution with HashMap
+         * TC: O(n) | SC: O(n)
+         */
         // TC = O(n), SC = O(n)
         public String encrypt(String word1) {
             StringBuilder sb = new StringBuilder();
@@ -80,6 +94,13 @@ public class TrieExample {
         /*
         1.) For each substring s of length 2 occurring at an even index in the string, we find an i such that values[i] == s. If there are multiple valid i, we choose any one of them. This means a string could have multiple possible strings it can decrypt to.
         2.) Replace s with keys[i] in the string.
+         */
+        /*
+         * PROBLEM: Design an Encrypter Widget - decrypt (LeetCode 2227)
+         * Count how many dictionary words encrypt to word2.
+         *
+         * ALGORITHM: Trie-based count (pre-built from encrypted dictionary)
+         * TC: O(n²) | SC: O(n)
          */
         // TC = O(n2), SC = O(n)
         public int decrypt(String word2) {

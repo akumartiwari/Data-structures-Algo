@@ -26,6 +26,13 @@ public class HashMap {
      */
 
     //TC = O(nlogn)
+    /*
+     * PROBLEM: Sum of Distances (LeetCode 2615)
+     * For each index compute sum of |i-j| for all j with the same value.
+     *
+     * ALGORITHM: TreeMap with prefix sums
+     * TC: O(n log n) | SC: O(n)
+     */
     public long[] distance(int[] nums) {
 
         TreeMap<Integer, TreeMap<Integer, Long>> freq = new TreeMap<>(); // element, {index, ps of remaining indexes}
@@ -64,6 +71,13 @@ public class HashMap {
 
     //TC = O(N)
     // HashMap Beats 100%
+    /*
+     * PROBLEM: Sum of Distances Optimised (LeetCode 2615)
+     * Optimised O(n) version computing distances using HashMap prefix/suffix sum tracking.
+     *
+     * ALGORITHM: HashMap two-pass
+     * TC: O(n) | SC: O(n)
+     */
     public long[] distanceOptimised(int[] arr) {
         Map<Long, long[]> map = new java.util.HashMap<>();
         // [0] -> sum of indices at left of i

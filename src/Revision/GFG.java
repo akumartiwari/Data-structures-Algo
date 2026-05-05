@@ -17,6 +17,13 @@ class GFG {
         }
     }
 
+    /*
+     * PROBLEM: Activity Selection (GFG Greedy Classic)
+     * Select the maximum number of non-overlapping activities given start and finish times.
+     *
+     * ALGORITHM: Greedy (sort by finish time, pick earliest finishing non-overlapping activity)
+     * TC: O(n log n) | SC: O(n)
+     */
     static void SelectActivities(int s[], int f[]) {
 
         // Vector to store results.
@@ -52,7 +59,13 @@ class GFG {
         }
     }
 
-    // Driver Code
+    /*
+     * PROBLEM: Entry point (Main)
+     * Drives the Activity Selection demo with a sample input.
+     *
+     * ALGORITHM: N/A
+     * TC: O(n log n) | SC: O(n)
+     */
     public static void main(String[] args) {
 
         int s[] = {1, 3, 0, 5, 8, 5};
@@ -63,18 +76,12 @@ class GFG {
     }
 
     /*
-    Input: nums = [2,3,0,1,4]
-Output: 2
-
-   Greedy approach to solve problem
-     TC = O(n), SC = O(1)
-     njmi= 2
-     cj = 1
-     cjmi=2
-     nj=2
-     njmx=4
+     * PROBLEM: Jump Game II (LeetCode 45)
+     * Find the minimum number of jumps needed to reach the last index of the array.
+     *
+     * ALGORITHM: Greedy (track current jump range and next jump max-reach)
+     * TC: O(n) | SC: O(1)
      */
-
     public int jump(int[] nums) {
 
         int n = nums.length;
@@ -95,6 +102,13 @@ Output: 2
         return currjumps;
     }
 
+    /*
+     * PROBLEM: Parse Variable Expressions (Helper)
+     * Read variable names and assignment expressions from stdin and format a simplified output expression.
+     *
+     * ALGORITHM: HashMap for variable-to-value mapping with string normalization
+     * TC: O(n) | SC: O(n)
+     */
     public void format() throws IOException {
         //Scanner
         Scanner s = new Scanner(System.in);

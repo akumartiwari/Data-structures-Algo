@@ -4,6 +4,13 @@ import java.util.*;
 
 public class MergeIntervals {
     /*
+     * PROBLEM: Merge Segments / Total Coverage (Helper)
+     * Compute total length covered by a set of possibly-overlapping segments.
+     *
+     * ALGORITHM: Sort + Greedy merge
+     * TC: O(n log n) | SC: O(1)
+     */
+    /*
 input = [(1,4), (2,3)]
 return 3
 
@@ -34,6 +41,13 @@ r[0][1]=4
         return result;
     }
 
+    /*
+     * PROBLEM: Merge Intervals (LeetCode 56)
+     * Merge all overlapping intervals and return the resulting non-overlapping list.
+     *
+     * ALGORITHM: Sort + Greedy merge (Stack-based)
+     * TC: O(n log n) | SC: O(n)
+     */
     public static int[][] mergeOverlapingSegments(int[][] segments) {
         // O(n), O(n*n)
         /*
@@ -72,6 +86,13 @@ r[0][1]=4
         return result;
     }
 
+    /*
+     * PROBLEM: Merge Sorted Array (LeetCode 88)
+     * Merge nums2 into nums1 in-place so nums1 remains sorted.
+     *
+     * ALGORITHM: Two Pointers from right
+     * TC: O(m+n) | SC: O(1)
+     */
     // O(n+m), O(1)
 	/*
      This problem is called Merge Sorted Array
@@ -104,6 +125,13 @@ r[0][1]=4
         }
     }
 
+    /*
+     * PROBLEM: Find Overlapping Intervals (Helper)
+     * Given two interval arrays a[] and b[], find and print a pair of overlapping intervals.
+     *
+     * ALGORITHM: Sort + Linear Scan
+     * TC: O(n log n) | SC: O(n)
+     */
     void findOverlapSegement(int N, int[] a, int[] b) {
 
         ArrayList<pair> tuple = new ArrayList<>();

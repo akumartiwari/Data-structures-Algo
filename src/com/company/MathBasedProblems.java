@@ -2,6 +2,13 @@ package com.company;
 
 public class MathBasedProblems {
         /*
+     * PROBLEM: Minimum Number of Operations to Make Array Continuous (LeetCode 2310)
+     * Find the minimum count of numbers whose units digit is k that sum to num.
+     *
+     * ALGORITHM: Math / Greedy
+     * TC: O(num/10) | SC: O(1)
+     */
+    /*
     Input: num = 58, k = 9
     Output: 2
     Explanation:
@@ -31,6 +38,13 @@ public class MathBasedProblems {
     }
 
 
+    /*
+     * PROBLEM: Calculate Amount Paid in Taxes (LeetCode 2265)
+     * Compute total tax given progressive tax brackets and income.
+     *
+     * ALGORITHM: Greedy Simulation
+     * TC: O(n) | SC: O(1)
+     */
     /*
     Input: brackets = [[3,50],[7,10],[12,25]], income = 10
     Output: 2.65000
@@ -63,6 +77,13 @@ public class MathBasedProblems {
     }
 
 
+    /*
+     * PROBLEM: Convert the Temperature (LeetCode 2469)
+     * Find the minimum number of operations (add 1/5/15/60 min) to convert current to correct time.
+     *
+     * ALGORITHM: Greedy Simulation
+     * TC: O(diff) | SC: O(1)
+     */
     /*
     Input: current = "02:30", correct = "04:35"
     Output: 3

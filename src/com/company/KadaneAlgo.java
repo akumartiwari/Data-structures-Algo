@@ -10,6 +10,13 @@ public class KadaneAlgo {
      */
 
     // kadan's algorithm
+    /*
+     * PROBLEM: Maximum Subarray (LeetCode 53)
+     * Find the contiguous subarray with the maximum sum.
+     *
+     * ALGORITHM: Kadane's Algorithm
+     * TC: O(n) | SC: O(1)
+     */
     public int maxSubArray(int[] arr) {
         int n = arr.length;
         if (n == 0) return 0;
@@ -40,6 +47,13 @@ public class KadaneAlgo {
 
      */
     // TC = O(26*26*n) < TC = O(10^7)
+    /*
+     * PROBLEM: Largest Variance in a String (LeetCode 2272)
+     * Find the max (freq_a - freq_b) over all substrings for any character pair (a, b).
+     *
+     * ALGORITHM: Kadane's Algorithm over all char pairs (O(26*26*n))
+     * TC: O(26*26*n) | SC: O(26)
+     */
     public int largestVariance(String s) {
         int[] freq = new int[26];
         for (int i = 0; i < s.length(); i++) freq[(int) (s.charAt(i) - 'a')]++;
@@ -97,6 +111,13 @@ public class KadaneAlgo {
      - Hence to achieve it we need to use kadane to find maxSumSubArray.
      */
     //Author: Anand
+    /*
+     * PROBLEM: Maximum Sum of an Hourglass (LeetCode 2321)
+     * Maximize max(sum1,sum2) by swapping a contiguous subarray between arrays.
+     *
+     * ALGORITHM: Kadane's Algorithm on difference arrays
+     * TC: O(n) | SC: O(n)
+     */
     public int maximumsSplicedArray(int[] nums1, int[] nums2) {
         int s1 = Arrays.stream(nums1).sum();
         int s2 = Arrays.stream(nums2).sum();

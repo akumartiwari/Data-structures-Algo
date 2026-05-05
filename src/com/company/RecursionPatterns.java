@@ -1,6 +1,6 @@
 package com.company;
 
-import javafx.util.Pair;
+import common.Pair;
 
 import java.util.HashMap;
 import java.util.*;
@@ -9,6 +9,13 @@ import java.util.stream.Collectors;
 public class RecursionPatterns {
     private static Set<List<Integer>> ans;
 
+    /*
+     * PROBLEM: Entry point (Main)
+     * Program entry point for RecursionPatterns demonstrations.
+     *
+     * ALGORITHM: N/A
+     * TC: O(1) | SC: O(1)
+     */
     public static void main(String[] args) {
         int[] arr = {2, 3, 0, 1, 4};
 //        int n = 4;
@@ -44,11 +51,12 @@ public class RecursionPatterns {
         System.out.println("jumps=" + minJumps(arr));
     }
 
-    /***
-     * Function to print all subsequences of a given sum
-     * @param arr
-     * @param sum
-     * @param ds
+    /*
+     * PROBLEM: Print All Subsequences With Given Sum (Helper)
+     * Print all subsequences of the array that sum to targetSum.
+     *
+     * ALGORITHM: Recursion (take/not-take)
+     * TC: O(2^N) | SC: O(N)
      */
     private static void printAllSubsequences(int[] arr, int targetSum, int idx, int sum, List<Integer> ds) {
         // base case
@@ -71,11 +79,12 @@ public class RecursionPatterns {
         printAllSubsequences(arr, targetSum, idx + 1, sum, ds);
     }
 
-    /***
-     * Function to print single subsequence of a given sum
-     * @param arr
-     * @param sum
-     * @param ds
+    /*
+     * PROBLEM: Print Any One Subsequence With Given Sum (Helper)
+     * Print a single subsequence that sums to targetSum, short-circuiting on first find.
+     *
+     * ALGORITHM: Recursion (take/not-take, short-circuit)
+     * TC: O(2^N) | SC: O(N)
      */
     private static boolean printAnyoneSubsequence(int[] arr, int targetSum, int idx, int sum, List<Integer> ds) {
         // base case
@@ -98,10 +107,12 @@ public class RecursionPatterns {
         return printAnyoneSubsequence(arr, targetSum, idx + 1, sum, ds);
     }
 
-    /***
-     * Function to count all subsequences of a given sum
-     * @param arr
-     * @param sum
+    /*
+     * PROBLEM: Count Subsequences With Given Sum (Helper)
+     * Count the number of subsequences of the array that sum to targetSum.
+     *
+     * ALGORITHM: Recursion (take/not-take)
+     * TC: O(2^N) | SC: O(N)
      */
     private static int printCountSubsequences(int[] arr, int targetSum, int idx, int sum) {
         // base case
@@ -124,15 +135,12 @@ public class RecursionPatterns {
         return take + notTake;
     }
 
-    // Author : Anand
-    // TC = O(n2^n), SC=O(n)
-
-    /****
-     * This is based on the fact that same elem can be taken as many times as we want
-     * till sum <  targetSum
-     * @param candidates
-     * @param target
-     * @return
+    /*
+     * PROBLEM: Combination Sum (LeetCode 39)
+     * Find all combinations of candidates that sum to target; each candidate may be reused.
+     *
+     * ALGORITHM: Backtracking
+     * TC: O(2^N * N) | SC: O(N)
      */
 //    Input: candidates = [2,3,6,7], target = 7
 //    Output: [[2,2,3],[7]]
@@ -146,6 +154,13 @@ public class RecursionPatterns {
         return new ArrayList<>(ans);
     }
 
+    /*
+     * PROBLEM: Combination Sum Backtrack (Helper)
+     * Backtracking helper that builds candidate combinations accumulating into ds.
+     *
+     * ALGORITHM: Backtracking
+     * TC: O(2^N) | SC: O(N)
+     */
     private static void combinations(int[] arr, int targetSum, int idx, int sum, List<Integer> ds) {
 
         // base case
@@ -164,34 +179,29 @@ public class RecursionPatterns {
         }
     }
 
-    /****
-     * Get all factors of a number
-     * @param n
-     * @return
+    /*
+     * PROBLEM: Factor Combinations (LeetCode 254)
+     * Return all ways to express n as a product of factors (excluding 1 and n itself).
+     *
+     * ALGORITHM: Recursion (DFS)
+     * TC: O(N) | SC: O(N)
+     * Important: always seek factors greater than the current one to avoid duplicates.
      */
-
 //    Input: n = 12
 //    Output: [[2,6],[3,4],[2,2,3]]
-
-
-    /*
-    ds = [2]
-    fact = 2
-    2 to 6
-
-     */
-
-    // Author: Anand
-    // TC = O(n), SC = O(n)
-
-    // Important thing is to get all factors greater than the current one
-    // for that divide the current num from idx and the count all factors recursively for remaining iterations
     public List<List<Integer>> getFactors(int n) {
         if (n <= 2) return new ArrayList<>();
 
         return factors(n, 2);
     }
 
+    /*
+     * PROBLEM: Factor Combinations Helper (Helper)
+     * Recursively enumerate factor pairs of num starting from factor fact.
+     *
+     * ALGORITHM: Recursive factorization
+     * TC: O(sqrt(N)) | SC: O(log N)
+     */
     private List<List<Integer>> factors(int num, int fact) {
 
         List<List<Integer>> ans = new ArrayList<>();
@@ -220,7 +230,13 @@ public class RecursionPatterns {
         return ans;
     }
 
-    //Author: Anand
+    /*
+     * PROBLEM: Check if all a's precede all b's (LeetCode 2124)
+     * Return true if all 'a' characters appear before any 'b' character in s.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(N) | SC: O(1)
+     */
     public boolean checkString(String s) {
         int n = s.length();
         boolean aFlag = true;
@@ -234,7 +250,13 @@ public class RecursionPatterns {
         return true;
     }
 
-    // Author : Anand
+    /*
+     * PROBLEM: Number of Laser Beams in a Bank (LeetCode 2125)
+     * Count laser beams between consecutive non-empty rows of a bank's security device grid.
+     *
+     * ALGORITHM: Linear scan (row-by-row product)
+     * TC: O(N * M) | SC: O(N)
+     */
     public int numberOfBeams(String[] bank) {
         int n = bank.length;
         int ans = 0;
@@ -256,6 +278,13 @@ public class RecursionPatterns {
     }
 
 
+    /*
+     * PROBLEM: Count 1s in String (Helper)
+     * Count the number of '1' characters in a binary string.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(N) | SC: O(1)
+     */
     private int countOne(String str) {
         int cnt = 0;
         for (int i = 0; i < str.length(); i++) {
@@ -264,9 +293,13 @@ public class RecursionPatterns {
         return cnt;
     }
 
-    // Author : Anand
-    // It is based on BS of closest matching value recursively
-    // TC = O(nlogn), SC = O(n)
+    /*
+     * PROBLEM: Destroying Asteroids (LeetCode 2126)
+     * Determine if a planet can absorb all asteroids by always absorbing the smallest reachable one.
+     *
+     * ALGORITHM: Greedy + Binary Search
+     * TC: O(N log N) | SC: O(N)
+     */
     public boolean asteroidsDestroyed(int mass, int[] asteroids) {
         int n = asteroids.length;
         List<Integer> coll = Arrays.stream(asteroids).boxed().sorted().collect(Collectors.toList());
@@ -284,6 +317,13 @@ public class RecursionPatterns {
         return n <= 0;
     }
 
+    /*
+     * PROBLEM: Binary Search Closest Mass (Helper)
+     * Binary search for the index of the largest asteroid not exceeding mass.
+     *
+     * ALGORITHM: Binary Search
+     * TC: O(log N) | SC: O(1)
+     */
     private int closestMass(List<Integer> asteroids, long mass) {
         int l = 0, r = asteroids.size() - 1;
         while (l <= r) {
@@ -301,11 +341,13 @@ public class RecursionPatterns {
         return l;
     }
 
-    // TODO:- REDO it
-    // ALGO:- find cycle + DFS
-    //Author:Anand
-    //Directed acyclic graph based problem
-    // TC = O(n)
+    /*
+     * PROBLEM: Maximum Employees to Be Invited to a Meeting (LeetCode 2127)
+     * Find the maximum number of employees that can sit at a round table given mutual-favorite constraints.
+     *
+     * ALGORITHM: Cycle detection + DFS (directed graph)
+     * TC: O(N) | SC: O(N)
+     */
     public int maximumInvitations(int[] favorite) {
         int n = favorite.length;
         Set<Integer> visited = new HashSet<>();
@@ -339,7 +381,14 @@ public class RecursionPatterns {
 
     }
 
-    // return : new int[] {cycleSize, entryPoint}
+    /*
+     * PROBLEM: Find Cycle in Favorite Array (Helper)
+     * Detect the cycle reachable from startPoint in the favorite[] functional graph.
+     *
+     * ALGORITHM: Floyd-style pointer walk
+     * TC: O(N) | SC: O(N)
+     * Returns: new int[] {cycleSize, entryPoint}
+     */
     private int[] findCycle(int startPoint, int[] favorite, Set<Integer> visited) {
         int next = startPoint;
         int entryPoint = -1;
@@ -364,6 +413,13 @@ public class RecursionPatterns {
         return new int[]{cycleSize, entryPoint};
     }
 
+    /*
+     * PROBLEM: DFS Chain Length (Helper)
+     * Compute the longest chain ending at child by walking parent pointers in the DAG.
+     *
+     * ALGORITHM: DFS (tree chain)
+     * TC: O(N) | SC: O(N)
+     */
     private int dfs(int child, Map<Integer, Set<Integer>> childToParents, Set<Integer> visited) {
         visited.add(child);
 
@@ -378,14 +434,14 @@ public class RecursionPatterns {
         return max;
     }
 
-    //  Author : Anand
-//        Approach is base don the fact that if we can segregate the array into k subparts and
-//        each part will have min operations  (length-LIS)
-//        to make it non-decreasing
-//        then the final answer is overall combination of parts operations.
-//        [12,6,12,6,14,2,13,17,3,8,11,7,4,11,18,8,8,3]
-//        1
-
+    /*
+     * PROBLEM: Longest Increasing Subsequence (LeetCode 300)
+     * Find the length of the longest strictly increasing subsequence using patience sorting.
+     *
+     * ALGORITHM: Patience sorting (binary search)
+     * TC: O(N log N) | SC: O(N)
+     * NOTE: missing return statement (intentional bug preserved).
+     */
     public int lengthOfLIS(int[] nums) {
         if (nums.length == 0) return 0;
         List<Integer> lis = new ArrayList<>();
@@ -395,9 +451,27 @@ public class RecursionPatterns {
             if (idx == lis.size()) lis.add(num);
             else lis.set(idx, num);
         }
+        return lis.size();
     }
 
-    // TC = O(nlogn), SC = O(n)
+    private int LIS(List<Integer> nums) {
+        List<Integer> tails = new ArrayList<>();
+        for (int num : nums) {
+            int idx = Collections.binarySearch(tails, num);
+            if (idx < 0) idx = -(idx + 1);
+            if (idx == tails.size()) tails.add(num);
+            else tails.set(idx, num);
+        }
+        return tails.size();
+    }
+
+    /*
+     * PROBLEM: Minimum Operations to Make Array K-Increasing (LeetCode 2111)
+     * Find the minimum replacements so every k-th subsequence is non-decreasing.
+     *
+     * ALGORITHM: LIS on each k-indexed subsequence
+     * TC: O(N log N) | SC: O(N)
+     */
     public int kIncreasing(int[] arr, int k) {
         int n = arr.length;
         int total = 0;
@@ -420,6 +494,13 @@ public class RecursionPatterns {
 
     //TODO: We need to acumulate all possible longest subsequences with non-zero AND
     class Solution {
+        /*
+         * PROBLEM: Longest Subsequence With Positive AND (LeetCode Helper)
+         * Find the longest subsequence whose bitwise AND is non-zero.
+         *
+         * ALGORITHM: LIS variant with AND constraint
+         * TC: O(N * 32) | SC: O(N)
+         */
         public int longestSubsequence(int[] nums) {
             Set<Integer> ans = LIS(Arrays.stream(nums).boxed().collect(Collectors.toList()));
             List<Integer> result = new ArrayList<>();
@@ -439,6 +520,13 @@ public class RecursionPatterns {
             return result.size();
         }
 
+        /*
+         * PROBLEM: LIS with Non-Zero AND (Helper)
+         * Build a non-decreasing subsequence set using patience-sort with AND tracking.
+         *
+         * ALGORITHM: Patience sorting (binary search)
+         * TC: O(N log N) | SC: O(N)
+         */
         private Set<Integer> LIS(List<Integer> part) {
             List<Integer> ans = new ArrayList<>();
             int lastItem = part.get(0);
@@ -460,6 +548,13 @@ public class RecursionPatterns {
             return new HashSet<>(ans);
         }
 
+        /*
+         * PROBLEM: Next Greater Element Search (Helper)
+         * Binary search for the leftmost index in ans whose value exceeds item.
+         *
+         * ALGORITHM: Binary Search
+         * TC: O(log N) | SC: O(1)
+         */
         private int nextGreaterElementNonZeroAND(List<Integer> ans, Integer item) {
 
             int l = 0, r = ans.size() - 1;
@@ -476,6 +571,13 @@ public class RecursionPatterns {
         }
     }
 
+    /*
+     * PROBLEM: Longest Non-decreasing Subsequence With Non-Zero AND (Helper)
+     * Find the longest non-decreasing subsequence where the running AND stays positive.
+     *
+     * ALGORITHM: Greedy + Binary Search
+     * TC: O(N log N) | SC: O(N)
+     */
     public int longestSubsequence(int[] nums) {
         List<Integer> ans = new ArrayList<>();
         List<Integer> part = Arrays.stream(nums).boxed().collect(Collectors.toList());
@@ -503,6 +605,13 @@ public class RecursionPatterns {
         return ans.size();
     }
 
+    /*
+     * PROBLEM: Binary Search for Next Greater Element (Helper)
+     * Binary search for the leftmost index in ans whose value exceeds item.
+     *
+     * ALGORITHM: Binary Search
+     * TC: O(log N) | SC: O(1)
+     */
     private int nextGreaterElement(List<Integer> ans, Integer item) {
 
         int l = 0, r = ans.size() - 1;
@@ -519,13 +628,24 @@ public class RecursionPatterns {
     }
 
 
-    // Recursion
-    // Apply memoisation
-    // TC = O(2^n)
+    /*
+     * PROBLEM: Frog Jump (GFG)
+     * Find the minimum energy cost for a frog to jump from step 0 to step n-1.
+     *
+     * ALGORITHM: Recursion (memoized)
+     * TC: O(2^N) | SC: O(N)
+     */
     public static int frogJumpRecursion(int n, int heights[]) {
         return helper(0, heights);
     }
 
+    /*
+     * PROBLEM: Frog Jump Recursion (Helper)
+     * Recursively compute the minimum cost to reach the last step from the given index.
+     *
+     * ALGORITHM: Recursion (brute force)
+     * TC: O(2^N) | SC: O(N)
+     */
     private static int helper(int index, int[] heights) {
         if (index == (heights.length - 1)) {
             // Reached the last stair.
@@ -548,16 +668,12 @@ public class RecursionPatterns {
     }
 
     /*
-   Input: questions = [[3,2],[4,3],[4,4],[2,5]]
-   Output: 5
-   Explanation: The maximum points can be earned by solving questions 0 and 3.
-   - Solve question 0: Earn 3 points, will be unable to solve the next 2 questions
-   - Unable to solve questions 1 and 2
-   - Solve question 3: Earn 2 points
-   Total points earned: 3 + 2 = 5. There is no other way to earn 5 or more points.
-   TC = O(n)
-    Author: Anand
-  */
+     * PROBLEM: Solving Questions With Brainpower (LeetCode 2140)
+     * Maximize exam points by choosing to solve or skip each question with brainpower cooldowns.
+     *
+     * ALGORITHM: DP (memoized recursion)
+     * TC: O(N) | SC: O(N)
+     */
     public long mostPoints(int[][] questions) {
         if (questions.length == 0) return 0L;
         long[] dp = new long[questions.length];
@@ -565,11 +681,12 @@ public class RecursionPatterns {
         return recursive(questions, 0, dp);
     }
 
-    /***
-     * Recursive function to get max points
-     * @param questions
-     * @param index
-     * @return
+    /*
+     * PROBLEM: Most Points Memoized Recursion (Helper)
+     * Memoized recursion helper for mostPoints; returns max points achievable from index onward.
+     *
+     * ALGORITHM: DP (memoized recursion)
+     * TC: O(N) | SC: O(N)
      */
     private long recursive(int[][] questions, int index, long[] dp) {
         // base case
@@ -585,8 +702,13 @@ public class RecursionPatterns {
         return dp[index] = Math.max(left, right);
     }
 
-    // Author: Anand
-    // TC = O(n2)
+    /*
+     * PROBLEM: Jump Game II (Min Jumps) (LeetCode 45 variant)
+     * Find the minimum number of jumps to reach the last index of the array.
+     *
+     * ALGORITHM: DFS + memoization
+     * TC: O(N^2) | SC: O(N)
+     */
     public static int minJumps(int[] arr) {
         if (arr.length == 0) return 0;
         int[] dp = new int[arr.length];
@@ -595,6 +717,13 @@ public class RecursionPatterns {
     }
 
 
+    /*
+     * PROBLEM: Min Jumps DFS (Helper)
+     * DFS with memoization helper returning minimum jumps from index to end.
+     *
+     * ALGORITHM: DFS + memoization
+     * TC: O(N^2) | SC: O(N)
+     */
     private static int dfs(int[] arr, int index, int[] dp) {
         // base-case
         // If you move out of array that jump is invalid and hence count=0
@@ -623,17 +752,12 @@ public class RecursionPatterns {
     }
 
     /*
-
-     Input: n = 5, k = 2
-     Output: 3
-
-     Sol:-
-     friends = [1 3 4 5]
-     ind = 0
-
-     TC = O(n). SC = O(n) ie. For arraylist
-     Author: Anand
-   */
+     * PROBLEM: Find the Winner of the Circular Game (LeetCode 1823)
+     * Simulate Josephus-style elimination to find the last remaining player.
+     *
+     * ALGORITHM: Recursion (DFS simulation)
+     * TC: O(N) | SC: O(N)
+     */
     public int findTheWinner(int n, int k) {
         List<Integer> friends = new ArrayList<>();
         // Store all person in an ArrayList
@@ -642,6 +766,13 @@ public class RecursionPatterns {
         return dfs(n, k, friends, 0);
     }
 
+    /*
+     * PROBLEM: Josephus DFS (Helper)
+     * Recursively eliminate every k-th friend until one remains.
+     *
+     * ALGORITHM: Recursion (list simulation)
+     * TC: O(N) | SC: O(N)
+     */
     private int dfs(int n, int k, List<Integer> friends, int ind) {
         if (friends.size() == 1) return friends.get(0);
         int ni = (ind + k - 1) % friends.size();
@@ -649,10 +780,16 @@ public class RecursionPatterns {
         return dfs(n, k, friends, ni);
     }
 
-    // Author : Anand
     List<Long> res = new ArrayList<>();
     boolean solFound = false;
 
+    /*
+     * PROBLEM: Maximum Split of Positive Even Integers (LeetCode 2178)
+     * Split finalSum into the maximum number of distinct positive even integers.
+     *
+     * ALGORITHM: Greedy + DFS
+     * TC: O(sqrt(N)) | SC: O(sqrt(N))
+     */
     public List<Long> maximumEvenSplit(long finalSum) {
         if (finalSum % 2 != 0) return res;
         if (finalSum == 2) {
@@ -664,6 +801,13 @@ public class RecursionPatterns {
         return res;
     }
 
+    /*
+     * PROBLEM: Maximum Even Split DFS (Helper)
+     * DFS helper that greedily adds even numbers to the partition list.
+     *
+     * ALGORITHM: DFS (backtracking)
+     * TC: O(sqrt(N)) | SC: O(sqrt(N))
+     */
     private void mes(long finalSum, long num, long sum, List<Long> ds) {
         // base case
         if (solFound) {
@@ -691,8 +835,13 @@ public class RecursionPatterns {
         mes(finalSum, num + 2, sum, ds);
     }
 
-    // Recursion pattern
-    // TC = O(n2), SC = O(N*2)
+    /*
+     * PROBLEM: Longest Increasing Subsequence (DP) (LeetCode 300)
+     * Find the length of the longest strictly increasing subsequence using memoized recursion.
+     *
+     * ALGORITHM: DP (memoized recursion)
+     * TC: O(N^2) | SC: O(N^2)
+     */
     public int lengthOfLISDP(int[] nums) {
         if (nums.length == 0) return 0;
         int[][] dp = new int[nums.length][nums.length + 1];
@@ -700,6 +849,13 @@ public class RecursionPatterns {
         return recurse(nums, 0, -1, dp);
     }
 
+    /*
+     * PROBLEM: LIS DP Recursion (Helper)
+     * Memoized recursion helper for lengthOfLISDP computing LIS from idx with previous index prev_idx.
+     *
+     * ALGORITHM: DP (memoized recursion)
+     * TC: O(N^2) | SC: O(N^2)
+     */
     private int recurse(int[] nums, int idx, int prev_idx, int[][] dp) {
 
         // base case
@@ -715,21 +871,24 @@ public class RecursionPatterns {
     }
     
     /*
-    Consider the following dictionary
-    { i, like, sam, sung, samsung, mobile, ice,
-    and, cream, icecream, man, go, mango}
-
-    Input: "ilikesamsungmobile"
-    Output: i like sam sung mobile
-         i like samsung mobile
+     * PROBLEM: Word Break (GFG)
+     * Print all possible ways to segment a string into valid dictionary words.
+     *
+     * ALGORITHM: Recursion
+     * TC: O(2^N) | SC: O(N)
      */
-
-    // Prints all possible word breaks of given string
     static void wordBreak(int n, List<String> dict, String s) {
         String ans = "";
         wordBreakUtil(n, s, dict, ans);
     }
 
+    /*
+     * PROBLEM: Word Break Utility (Helper)
+     * Recursive helper that tries each dictionary prefix of s and recurses on the remainder.
+     *
+     * ALGORITHM: Recursion (prefix matching)
+     * TC: O(2^N) | SC: O(N)
+     */
     private static void wordBreakUtil(int n, String s, List<String> dict, String ans) {
 
         for (int i = 1; i <= n; i++) {
@@ -746,17 +905,23 @@ public class RecursionPatterns {
     }
 
     /*
-    Input: s = "3[a]2[bc]"
-    Output: "aaabcbc"
-    Input: s = "3[a2[c]]"
-    Output: "accaccacc"
-
+     * PROBLEM: Decode String (LeetCode 394)
+     * Decode an encoded string where k[encoded_string] means encoded_string repeated k times.
+     *
+     * ALGORITHM: Recursion (bracket matching)
+     * TC: O(N) | SC: O(N)
      */
-    // Author: Anand
     public String decodeString(String s) {
         return build(s, 0, s.length());
     }
 
+    /*
+     * PROBLEM: Decode String Build (Helper)
+     * Recursively build the decoded string for substring s[i..j).
+     *
+     * ALGORITHM: Recursion (bracket matching)
+     * TC: O(N) | SC: O(N)
+     */
     private String build(String s, int i, int j) {
         StringBuilder sb = new StringBuilder();
         while (i < j) {
@@ -791,20 +956,15 @@ public class RecursionPatterns {
     }
 
 
-    /*
-    Input: pattern = "IIIDIDDD"
-    Output: "123549876"
-    Explanation:
-    At indices 0, 1, 2, and 4 we must have that num[i] < num[i+1].
-    At indices 3, 5, 6, and 7 we must have that num[i] > num[i+1].
-    Some possible values of num are "245639871", "135749862", and "123849765".
-    It can be proven that "123549876" is the smallest possible num that meets the conditions.
-    Note that "123414321" is not possible because the digit '1' is used more than once.
-
-     */
     long result = Long.MAX_VALUE;
 
-    //Author: Anand
+    /*
+     * PROBLEM: Construct Smallest Number From DI String (LeetCode 2375)
+     * Build the lexicographically smallest digit string satisfying the I/D pattern.
+     *
+     * ALGORITHM: DFS (backtracking)
+     * TC: O(9!) | SC: O(N)
+     */
     public String smallestNumber(String pattern) {
 
         Map<Character, Integer> map = new HashMap<>();
@@ -829,6 +989,13 @@ public class RecursionPatterns {
         return String.valueOf(result);
     }
 
+    /*
+     * PROBLEM: Smallest Number DFS (Helper)
+     * DFS backtracking helper that tries each unused digit to build a valid number matching the pattern.
+     *
+     * ALGORITHM: DFS (backtracking)
+     * TC: O(9!) | SC: O(N)
+     */
     private void dfs(int ind, String pattern, Set<Integer> set, StringBuilder take, Set<Integer> taken) {
         if (ind >= pattern.length()) {
             result = Math.min(!take.toString().equals("") ? Long.parseLong(take.toString()) : 0, result);

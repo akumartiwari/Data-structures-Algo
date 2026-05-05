@@ -4,22 +4,29 @@ import java.util.Collections;
 
 import static java.util.Arrays.asList;
 
-class ListNode {
-    int val;
-    ListNode next;
+public class ListNode {
+    public int val;
+    public ListNode next;
 
-    ListNode() {
+    public ListNode() {
     }
 
-    ListNode(int val) {
+    public ListNode(int val) {
         this.val = val;
     }
 
-    ListNode(int val, ListNode next) {
+    public ListNode(int val, ListNode next) {
         this.val = val;
         this.next = next;
     }
 
+    /*
+     * PROBLEM: Rotate List (LeetCode 61)
+     * Rotate a linked list to the right by k places.
+     *
+     * ALGORITHM: Two Pointers (find list length, compute effective rotation, split and reconnect)
+     * TC: O(n) | SC: O(1)
+     */
     public ListNode rotateRight(ListNode head, int k) {
         if (head == null) return null;
         if (k == 0) return head;
@@ -45,6 +52,13 @@ class ListNode {
         return temp;
     }
 
+    /*
+     * PROBLEM: Get Linked List Size (Helper)
+     * Return the number of nodes in the linked list rooted at root.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(n) | SC: O(1)
+     */
     // O(n)
 // [1,2,3,4]
 //5
@@ -66,6 +80,13 @@ class ListNode {
         return size;
     }
 
+    /*
+     * PROBLEM: Split Linked List in Parts (LeetCode 725)
+     * Split a linked list into k consecutive parts as evenly as possible (optimised version).
+     *
+     * ALGORITHM: Two Pointers (compute size, distribute div+1 nodes to the first mod parts)
+     * TC: O(n) | SC: O(k)
+     */
     public ListNode[] splitListToPartsO(ListNode root, int k) {
         ListNode[] res = new ListNode[k];
         int size = size(root);  // First you find out the size of linked list.
@@ -93,6 +114,13 @@ class ListNode {
     }
 
 
+    /*
+     * PROBLEM: Split Linked List in Parts (LeetCode 725)
+     * Split a linked list into k consecutive parts (alternative implementation).
+     *
+     * ALGORITHM: Linear scan (compute length, then walk to split boundaries)
+     * TC: O(n) | SC: O(k)
+     */
     public ListNode[] splitListToParts(ListNode root, int k) {
         ListNode[] list = new ListNode[k];
 
@@ -152,6 +180,13 @@ class ListNode {
     }
 
 
+    /*
+     * PROBLEM: Odd Even Linked List (LeetCode 328)
+     * Group all odd-indexed nodes together followed by even-indexed nodes in-place.
+     *
+     * ALGORITHM: Two Pointers (interleave odd and even pointer chains, then join them)
+     * TC: O(n) | SC: O(1)
+     */
     public ListNode oddEvenList(ListNode head) {
 
         int counter = 1;
@@ -224,6 +259,14 @@ nums[1]=1;
          */
 
 
+    /*
+     * PROBLEM: Next Permutation (LeetCode 31)
+     * Rearrange nums into the lexicographically next greater permutation in-place.
+     *
+     * ALGORITHM: Two Pointers (find rightmost descending break, swap with next greater element,
+     *            then reverse the suffix)
+     * TC: O(n) | SC: O(1)
+     */
     public void nextPermutation(int[] nums) {
         int elem = Integer.MIN_VALUE;
         int index = 0;
@@ -261,6 +304,13 @@ nums[1]=1;
     }
 
 
+    /*
+     * PROBLEM: Get Equal Substrings Within Budget — Optimal (LeetCode 1208)
+     * Find the maximum length substring you can make equal within maxCost budget (sliding window).
+     *
+     * ALGORITHM: Sliding Window (expand right, shrink left when cost exceeds budget)
+     * TC: O(n) | SC: O(1)
+     */
     public int equalSubstringOptimal(String s, String t, int maxCost) {
         int start = 0, end = 0, currcost = 0, maxlength = 0;
         int n = s.length();
@@ -279,6 +329,13 @@ nums[1]=1;
     }
 
 
+    /*
+     * PROBLEM: Get Equal Substrings Within Budget (LeetCode 1208)
+     * Find the maximum length substring you can make equal within maxCost (DP approach).
+     *
+     * ALGORITHM: DP (build cost array, then linear scan with running cost)
+     * TC: O(n) | SC: O(n)
+     */
     public int equalSubstring(String s, String t, int maxCost) {
         if (s.length() == 0 || t.length() == 0) return 0;
         if (s.length() != t.length()) return 0;

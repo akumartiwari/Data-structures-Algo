@@ -1,6 +1,6 @@
 package Graph;
 
-import javafx.util.Pair;
+import common.Pair;
 
 import java.util.HashMap;
 import java.util.*;

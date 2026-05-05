@@ -1,6 +1,6 @@
 package AdvancedRevision;
 
-import javafx.util.Pair;
+import common.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;

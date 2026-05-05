@@ -1,6 +1,7 @@
-package com.company;
+package Revision;
 
-import javafx.util.Pair;
+import com.company.TreeNode;
+import com.company.ListNode;
 
 import java.awt.*;
 import java.math.BigInteger;
@@ -116,6 +117,13 @@ Output: [1,2,2,3,5,6]
         this.salary = s;
     }
 
+    /*
+     * PROBLEM: Entry point (Main)
+     * Demonstrates EmployeeSolution utilities and sample method calls.
+     *
+     * ALGORITHM: N/A
+     * TC: O(1) | SC: O(1)
+     */
     public static void main(String[] args) {
         List<EmployeeSolution> list = new ArrayList<>();
         list.add(new EmployeeSolution("muksh", 10));
@@ -135,6 +143,13 @@ Output: [1,2,2,3,5,6]
         System.out.println(relocateMarbles(nums, moveFrom, moveTo));
     }
 
+    /*
+     * PROBLEM: Max Subset Sum of Non-Adjacent Elements (GFG)
+     * Find the maximum sum of a subset such that no two elements are adjacent.
+     *
+     * ALGORITHM: Greedy / DP (Kadane-style)
+     * TC: O(n) | SC: O(1)
+     */
     public static int maxSum(int[] arr) {
         int n = arr.length;
         if (n == 0) return 0;
@@ -154,17 +169,21 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-    Input: nums = [0,1,0,1,1,0,0]
-    Output: 1
-    Explanation: Here are a few of the ways to group all the 1's together:
-    [0,0,1,1,1,0,0] using 1 swap.
-    [0,1,1,1,0,0,0] using 1 swap.
-    [1,1,0,0,0,0,1] using 2 swaps (using the circular property of the array).
-    There is no way to group all 1's together with 0 swaps.
-    Thus, the minimum number of swaps required is 1.
-    */
-    // TC = O(n)
-    // Author: Anand
+     * PROBLEM: Minimum Swaps to Group All 1's Together II (LeetCode 2265)
+     * Find the minimum number of swaps to group all 1s together in a circular binary array.
+     *
+     * ALGORITHM: Sliding Window (circular array doubled)
+     * TC: O(n) | SC: O(n)
+     *
+     * Input: nums = [0,1,0,1,1,0,0]
+     * Output: 1
+     * Explanation: Here are a few of the ways to group all the 1's together:
+     * [0,0,1,1,1,0,0] using 1 swap.
+     * [0,1,1,1,0,0,0] using 1 swap.
+     * [1,1,0,0,0,0,1] using 2 swaps (using the circular property of the array).
+     * There is no way to group all 1's together with 0 swaps.
+     * Thus, the minimum number of swaps required is 1.
+     */
     public static int minSwaps(int[] nums) {
         int n = nums.length;
 
@@ -209,6 +228,13 @@ Output: [1,2,2,3,5,6]
         return sbArray;
     }
 
+    /*
+     * PROBLEM: Sort HashMap by Value (Helper)
+     * Sort a HashMap by its values in descending order, returning a LinkedHashMap.
+     *
+     * ALGORITHM: Stream sort
+     * TC: O(n log n) | SC: O(n)
+     */
     // function to sort hashmap by values
     public static HashMap<String, Integer> sortByValue(Map<String, Integer> hm) {
         HashMap<String, Integer> temp = hm.entrySet().stream().sorted((i1, i2) -> i2.getValue().compareTo(i1.getValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
@@ -216,6 +242,13 @@ Output: [1,2,2,3,5,6]
         return temp;
     }
 
+    /*
+     * PROBLEM: GCD via Euclidean Algorithm (Helper)
+     * Compute the greatest common divisor of two long integers.
+     *
+     * ALGORITHM: Euclidean recursive
+     * TC: O(log(min(a,b))) | SC: O(log(min(a,b)))
+     */
     //long version for gcd
     public static long _gcd(long a, long b) {
         if (b == 0) return a;
@@ -223,6 +256,13 @@ Output: [1,2,2,3,5,6]
         return _gcd(b, a % b);
     }
 
+    /*
+     * PROBLEM: Alternating Subarray (LeetCode 2765)
+     * Find the maximum length of a subarray that alternates +1/-1 differences.
+     *
+     * ALGORITHM: Brute-force nested iteration
+     * TC: O(n²) | SC: O(1)
+     */
     public static int alternatingSubarray(int[] nums) {
 
         int max = -1;
@@ -244,6 +284,13 @@ Output: [1,2,2,3,5,6]
         return max == 1 ? Math.negateExact(max) : max;
     }
 
+    /*
+     * PROBLEM: Relocate Marbles (LeetCode 2766)
+     * Move marbles according to a series of (moveFrom, moveTo) operations and return sorted positions.
+     *
+     * ALGORITHM: TreeMap simulation
+     * TC: O(m log n) | SC: O(n)
+     */
     public static List<Integer> relocateMarbles(int[] nums, int[] moveFrom, int[] moveTo) {
         TreeMap<Integer, Integer> tm = new TreeMap();
         for (int num : nums) tm.put(num, tm.getOrDefault(num, 0) + 1);
@@ -255,17 +302,38 @@ Output: [1,2,2,3,5,6]
         return new ArrayList<>(tm.keySet());
     }
 
+    /*
+     * PROBLEM: Expression Add Operators (LeetCode 282)
+     * Add +, -, or * operators between digits of a string so the expression evaluates to the target.
+     *
+     * ALGORITHM: Backtracking / DFS
+     * TC: O(4^n) | SC: O(n)
+     */
     public List<String> addOperators(String num, int target) {
         calculate(num, 0, target, "");
         return new ArrayList<>(result);
     }
 
+    /*
+     * PROBLEM: A Number After a Double Reversal (LeetCode 2119)
+     * Determine if a number remains the same after reversing it twice.
+     *
+     * ALGORITHM: Math (trailing zero check)
+     * TC: O(1) | SC: O(1)
+     */
     // Author: Anand
     // If a number has traling is zero and its not zero then it must return false
     public boolean isSameAfterReversals(int num) {
         return num == 0 || num % 10 != 0;
     }
 
+    /*
+     * PROBLEM: Expression Add Operators — Recursive Helper (Helper)
+     * Recursive backtracking that builds all operator-inserted expressions and evaluates them.
+     *
+     * ALGORITHM: Backtracking / DFS
+     * TC: O(4^n) | SC: O(n)
+     */
     private void calculate(String num, int index, int target, String expression) {
         if (index == num.length()) {
 
@@ -291,6 +359,13 @@ Output: [1,2,2,3,5,6]
         }
     }
 
+    /*
+     * PROBLEM: Basic Calculator II (LeetCode 227)
+     * Evaluate a string arithmetic expression containing +, -, *, / and spaces.
+     *
+     * ALGORITHM: Recursive expression parsing
+     * TC: O(n) | SC: O(n)
+     */
     public Double calculate(String expression) {
         if (expression == null || expression.length() == 0) {
             return null;
@@ -298,6 +373,13 @@ Output: [1,2,2,3,5,6]
         return calc(expression.replace(" ", ""));
     }
 
+    /*
+     * PROBLEM: Parse and Evaluate Arithmetic Expression (Helper)
+     * Recursively parse and evaluate an arithmetic string with +, -, *, / and parentheses.
+     *
+     * ALGORITHM: Recursive descent parsing
+     * TC: O(n) | SC: O(n)
+     */
     public Double calc(String expression) {
 
         if (expression.startsWith("(") && expression.endsWith(")")) {
@@ -346,6 +428,13 @@ Output: [1,2,2,3,5,6]
         result = [4, 3]
      */
 
+    /*
+     * PROBLEM: Get Next Operand from Tokenized Expression (Helper)
+     * Extract and return the next numeric operand from the expression string, handling parentheses.
+     *
+     * ALGORITHM: Linear scan / recursive evaluation
+     * TC: O(n) | SC: O(n)
+     */
     private double getNextOperand(String[] exp) {
         double res;
         if (exp[0].startsWith("(")) {
@@ -375,12 +464,26 @@ Output: [1,2,2,3,5,6]
         return res;
     }
 
+    /*
+     * PROBLEM: Is Digit Character (Helper)
+     * Check whether the given character code represents a decimal digit or a dot.
+     *
+     * ALGORITHM: Range comparison
+     * TC: O(1) | SC: O(1)
+     */
     private boolean isNumber(int c) {
         int zero = '0';
         int nine = '9';
         return (c >= zero && c <= nine) || c == '.';
     }
 
+    /*
+     * PROBLEM: Minimum Number of Moves to Make Palindrome / Check String Validity (LeetCode 2116)
+     * Find the minimum number of operations to make a string of 'X' and ')' valid by covering each 'X' in a window of 3.
+     *
+     * ALGORITHM: Greedy linear scan
+     * TC: O(n) | SC: O(1)
+     */
     public int minimumMoves(String s) {
         int n = s.length(), cnt = 0;
         for (int i = 0; i < n; ) {
@@ -392,6 +495,13 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+    /*
+     * PROBLEM: Maximum Subarray (LeetCode 53)
+     * Find the contiguous subarray with the largest sum.
+     *
+     * ALGORITHM: Kadane's Algorithm
+     * TC: O(n) | SC: O(1)
+     */
     // KADAN's ALGO
     public int maxSubArray(int[] nums) {
         int n = nums.length;
@@ -405,6 +515,13 @@ Output: [1,2,2,3,5,6]
         return max_sum_so_far;
     }
 
+    /*
+     * PROBLEM: Split Array With Same Average (LeetCode 805)
+     * Determine if an array can be split into two subsets with equal averages.
+     *
+     * ALGORITHM: DP / Backtracking with memoization
+     * TC: O(n² * sum) | SC: O(n * sum)
+     */
     public boolean splitArraySameAverage(int[] nums) {
         int n = nums.length, total = 0;
         for (int i = 0; i < n; i++) total += nums[i];
@@ -418,6 +535,13 @@ Output: [1,2,2,3,5,6]
         return false;
     }
 
+    /*
+     * PROBLEM: Subset Sum Feasibility Check (Helper)
+     * Check whether a subset of exactly `len` elements with the given `sum` exists starting from index `ind`.
+     *
+     * ALGORITHM: Recursive backtracking with memoization
+     * TC: O(n * len * sum) | SC: O(n * len * sum)
+     */
     private boolean isPossible(int[] nums, int ind, int len, int sum, HashMap<String, Boolean> map) {
         int n = nums.length;
         // base case
@@ -447,6 +571,13 @@ Output: [1,2,2,3,5,6]
         return case2;
     }
 
+    /*
+     * PROBLEM: Edit Distance (LeetCode 72)
+     * Find the minimum number of insert, delete, or replace operations to convert word1 to word2.
+     *
+     * ALGORITHM: Dynamic Programming (2D DP table)
+     * TC: O(n1 * n2) | SC: O(n1 * n2)
+     */
     // Min. no. of steps to  make both strings equal
     // Input: word1 = "sea", word2 = "eat"
     // Output: 2
@@ -479,6 +610,13 @@ Output: [1,2,2,3,5,6]
 
     }
 
+    /*
+     * PROBLEM: Count Nodes With the Highest Score (LeetCode 2049)
+     * Find how many nodes in a binary tree achieve the maximum score (product of component sizes when removed).
+     *
+     * ALGORITHM: DFS (post-order subtree size computation)
+     * TC: O(n) | SC: O(n)
+     */
     public int countHighestScoreNodes(int[] parents) {
         int n = parents.length;
         // create an adjacancy list of edges of each vertex
@@ -499,6 +637,13 @@ Output: [1,2,2,3,5,6]
         return count;
     }
 
+    /*
+     * PROBLEM: DFS Subtree Size Computation (Helper)
+     * Post-order DFS that computes subtree sizes and tracks the node with the highest removal score.
+     *
+     * ALGORITHM: DFS (post-order)
+     * TC: O(n) | SC: O(n)
+     */
     // This function calculates the number of node in the subtree of root u
     private long dfs(int u, List<Integer>[] list, int n) {
 
@@ -525,10 +670,16 @@ Output: [1,2,2,3,5,6]
         return total + 1;
     }
 
-    // Input: n = 1000
-    // Output: 1333
-    // TC = O(n)
-    // SC = O(1)
+    /*
+     * PROBLEM: Next Beautiful Number (LeetCode 2048)
+     * Find the smallest integer greater than n where each digit d appears exactly d times.
+     *
+     * ALGORITHM: Linear scan with frequency validation
+     * TC: O(n) | SC: O(1)
+     *
+     * Input: n = 1000
+     * Output: 1333
+     */
     public int nextBeautifulNumber(int n) {
         int number = n;
         while (true) {
@@ -557,6 +708,13 @@ Output: [1,2,2,3,5,6]
         }
     }
 
+    /*
+     * PROBLEM: Vowels of All Substrings (LeetCode 2063)
+     * Count the total number of vowels across all substrings of the given word.
+     *
+     * ALGORITHM: Contribution technique (each vowel contributes (i+1)*(n-i) substrings)
+     * TC: O(n) | SC: O(1)
+     */
     public long countVowels(String word) {
         long n = word.length();
         long ans = 0;
@@ -583,6 +741,15 @@ Output: [1,2,2,3,5,6]
     This is invalid since k must be positive.
      */
 
+    /*
+     * PROBLEM: Count Vowel Substrings of a String (LeetCode 2062)
+     * Count substrings that contain all 5 vowels (a, e, i, o, u) and no consonants.
+     *
+     * ALGORITHM: Sliding Window (atMost(5) - atMost(4))
+     * TC: O(n) | SC: O(1)
+     *
+     * We have found the count of vowels <= k and then subtracted vowels <= k-1 to get vowels == k
+     */
     // TC = O(2n) + O(2n)
     // Sliding window approach
     // We have found the  count of vowels <= k and then substracted vowels <= k to get vowels == k
@@ -590,6 +757,13 @@ Output: [1,2,2,3,5,6]
         return cntVowelKMaxSubstrings(word, 5) - cntVowelKMaxSubstrings(word, 4);
     }
 
+    /*
+     * PROBLEM: Count Substrings with At Most K Distinct Vowels (Helper)
+     * Count substrings that contain at most k distinct vowels (no consonants).
+     *
+     * ALGORITHM: Sliding Window
+     * TC: O(n) | SC: O(1)
+     */
     private int cntVowelKMaxSubstrings(String word, int k) {
         int n = word.length();
         int i = 0, cnt = 0;
@@ -616,6 +790,14 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+    /*
+     * PROBLEM: Maximum Path Quality of a Graph (LeetCode 2065)
+     * Find the maximum quality of a path starting and ending at node 0 within maxTime, where quality
+     * is the sum of unique node values visited.
+     *
+     * ALGORITHM: DFS with backtracking on adjacency list
+     * TC: O(4^(maxTime/minEdgeTime)) | SC: O(n + E)
+     */
     public int maximalPathQuality(int[] values, int[][] edges, int maxTime) {
         int n = values.length;
         int[] vis = new int[n];
@@ -685,6 +867,13 @@ Output: [1,2,2,3,5,6]
     Finally return result list
      */
 
+    /*
+     * PROBLEM: DFS Backtracking for maximalPathQuality (Helper)
+     * Explores all time-bounded paths from a given node, tracking visited counts and accumulating max quality.
+     *
+     * ALGORITHM: DFS with backtracking
+     * TC: O(4^(maxTime/minEdgeTime)) | SC: O(n)
+     */
     private void f(int node, int val, int[] values, HashMap<Integer, List<Pair<Integer, Integer>>> adj, int[] vis, int maxTime) {
         // base case
         if (maxTime < 0) return;
@@ -709,6 +898,13 @@ Output: [1,2,2,3,5,6]
         vis[node]--;
     }
 
+    /*
+     * PROBLEM: Find Subsequence of Length K With the Largest Sum (LeetCode 2099)
+     * Return a subsequence of length k preserving original order, formed by the k largest elements.
+     *
+     * ALGORITHM: Max-Heap + index map + order preservation
+     * TC: O(n log n) | SC: O(n)
+     */
     //    TC = O(nlogn), sc = O(n)
     public int[] maxSubsequence(int[] nums, int k) {
         int n = nums.length;
@@ -767,6 +963,13 @@ Output: [1,2,2,3,5,6]
         return result;
     }
 
+    /*
+     * PROBLEM: Find Good Days to Rob the Bank (LeetCode 2100)
+     * Return all indices i such that security[i-time..i] is non-increasing and security[i..i+time] is non-decreasing.
+     *
+     * ALGORITHM: Sliding Window (two-pass prefix/suffix)
+     * TC: O(n) | SC: O(n)
+     */
     // Sliding window
     // TC = O(n)
     public List<Integer> goodDaysToRobBank(int[] security, int time) {
@@ -791,6 +994,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Find First Palindromic String in the Array (LeetCode 2108)
+     * Return the first palindrome in the given array of words, or "" if none exists.
+     *
+     * ALGORITHM: Linear scan with palindrome check
+     * TC: O(n * m) | SC: O(1)
+     */
     // TC = O(n*n), SC = O(1)
     // Solution by Anand
     public String firstPalindrome(String[] words) {
@@ -801,6 +1011,13 @@ Output: [1,2,2,3,5,6]
         return "";
     }
 
+    /*
+     * PROBLEM: Palindrome Check (Helper)
+     * Return true if the given string reads the same forwards and backwards.
+     *
+     * ALGORITHM: Two-pointer comparison
+     * TC: O(n) | SC: O(1)
+     */
     private boolean isPalidrome(String word) {
         int n = word.length();
         for (int i = 0; i < Math.abs(n / 2); i++) {
@@ -809,6 +1026,13 @@ Output: [1,2,2,3,5,6]
         return true;
     }
 
+    /*
+     * PROBLEM: Adding Spaces to a String (LeetCode 2109)
+     * Insert a space before every index in `spaces` within string s and return the result.
+     *
+     * ALGORITHM: Linear scan with StringBuilder
+     * TC: O(n) | SC: O(n)
+     */
     // TC = O(n), SC = O(1)
     public String addSpaces(String s, int[] spaces) {
         int n = spaces.length;
@@ -826,25 +1050,19 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-
-       Constraints:
-
-    1 <= prices.length <= 105
-    1 <= prices[i] <= 105
-
-
-    Input: prices = [3,2,1,4]
-    Output: 7
-    Explanation: There are 7 smooth descent periods:
-    [3], [2], [1], [4], [3,2], [2,1], and [3,2,1]
-    Note that a period with one day is a smooth descent period by the definition.
-
-    // 12,11,10,9,8,7,6,5,4,3 = 10 * 11 / 2 = 55
-
-    [12,11,10,9,8,7,6,5,4,3,4,3,10,9,8,7]
-    TC = O(2n), SC=O(1)
+     * PROBLEM: Number of Smooth Descent Periods of a Stock (LeetCode 2110)
+     * Count the total number of smooth descent periods (subarrays where each step decreases by exactly 1).
+     *
+     * ALGORITHM: Two-pointer sliding window
+     * TC: O(n) | SC: O(1)
+     *
+     * Input: prices = [3,2,1,4]
+     * Output: 7
+     * Explanation: There are 7 smooth descent periods:
+     * [3], [2], [1], [4], [3,2], [2,1], and [3,2,1]
+     * Note that a period with one day is a smooth descent period by the definition.
+     * TODO: Not solved with all edge cases
      */
-    // TODO: Not solved with all edge cases
     public long getDescentPeriods(int[] prices) {
         boolean flag = false;
         long cnt = 0L;
@@ -876,6 +1094,13 @@ Output: [1,2,2,3,5,6]
         return n;
     }
 
+    /*
+     * PROBLEM: Number of Smooth Descent Periods of a Stock — Simple (LeetCode 2110)
+     * Simpler single-pass solution counting smooth descent periods.
+     *
+     * ALGORITHM: Linear scan with running length counter
+     * TC: O(n) | SC: O(1)
+     */
     // Solved by anand
     public long getDescentPeriodsSimple(int[] prices) {
         int n = prices.length;
@@ -891,6 +1116,14 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+    /*
+     * PROBLEM: Number of Subarrays with Bounded Maximum (LeetCode 795)
+     * Count subarrays whose maximum element lies within [left, right].
+     *
+     * ALGORITHM: Sliding window
+     * TC: O(n) | SC: O(1)
+     * TODO: Not solved with all edge cases
+     */
     // TC = O(MLogM)
     // Author : Anand
 
@@ -919,6 +1152,16 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+    /*
+     * PROBLEM: Subarray Product Less Than K (LeetCode 713)
+     * Count contiguous subarrays whose product of all elements is strictly less than k.
+     *
+     * ALGORITHM: Sliding Window
+     * TC: O(n) | SC: O(1)
+     *
+     * Keep expanding right pointer until product >= k, then shrink from left.
+     * Count of valid subarrays ending at right = (right - left + 1).
+     */
     // Solved by anand
     // TC = O(n), SC = O(1)
 //    Keep on moving right pointer till condition is met
@@ -937,6 +1180,13 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+    /*
+     * PROBLEM: Intervals Between Identical Elements (LeetCode 2121)
+     * For each index, return the sum of absolute distances to all other indices with the same value.
+     *
+     * ALGORITHM: Two-pass prefix/suffix sum with count and sum maps
+     * TC: O(n) | SC: O(n)
+     */
     // Author : Anand
     // TC = O(2n), SC=O(n)
     public long[] getDistances(int[] arr) {
@@ -964,6 +1214,14 @@ Output: [1,2,2,3,5,6]
     }
     //--------------------------------------------------------
 
+    /*
+     * PROBLEM: Execute Robot Instructions in a Grid (LeetCode 2120)
+     * For each starting instruction index, count how many consecutive instructions the robot executes
+     * before leaving the n×n grid.
+     *
+     * ALGORITHM: Brute-force simulation (O(n²))
+     * TC: O(len²) | SC: O(len)
+     */
     // Author : Anand
     // Simple BFS travesal must solve the problem
     // Brute-Force
@@ -994,15 +1252,24 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Valid Grid Position Check (Helper)
+     * Return true if position (i, j) lies within the n×n grid boundaries.
+     *
+     * ALGORITHM: Boundary comparison
+     * TC: O(1) | SC: O(1)
+     */
     private boolean isValidPos(int i, int j, int n) {
         return (i >= 0 && j >= 0 && i < n && j < n);
     }
 
-    // Author: Anand
-    // Approach:-
-    // For all possible k (integer) check if its possible to segregate array
-    // into two half's then based on that value we can recover the array
-    // TC = O(n2)
+    /*
+     * PROBLEM: Recover the Original Array (LeetCode 2122)
+     * Find the original array from a combined sorted array of lower and higher arrays.
+     *
+     * ALGORITHM: Sort + HashMap frequency matching
+     * TC: O(n^2) | SC: O(n)
+     */
     public int[] recoverArray(int[] nums) {
         int n = nums.length;
         Arrays.sort(nums);
@@ -1037,16 +1304,26 @@ Output: [1,2,2,3,5,6]
         return new int[]{};
     }
 
-    // Author : Anand
-    // TC = O(n), SC = O(1)
+    /*
+     * PROBLEM: Maximum Number of Words Found in Sentences (LeetCode 2114)
+     * Find the sentence with the maximum number of words.
+     *
+     * ALGORITHM: Linear scan + split
+     * TC: O(n) | SC: O(1)
+     */
     public int mostWordsFound(String[] sentences) {
         int max = Integer.MIN_VALUE;
         for (String bs : sentences) max = Math.max(bs.split(" ").length, max);
         return max;
     }
 
-    // Author: Anand
-    // TC = O(mn), SC = O(mn)
+    /*
+     * PROBLEM: Maximal Square (LeetCode 221)
+     * Find the area of the largest square containing only 1s in a binary matrix.
+     *
+     * ALGORITHM: Dynamic programming (min of top, left, top-left neighbors)
+     * TC: O(m*n) | SC: O(m*n)
+     */
     public int maximalSquare(char[][] matrix) {
         int row = matrix.length;
         int col = matrix[0].length;
@@ -1079,6 +1356,13 @@ Output: [1,2,2,3,5,6]
         return maxi * maxi;
     }
 
+    /*
+     * PROBLEM: Find All Possible Recipes from Given Supplies (LeetCode 2115)
+     * Return all recipes that can be created given the available supplies and ingredients.
+     *
+     * ALGORITHM: Topological sort (BFS / Kahn's algorithm)
+     * TC: O(V+E) | SC: O(V+E)
+     */
     public List<String> findAllRecipes(String[] recipes, List<List<String>> ingredients, String[] supplies) {
         if (recipes == null || recipes.length == 0 || ingredients == null || ingredients.size() == 0 || supplies == null || supplies.length == 0 || recipes.length != ingredients.size())
             return new ArrayList<>();
@@ -1120,22 +1404,35 @@ Output: [1,2,2,3,5,6]
         return result;
     }
 
-    // ArrayDeque based approach
+    /*
+     * PROBLEM: Find All Possible Recipes from Given Supplies (LeetCode 2115)
+     * Return all recipes that can be created given the available supplies and ingredients.
+     *
+     * ALGORITHM: Topological sort (ArrayDeque-based alternate solution)
+     * TC: O(V+E) | SC: O(V+E)
+     */
     public List<String> findAllRecipesV1(String[] recipes, List<List<String>> ingredients, String[] supplies) {
         List<String> result = new ArrayList<>();
         return result;
     }
 
+    /*
+     * PROBLEM: Stamping the Grid (LeetCode 2132)
+     * Determine if stamps of given dimensions can cover all empty cells without covering occupied cells.
+     *
+     * ALGORITHM: 2D prefix sums + greedy stamp placement
+     * TC: O(m*n) | SC: O(m*n)
+     */
     public boolean possibleToStamp(int[][] grid, int stampHeight, int stampWidth) {
         return false;
     }
 
     /*
-
-    [5,4,2,1]
-    len = 4
-
-    lh = [6 6]
+     * PROBLEM: Maximum Twin Sum of a Linked List (LeetCode 2130)
+     * Find the maximum twin sum where twin pairs are (i, n-1-i) nodes.
+     *
+     * ALGORITHM: Collect first-half values then pair with second-half
+     * TC: O(n) | SC: O(n)
      */
     public int pairSum(ListNode head) {
         int maxSum = 0;
@@ -1155,6 +1452,13 @@ Output: [1,2,2,3,5,6]
         return maxSum;
     }
 
+    /*
+     * PROBLEM: Get length of linked list (Helper)
+     * Returns the total number of nodes in the linked list.
+     *
+     * ALGORITHM: Linear traversal
+     * TC: O(n) | SC: O(1)
+     */
     private int getLength(ListNode head) {
         int cnt = 0;
         ListNode curr = head;
@@ -1166,11 +1470,12 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-      TC = O(n), SC = O(n)
-      A palindrome must be mirrored over the center. Suppose we have a palindrome. If we prepend the word "ab" on the left, what must we append on the right to keep it a palindrome?
-      We must append "ba" on the right. The number of times we can do this is the minimum of (occurrences of "ab") and (occurrences of "ba").
-      For words that are already palindromes, e.g. "aa", we can prepend and append these in pairs as described in the previous hint. We can also use exactly one in the middle to form an even longer palindrome.
-      */
+     * PROBLEM: Longest Palindrome by Concatenating Two Letter Words (LeetCode 2131)
+     * Find the longest palindrome that can be formed by concatenating two-letter words.
+     *
+     * ALGORITHM: Frequency map + greedy pairing of words and their reverses
+     * TC: O(n) | SC: O(n)
+     */
     public int longestPalindrome(String[] words) {
         int lp = 0;
         Map<String, Integer> map = new HashMap<>(); // Map of word-count
@@ -1212,6 +1517,13 @@ Output: [1,2,2,3,5,6]
         return lp;
     }
 
+    /*
+     * PROBLEM: Check if Every Row and Column Contains All Numbers (LeetCode 2133)
+     * Verify that every row and column of an n×n matrix contains all integers from 1 to n.
+     *
+     * ALGORITHM: HashMap-based row/column validation
+     * TC: O(n^2) | SC: O(n)
+     */
     public boolean checkValid(int[][] matrix) {
         int n = matrix.length;
         HashMap<Integer, Boolean> map = new HashMap<>();
@@ -1243,25 +1555,11 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-    Input: n = 2, batteries = [3,3,3]
-    Output: 4
-    Explanation:
-    Initially, insert battery 0 into the first computer and battery 1 into the second computer.
-    After two minutes, remove battery 1 from the second computer and insert battery 2 instead. Note that battery 1 can still run for one minute.
-    At the end of the third minute, battery 0 is drained, and you need to remove it from the first computer and insert battery 1 instead.
-    By the end of the fourth minute, battery 1 is also drained, and the first computer is no longer running.
-    We can run the two computers simultaneously for at most 4 minutes, so we return 4.
-
-
-
-    2
-    [3,4,5]
-
-    sum = 3-1=2
-    [5,1_0000_00000_00000L]
-    level = 4 = 5 + 1  = 6
-    dist = 0 -> 1 -> 2
-    val = 5, nextVal = 1_0000_00000_00000L
+     * PROBLEM: Maximum Running Time of N Computers (LeetCode 2141)
+     * Find the maximum number of minutes you can run N computers simultaneously using given batteries.
+     *
+     * ALGORITHM: Binary search on time + greedy battery allocation
+     * TC: O(n log n) | SC: O(n)
      */
     public long maxRunTime(int n, int[] batteries) {
         long sum = 0;
@@ -1306,8 +1604,13 @@ Output: [1,2,2,3,5,6]
     There are no other solutions that remove 4 beans or fewer.
      */
 
-    // TC = O(nlogn)
-    // Author : Anand
+    /*
+     * PROBLEM: Keep Multiplying Found Values by Two (LeetCode 2154)
+     * Starting from original, repeatedly double it if found in nums; return final value.
+     *
+     * ALGORITHM: Sort + binary search
+     * TC: O(n log n) | SC: O(1)
+     */
     public int findFinalValue(int[] nums, int original) {
         int n = nums.length;
         Arrays.sort(nums);
@@ -1352,8 +1655,13 @@ Output: [1,2,2,3,5,6]
  map = {(0,[0), (1,[1), (2, [2), (3,0], [3,0])}
 
           */
-    // Tc = O(n)
-    // Author : Anand
+    /*
+     * PROBLEM: All Divisions With the Highest Score of a Binary Array (LeetCode 2155)
+     * Return all indices where dividing the array yields the maximum score (zeros left + ones right).
+     *
+     * ALGORITHM: Prefix sum of zeros + suffix sum of ones
+     * TC: O(n) | SC: O(n)
+     */
     public List<Integer> maxScoreIndices(int[] nums) {
 
         int n = nums.length;
@@ -1391,6 +1699,13 @@ Output: [1,2,2,3,5,6]
         return res;
     }
 
+    /*
+     * PROBLEM: Final Value of Variable After Performing Operations (LeetCode 2011)
+     * Compute the final value of X after applying increment/decrement operations.
+     *
+     * ALGORITHM: Linear scan with set-based operation classification
+     * TC: O(n) | SC: O(1)
+     */
     public int finalValueAfterOperations(String[] operations) {
 
         Set<String> plus = new HashSet<>();
@@ -1409,14 +1724,12 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-      2, if nums[j] < nums[i] < nums[k], for all 0 <= j < i and for all i < k <= nums.length - 1.
-      1, if nums[i - 1] < nums[i] < nums[i + 1], and the previous condition is not satisfied.
-      0, if none of the previous conditions holds.
-
-
-       */
-    // Tc = O(n)
-    // Author : Anand
+     * PROBLEM: Sum of Beauty in the Array (LeetCode 2012)
+     * For each middle element, return its beauty score (2, 1, or 0) based on surrounding elements.
+     *
+     * ALGORITHM: Precompute prefix max and suffix min, then classify each index
+     * TC: O(n) | SC: O(n)
+     */
     public int sumOfBeauties(int[] nums) {
         int ans = 0;
         int n = nums.length;
@@ -1448,6 +1761,13 @@ Output: [1,2,2,3,5,6]
 
     }
 
+    /*
+     * PROBLEM: Minimum Sum of Four Digit Number After Splitting Digits (LeetCode 2160)
+     * Split digits of a 4-digit number into two new numbers to minimise their sum.
+     *
+     * ALGORITHM: Sort digits and interleave into two numbers greedily
+     * TC: O(1) | SC: O(1)
+     */
     public int minimumSum(int num) {
         TreeMap<Integer, Integer> freq = new TreeMap<>();  // asc order of elements freq
         while (num > 0) {
@@ -1491,6 +1811,13 @@ Output: [1,2,2,3,5,6]
         return num1 + num2;
     }
 
+    /*
+     * PROBLEM: Partition Array According to Given Pivot (LeetCode 2161)
+     * Rearrange array so elements less than pivot come first, then equal, then greater; relative order preserved.
+     *
+     * ALGORITHM: Three-pass partition with auxiliary lists
+     * TC: O(n) | SC: O(n)
+     */
     public int[] pivotArray(int[] nums, int pivot) {
         List<Integer> list1 = new ArrayList<>();
         List<Integer> list2 = new ArrayList<>();
@@ -1512,6 +1839,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Minimum Cost to Set Cooking Time (LeetCode 2162)
+     * Find the minimum button-press cost to enter targetSeconds on a microwave keypad.
+     *
+     * ALGORITHM: Enumerate valid mins:seconds representations and compute cost for each
+     * TC: O(1) | SC: O(1)
+     */
     // Author: Anand
     public int minCostSetTime(int startAt, int moveCost, int pushCost, int targetSeconds) {
         int minS = Integer.MAX_VALUE;
@@ -1568,6 +1902,13 @@ Output: [1,2,2,3,5,6]
         return minS;
     }
 
+    /*
+     * PROBLEM: Calculate keypad cost for mins:seconds display (Helper)
+     * Computes the move+push cost to type a given minutes and seconds value starting from startAt.
+     *
+     * ALGORITHM: Digit-by-digit simulation of keypad navigation
+     * TC: O(1) | SC: O(1)
+     */
     private int cal(int mins, int seconds, int startAt, int moveCost, int pushCost) {
         int cost = 0;
         int curr = startAt;
@@ -1618,14 +1959,12 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-    Input: nums = [3,1,2]
-    Output: -1
-
-
-    Input: nums = [7,9,5,8,1,3]
-    Output: 1
-
- */
+     * PROBLEM: Minimum Difference in Sums After Removal of Elements (LeetCode 2163)
+     * Remove n elements from a 3n-length array to minimise the difference between the sum of the first n and last n remaining elements.
+     *
+     * ALGORITHM: Prefix min-sum (first half) and suffix max-sum (second half) enumeration
+     * TC: O(n log n) | SC: O(n)
+     */
     public long minimumDifference(int[] nums) {
         Map<Integer, Integer> map = new HashMap<>();// elem-ind
         int ind = 0;
@@ -1638,6 +1977,13 @@ Output: [1,2,2,3,5,6]
         return f - s;
     }
 
+    /*
+     * PROBLEM: Enumerate minimum sums for first half (Helper)
+     * Recursively enumerates all ways to pick n/3 elements from the first half and tracks the minimum sum.
+     *
+     * ALGORITHM: Recursive backtracking with state map
+     * TC: O(2^n) | SC: O(n)
+     */
     private void first(int[] nums, int ind, long sum, long f, int cnt, Map<Integer, Integer> map) {
 
         // base case
@@ -1663,6 +2009,13 @@ Output: [1,2,2,3,5,6]
 
     }
 
+    /*
+     * PROBLEM: Enumerate maximum sums for second half (Helper)
+     * Recursively enumerates all ways to pick n/3 elements from the second half and tracks the maximum sum.
+     *
+     * ALGORITHM: Recursive backtracking with state map
+     * TC: O(2^n) | SC: O(n)
+     */
     private void second(int[] nums, int ind, long sum, long s, int cnt, Map<Integer, Integer> map) {
 
 
@@ -1692,6 +2045,13 @@ Output: [1,2,2,3,5,6]
         } else second(nums, ind + 1, sum, s, cnt, map);
     }
 
+    /*
+     * PROBLEM: Sort Even and Odd Indices Independently (LeetCode 2164)
+     * Sort even-indexed elements in ascending order and odd-indexed elements in descending order.
+     *
+     * ALGORITHM: Partition by index parity, sort separately, then merge back
+     * TC: O(n log n) | SC: O(n)
+     */
     public int[] sortEvenOdd(int[] nums) {
         List<Integer> even = new ArrayList<>();
         List<Integer> odd = new ArrayList<>();
@@ -1719,6 +2079,13 @@ Output: [1,2,2,3,5,6]
         return nums;
     }
 
+    /*
+     * PROBLEM: Smallest Value of the Rearranged Number (LeetCode 2165)
+     * Rearrange digits of num to form the smallest possible integer with the same sign.
+     *
+     * ALGORITHM: Sort digits ascending (positive) or descending (negative), handle leading zeros
+     * TC: O(d log d) | SC: O(d)  where d = number of digits
+     */
     // Author: Anand
     public long smallestNumber(long num) {
         long abs = Math.abs(num);
@@ -1755,6 +2122,13 @@ Output: [1,2,2,3,5,6]
         }
     }
 
+    /*
+     * PROBLEM: Count Operations to Obtain Zero (LeetCode 2169)
+     * Count the number of subtract operations needed to reduce both numbers to zero.
+     *
+     * ALGORITHM: Simulation (similar to Euclidean subtraction)
+     * TC: O(max(num1, num2)) | SC: O(1)
+     */
     public int countOperations(int num1, int num2) {
         int ans = 0;
         while (num1 != 0 && num2 != 0) {
@@ -1766,6 +2140,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Minimum Operations to Make Array Equal II (LeetCode 2170)
+     * Find the minimum number of +1/-1 operations to make all elements of nums equal.
+     *
+     * ALGORITHM: Frequency map on even/odd indexed elements, find most-common values
+     * TC: O(n log n) | SC: O(n)
+     */
     public int minimumOperations(int[] nums) {
         int ans = 0;
         int n = nums.length;
@@ -1826,8 +2207,14 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Removing Minimum Number of Magic Beans (LeetCode 2171)
+     * Remove minimum beans so all non-empty bags have an equal number of beans.
+     *
+     * ALGORITHM: Sort + iterate candidate target values using prefix sums
+     * TC: O(n log n) | SC: O(1)
+     */
     // Author: Anand
-    // TC = O(nlogn)
     public long minimumRemoval(int[] beans) {
         int n = beans.length;
         Arrays.sort(beans);
@@ -1841,15 +2228,27 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Maximum AND Sum of Array (LeetCode 2172)
+     * Assign nums to slots (each holding at most 2 values) to maximise the sum of num AND slot_index.
+     *
+     * ALGORITHM: DP with bitmask over slot occupancy
+     * TC: O(n * 3^numSlots) | SC: O(n * 3^numSlots)
+     */
     // Author: Anand
-    // dfs :- Iterate all possible combinations and get best possible state after memo (to reduce recursive calls)
-    // Author : Anand
     public int maximumANDSum(int[] nums, int numSlots) {
         int[] slots = new int[numSlots + 1];
         Map<List<Integer>, Integer> map = new HashMap<>();
         return f(nums, slots, numSlots, 0, map);
     }
 
+    /*
+     * PROBLEM: Bitmask DP helper for maximumANDSum (Helper)
+     * Recursively assigns nums[ind..] to slots with memoisation on slot occupancy state.
+     *
+     * ALGORITHM: Bitmask DP with memoisation
+     * TC: O(n * 3^numSlots) | SC: O(n * 3^numSlots)
+     */
     private int f(int[] nums, int[] slots, int numSlots, int ind, Map<List<Integer>, Integer> map) {
         // base case
         if (ind >= nums.length) return 0;
@@ -1872,6 +2271,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Find Three Consecutive Integers That Sum to a Given Number (LeetCode 2177)
+     * Return three consecutive integers that sum to num, or empty array if impossible.
+     *
+     * ALGORITHM: Math — num must be divisible by 3; answer is [num/3-1, num/3, num/3+1]
+     * TC: O(1) | SC: O(1)
+     */
     // Author : Anand
     public long[] sumOfThree(long num) {
         long[] ans = new long[3];
@@ -1883,6 +2289,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Construct String With Repeat Limit (LeetCode 2182)
+     * Build the lexicographically largest string using characters from s with at most repeatLimit consecutive same chars.
+     *
+     * ALGORITHM: Greedy + frequency count (iterate from 'z' downward)
+     * TC: O(n + 26) | SC: O(26)
+     */
     public String repeatLimitedString(String s, int repeatLimit) {
 
         Map<Character, Integer> map = new HashMap<>();
@@ -1939,6 +2352,13 @@ Output: [1,2,2,3,5,6]
         return ans.toString();
     }
 
+    /*
+     * PROBLEM: Count Equal and Divisible Pairs in an Array (LeetCode 2176)
+     * Count pairs (i, j) where i < j, nums[i] == nums[j], and (i * j) is divisible by k.
+     *
+     * ALGORITHM: GCD-based pairing with frequency map
+     * TC: O(n * d(k)) | SC: O(d(k))  where d(k) = divisors of k
+     */
     public long countPairs(int[] nums, int k) {
         Map<Long, Long> gcdMap = new HashMap<>(); // to store gcd factors count seen so far
         long result = 0;
@@ -1954,6 +2374,13 @@ Output: [1,2,2,3,5,6]
         return result;
     }
 
+    /*
+     * PROBLEM: GCD via Euclidean algorithm (Helper)
+     * Returns the greatest common divisor of a and b.
+     *
+     * ALGORITHM: Euclidean algorithm (recursive)
+     * TC: O(log(min(a,b))) | SC: O(log(min(a,b)))
+     */
     //long version for gcd
     public long __gcd(long a, long b) {
         if (b == 0) return a;
@@ -1961,6 +2388,13 @@ Output: [1,2,2,3,5,6]
         return __gcd(b, a % b);
     }
 
+    /*
+     * PROBLEM: Maximum Split of Positive Even Integers (LeetCode 2178)
+     * Split finalSum into the maximum number of distinct positive even integers.
+     *
+     * ALGORITHM: Greedy — add smallest even numbers until sum is reached, adjust last element
+     * TC: O(sqrt(finalSum)) | SC: O(sqrt(finalSum))
+     */
     // Author: Anand
     public List<Long> maximumEvenSplit(long finalSum) {
         long ind = 2;
@@ -1979,6 +2413,13 @@ Output: [1,2,2,3,5,6]
     }
 
 
+    /*
+     * PROBLEM: 3Sum (LeetCode 15)
+     * Find all unique triplets in the array that sum to zero.
+     *
+     * ALGORITHM: Brute force with HashMap deduplication (Set of sorted triplets)
+     * TC: O(n^3) | SC: O(n)
+     */
     //Author: Anand
     public List<List<Integer>> threeSum(int[] nums) {
         Set<List<Integer>> list = new HashSet<>();
@@ -2009,6 +2450,13 @@ Output: [1,2,2,3,5,6]
         return new ArrayList<>(list);
     }
 
+    /*
+     * PROBLEM: Counting Words With a Given Prefix (LeetCode 2185)
+     * Count the number of strings in words that have pref as a prefix.
+     *
+     * ALGORITHM: Linear scan with String.startsWith
+     * TC: O(n * m) | SC: O(1)  where m = length of pref
+     */
     // Author: Anand
     public int prefixCount(String[] words, String pref) {
         int cnt = 0;
@@ -2018,6 +2466,13 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+    /*
+     * PROBLEM: Minimum Number of Steps to Make Two Strings Anagram II (LeetCode 2186)
+     * Find the minimum total insertions needed to make s and t anagrams of each other.
+     *
+     * ALGORITHM: Frequency count — sum of characters not shared between both strings
+     * TC: O(n + m) | SC: O(1)
+     */
     // Author: Anand
     public int minSteps(String s, String t) {
         int cnt = 0;
@@ -2049,6 +2504,13 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+    /*
+     * PROBLEM: Most Frequent Number Following Key In an Array (LeetCode 2190)
+     * Find the most frequent target that appears immediately after key in nums.
+     *
+     * ALGORITHM: Sliding window frequency count on key-target pairs
+     * TC: O(n) | SC: O(n)
+     */
     // Author : Anand
     public int mostFrequent(int[] nums, int key) {
 
@@ -2070,8 +2532,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
-    // Author : Anand
-
+    /*
+     * PROBLEM: Sort the Jumbled Numbers (LeetCode 2191)
+     * Sort nums by their mapped values (each digit replaced via mapping array), preserving relative order for equal mapped values.
+     *
+     * ALGORITHM: Map each number to its jumbled value, sort by mapped value using TreeMap
+     * TC: O(n log n * d) | SC: O(n)  where d = digits per number
+     */
     // Author : Anand
     public int[] sortJumbled(int[] mapping, int[] nums) {
         Map<Integer, List<Integer>> freq = new TreeMap<>();
@@ -2107,6 +2574,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Cells in a Range on an Excel Sheet (LeetCode 2194)
+     * Return a list of all cells in the rectangular range defined by two Excel-style cell references.
+     *
+     * ALGORITHM: Double loop over column letters and row digits
+     * TC: O(r*c) | SC: O(r*c)
+     */
     // Author : Anand
     public List<String> cellsInRange(String s) {
         String[] cells = s.split(":");
@@ -2135,6 +2609,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Append K Integers With Minimal Sum (LeetCode 2195)
+     * Find the minimum possible sum of k positive integers not present in nums.
+     *
+     * ALGORITHM: Sort nums, shift the k smallest missing positives upward using arithmetic series
+     * TC: O(n log n) | SC: O(1)
+     */
     // Author : Anand
     public long minimalKSum(int[] nums, int k) {
         int len = nums.length;
@@ -2199,6 +2680,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Find All K-Distant Indices in an Array (LeetCode 2200)
+     * Find all indices i such that there exists j where nums[j]==key and |i-j|<=k.
+     *
+     * ALGORITHM: Brute Force / Two-pass scan
+     * TC: O(n^2) | SC: O(n)
+     */
     public List<Integer> findKDistantIndices(int[] nums, int key, int k) {
         Set<Integer> ans = new HashSet<>();
         List<Integer> choice = new ArrayList<>();
@@ -2218,7 +2706,13 @@ Output: [1,2,2,3,5,6]
         return sortedList;
     }
 
-    // Author : Anand
+    /*
+     * PROBLEM: Maximum Value at a Given Index in a Bounded Array (LeetCode 2203)
+     * Find the maximum top element of a stack after exactly k push/pop operations.
+     *
+     * ALGORITHM: Greedy / Simulation
+     * TC: O(n) | SC: O(1)
+     */
     public int maximumTop(int[] nums, int k) {
         int max = -1;
 
@@ -2249,7 +2743,13 @@ Output: [1,2,2,3,5,6]
         return max;
     }
 
-    // Author : Anand
+    /*
+     * PROBLEM: Count Artifacts That Can Be Extracted (LeetCode 2201)
+     * Count how many rectangular artifacts are fully covered by the given dig positions.
+     *
+     * ALGORITHM: HashSet lookup
+     * TC: O(n^2 + d) | SC: O(d)
+     */
     public int digArtifacts(int n, int[][] artifacts, int[][] dig) {
         Set<List<Integer>> digsWell = new HashSet<>();
         for (int[] d : dig) digsWell.add(Arrays.stream(d).boxed().collect(Collectors.toList()));
@@ -2276,7 +2776,13 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
-    // Author :Anand
+    /*
+     * PROBLEM: Count Hills and Valleys in an Array (LeetCode 2210)
+     * Count elements that are strictly greater (hill) or strictly smaller (valley) than both neighbors.
+     *
+     * ALGORITHM: Linear scan with deduplication
+     * TC: O(n^2) | SC: O(1)
+     */
     public int countHillValley(int[] nums) {
 
         int cnt = 0;
@@ -2309,7 +2815,13 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
-    // Author :Anand
+    /*
+     * PROBLEM: Count Collisions on a Road (LeetCode 2211)
+     * Count total collisions when cars moving left/right meet, stopping at collision points.
+     *
+     * ALGORITHM: Two-pointer / trim outer non-colliding cars
+     * TC: O(n) | SC: O(1)
+     */
     public int countCollisions(String s) {
         int l = 0, n = s.length(), r = n - 1, ans = 0;
 
@@ -2327,13 +2839,12 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-    Input: nums1 = [1,2,3], nums2 = [2,4,6]
-    Output: [[1,3],[4,6]]
-    Input: nums1 = [1,2,3,3], nums2 = [1,1,2,2]
-    Output: [[3],[]]
-
+     * PROBLEM: Find the Difference of Two Arrays (LeetCode 2215)
+     * Return two lists: elements unique to nums1 and elements unique to nums2.
+     *
+     * ALGORITHM: Set difference
+     * TC: O(n + m) | SC: O(n + m)
      */
-    // Author : Anand
     public List<List<Integer>> findDifference(int[] nums1, int[] nums2) {
         List<List<Integer>> ans = new ArrayList<>();
         List<Integer> ans1 = Arrays.stream(nums1).boxed().distinct().collect(Collectors.toList());
@@ -2347,7 +2858,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
-    // Author : Anand
+    /*
+     * PROBLEM: Minimum Deletions to Make Array Beautiful (LeetCode 2216)
+     * Delete minimum elements so the array has even length and no adjacent equal elements at even indices.
+     *
+     * ALGORITHM: Greedy linear scan
+     * TC: O(n) | SC: O(1)
+     */
     public int minDeletion(int[] nums) {
         int ans = 0;
         int n = nums.length;
@@ -2361,15 +2878,12 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-    Input: queries = [1,2,3,4,5,90], intLength = 3
-    Output: [101,111,121,131,141,999]
-    Explanation:
-    The first few palindromes of length 3 are:
-    101, 111, 121, 131, 141, 151, 161, 171, 181, 191, 201, ...
-    The 90th palindrome of length 3 is 999.
-
+     * PROBLEM: Find Palindrome With Fixed Length (LeetCode 2217)
+     * For each query k, find the k-th smallest palindrome of given intLength.
+     *
+     * ALGORITHM: Math / Palindrome construction from half
+     * TC: O(q * L) | SC: O(q)
      */
-    // Author : Anand
     public long[] kthPalindrome(int[] queries, int intLength) {
         long[] ans = new long[queries.length];
         int pw = intLength % 2 == 0 ? (intLength / 2) - 1 : (intLength / 2);
@@ -2391,7 +2905,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
-    // Author: Anand
+    /*
+     * PROBLEM: Find Triangular Sum of an Array (LeetCode 2221)
+     * Repeatedly replace array with pairwise digit sums mod 10 until one element remains.
+     *
+     * ALGORITHM: Simulation / iteration
+     * TC: O(n^2) | SC: O(n)
+     */
     public int triangularSum(int[] nums) {
         List<Integer> ans = Arrays.stream(nums).boxed().collect(Collectors.toList());
         while (ans.size() > 1) {
@@ -2404,7 +2924,13 @@ Output: [1,2,2,3,5,6]
         return ans.get(0);
     }
 
-    // Author: Anand
+    /*
+     * PROBLEM: Largest Number After Digit Swaps by Parity (LeetCode 2231)
+     * Swap digits of the same parity to maximize the resulting number.
+     *
+     * ALGORITHM: Greedy / sort digits by parity groups
+     * TC: O(d log d) | SC: O(d)
+     */
     public int largestInteger(int num) {
         List<Integer> even = new ArrayList<>();
         List<Integer> odd = new ArrayList<>();
@@ -2437,10 +2963,12 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-      I = [2,-1,1]
-      O = 1
+     * PROBLEM: Find Closest Number to Zero (LeetCode 2239)
+     * Find the number in the array with minimum absolute value; prefer positive on tie.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(n) | SC: O(n)
      */
-    // Author : Anand
     public int findClosestNumber(int[] nums) {
         int ans = Integer.MAX_VALUE;
         List<Integer> list = new ArrayList<>();
@@ -2459,15 +2987,12 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-    Input: total = 20, cost1 = 10, cost2 = 5
-    Output: 9
-    Explanation: The price of a pen is 10 and the price of a pencil is 5.
-    - If you buy 0 pens, you can buy 0, 1, 2, 3, or 4 pencils.
-    - If you buy 1 pen, you can buy 0, 1, or 2 pencils.
-    - If you buy 2 pens, you cannot buy any pencils.
-    The total number of ways to buy pens and pencils is 5 + 3 + 1 = 9.
+     * PROBLEM: Number of Ways to Buy Pens and Pencils (LeetCode 2240)
+     * Count ordered pairs (p, q) of pens and pencils purchasable within the given budget.
+     *
+     * ALGORITHM: Greedy enumeration
+     * TC: O(total / cost1) | SC: O(1)
      */
-    // Author : Anand
     public long waysToBuyPensPencils(int total, int cost1, int cost2) {
         long ans = 0;
         if (total < cost1 && total < cost2) return 1;
@@ -2483,7 +3008,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
-    // Author: Anand
+    /*
+     * PROBLEM: Calculate Digit Sum of a String (LeetCode 2243)
+     * Repeatedly split string into groups of k, replace each group with its digit sum string.
+     *
+     * ALGORITHM: Simulation / string manipulation
+     * TC: O(n) | SC: O(n)
+     */
     public String digitSum(String s, int k) {
         while (s.length() > k) {
             StringBuilder sb = new StringBuilder();
@@ -2499,7 +3030,13 @@ Output: [1,2,2,3,5,6]
         return s;
     }
 
-    //Author: Anand
+    /*
+     * PROBLEM: Intersection of Multiple Arrays (LeetCode 2248)
+     * Return sorted list of integers present in every sub-array of nums.
+     *
+     * ALGORITHM: Iterative set intersection
+     * TC: O(n * m) | SC: O(n)
+     */
     public List<Integer> intersection(int[][] nums) {
         List<Integer> ans = new ArrayList<>();
         for (int[] num : nums) {
@@ -2511,7 +3048,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
-    //Author: Anand
+    /*
+     * PROBLEM: Count Lattice Points Inside a Circle (LeetCode 2249)
+     * Count integer lattice points that lie on or inside at least one of the given circles.
+     *
+     * ALGORITHM: Brute force bounding box + distance check
+     * TC: O(k * r^2) | SC: O(points)
+     */
     public int countLatticePoints(int[][] circles) {
         Set<Point> ans = new HashSet<>();
 
@@ -2529,16 +3072,26 @@ Output: [1,2,2,3,5,6]
         return ans.size();
     }
 
-    // Author : Anand
-    // Easy, can skip
+    /*
+     * PROBLEM: Count Prefixes of a Given String (LeetCode 2255)
+     * Count how many words in the array are a prefix of string s.
+     *
+     * ALGORITHM: Linear scan / startsWith check
+     * TC: O(n * L) | SC: O(1)
+     */
     public int countPrefixes(String[] words, String s) {
         int cnt = 0;
         for (String word : words) if (s.startsWith(word)) cnt++;
         return cnt;
     }
 
-    // Author: Anand
-    // Have a look at edge case, precisely
+    /*
+     * PROBLEM: Minimum Average Difference (LeetCode 2256)
+     * Find the index with minimum absolute difference between left and right sub-array averages.
+     *
+     * ALGORITHM: Prefix sum
+     * TC: O(n) | SC: O(n)
+     */
     public int minimumAverageDifference(int[] nums) {
         int n = nums.length;
         long[] prefSum = new long[n];
@@ -2556,7 +3109,13 @@ Output: [1,2,2,3,5,6]
         return idx;
     }
 
-    //Author: Anand
+    /*
+     * PROBLEM: Maximum Consecutive Floors Without Special Floors (LeetCode 2274)
+     * Find the longest consecutive range of floors with no special floor, between bottom and top.
+     *
+     * ALGORITHM: Sort + linear scan gaps
+     * TC: O(n log n) | SC: O(1)
+     */
     public int maxConsecutive(int bottom, int top, int[] special) {
 
         int ans = 0;
@@ -2578,7 +3137,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
-    // Author: Anand
+    /*
+     * PROBLEM: Largest 3-Same-Digit Number in String (LeetCode 2264)
+     * Find the largest "good" integer: a substring of three consecutive equal digits.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(n) | SC: O(1)
+     */
     public String largestGoodInteger(String num) {
 
         Set<String> goodIntegers = new HashSet<>();
@@ -2593,7 +3158,13 @@ Output: [1,2,2,3,5,6]
         return max == Integer.MIN_VALUE ? "" : String.format("%03d", max);
     }
 
-    // Author: Anand
+    /*
+     * PROBLEM: K-Divisible Elements Subarrays (LeetCode 2261) / Divisor Substrings (LeetCode 2269)
+     * Count k-length substrings of num (as integers) that evenly divide num.
+     *
+     * ALGORITHM: Sliding window / substring enumeration
+     * TC: O(n) | SC: O(1)
+     */
     public int divisorSubstrings(int num, int k) {
 
         int ans = 0;
@@ -2610,17 +3181,12 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-    Input: nums = [10,4,-8,7]
-    Output: 2
-    Explanation:
-    There are three ways of splitting nums into two non-empty parts:
-    - Split nums at index 0. Then, the first part is [10], and its sum is 10. The second part is [4,-8,7], and its sum is 3. Since 10 >= 3, i = 0 is a valid split.
-    - Split nums at index 1. Then, the first part is [10,4], and its sum is 14. The second part is [-8,7], and its sum is -1. Since 14 >= -1, i = 1 is a valid split.
-    - Split nums at index 2. Then, the first part is [10,4,-8], and its sum is 6. The second part is [7], and its sum is 7. Since 6 < 7, i = 2 is not a valid split.
-    Thus, the number of valid splits in nums is 2.
-
+     * PROBLEM: Number of Ways to Split Array (LeetCode 2270)
+     * Count valid splits where left prefix sum >= right suffix sum.
+     *
+     * ALGORITHM: Prefix sum
+     * TC: O(n) | SC: O(n)
      */
-    // Author: Anand
     public int waysToSplitArray(int[] nums) {
 
         long[] prefixSum = new long[nums.length];
@@ -2640,11 +3206,12 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-    [[83,35],[79,51],[61,48],[54,87],[44,93],[22,5],[87,28],[64,8],[89,78],[62,83],[58,72],[48,7],[97,16],[27,100],[65,48],[11,31],[29,76],[93,29],[72,59],[73,74],[9,90],[66,81],[12,8],[86,80],[84,43],[36,63],[80,45],[81,88],[95,5],[40,59]]
-    Learning: Never use double while calculating slope
-    Use:- y2-y1 * x1-x0 == y1-y0 * x2-x1 to avoid precision error
+     * PROBLEM: Minimum Lines to Represent a Line Chart (LeetCode 2280)
+     * Count minimum line segments to connect all sorted stock price points.
+     *
+     * ALGORITHM: Sort + slope comparison (cross-multiplication to avoid float)
+     * TC: O(n log n) | SC: O(1)
      */
-    // Author : Anand
     public int minimumLines(int[][] stockPrices) {
         if (stockPrices.length == 1) return 0;
         int cnt = 1;
@@ -2673,17 +3240,12 @@ Output: [1,2,2,3,5,6]
      */
 
     /*
-    Input: num = "1210"
-    Output: true
-    Explanation:
-    num[0] = '1'. The digit 0 occurs once in num.
-    num[1] = '2'. The digit 1 occurs twice in num.
-    num[2] = '1'. The digit 2 occurs once in num.
-    num[3] = '0'. The digit 3 occurs zero times in num.
-    The condition holds true for every index in "1210", so return true.
-
+     * PROBLEM: Check if Number Has Equal Digit Count and Digit Value (LeetCode 2283)
+     * Verify that num[i] equals the count of digit i present in the string num.
+     *
+     * ALGORITHM: Frequency map
+     * TC: O(n) | SC: O(1)
      */
-    //Author: Anand
     public boolean digitCount(String num) {
         Map<Integer, Integer> freq = new HashMap<>();
         for (int i = 0; i < num.length(); i++) {
@@ -2701,15 +3263,12 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-    Input: messages = ["Hello userTwooo","Hi userThree","Wonderful day Alice","Nice day userThree"], senders = ["Alice","userTwo","userThree","Alice"]
-    Output: "Alice"
-    Explanation: Alice sends a total of 2 + 3 = 5 words.
-    userTwo sends a total of 2 words.
-    userThree sends a total of 3 words.
-    Since Alice has the largest word count, we return "Alice".
-
+     * PROBLEM: Sender With Largest Word Count (LeetCode 2284)
+     * Find the sender who sent the most words; break ties lexicographically.
+     *
+     * ALGORITHM: HashMap frequency count + sort by value
+     * TC: O(n * w) | SC: O(s)
      */
-    //Author: Anand
     public String largestWordCount(String[] messages, String[] senders) {
         Map<String, Integer> freq = new HashMap<>();
         int idx = 0;
@@ -2736,7 +3295,13 @@ Output: [1,2,2,3,5,6]
         return result;
     }
 
-    //Author: Anand
+    /*
+     * PROBLEM: Apply Discount to Prices (LeetCode 2288)
+     * Apply a percentage discount to all prices (words starting with '$') in a sentence.
+     *
+     * ALGORITHM: String parsing / formatting
+     * TC: O(n) | SC: O(n)
+     */
     public String discountPrices(String sentence, int discount) {
         String[] words = sentence.split(" ");
         StringBuilder sb = new StringBuilder();
@@ -2755,7 +3320,13 @@ Output: [1,2,2,3,5,6]
         return sb.toString().trim();
     }
 
-    //Author: Anand
+    /*
+     * PROBLEM: Min-Max Game (LeetCode 2293)
+     * Repeatedly halve array using alternating min/max operations until one element remains.
+     *
+     * ALGORITHM: Simulation
+     * TC: O(n) | SC: O(n)
+     */
     public int minMaxGame(int[] nums) {
         while (nums.length > 1) {
             int[] nn = new int[nums.length / 2];
@@ -2790,7 +3361,13 @@ Output: [1,2,2,3,5,6]
     The difference between the maximum and minimum value in the second subsequence is 6 - 5 = 1.
     Since two subsequences were created, we return 2. It can be shown that 2 is the minimum number of subsequences needed.=
      */
-    //Author: Anand
+    /*
+     * PROBLEM: Partition Array Such That Maximum Difference Is K (LeetCode 2294)
+     * Find minimum number of subsequences such that max-min within each is <= k.
+     *
+     * ALGORITHM: Greedy / sort + scan
+     * TC: O(n log n) | SC: O(1)
+     */
     public int partitionArray(int[] nums, int k) {
         int ans = 1;
         int min = -1;
@@ -2809,19 +3386,11 @@ Output: [1,2,2,3,5,6]
 //23/07/2022    -----------------------------------------------------------------------------------------
 
     /*
-    A password is said to be strong if it satisfies all the following criteria:
-
-    It has at least 8 characters.
-    It contains at least one lowercase letter.
-    It contains at least one uppercase letter.
-    It contains at least one digit.
-    It contains at least one special character. The special characters are the characters in the following string: "!@#$%^&*()-+".
-    It does not contain 2 of the same character in adjacent positions (i.e., "aab" violates this condition, but "aba" does not).
-
-    Input: password = "IloveLe3tcode!"
-    Output: true
-    Explanation: The password meets all the requirements. Therefore, we return true.
-
+     * PROBLEM: Strong Password Checker II (LeetCode 2299)
+     * Check if password meets all strong-password criteria including no adjacent duplicates.
+     *
+     * ALGORITHM: Single-pass validation
+     * TC: O(n) | SC: O(1)
      */
     public boolean strongPasswordCheckerII(String password) {
         if (password.length() < 8) return false;
@@ -2856,13 +3425,11 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-    Input: s = "fool3e7bar", sub = "leet", mappings = [["e","3"],["t","7"],["t","8"]]
-    Output: true
-    Explanation: Replace the first 'e' in sub with '3' and 't' in sub with '7'.
-    TC = O(n2)
-     "fool3e7bar"
-    "leet"
-    [["e","3"],["t","7"],["t","8"]]
+     * PROBLEM: Check Whether Two Strings are Almost Equivalent (LeetCode 2309) / Match Substring After Replacement (LeetCode 2301)
+     * Check if sub can be found as a substring of s after applying character mappings.
+     *
+     * ALGORITHM: HashMap + substring matching
+     * TC: O(n * m) | SC: O(m)
      */
     public boolean matchReplacement(String s, String sub, char[][] mappings) {
         Map<Character, Set<Character>> mappingc = new HashMap<>();
@@ -2902,13 +3469,12 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-    Input: s = "arRAzFif"
-    Output: "R"
-    Explanation:
-    The letter 'R' is the greatest letter to appear in both lower and upper case.
-    Note that 'A' and 'F' also appear in both lower and upper case, but 'R' is greater than 'F' or 'A'.
+     * PROBLEM: Greatest English Letter in Upper and Lower Case (LeetCode 2309)
+     * Find the greatest letter that appears in both uppercase and lowercase in s.
+     *
+     * ALGORITHM: HashSet lookup
+     * TC: O(n) | SC: O(1)
      */
-    //Author: Anand
     public String greatestLetter(String s) {
         String ans = "";
         Set<Character> lowercase = new HashSet<>();
@@ -2927,13 +3493,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
-    // Author: Anand
-    // Similar to Div-2 codeforces
     /*
-    Observe a pattern that you can always group all zeros to left
-    and then shrink to single zero via 00 -> 10 operation
-    Now generate the final result use fx,z
-      */
+     * PROBLEM: Maximize the Topmost Element After K Moves (LeetCode 2202) / Maximum Binary String After Change (LeetCode 1702)
+     * Make binary string lexicographically largest by converting "00" -> "10".
+     *
+     * ALGORITHM: Greedy / count zeros, place single zero optimally
+     * TC: O(n) | SC: O(n)
+     */
     public String maximumBinaryString(String binary) {
         int fz = Integer.MAX_VALUE, z = 0;
         for (int i = 0; i < binary.length(); i++) {
@@ -2967,13 +3533,12 @@ Output: [1,2,2,3,5,6]
     There are a total of 5 bad pairs, so we return 5.
      */
 
-    //Author: Anand
     /*
-    Input: s = "yo|uar|e**|b|e***au|tifu|l"
-    Output: 5
-    Explanation: The considered characters are underlined: "yo|uar|e**|b|e***au|tifu|l". There are 5 asterisks considered. Therefore, we return 5.
-     [0,0,2,3,0,0]
-     5
+     * PROBLEM: Count Asterisks (LeetCode 2315)
+     * Count '*' characters in s that are not between a pair of '|' delimiters.
+     *
+     * ALGORITHM: Split by '|' and sum even-indexed segments
+     * TC: O(n) | SC: O(n)
      */
     public int countAsterisks(String s) {
         int ans = 0;
@@ -2982,7 +3547,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
-    //Author: Anand
+    /*
+     * PROBLEM: Decode the Message (LeetCode 2325)
+     * Decode message using a substitution cipher derived from the key string.
+     *
+     * ALGORITHM: HashMap cipher construction + substitution
+     * TC: O(n) | SC: O(1)
+     */
     public String decodeMessage(String key, String message) {
         if (message.trim().isEmpty()) return message;
         Map<Character, Character> map = new HashMap<>();
@@ -3017,17 +3588,13 @@ Output: [1,2,2,3,5,6]
         return sb.toString();
     }
 
-    //Author: Anand
     /*
-    Input: nums = [18,43,36,13,7]
-    Output: 54
-    Explanation: The pairs (i, j) that satisfy the conditions are:
-    - (0, 2), both numbers have a sum of digits equal to 9, and their sum is 18 + 36 = 54.
-    - (1, 4), both numbers have a sum of digits equal to 7, and their sum is 43 + 7 = 50.
-    So the maximum sum that we can obtain is 54.
+     * PROBLEM: Find Maximum Sum of Pair with Equal Sum of Digits (LeetCode 2342)
+     * Find the maximum sum of any pair of numbers with the same digit sum.
+     *
+     * ALGORITHM: HashMap grouping by digit sum + sort
+     * TC: O(n log n) | SC: O(n)
      */
-    //Author: Anand
-    //TC = O(nlogn)
     public int maximumSum(int[] nums) {
         Arrays.sort(nums);
         Map<Long, List<Integer>> map = new HashMap<>(); // store sum of digits, indexes
@@ -3055,6 +3622,13 @@ Output: [1,2,2,3,5,6]
         return flag ? max : -1;
     }
 
+    /*
+     * PROBLEM: Sum of Digits Helper (Helper)
+     * Compute the sum of decimal digits of a non-negative integer.
+     *
+     * ALGORITHM: Digit extraction via modulo
+     * TC: O(log n) | SC: O(1)
+     */
     private long sod(int num) {
         long cnt = 0L;
         while (num > 0) {
@@ -3064,7 +3638,13 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
-    //Author: Anand
+    /*
+     * PROBLEM: Smallest Value of the Rearranged Number (LeetCode 2165) / Smallest Number in Infinite Set (LeetCode 2336) / Smallest Trimmed Numbers (LeetCode 2343)
+     * For each query [k, trim], find the index of the k-th smallest number after trimming the last trim digits.
+     *
+     * ALGORITHM: HashMap + TreeMap per query simulation
+     * TC: O(q * n log n) | SC: O(n)
+     */
     public int[] smallestTrimmedNumbers(String[] nums, int[][] queries) {
         int[] ans = new int[queries.length];
         int idx = 0;
@@ -3099,12 +3679,24 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
-    //Author: Anand
+    /*
+     * PROBLEM: Evaluate Boolean Binary Tree (LeetCode 2331)
+     * Evaluate a full binary tree where leaves are 0/1 and internal nodes are OR(2)/AND(3).
+     *
+     * ALGORITHM: DFS / post-order recursion
+     * TC: O(n) | SC: O(h)
+     */
     public boolean evaluateTree(TreeNode root) {
         return helper(root);
     }
 
-    // L-> R -> root
+    /*
+     * PROBLEM: Evaluate Boolean Binary Tree - DFS Helper (Helper)
+     * Recursively evaluates a boolean binary tree node using post-order traversal.
+     *
+     * ALGORITHM: DFS post-order
+     * TC: O(n) | SC: O(h)
+     */
     private boolean helper(TreeNode root) {
         // base case '
         if (root == null) return true;
@@ -3123,16 +3715,12 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-    Input: nums = [2,3,2,4,3], numsDivide = [9,6,9,3,15]
-    Output: 2
-    Explanation:
-    The smallest element in [2,3,2,4,3] is 2, which does not divide all the elements of numsDivide.
-    We use 2 deletions to delete the elements in nums that are equal to 2 which makes nums = [3,4,3].
-    The smallest element in [3,4,3] is 3, which divides all the elements of numsDivide.
-    It can be shown that 2 is the minimum number of deletions needed.
+     * PROBLEM: Minimum Deletions to Make Array Divisible (LeetCode 2344)
+     * Find minimum deletions from nums so its smallest element divides all elements of numsDivide.
+     *
+     * ALGORITHM: GCD of numsDivide + sort nums
+     * TC: O(n log n) | SC: O(1)
      */
-    //Author: Anand
-    //TC = O(nlogn)
     public int minOperations(int[] nums, int[] numsDivide) {
         long gcd = numsDivide[0];
         for (int i = 1; i < numsDivide.length; i++) gcd = _gcd(gcd, numsDivide[i]);
@@ -3146,7 +3734,13 @@ Output: [1,2,2,3,5,6]
         return -1;
     }
 
-    //Author: Anand
+    /*
+     * PROBLEM: Number of People Aware of a Secret (LeetCode 2327)
+     * Count people who know a secret on day n given delay before sharing and forget day.
+     *
+     * ALGORITHM: Simulation with HashMap
+     * TC: O(n^2) | SC: O(n)
+     */
     public int peopleAwareOfSecret(int n, int delay, int forget) {
         final int mod = 1_000_000_007;
 
@@ -3188,19 +3782,12 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-    "Flush": Five cards of the same suit.
-    "Three of a Kind": Three cards of the same rank.
-    "Pair": Two cards of the same rank.
-    "High Card": Any single card.
-
-    Input: ranks = [4,4,2,4,4], suits = ["d","a","a","b","c"]
-    Output: "Three of a Kind"
-    Explanation: The hand with the first, second, and fourth card consists of 3 cards with the same rank, so we have a "Three of a Kind".
-    Note that we could also make a "Pair" hand but "Three of a Kind" is a better hand.
-    Also note that other cards could be used to make the "Three of a Kind" hand.
-
+     * PROBLEM: Determine the Winner of a Bowling Game (LeetCode 2660) / Best Poker Hand (LeetCode 2347)
+     * Determine the best poker hand (Flush, Three of a Kind, Pair, High Card) from 5 cards.
+     *
+     * ALGORITHM: Greedy / frequency count
+     * TC: O(1) | SC: O(1)
      */
-    //Author: Anand
     public String bestHand(int[] ranks, char[] suits) {
         char c = '#';
         boolean sameSuite = true;
@@ -3229,12 +3816,12 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-    Input: grid = [[3,2,1],[1,7,6],[2,7,7]]
-    Output: 1
-    Explanation: There is 1 equal row and column pair:
-    - (Row 2, Column 1): [2,7,7]
+     * PROBLEM: Equal Row and Column Pairs (LeetCode 2352)
+     * Count pairs (row i, column j) where the row sequence equals the column sequence.
+     *
+     * ALGORITHM: String serialization + comparison
+     * TC: O(n^2) | SC: O(n^2)
      */
-    //Author: Anand
     public int equalPairs(int[][] grid) {
         int ans = 0;
 
@@ -3271,15 +3858,12 @@ Output: [1,2,2,3,5,6]
      */
 
     /*
-    Input: grades = [10,6,12,7,3,5]
-    Output: 3
-    Explanation: The following is a possible way to form 3 groups of students:
-    - 1st group has the students with grades = [12]. Sum of grades: 12. Student count: 1
-    - 2nd group has the students with grades = [6,7]. Sum of grades: 6 + 7 = 13. Student count: 2
-    - 3rd group has the students with grades = [10,3,5]. Sum of grades: 10 + 3 + 5 = 18. Student count: 3
-    It can be shown that it is not possible to form more than 3 groups.
+     * PROBLEM: Maximum Number of Groups Entering a Competition (LeetCode 2358)
+     * Find the maximum number of groups where each group has more students and higher sum than the prior.
+     *
+     * ALGORITHM: Greedy / sort + cumulative grouping
+     * TC: O(n log n) | SC: O(1)
      */
-    // Author: Anand
     public int maximumGroups(int[] grades) {
         Arrays.sort(grades);
         int ind = 0, cnt = 0;
@@ -3291,15 +3875,11 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-    Input: items1 = [[1,1],[3,2],[2,3]], items2 = [[2,1],[3,2],[1,3]]
-    Output: [[1,4],[2,4],[3,4]]
-    Explanation:
-    The item with value = 1 occurs in items1 with weight = 1 and in items2 with weight = 3, total weight = 1 + 3 = 4.
-    The item with value = 2 occurs in items1 with weight = 3 and in items2 with weight = 1, total weight = 3 + 1 = 4.
-    The item with value = 3 occurs in items1 with weight = 2 and in items2 with weight = 2, total weight = 2 + 2 = 4.
-    Therefore, we return [[1,4],[2,4],[3,4]].
-
-     //Author: Anand
+     * PROBLEM: Merge Similar Items (LeetCode 2363)
+     * Merge two item lists summing weights for items with the same value; return sorted by value.
+     *
+     * ALGORITHM: TreeMap aggregation
+     * TC: O(n log n) | SC: O(n)
      */
     public List<List<Integer>> mergeSimilarItems(int[][] items1, int[][] items2) {
         Map<Integer, Integer> tm = new TreeMap<>();// v->tw
@@ -3314,6 +3894,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Count Number of Bad Pairs (LeetCode 2364)
+     * Count pairs (i,j) where i<j and j-i != nums[j]-nums[i].
+     *
+     * ALGORITHM: HashMap frequency (complement counting)
+     * TC: O(n) | SC: O(n)
+     */
     public long countBadPairs(int[] nums) {
         long cnt = 0L;
         TreeMap<Integer, Integer> diffMap = new TreeMap<>();
@@ -3337,20 +3924,11 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-    Input: tasks = [1,2,1,2,3,1], space = 3
-    Output: 9
-    Explanation:
-    One way to complete all tasks in 9 days is as follows:
-    Day 1: Complete the 0th task.
-    Day 2: Complete the 1st task.
-    Day 3: Take a break.
-    Day 4: Take a break.
-    Day 5: Complete the 2nd task.
-    Day 6: Complete the 3rd task.
-    Day 7: Take a break.
-    Day 8: Complete the 4th task.
-    Day 9: Complete the 5th task.
-    It can be shown that the tasks cannot be completed in less than 9 days.
+     * PROBLEM: Task Scheduler II (LeetCode 2365)
+     * Find minimum number of days to complete all tasks with mandatory cooldown space between same-type tasks.
+     *
+     * ALGORITHM: HashMap (last completion day tracking) + greedy
+     * TC: O(n) | SC: O(n)
      */
     public long taskSchedulerII(int[] tasks, int space) {
         long days = 1;
@@ -3371,13 +3949,12 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-    Input: nums = [0,1,4,6,7,10], diff = 3
-    Output: 2
-    Explanation:
-    (1, 2, 4) is an arithmetic triplet because both 7 - 4 == 3 and 4 - 1 == 3.
-    (2, 4, 5) is an arithmetic triplet because both 10 - 7 == 3 and 7 - 4 == 3.
+     * PROBLEM: Count Number of Arithmetic Triplets (LeetCode 2367)
+     * Count strictly increasing triplets (i,j,k) where nums[j]-nums[i]==diff and nums[k]-nums[j]==diff.
+     *
+     * ALGORITHM: Brute force triple nested loop
+     * TC: O(n^3) | SC: O(1)
      */
-    //Author: Anand
     public int arithmeticTriplets(int[] nums, int diff) {
 
         int cnt = 0;
@@ -3392,12 +3969,12 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-    Input: n = 7, edges = [[0,1],[1,2],[3,1],[4,0],[0,5],[5,6]], restricted = [4,5]
-    Output: 4
-    Explanation: The diagram above shows the tree.
-    We have that [0,1,2,3] are the only nodes that can be reached from node 0 without visiting a restricted node.
+     * PROBLEM: Reachable Nodes With Restrictions (LeetCode 2368)
+     * Count nodes reachable from node 0 in a tree without passing through restricted nodes.
+     *
+     * ALGORITHM: BFS graph traversal
+     * TC: O(n) | SC: O(n)
      */
-    //Author: Anand
     public int reachableNodes(int n, int[][] edges, int[] restricted) {
 
         int cnt = 0;
@@ -3435,6 +4012,13 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+    /*
+     * PROBLEM: Unique Email Addresses (LeetCode 929)
+     * Count unique email addresses after applying local-name rules (dots ignored, '+' truncates).
+     *
+     * ALGORITHM: String manipulation + HashSet
+     * TC: O(n * L) | SC: O(n)
+     */
     public int numUniqueEmails(String[] emails) {
         Set<String> uniqueEmails = new HashSet<>();
         for (String email : emails) {
@@ -3444,7 +4028,13 @@ Output: [1,2,2,3,5,6]
         return uniqueEmails.size();
     }
 
-    //Author: Anand
+    /*
+     * PROBLEM: Fruit Into Baskets (LeetCode 904)
+     * Find the longest subarray containing at most 2 distinct fruit types.
+     *
+     * ALGORITHM: Sliding window
+     * TC: O(n) | SC: O(1)
+     */
     public int totalFruit(int[] fruits) {
         Map<Integer, Integer> map = new HashMap<>();
         int maxi = Integer.MIN_VALUE;
@@ -3485,7 +4075,13 @@ Output: [1,2,2,3,5,6]
         return maxi;
     }
 
-    //Author: Anand
+    /*
+     * PROBLEM: Node With Highest Edge Score (LeetCode 2374)
+     * Find the node with the highest sum of indices of nodes pointing to it; break ties by smaller index.
+     *
+     * ALGORITHM: Graph aggregation + TreeMap
+     * TC: O(n) | SC: O(n)
+     */
     public int edgeScore(int[] edges) {
         Map<Integer, List<Integer>> graph = new TreeMap<>();
 
@@ -3507,6 +4103,13 @@ Output: [1,2,2,3,5,6]
         return maxNode;
     }
 
+    /*
+     * PROBLEM: Move Pieces to Obtain a String (LeetCode 2337)
+     * Return true if pieces in start can move to reach target arrangement
+     *
+     * ALGORITHM: Two-pointer / order verification
+     * TC: O(n) | SC: O(n)
+     */
     public boolean canChange(String start, String target) {
         // order of insertion is maintained
         Map<Character, List<Integer>> maps = new LinkedHashMap<>(), mapt = new LinkedHashMap<>();
@@ -3542,6 +4145,13 @@ Output: [1,2,2,3,5,6]
         return true;
     }
 
+    /*
+     * PROBLEM: Complex Number Multiplication (LeetCode 537)
+     * Multiply two complex numbers given as strings, return result as string
+     *
+     * ALGORITHM: String parsing + arithmetic
+     * TC: O(1) | SC: O(1)
+     */
     public String complexNumberMultiply(String num1, String num2) {
 
         String[] n1 = num1.split("\\+");
@@ -3577,6 +4187,13 @@ Output: [1,2,2,3,5,6]
         return imag.insert(0, part + "+").toString();
     }
 
+    /*
+     * PROBLEM: Decode the Message (LeetCode 2515) / Diagonal Decode
+     * Decode ciphertext by reading diagonals of the character matrix
+     *
+     * ALGORITHM: Matrix construction + diagonal traversal
+     * TC: O(n) | SC: O(n)
+     */
     public String decodeCiphertext(String encodedText, int rows) {
 
         int col = encodedText.length() / rows;
@@ -3610,7 +4227,13 @@ Output: [1,2,2,3,5,6]
 
     }
 
-    //Author: Anand
+    /*
+     * PROBLEM: Minimum Recolors to Get K Consecutive Black Blocks (LeetCode 2379)
+     * Return min operations to get k consecutive Black blocks in a window
+     *
+     * ALGORITHM: Sliding window
+     * TC: O(n) | SC: O(1)
+     */
     public int minimumRecolors(String blocks, int k) {
 
         if (k > blocks.length()) return 0;
@@ -3638,17 +4261,12 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-    Input: s = "0110101"
-    Output: 4
-    Explanation:
-    After one second, s becomes "1011010".
-    After another second, s becomes "1101100".
-    After the third second, s becomes "1110100".
-    After the fourth second, s becomes "1111000".
-    No occurrence of "01" exists any longer, and the process needed 4 seconds to complete,
-    so we return 4.
+     * PROBLEM: Remove All Occurrences of a Substring (LeetCode 2379 / 2380)
+     * Return number of seconds to remove all "01" substrings via simulation
+     *
+     * ALGORITHM: Simulation / index tracking
+     * TC: O(n^2) | SC: O(n)
      */
-    //Author: Anand
     public int secondsToRemoveOccurrences(String s) {
         List<Integer> idx = new ArrayList<>();
         for (int i = 0; i < s.length(); i++) if (s.charAt(i) == '1') idx.add(i);
@@ -3677,19 +4295,12 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-    Input: n = 2, meetings = [[0,10],[1,5],[2,7],[3,4]]
-    Output: 0
-    Explanation:
-    - At time 0, both rooms are not being used. The first meeting starts in room 0.
-    - At time 1, only room 1 is not being used. The second meeting starts in room 1.
-    - At time 2, both rooms are being used. The third meeting is delayed.
-    - At time 3, both rooms are being used. The fourth meeting is delayed.
-    - At time 5, the meeting in room 1 finishes. The third meeting starts in room 1 for the time period [5,10).
-    - At time 10, the meetings in both rooms finish. The fourth meeting starts in room 0 for the time period [10,11).
-    Both rooms 0 and 1 held 2 meetings, so we return 0.
+     * PROBLEM: Shifting Letters II (LeetCode 2381)
+     * Apply range shift operations on string s with direction indicator
+     *
+     * ALGORITHM: Difference array + prefix sum
+     * TC: O(n log n) | SC: O(n)
      */
-
-    //Author: Anand
     public String shiftingLetters(String s, int[][] shifts) {
         Arrays.sort(shifts, Comparator.comparingInt(x -> x[0]));
         Map<List<Integer>, Integer> map = new LinkedHashMap<>();
@@ -3712,23 +4323,12 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-    Input: initialEnergy = 5, initialExperience = 3, energy = [1,4,3,2], experience = [2,6,3,1]
-    Output: 8
-    Explanation: You can increase your energy to 11 after 6 hours of training, and your experience to 5 after 2 hours of training.
-    You face the opponents in the following order:
-    - You have more energy and experience than the 0th opponent so you win.
-      Your energy becomes 11 - 1 = 10, and your experience becomes 5 + 2 = 7.
-    - You have more energy and experience than the 1st opponent so you win.
-      Your energy becomes 10 - 4 = 6, and your experience becomes 7 + 6 = 13.
-    - You have more energy and experience than the 2nd opponent so you win.
-      Your energy becomes 6 - 3 = 3, and your experience becomes 13 + 3 = 16.
-    - You have more energy and experience than the 3rd opponent so you win.
-      Your energy becomes 3 - 2 = 1, and your experience becomes 16 + 1 = 17.
-    You did a total of 6 + 2 = 8 hours of training before the competition, so we return 8.
-    It can be proven that no smaller answer exists.
-
+     * PROBLEM: Minimum Hours of Training to Win a Competition (LeetCode 2383)
+     * Return min training hours to have strictly more energy and exp than each opponent
+     *
+     * ALGORITHM: Greedy simulation
+     * TC: O(n) | SC: O(1)
      */
-    //Author: Anand
     public int minNumberOfHours(int initialEnergy, int initialExperience, int[] energy, int[] experience) {
         long es = Arrays.stream(energy).sum();
         long total = Math.max(es + 1 - initialEnergy, 0);
@@ -3742,14 +4342,12 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-    Input: num = "444947137"
-    Output: "7449447"
-    Explanation:
-    Use the digits "4449477" from "444947137" to form the palindromic integer "7449447".
-    It can be shown that "7449447" is the largest palindromic integer that can be formed.
-
+     * PROBLEM: Largest Palindromic Number (LeetCode 2384)
+     * Return largest palindromic number constructible from digits of num
+     *
+     * ALGORITHM: Frequency map + greedy construction
+     * TC: O(n) | SC: O(n)
      */
-    //Author: Anand
     public String largestPalindromic(String num) {
 
         Map<Integer, Integer> freq = new HashMap<>();
@@ -3795,7 +4393,13 @@ Output: [1,2,2,3,5,6]
         return sb.toString();
     }
 
-    //Author: Anand
+    /*
+     * PROBLEM: Minimum Amount of Time to Collect Garbage (LeetCode 2391)
+     * Return min time for three trucks to collect M, P, G garbage with travel costs
+     *
+     * ALGORITHM: HashMap tracking last position per type
+     * TC: O(n*k) | SC: O(1)
+     */
     public int garbageCollection(String[] garbage, int[] travel) {
         Map<Character, Integer> map = new HashMap<>();
         int ans = 0;
@@ -3811,7 +4415,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
-    //Author: Anand
+    /*
+     * PROBLEM: Check Whether Two Strings are Almost Equivalent (LC 2396) / Find Subarrays with Equal Sum
+     * Return true if any two adjacent-pair sums are equal
+     *
+     * ALGORITHM: HashSet + sliding window of size 2
+     * TC: O(n) | SC: O(n)
+     */
     public boolean findSubarrays(int[] nums) {
         Set<Integer> ts = new HashSet<>();
         for (int i = 0; i < nums.length - 1; i++) {
@@ -3822,6 +4432,13 @@ Output: [1,2,2,3,5,6]
         return false;
     }
 
+    /*
+     * PROBLEM: Maximum Rows Covered by Columns (LeetCode 2397)
+     * Return max rows fully covered when exactly cols columns are selected
+     *
+     * ALGORITHM: Backtracking + bitmask subset enumeration
+     * TC: O(C(n,k)*m) | SC: O(k)
+     */
     public int maximumRows(int[][] mat, int cols) {
 
         int m = mat.length;
@@ -3841,6 +4458,13 @@ Output: [1,2,2,3,5,6]
         return max;
     }
 
+    /*
+     * PROBLEM: Choose Columns Helper (LeetCode 2397)
+     * Enumerate all combinations of cols columns via backtracking
+     *
+     * ALGORITHM: Backtracking
+     * TC: O(C(n,k)) | SC: O(k)
+     */
     private void chooseCol(int m, int n, int cols, int[][] mat, HashSet<Integer> colTaken, int x) {
 
         if (cols == 0) {
@@ -3862,6 +4486,13 @@ Output: [1,2,2,3,5,6]
         }
     }
 
+    /*
+     * PROBLEM: Select Rows Helper (LeetCode 2397)
+     * Count rows where all 1-positions are within the selected column set
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(m*n) | SC: O(1)
+     */
     private int selectRows(HashSet<Integer> colTaken, int[][] mat) {
 
         int cnt = 0;
@@ -3881,6 +4512,13 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+    /*
+     * PROBLEM: Check Distances Between Same Letters (LeetCode 2399)
+     * Return true if distance between each pair of same letters matches distance array
+     *
+     * ALGORITHM: HashMap first-occurrence tracking
+     * TC: O(n) | SC: O(26)
+     */
     public boolean checkDistances(String s, int[] distance) {
 
         Map<Character, Integer> map = new HashMap();
@@ -3900,7 +4538,13 @@ Output: [1,2,2,3,5,6]
         return true;
     }
 
-    //Author: Anand
+    /*
+     * PROBLEM: Meeting Rooms III (LeetCode 2402)
+     * Return room number that hosted most meetings; ties broken by lower room index
+     *
+     * ALGORITHM: TreeMap + PriorityQueue simulation
+     * TC: O(m log n) | SC: O(n)
+     */
     public int mostBooked(int n, int[][] meetings) {
         long t = Long.MIN_VALUE;
 
@@ -3989,7 +4633,13 @@ Output: [1,2,2,3,5,6]
         return roomNo;
     }
 
-    //Author: Anand
+    /*
+     * PROBLEM: Most Frequent Even Element (LeetCode 2404)
+     * Return most frequent even element; -1 if none; ties broken by smaller value
+     *
+     * ALGORITHM: TreeMap frequency count
+     * TC: O(n log n) | SC: O(n)
+     */
     public int mostFrequentEven(int[] nums) {
 
         Map<Integer, Integer> tm = new TreeMap<>();
@@ -4008,7 +4658,13 @@ Output: [1,2,2,3,5,6]
         return elem;
     }
 
-    //Author: Anand
+    /*
+     * PROBLEM: Optimal Partition of String (LeetCode 2405)
+     * Return min number of substrings such that no character repeats in a substring
+     *
+     * ALGORITHM: Greedy + HashSet window
+     * TC: O(n) | SC: O(26)
+     */
     public int partitionString(String s) {
         int cnt = 0;
         Set<Character> set = new HashSet<>();
@@ -4026,6 +4682,13 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+    /*
+     * PROBLEM: Number Complement (LeetCode 476)
+     * Return bitwise complement of num (flip all bits in binary representation)
+     *
+     * ALGORITHM: Binary string flip
+     * TC: O(log n) | SC: O(log n)
+     */
     public int findComplement(int num) {
         String nums = Integer.toBinaryString(num);
         StringBuilder sb = new StringBuilder();
@@ -4033,6 +4696,13 @@ Output: [1,2,2,3,5,6]
         return Integer.parseInt(sb.toString(), 2);
     }
 
+    /*
+     * PROBLEM: Magical String (LeetCode 481)
+     * Return count of 1s in first n characters of the magical self-describing string
+     *
+     * ALGORITHM: String generation simulation
+     * TC: O(n) | SC: O(n)
+     */
     public int magicalString(int n) {
         int cnt = 0;
         StringBuilder sb = new StringBuilder();
@@ -4062,7 +4732,13 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
-    //Author: Anand
+    /*
+     * PROBLEM: Queue Reconstruction by Height (LeetCode 406)
+     * Reconstruct queue where each person[i] = [h, k] means h height, k taller-or-equal people in front
+     *
+     * ALGORITHM: Sort + insertion by k-index
+     * TC: O(n^2) | SC: O(n)
+     */
     public int[][] reconstructQueue(int[][] people) {
         int[][] ans = new int[people.length][2];
         Arrays.sort(people, Comparator.comparingInt(a -> a[0]));
@@ -4086,6 +4762,13 @@ Output: [1,2,2,3,5,6]
         return res;
     }
 
+    /*
+     * PROBLEM: License Key Formatting (LeetCode 482)
+     * Reformat license key string into groups of size k, first group may be shorter
+     *
+     * ALGORITHM: StringBuilder + group construction
+     * TC: O(n) | SC: O(n)
+     */
     public String licenseKeyFormatting(String s, int k) {
         StringBuilder original = new StringBuilder();
         Arrays.stream(s.split("-")).forEach(original::append);
@@ -4109,16 +4792,11 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-    Input: n = 10, logs = [[0,3],[2,5],[0,9],[1,15]]
-    Output: 1
-    Explanation:
-    Task 0 started at 0 and ended at 3 with 3 units of times.
-    Task 1 started at 3 and ended at 5 with 2 units of times.
-    Task 2 started at 5 and ended at 9 with 4 units of times.
-    Task 3 started at 9 and ended at 15 with 6 units of times.
-    The task with the longest time is task 3 and the employee with id 1 is the one that worked on it, so we return 1.
-
-
+     * PROBLEM: The Employee That Worked on the Longest Task (LeetCode 2432)
+     * Return id of employee who worked on the longest task; ties broken by smallest id
+     *
+     * ALGORITHM: Linear scan with time tracking
+     * TC: O(n) | SC: O(1)
      */
     public int hardestWorker(int n, int[][] logs) {
         int id = -1;
@@ -4143,12 +4821,26 @@ Output: [1,2,2,3,5,6]
         return id;
     }
 
+    /*
+     * PROBLEM: Find the Original Array of Prefix XOR (LeetCode 2433)
+     * Reconstruct original array from prefix XOR array
+     *
+     * ALGORITHM: XOR of consecutive prefix values
+     * TC: O(n) | SC: O(n)
+     */
     public int[] findArray(int[] pref) {
         int[] ans = new int[pref.length];
         for (int i = 0; i < pref.length; i++) ans[i] = i == 0 ? pref[i] : pref[i - 1] ^ pref[i];
         return ans;
     }
 
+    /*
+     * PROBLEM: Count the Number of Times a Wildcard Pattern Matches (LeetCode 2437)
+     * Return count of valid times matching HH:MM pattern with ? wildcards
+     *
+     * ALGORITHM: Case-by-case digit counting
+     * TC: O(1) | SC: O(1)
+     */
     public int countTime(String time) {
         String[] array = time.split(":");
         int cnt = 1;
@@ -4180,6 +4872,13 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+    /*
+     * PROBLEM: Find the Distinct Difference Array (LC 2442) / Product of Array Except Self Queries
+     * For each query [i,j], return product of powers of 2 in n from index i to j mod 1e9+7
+     *
+     * ALGORITHM: Prefix product + BigInteger mod
+     * TC: O(n + q) | SC: O(n)
+     */
     public int[] productQueries(int n, int[][] queries) {
 
         List<Integer> list = new ArrayList<>();
@@ -4227,7 +4926,13 @@ Output: [1,2,2,3,5,6]
         return ans.stream().mapToInt(x -> x).toArray();
     }
 
-    //Author: Anand
+    /*
+     * PROBLEM: Find Maximum K Such That -K Also Exists (LeetCode 2441)
+     * Return largest positive k in nums such that -k also exists; else -1
+     *
+     * ALGORITHM: TreeMap descending scan
+     * TC: O(n log n) | SC: O(n)
+     */
     public int findMaxK(int[] nums) {
         TreeMap<Integer, Integer> tm = new TreeMap<>(Collections.reverseOrder()); // number-> count
 
@@ -4240,7 +4945,13 @@ Output: [1,2,2,3,5,6]
         return -1;
     }
 
-    //Author: Anand
+    /*
+     * PROBLEM: Count Distinct Integers After Reverse Operations (LeetCode 2442)
+     * Return count of distinct integers after adding reversed versions of all nums
+     *
+     * ALGORITHM: HashSet with reverse insertion
+     * TC: O(n) | SC: O(n)
+     */
     public int countDistinctIntegers(int[] nums) {
 
         Set<Integer> set = new HashSet<>();
@@ -4256,7 +4967,13 @@ Output: [1,2,2,3,5,6]
         return set.size();
     }
 
-    //Author: Anand
+    /*
+     * PROBLEM: Sum of Number and Its Reverse (LeetCode 2443)
+     * Return true if some non-negative integer i satisfies i + reverse(i) == num
+     *
+     * ALGORITHM: Linear scan + reverse check
+     * TC: O(num * digits) | SC: O(digits)
+     */
     public boolean sumOfNumberAndReverse(int num) {
 
         for (int i = 1; i <= num; i++) {
@@ -4268,6 +4985,13 @@ Output: [1,2,2,3,5,6]
         return false;
     }
 
+    /*
+     * PROBLEM: Count Subarrays With Fixed Bounds (LeetCode 2444)
+     * Return count of subarrays where min==minK and max==maxK
+     *
+     * ALGORITHM: Inclusion-exclusion on bounded subarray counts
+     * TC: O(n) | SC: O(1)
+     */
     public long countSubarrays(int[] nums, int minK, int maxK) {
         long cnt1 = subArrays(nums, minK, maxK);
         long cnt2 = subArrays(nums, minK + 1, maxK);
@@ -4277,6 +5001,13 @@ Output: [1,2,2,3,5,6]
         return cnt1 - cnt2 - cnt3 + cnt4;
     }
 
+    /*
+     * PROBLEM: Count Bounded Subarrays Helper
+     * Count subarrays where all elements are in [l, u]
+     *
+     * ALGORITHM: Two-pointer run-length counting
+     * TC: O(n) | SC: O(1)
+     */
     private long subArrays(int[] arr, int l, int u) {
         int i = 0, n = arr.length;
         long ans = 0L;
@@ -4298,6 +5029,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Minimize Maximum of Array (LeetCode 2439)
+     * Return minimum possible value of max element after operations
+     *
+     * ALGORITHM: Prefix sum + ceiling average
+     * TC: O(n) | SC: O(1)
+     */
     public int minimizeArrayValue(int[] nums) {
         long sum = 0L;
         int max = Integer.MIN_VALUE;
@@ -4310,6 +5048,13 @@ Output: [1,2,2,3,5,6]
         return max;
     }
 
+    /*
+     * PROBLEM: Perfect Number (LeetCode 507)
+     * Return true if num equals sum of all its proper divisors
+     *
+     * ALGORITHM: Trial division up to sqrt(n)
+     * TC: O(sqrt(n)) | SC: O(1)
+     */
     public boolean checkPerfectNumber(int num) {
         if (num == 1) return false;
         int sum = 0;
@@ -4324,6 +5069,13 @@ Output: [1,2,2,3,5,6]
         return sum == num;
     }
 
+    /*
+     * PROBLEM: Robot Return to Origin (LeetCode 657)
+     * Return true if robot returns to origin after all moves
+     *
+     * ALGORITHM: Direction simulation with coordinate tracking
+     * TC: O(n) | SC: O(1)
+     */
     public boolean judgeCircle(String moves) {
         int x = 0, y = 0;
         Map<Character, List<Integer>> dirs = new HashMap<>();
@@ -4345,6 +5097,13 @@ Output: [1,2,2,3,5,6]
         return x == 0 && y == 0;
     }
 
+    /*
+     * PROBLEM: Find K Closest Elements (LeetCode 658)
+     * Return k closest integers to x from sorted array arr
+     *
+     * ALGORITHM: Min-heap by distance, then sort
+     * TC: O(n log k) | SC: O(k)
+     */
     public List<Integer> findClosestElements(int[] arr, int k, int x) {
 
         // [dist, element]
@@ -4368,6 +5127,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Determine if Two Events Have Conflict (LeetCode 2446)
+     * Return true if two time-interval events overlap
+     *
+     * ALGORITHM: Convert to minutes and check interval overlap
+     * TC: O(1) | SC: O(1)
+     */
     public boolean haveConflict(String[] event1, String[] event2) {
 
         List<Integer> el1 = new ArrayList<>();
@@ -4387,6 +5153,13 @@ Output: [1,2,2,3,5,6]
         return el1.get(0) <= el2.get(1) && el1.get(0) >= el2.get(0);
     }
 
+    /*
+     * PROBLEM: Number of Subarrays with GCD Equal to K (LeetCode 2447)
+     * Return count of subarrays whose GCD equals k
+     *
+     * ALGORITHM: Brute force with incremental GCD
+     * TC: O(n^2 log n) | SC: O(n)
+     */
     public int subarrayGCD(int[] nums, int k) {
         int cnt = 0;
         List<Integer> list = new ArrayList<>();
@@ -4403,11 +5176,12 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
-        Time Complexity: O(N * log(N))
-        Space Complexity: O(1)
-
-        Where N is the number of elements in array
-    */
+     * PROBLEM: Minimum Cost to Make Array Equal (LeetCode 2448)
+     * Return minimum cost to make all array elements equal using given cost weights
+     *
+     * ALGORITHM: Ternary search on target value
+     * TC: O(n log n) | SC: O(1)
+     */
     public long minCost(int[] arr, int[] cost) {
         int n = arr.length;
         // Variable to contain minimum value of array
@@ -4466,6 +5240,13 @@ Output: [1,2,2,3,5,6]
         return Math.min(ans, findCostWithTargetValue(arr, cost, n, (lowerLimit + upperLimit) / 2));
     }
 
+    /*
+     * PROBLEM: Compute Cost for Target Value Helper
+     * Compute weighted sum of absolute differences from target
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(n) | SC: O(1)
+     */
     private long findCostWithTargetValue(int[] arr, int[] cost, int n, int target) {
         long tc = 0L;
         // Loop to calculate cost with given target value
@@ -4476,6 +5257,13 @@ Output: [1,2,2,3,5,6]
         return tc;
     }
 
+    /*
+     * PROBLEM: New Integer (Digit 9 Removal Mapping)
+     * Return the n-th positive integer that does not contain digit 9
+     *
+     * ALGORITHM: Base-9 to base-10 conversion
+     * TC: O(log n) | SC: O(1)
+     */
     public int newInteger(int n) {
         int ans = 0;
         int base = 1;
@@ -4488,6 +5276,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Split Array into Consecutive Subsequences (LeetCode 659)
+     * Return true if nums can be split into consecutive subsequences of length >= 3
+     *
+     * ALGORITHM: TreeMap + greedy sequence extension
+     * TC: O(n log n) | SC: O(n)
+     */
     public boolean isPossible(int[] nums) {
         int n = nums.length;
 
@@ -4515,6 +5310,13 @@ Output: [1,2,2,3,5,6]
         return true;
     }
 
+    /*
+     * PROBLEM: 4 Keys Keyboard (LeetCode 651)
+     * Return max As printable in n keystrokes using A, Ctrl-A, Ctrl-C, Ctrl-V
+     *
+     * ALGORITHM: DFS + memoization
+     * TC: O(n^2) | SC: O(n^2)
+     */
     // More optimised solution exist in DP.java file
     public int maxA(int n) {
         StringBuilder sb = new StringBuilder();
@@ -4524,6 +5326,13 @@ Output: [1,2,2,3,5,6]
         return helper(sb, "", 1, n, dp);
     }
 
+    /*
+     * PROBLEM: 4 Keys Keyboard DFS Helper (LeetCode 651)
+     * Recursively explore all keystroke sequences to maximize A count
+     *
+     * ALGORITHM: DFS with memoization on (sb, copied, op)
+     * TC: O(n^2) | SC: O(n^2)
+     */
     private int helper(StringBuilder sb, String copied, int op, int n, Map<String, Integer> dp) {
         // base case
         if (op == n) return sb.length();
@@ -4572,6 +5381,13 @@ Output: [1,2,2,3,5,6]
         return len;
     }
 
+    /*
+     * PROBLEM: Odd String Difference (LeetCode 2451)
+     * Return the word with a unique difference array among all words
+     *
+     * ALGORITHM: HashMap from difference-array to words list
+     * TC: O(n*m) | SC: O(n*m)
+     */
     public String oddString(String[] words) {
 
         Map<List<Integer>, List<String>> diffM = new HashMap<>();
@@ -4593,6 +5409,13 @@ Output: [1,2,2,3,5,6]
         return "";
     }
 
+    /*
+     * PROBLEM: Words Within Two Edits of Dictionary (LeetCode 2452)
+     * Return all queries that differ from any dictionary word in at most 2 positions
+     *
+     * ALGORITHM: Brute force comparison
+     * TC: O(q*d*w) | SC: O(q)
+     */
     public List<String> twoEditWords(String[] queries, String[] dictionary) {
         List<String> ans = new ArrayList<>();
         for (String query : queries) {
@@ -4613,12 +5436,26 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Average Value of Even Numbers That Are Divisible by Three (LeetCode 2455)
+     * Return average of elements divisible by both 2 and 3; 0 if none
+     *
+     * ALGORITHM: Linear filter + average
+     * TC: O(n) | SC: O(n)
+     */
     public int averageValue(int[] nums) {
         List<Integer> list = new ArrayList<>();
         for (int num : nums) if (num % 2 == 0 && num % 3 == 0) list.add(num);
         return list.size() > 0 ? Math.abs(list.stream().mapToInt(x -> x).sum() / list.size()) : 0;
     }
 
+    /*
+     * PROBLEM: Most Popular Video Creator (LeetCode 2456)
+     * Return creators with highest total views and their most-viewed video id
+     *
+     * ALGORITHM: HashMap + PriorityQueue
+     * TC: O(n log n) | SC: O(n)
+     */
     public List<List<String>> mostPopularCreator(String[] creators, String[] ids, int[] views) {
         List<List<String>> ans = new ArrayList<>();
 
@@ -4663,6 +5500,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Minimum Addition to Make Integer Beautiful (LeetCode 2457)
+     * Find smallest non-negative number to add to n so digit sum <= target
+     *
+     * ALGORITHM: Greedy digit complement
+     * TC: O(log n) | SC: O(log n)
+     */
     public long makeIntegerBeautiful(long n, int target) {
 
         StringBuilder ans = new StringBuilder();
@@ -4689,6 +5533,13 @@ Output: [1,2,2,3,5,6]
         return 0L;
     }
 
+    /*
+     * PROBLEM: Compute sum of digits (Helper)
+     * Compute sum of digits of a long integer for makeIntegerBeautiful
+     *
+     * ALGORITHM: Iterative digit extraction
+     * TC: O(log n) | SC: O(1)
+     */
     private int sod(long n) {
         int s = 0;
         while (n > 0) {
@@ -4699,6 +5550,13 @@ Output: [1,2,2,3,5,6]
         return s;
     }
 
+    /*
+     * PROBLEM: Apply Operations to an Array (LeetCode 2460)
+     * Double adjacent equal elements, set second to 0, then shift zeros to end
+     *
+     * ALGORITHM: Simulation + two-pointer
+     * TC: O(n) | SC: O(n)
+     */
     public int[] applyOperations(int[] nums) {
         for (int i = 0; i < nums.length - 1; i++) {
             if (nums[i] == nums[i + 1]) {
@@ -4716,6 +5574,13 @@ Output: [1,2,2,3,5,6]
     }
 
     // function to shift zeros
+    /*
+     * PROBLEM: Shift zeros to right in list (Helper)
+     * Shift all zeros in list to the right end for applyOperations
+     *
+     * ALGORITHM: In-place removal and append
+     * TC: O(n) | SC: O(1)
+     */
     private void move_zeros_to_right(List<Integer> m) {
         int count = 0;
         for (int i = 0; i < m.size(); i++) {
@@ -4733,6 +5598,13 @@ Output: [1,2,2,3,5,6]
         }
     }
 
+    /*
+     * PROBLEM: Number of Distinct Averages (LeetCode 2465)
+     * Count distinct averages formed by repeatedly removing min+max from sorted array
+     *
+     * ALGORITHM: Dual priority queue
+     * TC: O(n log n) | SC: O(n)
+     */
     public int distinctAverages(int[] nums) {
 
         PriorityQueue<Integer> minPq = new PriorityQueue<>();
@@ -4756,6 +5628,13 @@ Output: [1,2,2,3,5,6]
         }
     }
 
+    /*
+     * PROBLEM: Convert the Temperature (LeetCode 2469)
+     * Convert Celsius to Kelvin and Fahrenheit
+     *
+     * ALGORITHM: Math formula
+     * TC: O(1) | SC: O(1)
+     */
     public double[] convertTemperature(double celsius) {
         double[] ans = new double[2];
         ans[0] = celsius + 273.15000;
@@ -4763,6 +5642,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Minimum Number of Operations to Sort a Binary Tree by Level (LeetCode 2471)
+     * Count minimum swaps needed to sort each level of the binary tree
+     *
+     * ALGORITHM: BFS level order + cycle detection via minSwaps
+     * TC: O(n log n) | SC: O(n)
+     */
     public int minimumOperations(TreeNode root) {
         if (root == null) return 0;
 
@@ -4794,6 +5680,13 @@ Output: [1,2,2,3,5,6]
 
     // Return the minimum number
     // of swaps required to sort the array
+    /*
+     * PROBLEM: Count minimum swaps to sort array (Helper)
+     * Count minimum swaps needed to sort arr[0..N-1] using cycle detection
+     *
+     * ALGORITHM: Index-based cycle detection
+     * TC: O(n log n) | SC: O(n)
+     */
     public int minSwaps(int[] arr, int N) {
 
         int ans = 0;
@@ -4830,12 +5723,26 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Swap Array Elements (Helper)
+     * Swap elements at indices i and j in an integer array in-place.
+     *
+     * ALGORITHM: Direct index swap
+     * TC: O(1) | SC: O(1)
+     */
     public void swap(int[] arr, int i, int j) {
         int temp = arr[i];
         arr[i] = arr[j];
         arr[j] = temp;
     }
 
+    /*
+     * PROBLEM: Number of Unequal Triplets in Array (LeetCode 2475)
+     * Count triplets (i,j,k) where i<j<k and all three values are distinct
+     *
+     * ALGORITHM: Brute force
+     * TC: O(n^3) | SC: O(1)
+     */
     public int unequalTriplets(int[] nums) {
         int cnt = 0;
         for (int i = 0; i < nums.length; i++) {
@@ -4850,6 +5757,13 @@ Output: [1,2,2,3,5,6]
     }
 
     //28th Nov---------------------------------------------------------------------------------------------------
+    /*
+     * PROBLEM: Find the Pivot Integer (LeetCode 2485)
+     * Find x such that sum(1..x) == sum(x..n); return -1 if none
+     *
+     * ALGORITHM: Prefix sum scan
+     * TC: O(n) | SC: O(1)
+     */
     public int pivotInteger(int n) {
         int total = Math.abs(n * (n + 1) / 2);
 
@@ -4863,6 +5777,13 @@ Output: [1,2,2,3,5,6]
         return -1;
     }
 
+    /*
+     * PROBLEM: Append Characters to String to Make Subsequence (LeetCode 2486)
+     * Find minimum characters to append to s so t is a subsequence of s
+     *
+     * ALGORITHM: Two pointer subsequence check
+     * TC: O(n+m) | SC: O(m)
+     */
     public int appendCharacters(String s, String t) {
 
         List<Character> tl = new ArrayList<>();
@@ -4879,6 +5800,13 @@ Output: [1,2,2,3,5,6]
 
     }
 
+    /*
+     * PROBLEM: Minimum Cuts to Divide a Circle (LeetCode 2481)
+     * Return minimum cuts to divide a circle into n equal slices
+     *
+     * ALGORITHM: Math (n/2 for even, n for odd)
+     * TC: O(1) | SC: O(1)
+     */
     public int numberOfCuts(int n) {
         if (n == 1) return 0;
         if (n % 2 == 0 && n % 3 == 0) return n / 2;
@@ -4886,6 +5814,13 @@ Output: [1,2,2,3,5,6]
         return n;
     }
 
+    /*
+     * PROBLEM: Difference Between Ones and Zeros in Row and Column (LeetCode 2482)
+     * Build matrix where diff[i][j] = onesRow[i]+onesCol[j]-zerosRow[i]-zerosCol[j]
+     *
+     * ALGORITHM: Row/column counting + matrix fill
+     * TC: O(m*n) | SC: O(m+n)
+     */
     public int[][] onesMinusZeros(int[][] grid) {
         int m = grid.length, n = grid[0].length;
         int[][] ans = new int[m][n];
@@ -4914,6 +5849,13 @@ Output: [1,2,2,3,5,6]
 
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
+    /*
+     * PROBLEM: Best Time to Close a Shop (LeetCode 2483)
+     * Find earliest hour to close shop minimizing penalty (open without customer + closed with customer).
+     *
+     * ALGORITHM: Prefix sum
+     * TC: O(N) | SC: O(N)
+     */
                 ans[i][j] = rows.get(i).getValue() + cols.get(j).getValue() - rows.get(i).getKey() - cols.get(j).getKey();
             }
         }
@@ -4921,6 +5863,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Best Time to Close a Shop (LeetCode 2483)
+     * Find earliest hour to close shop minimizing penalty: open without customer or closed with customer.
+     *
+     * ALGORITHM: Prefix sum
+     * TC: O(N) | SC: O(N)
+     */
     public int bestClosingTime(String customers) {
 
         TreeMap<Integer, Integer> tm = new TreeMap<>();
@@ -4949,6 +5898,13 @@ Output: [1,2,2,3,5,6]
                 ans = entry.getValue();
                 ind = ci;
             }
+    /*
+     * PROBLEM: Multiply Strings (LeetCode 43)
+     * Multiply two non-negative integers represented as strings, return product as a string.
+     *
+     * ALGORITHM: Grade-school multiplication simulation
+     * TC: O(M*N) | SC: O(M+N)
+     */
             ci++;
         }
 
@@ -4956,6 +5912,13 @@ Output: [1,2,2,3,5,6]
     }
 
     // TBC
+    /*
+     * PROBLEM: Multiply Strings (LeetCode 43)
+     * Multiply two non-negative integers represented as strings; return the product as a string.
+     *
+     * ALGORITHM: Grade-school multiplication simulation
+     * TC: O(M*N) | SC: O(M+N)
+     */
     public String multiply(String num1, String num2) {
         List<Integer> prev = new ArrayList<>();
 
@@ -5011,6 +5974,13 @@ Output: [1,2,2,3,5,6]
 
             System.out.println("sb=" + sb);
         }
+    /*
+     * PROBLEM: Circular Sentence (LeetCode 2490)
+     * Determine if a sentence is circular: last char of each word equals first char of the next.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(N) | SC: O(1)
+     */
 
 
         return sb.toString();
@@ -5018,6 +5988,13 @@ Output: [1,2,2,3,5,6]
     }
 
     //Author: Anand
+    /*
+     * PROBLEM: Circular Sentence (LeetCode 2490)
+     * Determine if a sentence is circular: last char of each word equals first char of the next word.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(N) | SC: O(1)
+     */
     public boolean isCircularSentence(String sentence) {
         String[] words = sentence.split(" ");
         char first = '#';
@@ -5027,6 +6004,13 @@ Output: [1,2,2,3,5,6]
             if (last == '#') last = word.charAt(word.length() - 1);
             else if (last != word.charAt(0)) return false;
 
+    /*
+     * PROBLEM: Divide Players Into Teams of Equal Skill (LeetCode 2491)
+     * Pair players so every pair has equal total skill; return the sum of all pairs' chemistry.
+     *
+     * ALGORITHM: Two pointers + sorting
+     * TC: O(N log N) | SC: O(1)
+     */
             last = word.charAt(word.length() - 1);
         }
 
@@ -5034,6 +6018,13 @@ Output: [1,2,2,3,5,6]
     }
 
     //Author: Anand
+    /*
+     * PROBLEM: Divide Players Into Teams of Equal Skill (LeetCode 2491)
+     * Pair players so every pair has equal total skill; return the sum of all pairs' chemistry.
+     *
+     * ALGORITHM: Two pointers + sorting
+     * TC: O(N log N) | SC: O(1)
+     */
     public long dividePlayers(int[] skill) {
         Arrays.sort(skill);
         int i = 0, j = skill.length - 1;
@@ -5042,6 +6033,13 @@ Output: [1,2,2,3,5,6]
         long sum = -1L;
         while (i < j) {
             if (sum == -1) sum = (long) skill[i] + skill[j];
+    /*
+     * PROBLEM: Maximum Value of a String in an Array (LeetCode 2496)
+     * Return the max value where value is numeric if all digits, else the string length.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(N*L) | SC: O(1)
+     */
             else if (sum != (long) skill[i] + skill[j]) return -1;
             ans += (long) skill[i++] * skill[j--];
         }
@@ -5049,12 +6047,26 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Maximum Value of a String in an Array (LeetCode 2496)
+     * Return max value: integer value if all digits, else the string length.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(N*L) | SC: O(1)
+     */
     public int maximumValue(String[] strs) {
         int max = Integer.MIN_VALUE;
         for (String s : strs) {
             if (s.replaceAll("\\d", "").isEmpty()) {
                 max = Math.max(max, Integer.parseInt(s));
             } else {
+    /*
+     * PROBLEM: Delete Greatest Value in Each Row (LeetCode 2500)
+     * Repeatedly delete the max in each row and add the column-max to the answer.
+     *
+     * ALGORITHM: Simulation with Priority Queue
+     * TC: O(M*N log N) | SC: O(M*N)
+     */
                 max = Math.max(max, s.length());
             }
         }
@@ -5062,6 +6074,13 @@ Output: [1,2,2,3,5,6]
     }
 
     //Author: Anand
+    /*
+     * PROBLEM: Delete Greatest Value in Each Row (LeetCode 2500)
+     * Repeatedly delete max from each row and add column-max to the answer.
+     *
+     * ALGORITHM: Simulation with Priority Queue
+     * TC: O(M*N log N) | SC: O(M*N)
+     */
     public int deleteGreatestValue(int[][] grid) {
 
         Map<Integer, PriorityQueue<Integer>> rowiseMax = new ConcurrentHashMap<>();
@@ -5085,6 +6104,13 @@ Output: [1,2,2,3,5,6]
                 } else max = Math.max(max, entry.getValue().poll());
             }
 
+    /*
+     * PROBLEM: Longest Square Streak in an Array (LeetCode 2501)
+     * Find the longest subsequence where each element is the square of the previous.
+     *
+     * ALGORITHM: HashMap + sorting
+     * TC: O(N log N) | SC: O(N)
+     */
             if (max != Integer.MIN_VALUE) ans += max;
         }
 
@@ -5092,6 +6118,13 @@ Output: [1,2,2,3,5,6]
     }
 
     //Author: Anand
+    /*
+     * PROBLEM: Longest Square Streak in an Array (LeetCode 2501)
+     * Find the longest subsequence where each element is the square of the previous.
+     *
+     * ALGORITHM: HashMap + sorting
+     * TC: O(N log N) | SC: O(N)
+     */
     public int longestSquareStreak(int[] nums) {
         Arrays.sort(nums);
         int n = nums.length;
@@ -5117,16 +6150,37 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
+     * PROBLEM: Count Pairs of Similar Strings (LeetCode 2506)
+     * Count pairs of words that consist of exactly the same set of distinct characters.
+     *
+     * ALGORITHM: HashSet character comparison
+     * TC: O(N^2 * L) | SC: O(L)
+     */
+    /*
     Input: words = ["aba","aabb","abcd","bac","aabc"]
     Output: 2
     Explanation: There are 2 pairs that satisfy the conditions:
     - i = 0 and j = 1 : both words[0] and words[1] only consist of characters 'a' and 'b'.
     - i = 3 and j = 4 : both words[3] and words[4] only consist of characters 'a', 'b', and 'c'.
      */
+    /*
+     * PROBLEM: Count Pairs of Similar Strings (LeetCode 2506)
+     * Count pairs of words consisting of exactly the same set of distinct characters.
+     *
+     * ALGORITHM: HashSet character comparison
+     * TC: O(N^2 * L) | SC: O(L)
+     */
     public int similarPairs(String[] words) {
 
         int cnt = 0;
         for (int i = 0; i < words.length; i++) {
+    /*
+     * PROBLEM: Check Same Character Set (Helper)
+     * Returns true if both strings consist of exactly the same set of characters.
+     *
+     * ALGORITHM: HashSet comparison
+     * TC: O(L) | SC: O(L)
+     */
             for (int j = i + 1; j < words.length; j++) {
                 if (isSimilar(words[i], words[j])) cnt++;
             }
@@ -5134,8 +6188,22 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+    /*
+     * PROBLEM: Check Same Character Set (Helper)
+     * Returns true if both strings consist of exactly the same set of characters.
+     *
+     * ALGORITHM: HashSet comparison
+     * TC: O(L) | SC: O(L)
+     */
     private boolean isSimilar(String word1, String word2) {
         Set<Character> s1 = new HashSet<>();
+    /*
+     * PROBLEM: Sieve of Eratosthenes (Helper)
+     * Compute all prime numbers up to n and populate the primeNumbers list.
+     *
+     * ALGORITHM: Sieve of Eratosthenes
+     * TC: O(N log log N) | SC: O(N)
+     */
         for (char c : word1.toCharArray()) s1.add(c);
         Set<Character> s2 = new HashSet<>();
         for (char c : word2.toCharArray()) s2.add(c);
@@ -5143,6 +6211,13 @@ Output: [1,2,2,3,5,6]
     }
 
     //prime sieve
+    /*
+     * PROBLEM: Sieve of Eratosthenes (Helper)
+     * Compute all prime numbers up to n and populate the primeNumbers list.
+     *
+     * ALGORITHM: Sieve of Eratosthenes
+     * TC: O(N log log N) | SC: O(N)
+     */
     public void primeSieve(int n) {
         BitSet bitset = new BitSet(n + 1);
         for (long i = 0; i < n; i++) {
@@ -5150,6 +6225,13 @@ Output: [1,2,2,3,5,6]
                 bitset.set((int) i);
                 continue;
             }
+    /*
+     * PROBLEM: Smallest Value After Replacing With Sum of Prime Factors (LeetCode 2507)
+     * Repeatedly replace n with sum of its prime factors until it can no longer change.
+     *
+     * ALGORITHM: Prime factorization + iterative reduction
+     * TC: O(sqrt(N) * log N) | SC: O(sqrt(N))
+     */
             if (bitset.get((int) i)) continue;
             primeNumbers.add((int) i);
             for (long j = i; j <= n; j += i)
@@ -5157,6 +6239,13 @@ Output: [1,2,2,3,5,6]
         }
     }
 
+    /*
+     * PROBLEM: Smallest Value After Replacing With Sum of Prime Factors (LeetCode 2507)
+     * Repeatedly replace n with sum of its prime factors until it can no longer change.
+     *
+     * ALGORITHM: Prime factorization + iterative reduction
+     * TC: O(sqrt(N) * log N) | SC: O(sqrt(N))
+     */
     public int smallestValue(int n) {
 
         if (n == 2 || n == 4) return n;
@@ -5169,6 +6258,13 @@ Output: [1,2,2,3,5,6]
             powers.clear();
             primeNumbers.clear();
             primeSieve(n);
+    /*
+     * PROBLEM: Prime Factorization (Helper)
+     * Collect all prime factors of n (with repetition) into the provided list.
+     *
+     * ALGORITHM: Trial division
+     * TC: O(sqrt(N)) | SC: O(log N)
+     */
             primeFactors(n, powers);
         }
         return n;
@@ -5176,6 +6272,13 @@ Output: [1,2,2,3,5,6]
 
     // A function to print all prime factors
     // of a given number n
+    /*
+     * PROBLEM: Prime Factorization (Helper)
+     * Collect all prime factors of n (with repetition) into the provided list.
+     *
+     * ALGORITHM: Trial division
+     * TC: O(sqrt(N)) | SC: O(log N)
+     */
     public void primeFactors(int n, List<Integer> powers) {
         // Print the number of 2s that divide n
         while (n % 2 == 0) {
@@ -5189,6 +6292,13 @@ Output: [1,2,2,3,5,6]
 
             if (i > n) break;
             // While i divides n, print i and divide n
+    /*
+     * PROBLEM: Add Edges to Make All Node Degrees Even (LeetCode 2508)
+     * Check whether adding at most 2 edges can make all vertex degrees even.
+     *
+     * ALGORITHM: Graph degree analysis with edge set
+     * TC: O(N^2) | SC: O(N)
+     */
             while (n % i == 0) {
                 powers.add(i);
                 n /= i;
@@ -5196,6 +6306,13 @@ Output: [1,2,2,3,5,6]
         }
     }
 
+    /*
+     * PROBLEM: Add Edges to Make All Node Degrees Even (LeetCode 2508)
+     * Check whether adding at most 2 edges can make all vertex degrees even.
+     *
+     * ALGORITHM: Graph degree analysis with edge set
+     * TC: O(N^2) | SC: O(N)
+     */
     public boolean isPossible(int n, List<List<Integer>> edges) {
 
         Map<Integer, Set<Integer>> edgesM = new HashMap<>();
@@ -5254,6 +6371,13 @@ Output: [1,2,2,3,5,6]
                 .stream()
                 .filter(x -> (x.getValue() % 2 == 0 &&
                         !edgesM.get(keyset.get(0)).contains(x.getKey())
+    /*
+     * PROBLEM: Count the Digits That Divide Its Number (LeetCode 2520)
+     * Count how many digits of num evenly divide num.
+     *
+     * ALGORITHM: Digit iteration
+     * TC: O(log N) | SC: O(1)
+     */
                         &&
                         !edgesM.get(keyset.get(1)).contains(x.getKey())))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -5261,9 +6385,23 @@ Output: [1,2,2,3,5,6]
         return un.size() > 0;
     }
 
+    /*
+     * PROBLEM: Count the Digits That Divide Its Number (LeetCode 2520)
+     * Count how many digits of num evenly divide num.
+     *
+     * ALGORITHM: Digit iteration
+     * TC: O(log N) | SC: O(1)
+     */
     public int countDigits(int num) {
 
         int cnt = 0;
+    /*
+     * PROBLEM: Partition String Into Substrings With Values at Most K (LeetCode 2522)
+     * Find the minimum number of substrings so each substring's numeric value is at most k.
+     *
+     * ALGORITHM: Greedy partitioning
+     * TC: O(N) | SC: O(N)
+     */
         for (char c : String.valueOf(num).toCharArray()) {
             int d = c - '0';
             if (num % d == 0) cnt++;
@@ -5271,6 +6409,13 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+    /*
+     * PROBLEM: Partition String Into Substrings With Values at Most K (LeetCode 2522)
+     * Find the minimum number of substrings so each substring's numeric value is at most k.
+     *
+     * ALGORITHM: Greedy partitioning
+     * TC: O(N) | SC: O(N)
+     */
     public int minimumPartition(String s, int k) {
         // Sanitiy check for the algorithm
         for (char c : s.toCharArray()) if ((c - '0') > k) return -1;
@@ -5287,6 +6432,13 @@ Output: [1,2,2,3,5,6]
                 cnt++;
                 sb.delete(0, sb.length());
                 sb.append(s.charAt(i));
+    /*
+     * PROBLEM: Maximum Enemy Forts That Can Be Captured (LeetCode 2511)
+     * Find the maximum enemies captured moving from one fort to another across only empty cells.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(N) | SC: O(1)
+     */
             }
         }
 
@@ -5294,6 +6446,13 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+    /*
+     * PROBLEM: Maximum Enemy Forts That Can Be Captured (LeetCode 2511)
+     * Find maximum enemies captured moving from one fort to another across only empty cells.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(N) | SC: O(1)
+     */
     public int captureForts(int[] forts) {
         int pos = Integer.MIN_VALUE, maxCnt = 0, cnt = 0;
         for (int fort : forts) {
@@ -5304,6 +6463,13 @@ Output: [1,2,2,3,5,6]
             } else if ((fort == 1 || fort == -1)) {
                 cnt = 0;
             } else if (pos != Integer.MIN_VALUE) {
+    /*
+     * PROBLEM: Reward Top K Students (LeetCode 2512)
+     * Return IDs of top k students ranked by score: +3 per positive word, -1 per negative word.
+     *
+     * ALGORITHM: Priority Queue + HashSet
+     * TC: O(N*M log N) | SC: O(N)
+     */
                 cnt++;
             }
         }
@@ -5311,6 +6477,13 @@ Output: [1,2,2,3,5,6]
         return maxCnt;
     }
 
+    /*
+     * PROBLEM: Reward Top K Students (LeetCode 2512)
+     * Return IDs of top k students ranked by score: +3 per positive word, -1 per negative word.
+     *
+     * ALGORITHM: Priority Queue + HashSet
+     * TC: O(N*M log N) | SC: O(N)
+     */
     public List<Integer> topStudents(String[] positive_feedback, String[] negative_feedback, String[] report, int[] student_id, int k) {
         PriorityQueue<Pair<Integer, Integer>> pq = new PriorityQueue<>(new Comparator<Pair<Integer, Integer>>() {
             @Override
@@ -5343,6 +6516,13 @@ Output: [1,2,2,3,5,6]
 
         List<Integer> ans = new ArrayList<>();
         while (!pq.isEmpty()) {
+    /*
+     * PROBLEM: Shortest Distance to Target String in a Circular Array (LeetCode 2515)
+     * Find minimum steps from startIndex to any occurrence of target in a circular word array.
+     *
+     * ALGORITHM: Circular bidirectional scan
+     * TC: O(N) | SC: O(1)
+     */
             if (k-- == 0) break;
             ans.add(pq.poll().getKey());
         }
@@ -5350,6 +6530,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Shortest Distance to Target String in Circular Array (LeetCode 2515)
+     * Find minimum steps from startIndex to any occurrence of target in a circular word array.
+     *
+     * ALGORITHM: Circular bidirectional scan
+     * TC: O(N) | SC: O(1)
+     */
     public int closetTarget(String[] words, String target, int startIndex) {
         int n = words.length;
         int cnt = 0, maxCnt = -1;
@@ -5375,6 +6562,13 @@ Output: [1,2,2,3,5,6]
         }
 
         if (ni != startIndex) {
+    /*
+     * PROBLEM: Take K of Each Character From Left and Right (LeetCode 2516)
+     * Find minimum total characters removed from both ends to get at least k of each 'a','b','c'.
+     *
+     * ALGORITHM: Sliding window
+     * TC: O(N) | SC: O(N)
+     */
             if (cnt == 0) return maxCnt;
             if (maxCnt == -1) return cnt;
             return Math.min(maxCnt, cnt);
@@ -5382,6 +6576,13 @@ Output: [1,2,2,3,5,6]
         return maxCnt;
     }
 
+    /*
+     * PROBLEM: Take K of Each Character From Left and Right (LeetCode 2516)
+     * Find minimum characters removed from both ends to get at least k of each 'a', 'b', 'c'.
+     *
+     * ALGORITHM: Sliding window
+     * TC: O(N) | SC: O(N)
+     */
     public int takeCharacters(String s, int k) {
         int n = s.length();
         TreeMap<Character, List<Integer>> pos = new TreeMap<>();
@@ -5419,6 +6620,13 @@ Output: [1,2,2,3,5,6]
                 ind++;
 
                 System.out.println(left + ":" + right);
+    /*
+     * PROBLEM: Categorize Box According to Criteria (LeetCode 2525)
+     * Classify a box as Bulky, Heavy, Both, or Neither based on volume/dimension and mass rules.
+     *
+     * ALGORITHM: Conditional checks
+     * TC: O(1) | SC: O(1)
+     */
             }
         }
 
@@ -5426,6 +6634,13 @@ Output: [1,2,2,3,5,6]
     }
 
     //Author: Anand
+    /*
+     * PROBLEM: Categorize Box According to Criteria (LeetCode 2525)
+     * Classify a box as Bulky, Heavy, Both, or Neither based on volume/dimension and mass rules.
+     *
+     * ALGORITHM: Conditional checks
+     * TC: O(1) | SC: O(1)
+     */
     public String categorizeBox(int length, int width, int height, int mass) {
         boolean bulky = false;
         long volume = (long) length * width * height;
@@ -5433,6 +6648,13 @@ Output: [1,2,2,3,5,6]
                 || width >= Math.pow(10, 4) || height >= Math.pow(10, 4)
         ) bulky = true;
         boolean heavy = mass >= 100;
+    /*
+     * PROBLEM: Maximize the Minimum Powered City (LeetCode 2528)
+     * Distribute k additional power stations to maximize the minimum power of any city in radius r.
+     *
+     * ALGORITHM: Binary search + greedy sliding window
+     * TC: O(N log(sum)) | SC: O(N)
+     */
         if (heavy && bulky) return "Both";
         if (!bulky && !heavy) return "Neither";
         if (bulky) return "Bulky";
@@ -5440,6 +6662,13 @@ Output: [1,2,2,3,5,6]
     }
 
     // TODO: For all test cases
+    /*
+     * PROBLEM: Maximize the Minimum Powered City (LeetCode 2528)
+     * Distribute k additional power stations to maximize the minimum power of any city in radius r.
+     *
+     * ALGORITHM: Binary search + greedy sliding window
+     * TC: O(N log(sum)) | SC: O(N)
+     */
     public long maxPower(int[] stations, int r, int k) {
         long ans = Long.MIN_VALUE;
 
@@ -5477,6 +6706,13 @@ Output: [1,2,2,3,5,6]
                 ans = Math.max(ans, pq.peek());
             } else {
                 ans = Math.max(ans, (long) k / stations.length);
+    /*
+     * PROBLEM: Difference Between Element Sum and Digit Sum of an Array (LeetCode 2535)
+     * Return absolute difference between the sum of all elements and the sum of all their digits.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(N log M) | SC: O(1)
+     */
                 k = 0;
             }
         }
@@ -5484,9 +6720,23 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Difference Between Element Sum and Digit Sum of an Array (LeetCode 2535)
+     * Return absolute difference between element sum and sum of all digits of each element.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(N log M) | SC: O(1)
+     */
     public int differenceOfSum(int[] nums) {
 
         long ds = 0L, ns = 0L;
+    /*
+     * PROBLEM: Digit Sum Calculation (Helper)
+     * Return the sum of all decimal digits of a given non-negative integer.
+     *
+     * ALGORITHM: Iterative digit extraction
+     * TC: O(log N) | SC: O(1)
+     */
         for (int num : nums) {
             ds += digitsum(num);
             ns += num;
@@ -5494,8 +6744,22 @@ Output: [1,2,2,3,5,6]
         return (int) Math.abs(ds - ns);
     }
 
+    /*
+     * PROBLEM: Digit Sum Calculation (Helper)
+     * Return the sum of all decimal digits of a given non-negative integer.
+     *
+     * ALGORITHM: Iterative digit extraction
+     * TC: O(log N) | SC: O(1)
+     */
     private int digitsum(int num) {
         int sum = 0;
+    /*
+     * PROBLEM: Increment Submatrices by One (LeetCode 2536)
+     * Apply range-add queries on an n x n matrix, incrementing each queried submatrix region by 1.
+     *
+     * ALGORITHM: BFS simulation on 2D grid
+     * TC: O(Q * N^2) | SC: O(N^2)
+     */
         while (num > 0) {
             sum += num % 10;
             num /= 10;
@@ -5503,6 +6767,13 @@ Output: [1,2,2,3,5,6]
         return sum;
     }
 
+    /*
+     * PROBLEM: Increment Submatrices by One (LeetCode 2536)
+     * Apply range-add queries on an n x n matrix, incrementing each queried submatrix region by 1.
+     *
+     * ALGORITHM: BFS simulation on 2D grid
+     * TC: O(Q * N^2) | SC: O(N^2)
+     */
     public int[][] rangeAddQueries(int n, int[][] queries) {
         int[][] ans = new int[n][n];
         this.n = n;
@@ -5541,17 +6812,45 @@ Output: [1,2,2,3,5,6]
                     }
                 }
 
+    /*
+     * PROBLEM: Grid Boundary Check (Helper)
+     * Returns true if (nx,ny) is within the n x n grid bounds.
+     *
+     * ALGORITHM: Boundary check
+     * TC: O(1) | SC: O(1)
+     */
                 if (!canMove) break;
             }
         }
 
+    /*
+     * PROBLEM: Minimum Common Value (LeetCode 2540)
+     * Return the minimum integer common to both arrays, or -1 if none exists.
+     *
+     * ALGORITHM: HashSet lookup
+     * TC: O(N+M) | SC: O(N)
+     */
         return ans;
     }
 
+    /*
+     * PROBLEM: Grid Boundary Check (Helper)
+     * Returns true if (nx, ny) is within the n x n grid bounds.
+     *
+     * ALGORITHM: Boundary check
+     * TC: O(1) | SC: O(1)
+     */
     private boolean safe(int nx, int ny) {
         return nx >= 0 && ny >= 0 && nx < this.n && ny < this.n;
     }
 
+    /*
+     * PROBLEM: Minimum Operations to Make Array Equal II (LeetCode 2541)
+     * Find minimum increment/decrement-by-k operations to make nums1[i] == nums2[i] for all i.
+     *
+     * ALGORITHM: Greedy difference array
+     * TC: O(N) | SC: O(N)
+     */
     public int getCommon(int[] nums1, int[] nums2) {
         Set<Integer> set = new HashSet<>();
         for (int num : nums1) set.add(num);
@@ -5559,6 +6858,13 @@ Output: [1,2,2,3,5,6]
         return -1;
     }
 
+    /*
+     * PROBLEM: Minimum Operations to Make Array Equal II (LeetCode 2541)
+     * Find minimum increment/decrement-by-k operations to make nums1[i] == nums2[i] for all i.
+     *
+     * ALGORITHM: Greedy difference array
+     * TC: O(N) | SC: O(N)
+     */
     public long minOperations(int[] nums1, int[] nums2, int k) {
 
         int[] diff = new int[nums1.length];
@@ -5589,6 +6895,13 @@ Output: [1,2,2,3,5,6]
                 valid = false;
                 break;
             }
+    /*
+     * PROBLEM: Maximum Subsequence Score (LeetCode 2542)
+     * Choose k indices to maximize sum(nums1[chosen]) * min(nums2[chosen]).
+     *
+     * ALGORITHM: Greedy + min-heap (sort nums2 descending)
+     * TC: O(N log N + N log K) | SC: O(K)
+     */
         }
 
         if (valid && pos % k == 0 && neg % k == 0 && Math.abs(pos) == Math.abs(neg)) return pos / k;
@@ -5596,6 +6909,13 @@ Output: [1,2,2,3,5,6]
         return -1;
     }
 
+    /*
+     * PROBLEM: Maximum Subsequence Score (LeetCode 2542)
+     * Choose k indices to maximize sum(nums1[chosen]) * min(nums2[chosen]).
+     *
+     * ALGORITHM: Greedy + min-heap (sort nums2 descending)
+     * TC: O(N log N + N log K) | SC: O(K)
+     */
     public long maxScore(int[] nums1, int[] nums2, int k) {
         int n = nums1.length;
         int[][] pairs = new int[n][2];
@@ -5612,6 +6932,13 @@ Output: [1,2,2,3,5,6]
             if (pq.size() > k) {
                 // pop the minimum guy and compute the result
                 sumS -= pq.poll(); // Provides minimum num1 guy
+    /*
+     * PROBLEM: Count Distinct Numbers on Board (LeetCode 2549)
+     * Starting with n on a board, repeatedly add i if n%i==1; count all distinct integers reached.
+     *
+     * ALGORITHM: Simulation with HashSet
+     * TC: O(N^2) | SC: O(N)
+     */
             }
 
             if (pq.size() == k) res = Math.max(res, sumS * pair[0]);
@@ -5619,6 +6946,13 @@ Output: [1,2,2,3,5,6]
         return res;
     }
 
+    /*
+     * PROBLEM: Count Distinct Numbers on Board (LeetCode 2549)
+     * Starting with n on a board, repeatedly add i if n%i==1; count all distinct integers reached.
+     *
+     * ALGORITHM: Simulation with HashSet
+     * TC: O(N^2) | SC: O(N)
+     */
     public int distinctIntegers(int n) {
 
         Set<Integer> dn = new HashSet<>();
@@ -5640,12 +6974,26 @@ Output: [1,2,2,3,5,6]
                         nn = true;
                         dn.add(i);
                     }
+    /*
+     * PROBLEM: Count the Number of Monkeys on the Board (LeetCode 2550)
+     * Count ways n monkeys sit on n vertices such that no two adjacent are same (2^n - 2 mod MOD).
+     *
+     * ALGORITHM: Modular fast exponentiation
+     * TC: O(log N) | SC: O(1)
+     */
                 }
             }
 
             if (!nn) return dn.size();
         }
     }
+    /*
+     * PROBLEM: Modular Fast Exponentiation (Helper)
+     * Compute (a^b) % mod efficiently using binary exponentiation.
+     *
+     * ALGORITHM: Binary exponentiation
+     * TC: O(log B) | SC: O(1)
+     */
 
     public int monkeyMove(int n) {
         int nn = (int) expo(2, n, MOD) - 2;
@@ -5653,9 +7001,23 @@ Output: [1,2,2,3,5,6]
         return nn;
     }
 
+    /*
+     * PROBLEM: Modular Fast Exponentiation (Helper)
+     * Compute (a^b) % mod efficiently using binary exponentiation.
+     *
+     * ALGORITHM: Binary exponentiation
+     * TC: O(log B) | SC: O(1)
+     */
     public long expo(long a, long b, long mod) {
         long res = 1;
         while (b > 0) {
+    /*
+     * PROBLEM: Number of Even and Odd Bits (LeetCode 2595)
+     * Count set bits at even and odd positions in the binary representation of n.
+     *
+     * ALGORITHM: Bit manipulation
+     * TC: O(log N) | SC: O(1)
+     */
             if ((b & 1) == 1L) res = (res * a) % mod;  //think about this one for a second
             a = (a * a) % mod;
             b = b >> 1;
@@ -5663,6 +7025,13 @@ Output: [1,2,2,3,5,6]
         return res;
     }
 
+    /*
+     * PROBLEM: Number of Even and Odd Bits (LeetCode 2595)
+     * Count set bits at even and odd positions in the binary representation of n.
+     *
+     * ALGORITHM: Bit manipulation
+     * TC: O(log N) | SC: O(1)
+     */
     public int[] evenOddBit(int n) {
 
         String binary = Integer.toBinaryString(n);
@@ -5671,12 +7040,26 @@ Output: [1,2,2,3,5,6]
 
         int odd = 0, even = 0;
         for (int i = 0; i < sb.length(); i++) {
+    /*
+     * PROBLEM: The Number of Beautiful Subsets (LeetCode 2597)
+     * Count non-empty subsets of nums where no two elements have absolute difference equal to k.
+     *
+     * ALGORITHM: Backtracking
+     * TC: O(2^N) | SC: O(N)
+     */
             if (i % 2 == 0 && sb.charAt(i) == '1') even++;
             else if (i % 2 != 0 && sb.charAt(i) == '1') odd++;
         }
 
         return new int[]{even, odd};
     }
+    /*
+     * PROBLEM: Beautiful Subsets Backtracking (Helper)
+     * Recursive helper enumerating take/not-take choices, enforcing the k-difference constraint.
+     *
+     * ALGORITHM: Backtracking with HashSet
+     * TC: O(2^N) | SC: O(N)
+     */
 
     public int beautifulSubsets(int[] nums, int k) {
         Arrays.sort(nums);
@@ -5684,6 +7067,13 @@ Output: [1,2,2,3,5,6]
         return solve(nums, k, 0, hSet);
     }
 
+    /*
+     * PROBLEM: Beautiful Subsets Backtracking (Helper)
+     * Recursive helper enumerating take/not-take choices, enforcing the k-difference constraint.
+     *
+     * ALGORITHM: Backtracking with HashSet
+     * TC: O(2^N) | SC: O(N)
+     */
     private int solve(int[] nums, int k, int ind, Set<Integer> hSet) {
         if (ind == nums.length) {
             if (hSet.size() > 0) return 1;
@@ -5697,6 +7087,13 @@ Output: [1,2,2,3,5,6]
             hSet.add(nums[ind]);
             take += solve(nums, k, ind + 1, hSet);
             hSet.remove(nums[ind]);
+    /*
+     * PROBLEM: Smallest Missing Non-Negative Integer After Operations (LeetCode 2598)
+     * Add or subtract value any number of times from each element; find the smallest missing MEX.
+     *
+     * ALGORITHM: Remainder grouping + HashSet
+     * TC: O(N log N) | SC: O(N)
+     */
         }
 
         return take + nottake;
@@ -5704,6 +7101,13 @@ Output: [1,2,2,3,5,6]
 
     //TBD
     // You can add or subtract value any number of times
+    /*
+     * PROBLEM: Smallest Missing Non-Negative Integer After Operations (LeetCode 2598)
+     * Add or subtract value any number of times from each element; find the smallest missing MEX.
+     *
+     * ALGORITHM: Remainder grouping + HashSet
+     * TC: O(N log N) | SC: O(N)
+     */
     public int findSmallestInteger(int[] nums, int value) {
 
         int gi = -1;
@@ -5747,6 +7151,13 @@ Output: [1,2,2,3,5,6]
             for (int l : list) {
                 if (l > 0) {
                     return l - 1;
+    /*
+     * PROBLEM: Distribute Money to Maximum Children (LeetCode 2591)
+     * Find the maximum number of children that can receive exactly $8 with valid distribution.
+     *
+     * ALGORITHM: Greedy simulation
+     * TC: O(N) | SC: O(1)
+     */
                 }
             }
         }
@@ -5754,6 +7165,13 @@ Output: [1,2,2,3,5,6]
     }
 
     //TBD
+    /*
+     * PROBLEM: Distribute Money to Maximum Children (LeetCode 2591)
+     * Find the maximum number of children that can receive exactly $8 with valid distribution.
+     *
+     * ALGORITHM: Greedy simulation
+     * TC: O(N) | SC: O(1)
+     */
     public int distMoney(int money, int children) {
         if (money == 20 && children >= 14 && children <= 20) return 0;
 
@@ -5830,6 +7248,13 @@ Output: [1,2,2,3,5,6]
                 children++;
 
                 if (pm == money && pc == children) return 0;
+    /*
+     * PROBLEM: K Items With the Maximum Sum (LeetCode 2600)
+     * Pick k items from a bag of 1s, 0s, and -1s in order to maximize the sum.
+     *
+     * ALGORITHM: Greedy selection
+     * TC: O(K) | SC: O(1)
+     */
                 return --ans + distMoney(money, children);
             }
             return --ans;
@@ -5837,6 +7262,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: K Items With the Maximum Sum (LeetCode 2600)
+     * Pick k items from a bag of 1s, 0s, and -1s in order to maximize the sum.
+     *
+     * ALGORITHM: Greedy selection
+     * TC: O(K) | SC: O(1)
+     */
     public int kItemsWithMaximumSum(int numOnes, int numZeros, int numNegOnes, int k) {
         int sum = 0;
         while (k > 0) {
@@ -5847,6 +7279,13 @@ Output: [1,2,2,3,5,6]
             else {
                 numNegOnes--;
                 sum--;
+    /*
+     * PROBLEM: Collect Coins in a Tree (LeetCode 2603)
+     * Find minimum edges traversed to collect all coins; each collector reaches coins within 2 hops.
+     *
+     * ALGORITHM: Tree pruning + BFS
+     * TC: O(N) | SC: O(N)
+     */
             }
             k--;
         }
@@ -5854,6 +7293,13 @@ Output: [1,2,2,3,5,6]
     }
 
     //TBD
+    /*
+     * PROBLEM: Collect Coins in a Tree (LeetCode 2603)
+     * Find minimum edges traversed to collect all coins; each collector reaches coins within 2 hops.
+     *
+     * ALGORITHM: Tree pruning + BFS
+     * TC: O(N) | SC: O(N)
+     */
     public int collectTheCoins(int[] coins, int[][] edges) {
 
         // No of vertices
@@ -5869,6 +7315,13 @@ Output: [1,2,2,3,5,6]
         addEdge(adj, 4, 5);
         addEdge(adj, 4, 6);
         addEdge(adj, 4, 7);
+    /*
+     * PROBLEM: Print Shortest Path in Unweighted Graph (Helper)
+     * Print shortest distance and path from source to dest in an unweighted undirected graph.
+     *
+     * ALGORITHM: BFS with predecessor tracking
+     * TC: O(V+E) | SC: O(V)
+     */
         addEdge(adj, 5, 6);
         addEdge(adj, 6, 7);
         int source = 0, dest = 7;
@@ -5876,6 +7329,13 @@ Output: [1,2,2,3,5,6]
         return 0;
     }
 
+    /*
+     * PROBLEM: Print Shortest Path in Unweighted Graph (Helper)
+     * Print shortest distance and path from source to dest in an unweighted undirected graph.
+     *
+     * ALGORITHM: BFS with predecessor tracking
+     * TC: O(V+E) | SC: O(V)
+     */
     private void printShortestDistance(ArrayList<ArrayList<Integer>> adj, int source, int dest, int v) {
         // predesessor array --> used to trace path in bfs
         int[] pred = new int[v];
@@ -5894,6 +7354,13 @@ Output: [1,2,2,3,5,6]
             path.add(pred[crawl]);
             crawl = pred[crawl];
         }
+    /*
+     * PROBLEM: BFS Shortest Path Finder (Helper)
+     * Run BFS from source; populate predecessor and distance arrays; return true if dest is reachable.
+     *
+     * ALGORITHM: BFS
+     * TC: O(V+E) | SC: O(V)
+     */
 
         // shortest distance
         System.out.println(dist[dest]);
@@ -5901,6 +7368,13 @@ Output: [1,2,2,3,5,6]
         for (int i = path.size() - 1; i >= 0; i--) System.out.print(path.get(i) + " ");
     }
 
+    /*
+     * PROBLEM: BFS Shortest Path Finder (Helper)
+     * Run BFS from source; populate predecessor/distance arrays; return true if dest is reachable.
+     *
+     * ALGORITHM: BFS
+     * TC: O(V+E) | SC: O(V)
+     */
     private boolean BFS(ArrayList<ArrayList<Integer>> adj, int source, int dest, int[] pred, int[] dist, int v) {
         Arrays.fill(pred, -1);
         Arrays.fill(dist, Integer.MAX_VALUE);
@@ -5918,18 +7392,46 @@ Output: [1,2,2,3,5,6]
                 visited[adj.get(u).get(i)] = true;
                 queue.offer(adj.get(u).get(i));
                 dist[adj.get(u).get(i)] = 1 + dist[u];
+    /*
+     * PROBLEM: Add Undirected Edge (Helper)
+     * Add a bidirectional edge between vertex1 and vertex2 in the adjacency list.
+     *
+     * ALGORITHM: Adjacency list update
+     * TC: O(1) | SC: O(1)
+     */
                 pred[adj.get(u).get(i)] = u;
                 if (adj.get(u).get(i) == dest) return true;
             }
         }
         return false;
+    /*
+     * PROBLEM: Form Smallest Number From Two Digit Arrays (LeetCode 2605)
+     * Form the smallest number containing at least one digit from each of two digit arrays.
+     *
+     * ALGORITHM: Set intersection + sorting
+     * TC: O(N log N) | SC: O(N)
+     */
     }
 
+    /*
+     * PROBLEM: Add Undirected Edge (Helper)
+     * Add a bidirectional edge between vertex1 and vertex2 in the adjacency list.
+     *
+     * ALGORITHM: Adjacency list update
+     * TC: O(1) | SC: O(1)
+     */
     private void addEdge(ArrayList<ArrayList<Integer>> adj, int vertex1, int vertex2) {
         adj.get(vertex1).add(vertex2);
         adj.get(vertex2).add(vertex1);
     }
 
+    /*
+     * PROBLEM: Form Smallest Number From Two Digit Arrays (LeetCode 2605)
+     * Form the smallest number containing at least one digit from each of two digit arrays.
+     *
+     * ALGORITHM: Set intersection + sorting
+     * TC: O(N log N) | SC: O(N)
+     */
     public int minNumber(int[] nums1, int[] nums2) {
         List<Integer> list1 = new ArrayList<>();
         List<Integer> list2 = new ArrayList<>();
@@ -5939,6 +7441,13 @@ Output: [1,2,2,3,5,6]
         Collections.sort(list1);
         Collections.sort(list2);
 
+    /*
+     * PROBLEM: Find the Longest Balanced Substring of a Binary String (LeetCode 2609)
+     * Find longest substring of form 0...01...1 with equal number of zeros and ones.
+     *
+     * ALGORITHM: Brute force substring enumeration
+     * TC: O(N^3) | SC: O(N)
+     */
         for (int num : list1) if (list2.contains(num)) return num;
 
         int d1 = list1.get(0);
@@ -5946,6 +7455,13 @@ Output: [1,2,2,3,5,6]
         return d1 < d2 ? Integer.parseInt(d1 + "" + d2) : Integer.parseInt(d2 + "" + d1);
     }
 
+    /*
+     * PROBLEM: Find the Longest Balanced Substring of a Binary String (LeetCode 2609)
+     * Find longest substring of form 0...01...1 with equal number of zeros and ones.
+     *
+     * ALGORITHM: Brute force substring enumeration
+     * TC: O(N^3) | SC: O(N)
+     */
     public int findTheLongestBalancedSubstring(String s) {
 
         int max = 0;
@@ -5954,6 +7470,13 @@ Output: [1,2,2,3,5,6]
                 String ss = s.substring(i, j + 1);
                 if (balanced(ss)) {
                     max = Math.max(max, ss.length());
+    /*
+     * PROBLEM: Check Balanced Binary Substring (Helper)
+     * Returns true if string has all 0s in first half and all 1s in second half with equal halves.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(N) | SC: O(1)
+     */
                 }
             }
         }
@@ -5961,8 +7484,22 @@ Output: [1,2,2,3,5,6]
         return max;
     }
 
+    /*
+     * PROBLEM: Check Balanced Binary Substring (Helper)
+     * Returns true if string has all 0s in first half and all 1s in second half with equal halves.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(N) | SC: O(1)
+     */
     private boolean balanced(String ss) {
 
+    /*
+     * PROBLEM: Convert an Array Into a 2D Array With Conditions (LeetCode 2610)
+     * Build 2D matrix where each row contains distinct elements, using minimum number of rows.
+     *
+     * ALGORITHM: Greedy row assignment
+     * TC: O(N^2) | SC: O(N)
+     */
 
         if (ss.length() % 2 != 0) return false;
         for (int i = 0; i < ss.length() / 2; i++)
@@ -5970,6 +7507,13 @@ Output: [1,2,2,3,5,6]
         return true;
     }
 
+    /*
+     * PROBLEM: Convert an Array Into a 2D Array With Conditions (LeetCode 2610)
+     * Build 2D matrix where each row contains distinct elements, using minimum number of rows.
+     *
+     * ALGORITHM: Greedy row assignment
+     * TC: O(N^2) | SC: O(N)
+     */
     public List<List<Integer>> findMatrix(int[] nums) {
         Map<Integer, Set<Integer>> matrix = new ConcurrentHashMap<>();
 
@@ -5999,17 +7543,45 @@ Output: [1,2,2,3,5,6]
             }
         }
 
+    /*
+     * PROBLEM: Mice and Cheese (LeetCode 2611)
+     * First mouse eats exactly k cheeses, second eats the rest; maximize total reward.
+     *
+     * ALGORITHM: Backtracking (TLE - greedy/sort optimization needed)
+     * TC: O(2^N) | SC: O(N)
+     */
         List<List<Integer>> ans = new ArrayList<>();
         for (Map.Entry<Integer, Set<Integer>> entry : matrix.entrySet())
             ans.add(new ArrayList<>(entry.getValue()));
         return ans;
+    /*
+     * PROBLEM: Mice and Cheese Recursive Helper (Helper)
+     * Explore all combinations of k items for the first mouse, accumulate maximum reward.
+     *
+     * ALGORITHM: Backtracking
+     * TC: O(2^N) | SC: O(N)
+     */
     }
 
     //TLE
+    /*
+     * PROBLEM: Mice and Cheese (LeetCode 2611)
+     * First mouse eats exactly k cheeses, second eats the rest; maximize total reward.
+     *
+     * ALGORITHM: Backtracking (TLE - greedy/sort optimization needed)
+     * TC: O(2^N) | SC: O(N)
+     */
     public int miceAndCheese(int[] reward1, int[] reward2, int k) {
         return helper(reward1, reward2, k, 0, new ArrayList<>());
     }
 
+    /*
+     * PROBLEM: Mice and Cheese Recursive Helper (Helper)
+     * Explore all combinations of k items for the first mouse to maximize total reward.
+     *
+     * ALGORITHM: Backtracking
+     * TC: O(2^N) | SC: O(N)
+     */
     private int helper(int[] reward1, int[] reward2, int k, int ind, List<Integer> it) {
         // base case
         if (ind >= reward1.length && k > 0) return 0;
@@ -6029,7 +7601,14 @@ Output: [1,2,2,3,5,6]
         it.add(ind);
         take += reward1[ind] + helper(reward1, reward2, k - 1, ind + 1, it);
         //not take
-        it.remove(new Integer(ind));
+        it.remove(Integer.valueOf(ind));
+    /*
+     * PROBLEM: Prime In Diagonal (LeetCode 2614)
+     * Find the largest prime on either main or anti-diagonal of a square matrix.
+     *
+     * ALGORITHM: Diagonal traversal + primality check
+     * TC: O(N * sqrt(max)) | SC: O(1)
+     */
         nt += helper(reward1, reward2, k, ind + 1, it);
         return Math.max(take, nt);
     }
@@ -6037,6 +7616,13 @@ Output: [1,2,2,3,5,6]
     //-----------------------------------------------------------------------------------------------------
     // 15th april
 
+    /*
+     * PROBLEM: Prime In Diagonal (LeetCode 2614)
+     * Find the largest prime on either main or anti-diagonal of a square matrix.
+     *
+     * ALGORITHM: Diagonal traversal + primality check
+     * TC: O(N * sqrt(max)) | SC: O(1)
+     */
     public int diagonalPrime(int[][] nums) {
 
         int max = 0;
@@ -6047,6 +7633,13 @@ Output: [1,2,2,3,5,6]
             }
 
             if (isPrime(nums[i][nums.length - i - 1])) {
+    /*
+     * PROBLEM: Primality Check (Helper)
+     * Returns true if n is a prime number using trial division.
+     *
+     * ALGORITHM: Trial division up to sqrt(n)
+     * TC: O(sqrt(N)) | SC: O(1)
+     */
                 max = Math.max(max, nums[i][nums.length - i - 1]);
             }
         }
@@ -6054,9 +7647,23 @@ Output: [1,2,2,3,5,6]
         return max;
     }
 
+    /*
+     * PROBLEM: Primality Check (Helper)
+     * Returns true if n is a prime number using trial division.
+     *
+     * ALGORITHM: Trial division up to sqrt(n)
+     * TC: O(sqrt(N)) | SC: O(1)
+     */
     public boolean isPrime(int n) {
         if (n <= 1) return false;
         if (n <= 3) return true;
+    /*
+     * PROBLEM: Sort HashMap by Value (Helper)
+     * Return a new LinkedHashMap with entries sorted in ascending order of their values.
+     *
+     * ALGORITHM: Comparator-based list sort
+     * TC: O(N log N) | SC: O(N)
+     */
         if (n % 2 == 0 || n % 3 == 0) return false;
         for (int i = 5; i * i <= n; i = i + 6)
             if (n % i == 0 || n % (i + 2) == 0)
@@ -6064,6 +7671,13 @@ Output: [1,2,2,3,5,6]
         return true;
     }
 
+    /*
+     * PROBLEM: Sort HashMap by Value (Helper)
+     * Return a new LinkedHashMap with entries sorted in ascending order of their values.
+     *
+     * ALGORITHM: Comparator-based list sort
+     * TC: O(N log N) | SC: O(N)
+     */
     public java.util.HashMap<Integer, Integer> sortByValue(java.util.HashMap<Integer, Integer> hm) {
 
 
@@ -6077,6 +7691,13 @@ Output: [1,2,2,3,5,6]
         });
 
         java.util.HashMap<Integer, Integer> temp = new LinkedHashMap<Integer, Integer>();
+    /*
+     * PROBLEM: Minimize the Maximum Difference of Pairs (LeetCode 2616)
+     * Form p index pairs to minimize the maximum absolute difference across all chosen pairs.
+     *
+     * ALGORITHM: Binary search + greedy pairing
+     * TC: O(N log N) | SC: O(1)
+     */
         for (Map.Entry<Integer, Integer> aa : list) {
             temp.put(aa.getKey(), aa.getValue());
         }
@@ -6084,6 +7705,13 @@ Output: [1,2,2,3,5,6]
         return temp;
     }
 
+    /*
+     * PROBLEM: Minimize the Maximum Difference of Pairs (LeetCode 2616)
+     * Form p index pairs to minimize the maximum absolute difference across all chosen pairs.
+     *
+     * ALGORITHM: Binary search + greedy pairing
+     * TC: O(N log N) | SC: O(1)
+     */
     public int minimizeMax(int[] nums, int p) {
         Map<Integer, Integer> freq = new ConcurrentHashMap<>();
         for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
@@ -6117,6 +7745,13 @@ Output: [1,2,2,3,5,6]
                 if (lastKey == -1) lastKey = entry.getKey();
                 ans = Math.min(Math.abs(lastKey - entry.getKey()), ans);
                 p--;
+    /*
+     * PROBLEM: Find the Width of Columns of a Grid (LeetCode 2639)
+     * For each column find the maximum display width (digits + sign) needed for any integer in it.
+     *
+     * ALGORITHM: Column-wise traversal
+     * TC: O(M*N*log(max)) | SC: O(N)
+     */
             }
         }
 
@@ -6124,6 +7759,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Find the Width of Columns of a Grid (LeetCode 2639)
+     * For each column find the maximum display width needed for any integer in it.
+     *
+     * ALGORITHM: Column-wise traversal
+     * TC: O(M*N*log(max)) | SC: O(N)
+     */
     public int[] findColumnWidth(int[][] grid) {
         // Traverse columnwise
         int m = grid.length, n = grid[0].length;
@@ -6137,6 +7779,13 @@ Output: [1,2,2,3,5,6]
 
             ans[i] = max;
         }
+    /*
+     * PROBLEM: Integer Display Length (Helper)
+     * Return the number of characters needed to display an integer (including minus sign for negatives).
+     *
+     * ALGORITHM: Iterative digit counting
+     * TC: O(log N) | SC: O(1)
+     */
 
         return ans;
     }
@@ -6144,10 +7793,24 @@ Output: [1,2,2,3,5,6]
 
     // 16th april
 
+    /*
+     * PROBLEM: Integer Display Length (Helper)
+     * Return the number of characters needed to display an integer (including minus sign for negatives).
+     *
+     * ALGORITHM: Iterative digit counting
+     * TC: O(log N) | SC: O(1)
+     */
     private int len(int num) {
         int an = Math.abs(num);
         int cnt = 0;
         while (an > 0) {
+    /*
+     * PROBLEM: Find the Score of All Prefixes of an Array (LeetCode 2640)
+     * For each index i, score[i] = prefix sum of (nums[j] + running max up to j) for j in [0,i].
+     *
+     * ALGORITHM: Prefix max + prefix sum
+     * TC: O(N) | SC: O(N)
+     */
             an /= 10;
             cnt++;
         }
@@ -6155,6 +7818,13 @@ Output: [1,2,2,3,5,6]
         return num > 0 ? cnt : cnt + 1;
     }
 
+    /*
+     * PROBLEM: Find the Score of All Prefixes of an Array (LeetCode 2640)
+     * For each index i, score[i] = prefix sum of (nums[j] + running max up to j) for j in [0,i].
+     *
+     * ALGORITHM: Prefix max + prefix sum
+     * TC: O(N) | SC: O(N)
+     */
     public long[] findPrefixScore(int[] nums) {
 
         long[] conv = new long[nums.length];
@@ -6174,6 +7844,13 @@ Output: [1,2,2,3,5,6]
 
     }
 
+    /*
+     * PROBLEM: Cousins in Binary Tree II (LeetCode 2641)
+     * Replace each node's value with the sum of its cousins' values (same level, different parent).
+     *
+     * ALGORITHM: BFS level-order traversal
+     * TC: O(N) | SC: O(N)
+     */
     /**
      * Definition for a binary tree node.
      * public class TreeNode {
@@ -6196,6 +7873,13 @@ Output: [1,2,2,3,5,6]
         return lot(root, map);
     }
 
+    /*
+     * PROBLEM: Level-Order Traversal for Cousin Sum Replacement (Helper)
+     * Two-pass BFS: first pass builds level/parent map, second pass assigns cousin sums.
+     *
+     * ALGORITHM: BFS level-order traversal
+     * TC: O(N) | SC: O(N)
+     */
     /**
      * Definition for a binary tree node.
      * public class TreeNode {
@@ -6294,6 +7978,13 @@ Output: [1,2,2,3,5,6]
                 p.val = actualCousins.stream().mapToInt(x -> x).sum();
                 n--;
             }
+    /*
+     * PROBLEM: Row With Maximum Ones (LeetCode 2643)
+     * Find the index and count of the row containing the most 1s in a binary matrix.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(M*N) | SC: O(1)
+     */
 
             level++;
         }
@@ -6301,6 +7992,13 @@ Output: [1,2,2,3,5,6]
         return root;
     }
 
+    /*
+     * PROBLEM: Row With Maximum Ones (LeetCode 2643)
+     * Find the index and count of the row containing the most 1s in a binary matrix.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(M*N) | SC: O(1)
+     */
     public int[] rowAndMaximumOnes(int[][] grid) {
         int m = grid.length, n = grid[0].length;
         int[] ans = new int[]{0, 0};
@@ -6311,6 +8009,13 @@ Output: [1,2,2,3,5,6]
                 if (grid[i][j] == 1) cnt++;
             }
             if (cnt > max) {
+    /*
+     * PROBLEM: Find the Maximum Divisibility Score (LeetCode 2644)
+     * Find the divisor with the highest count of nums elements divisible by it.
+     *
+     * ALGORITHM: Brute force
+     * TC: O(N*D) | SC: O(1)
+     */
                 max = cnt;
                 ans = new int[]{i, max};
             }
@@ -6318,6 +8023,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Maximum Divisibility Score (LeetCode 2644)
+     * Find the divisor with the highest count of nums elements divisible by it.
+     *
+     * ALGORITHM: Brute force
+     * TC: O(N*D) | SC: O(1)
+     */
     public int maxDivScore(int[] nums, int[] divisors) {
 
         Arrays.sort(divisors);
@@ -6329,6 +8041,13 @@ Output: [1,2,2,3,5,6]
             }
             if (cnt > max) {
                 max = cnt;
+    /*
+     * PROBLEM: Split With Minimum Sum (LeetCode 2578)
+     * Split digits of num into two numbers num1 and num2 to minimize num1 + num2.
+     *
+     * ALGORITHM: Greedy: sort digits, alternate assignment
+     * TC: O(log N * log(log N)) | SC: O(log N)
+     */
                 ans = d;
             }
         }
@@ -6336,6 +8055,13 @@ Output: [1,2,2,3,5,6]
         return ans == 0 ? divisors[0] : ans;
     }
 
+    /*
+     * PROBLEM: Split With Minimum Sum (LeetCode 2578)
+     * Split digits of num into two numbers num1 and num2 to minimize num1 + num2.
+     *
+     * ALGORITHM: Greedy: sort digits, alternate assignment
+     * TC: O(log N * log(log N)) | SC: O(log N)
+     */
     public int splitNum(int num) {
         TreeMap<Integer, Integer> tm = new TreeMap<>();
 
@@ -6353,6 +8079,13 @@ Output: [1,2,2,3,5,6]
                 else sb1.append(entry.getKey());
             }
         }
+    /*
+     * PROBLEM: Count Unguarded Cells in the Grid (LeetCode 2257)
+     * Count grid cells not occupied or seen by any guard; guards have line-of-sight blocked by walls.
+     *
+     * ALGORITHM: BFS grid simulation
+     * TC: O(M*N) | SC: O(M*N)
+     */
 
         return Integer.parseInt(sb1.toString()) + Integer.parseInt(sb2.toString());
     }
@@ -6360,6 +8093,13 @@ Output: [1,2,2,3,5,6]
     // TC = O(mn), SC = O(mn)
     // Author : Anand
     // DFS on graph
+    /*
+     * PROBLEM: Count Unguarded Cells in the Grid (LeetCode 2257)
+     * Count grid cells not occupied or seen by any guard; guards have line-of-sight blocked by walls.
+     *
+     * ALGORITHM: BFS grid simulation
+     * TC: O(M*N) | SC: O(M*N)
+     */
     public int countUnguarded(int m, int n, int[][] guards, int[][] walls) {
         char[][] grid = new char[m][n];
         Queue<int[]> queue = new LinkedList<>();
@@ -6390,10 +8130,24 @@ Output: [1,2,2,3,5,6]
         int cnt = 0;
         // count cells that are not blocker
         for (int i = 0; i < grid.length; i++) {
+    /*
+     * PROBLEM: Grid Boundary and Obstacle Check (Helper)
+     * Returns true if (x,y) is within bounds and is not a wall ('W') or guard ('G').
+     *
+     * ALGORITHM: Boundary check
+     * TC: O(1) | SC: O(1)
+     */
             for (int j = 0; j < grid[0].length; j++) {
                 if (grid[i][j] != 'W' && grid[i][j] != 'G' && grid[i][j] != 'P') cnt++;
             }
         }
+    /*
+     * PROBLEM: Kth Largest Sum in a Binary Tree (LeetCode 2583)
+     * Find the kth largest level sum across all levels of a binary tree.
+     *
+     * ALGORITHM: BFS level-order + max-heap
+     * TC: O(N log N) | SC: O(N)
+     */
         return cnt;
     }
 
@@ -6429,6 +8183,13 @@ Output: [1,2,2,3,5,6]
 
         while (!pq.isEmpty()) {
             long ans = pq.poll();
+    /*
+     * PROBLEM: Split the Array to Make Coprime Products (LeetCode 2584)
+     * Find smallest split index i such that product(left) and product(right) are coprime.
+     *
+     * ALGORITHM: Prime factorization + prefix tracking
+     * TC: O(N log N) | SC: O(N)
+     */
             if (--k == 0) return ans;
         }
 
@@ -6463,6 +8224,13 @@ Output: [1,2,2,3,5,6]
             TreeMap<Integer, Integer> tm = new TreeMap<>();
 
             computePowers(n, tm);
+    /*
+     * PROBLEM: Compute Prime Power Factorization (Helper)
+     * Populate a TreeMap with prime -> exponent entries for the prime factorization of n.
+     *
+     * ALGORITHM: Trial division
+     * TC: O(sqrt(N)) | SC: O(log N)
+     */
 
             // check if valid
             if (valid(overallPowers, tm)) return p;
@@ -6482,6 +8250,13 @@ Output: [1,2,2,3,5,6]
                     tm.put(i, tm.getOrDefault(i, 0) + 1);
                     n /= i;
                 }
+    /*
+     * PROBLEM: Validate Coprime Split (Helper)
+     * Check if the left prefix product shares no prime factors with the remaining product.
+     *
+     * ALGORITHM: TreeMap intersection check
+     * TC: O(P log P) | SC: O(P)
+     */
             }
             if (n > 2) {
                 tm.put(n, tm.getOrDefault(n, 0) + 1);
@@ -6500,6 +8275,13 @@ Output: [1,2,2,3,5,6]
                 affectedPowers.put(entry.getKey(), affectedPowers.getOrDefault(entry.getKey(), 0) - entry.getValue());
                 if (affectedPowers.get(entry.getKey()) <= 0) affectedPowers.remove(entry.getKey());
             }
+    /*
+     * PROBLEM: Vowel Character Check (Helper)
+     * Returns true if the character is a vowel (a, e, i, o, u), case-insensitive.
+     *
+     * ALGORITHM: Character comparison
+     * TC: O(1) | SC: O(1)
+     */
         }
 
 
@@ -6514,6 +8296,13 @@ Output: [1,2,2,3,5,6]
 
     // TOPOLOGICAL SORT
     // Use toplogical sort for indegree and pq to minisnmise the time taken to complete the course
+    /*
+     * PROBLEM: Count the Number of Vowel Strings in Range (LeetCode 2586)
+     * Count strings in words[left..right] that both start and end with a vowel.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(N) | SC: O(1)
+     */
     // TC = O(V+E) // As Simple DFS, SC = O(V) {Stack space}
 
 
@@ -6521,6 +8310,13 @@ Output: [1,2,2,3,5,6]
     // The idea is to do dfs for all nodes after marking them visited,
     // after returning from recursion calls add them to stack
 
+    /*
+     * PROBLEM: Rearrange Array to Maximize Prefix Score (LeetCode 2587)
+     * Count maximum positive prefix sums after optimal descending rearrangement of nums.
+     *
+     * ALGORITHM: Greedy: sort descending + prefix sum
+     * TC: O(N log N) | SC: O(N)
+     */
     public int vowelStrings(String[] words, int left, int right) {
         int cnt = 0;
         for (int i = left; i <= right; i++)
@@ -6545,6 +8341,13 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+    /*
+     * PROBLEM: Minimum Additions to Make Valid String (LeetCode 2645)
+     * Find minimum characters to insert so the string becomes a concatenation of 'abc' copies.
+     *
+     * ALGORITHM: Greedy character grouping
+     * TC: O(N) | SC: O(1)
+     */
     /*
       Steps:
         Build the graph using rowConditions
@@ -6600,6 +8403,13 @@ Output: [1,2,2,3,5,6]
                 }
             } else {
                 ind++;
+    /*
+     * PROBLEM: Topological Sort DFS (Helper)
+     * Perform DFS-based topological sort on a directed acyclic graph.
+     *
+     * ALGORITHM: DFS + Stack
+     * TC: O(V+E) | SC: O(V)
+     */
                 cnt += 2; // add b,c
             }
         }
@@ -6621,6 +8431,13 @@ Output: [1,2,2,3,5,6]
         int[] ans = new int[N];
         int ind = 0;
         while (!stk.empty()) {
+    /*
+     * PROBLEM: DFS Topological Sort Recursive Helper (Helper)
+     * Mark node visited and push to stack after visiting all its descendants.
+     *
+     * ALGORITHM: DFS
+     * TC: O(V+E) | SC: O(V)
+     */
             ans[ind++] = stk.pop();
         }
 
@@ -6634,6 +8451,13 @@ Output: [1,2,2,3,5,6]
         for (int e : graph.get(node)) {
             if (vis[e] == 0)
                 findTopoSort(e, vis, graph, stk);
+    /*
+     * PROBLEM: BFS Topological Sort - Kahn's Algorithm (Helper)
+     * Perform BFS-based topological sort using an in-degree array.
+     *
+     * ALGORITHM: BFS + Kahn's algorithm
+     * TC: O(V+E) | SC: O(V+E)
+     */
         }
 
         stk.push(node);
@@ -6663,16 +8487,37 @@ Output: [1,2,2,3,5,6]
             int element = queue.poll();
 
             ans.add(element + 1);
+    /*
+     * PROBLEM: Minimize the Total Price of the Trips (LeetCode 2646)
+     * Halve prices along trip paths to minimize total trip cost; no two adjacent nodes both halved.
+     *
+     * ALGORITHM: Tree DP + DFS path finding
+     * TC: O(N^2) | SC: O(N)
+     */
             for (int e : graph.get(element)) {
                 if (--indegree[e] == 0) queue.add(e);
             }
         }
+    /*
+     * PROBLEM: Separate the Digits in an Array (LeetCode 2553)
+     * Expand each integer in nums into its individual digits in the same order.
+     *
+     * ALGORITHM: Digit extraction
+     * TC: O(N * log M) | SC: O(N * log M)
+     */
         return ans;
     }
 
     public int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
         return 0;
     }
+    /*
+     * PROBLEM: Extract Digits of Integer (Helper)
+     * Return list of individual digits of a positive integer in most-significant-first order.
+     *
+     * ALGORITHM: Iterative digit extraction
+     * TC: O(log N) | SC: O(log N)
+     */
 
     public int[] separateDigits(int[] nums) {
         List<Integer> ans = new ArrayList<>();
@@ -6683,6 +8528,13 @@ Output: [1,2,2,3,5,6]
     private List<Integer> digits(int num) {
         List<Integer> d = new ArrayList<>();
         while (num > 0) {
+    /*
+     * PROBLEM: Maximum Number of Integers to Choose From a Range I (LeetCode 2554)
+     * Choose max integers from [1,n] not in banned list such that their sum does not exceed maxSum.
+     *
+     * ALGORITHM: Greedy selection
+     * TC: O(N) | SC: O(B)
+     */
             d.add(num % 10);
             num /= 10;
         }
@@ -6702,6 +8554,13 @@ Output: [1,2,2,3,5,6]
                 cnt++;
             }
         }
+    /*
+     * PROBLEM: Maximize Win From Two Segments (LeetCode 2555)
+     * Place two non-overlapping segments of length k to maximize total prizes captured.
+     *
+     * ALGORITHM: Two-pointer + sliding window
+     * TC: O(N) | SC: O(N)
+     */
 
         return cnt;
     }
@@ -6761,6 +8620,13 @@ Output: [1,2,2,3,5,6]
             if (entry.getKey() >= segment1.get(0) && entry.getKey() <= segment1.get(1)) {
                 nm.remove(entry.getKey());
                 ans += entry.getValue();
+    /*
+     * PROBLEM: Optimal Segment Finder (Helper)
+     * Use sliding window to find the contiguous segment of width k covering the most prize positions.
+     *
+     * ALGORITHM: Sliding window / two pointers
+     * TC: O(N) | SC: O(N)
+     */
             }
         }
 
@@ -6782,6 +8648,13 @@ Output: [1,2,2,3,5,6]
                 max = Math.max(max, curr);
                 ans = new ArrayList<>(Arrays.asList(i, j));
                 i++;
+    /*
+     * PROBLEM: Take Gifts From the Richest Pile (LeetCode 2558)
+     * Each second, replace largest pile with floor(sqrt(pile)); return total gifts remaining after k steps.
+     *
+     * ALGORITHM: Max-heap simulation
+     * TC: O(K log N) | SC: O(N)
+     */
                 curr -= treeMap.get(keyset.get(i));
             }
         }
@@ -6794,6 +8667,13 @@ Output: [1,2,2,3,5,6]
         PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());//max pq
         for (int gift : gifts) pq.add(gift);
         while (k-- > 0) {
+    /*
+     * PROBLEM: Count Vowel Strings in Ranges (LeetCode 2559)
+     * For each query [left, right], count words starting and ending with a vowel using prefix sums.
+     *
+     * ALGORITHM: Prefix sum
+     * TC: O(N + Q) | SC: O(N)
+     */
             int gift = pq.poll();
             pq.add((int) Math.floor(Math.sqrt(gift)));
         }
@@ -6818,6 +8698,13 @@ Output: [1,2,2,3,5,6]
             else ps[i] += ps[i - 1] + (valid ? 1 : 0);
         }
 
+    /*
+     * PROBLEM: Find the Array Concatenation Value (LeetCode 2562)
+     * Sum concatenation values: pair first and last elements working inward; middle element alone.
+     *
+     * ALGORITHM: Two-pointer simulation
+     * TC: O(N) | SC: O(1)
+     */
         int ind = 0;
         for (int[] query : queries) {
             ans[ind++] = ps[query[1]] - (query[0] > 0 ? ps[query[0] - 1] : 0);
@@ -6830,6 +8717,13 @@ Output: [1,2,2,3,5,6]
         int last = nums.length % 2 != 0 ? (int) Math.ceil((double) nums.length / 2) : nums.length / 2;
         for (int i = 0; i < last; i++) {
             String eval = "";
+    /*
+     * PROBLEM: Maximum Difference by Remapping a Digit (LeetCode 2566)
+     * Remap one digit to 9 for maximum, another to 0 for minimum; return their difference.
+     *
+     * ALGORITHM: String digit replacement
+     * TC: O(log N) | SC: O(log N)
+     */
             if (i == last - 1 && nums.length % 2 != 0) eval += nums[i];
             else eval = nums[i] + ((nums.length - 1 - i) >= 0 ? String.valueOf(nums[nums.length - 1 - i]) : "");
             ans += eval.isEmpty() ? 0 : Long.parseLong(eval);
@@ -6846,6 +8740,13 @@ Output: [1,2,2,3,5,6]
             if (nums.charAt(i) != '0' && mini == -1) mini = i;
         }
 
+    /*
+     * PROBLEM: Minimum Score by Changing Two Elements (LeetCode 2567)
+     * Change at most two elements to minimize score (max - min) of the array.
+     *
+     * ALGORITHM: Greedy: sort + remove extremes
+     * TC: O(N log N) | SC: O(N)
+     */
         int max = maxi != -1 ? Integer.parseInt(nums.replaceAll(String.valueOf(nums.charAt(maxi)), "9")) : num;
         int min = mini != -1 ? Integer.parseInt(nums.replaceAll(String.valueOf(nums.charAt(mini)), "0")) : 0;
 
@@ -6891,6 +8792,13 @@ Output: [1,2,2,3,5,6]
     }
 
     /*
+     * PROBLEM: Merge Two 2D Arrays by Summing Values (LeetCode 2570)
+     * Merge two [id, value] arrays; sum values for matching ids; return result sorted by id.
+     *
+     * ALGORITHM: TreeMap merge
+     * TC: O((N+M) log(N+M)) | SC: O(N+M)
+     */
+    /*
     Input: nums1 = [[1,2],[2,3],[4,5]], nums2 = [[1,4],[3,2],[4,1]]
     Output: [[1,6],[2,3],[3,2],[4,6]]
     Explanation: The resulting array contains the following:
@@ -6918,6 +8826,13 @@ Output: [1,2,2,3,5,6]
         return array;
     }
 
+    /*
+     * PROBLEM: Minimum Operations to Reduce an Integer to 0 (LeetCode 2571)
+     * Return min number of add/subtract power-of-two operations to make n zero.
+     *
+     * ALGORITHM: Greedy — at each step pick nearest power of 2 (round up or down, whichever is closer)
+     * TC: O(log²n) | SC: O(1)
+     */
     public int minOperations(int n) {
         int op = 0;
         while (n != 0) {
@@ -6934,6 +8849,13 @@ Output: [1,2,2,3,5,6]
         return op;
     }
 
+    /*
+     * PROBLEM: Left and Right Sum Differences (LeetCode 2574)
+     * Return array where each element is |leftSum[i] - rightSum[i]|.
+     *
+     * ALGORITHM: Prefix sums — two passes to build left and right prefix arrays
+     * TC: O(n) | SC: O(n)
+     */
     public int[] leftRigthDifference(int[] nums) {
         int[] ls = new int[nums.length];
         int[] rs = new int[nums.length];
@@ -6948,6 +8870,13 @@ Output: [1,2,2,3,5,6]
     }
 
     //TLE
+    /*
+     * PROBLEM: Find the Divisibility Array of a String (LeetCode 2575)
+     * Return 1 at index i if the number formed by word[0..i] is divisible by m, else 0.
+     *
+     * ALGORITHM: BigInteger modular arithmetic per prefix
+     * TC: O(n²) due to BigInteger (TLE) | SC: O(n)
+     */
     public int[] divisibilityArray(String word, int m) {
         int[] ans = new int[word.length()];
         StringBuilder sb = new StringBuilder();
@@ -6962,6 +8891,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Lexicographically Smallest Palindrome (LeetCode 2697)
+     * Make string a palindrome with minimum replacements by using the smaller of each mirrored pair.
+     *
+     * ALGORITHM: Two pointers — replace each mismatched pair with the lexicographically smaller character
+     * TC: O(n) | SC: O(n)
+     */
     public String makeSmallestPalindrome(String s) {
         StringBuilder ans = new StringBuilder();
         ans.append(s);
@@ -6976,6 +8912,13 @@ Output: [1,2,2,3,5,6]
         return ans.toString();
     }
 
+    /*
+     * PROBLEM: Buy Two Chocolates (LeetCode 2706)
+     * Buy the two cheapest chocolates; return leftover money, or full money if can't afford them.
+     *
+     * ALGORITHM: Sort + constant-time comparison
+     * TC: O(n log n) | SC: O(1)
+     */
     public int buyChoco(int[] prices, int money) {
         Arrays.sort(prices);
         if (prices.length <= 1) return money;
@@ -6983,6 +8926,13 @@ Output: [1,2,2,3,5,6]
         return money - (prices[0] + prices[1]);
     }
 
+    /*
+     * PROBLEM: Maximum Strength of a Group (LeetCode 2708)
+     * Find the maximum product of any non-empty subset of the array.
+     *
+     * ALGORITHM: Greedy — multiply all positives; pair up negatives (remove smallest magnitude if count is odd); handle edge cases for single negatives and zeros
+     * TC: O(n log n) | SC: O(n)
+     */
     public long maxStrength(int[] nums) {
 
         List<Integer> pos = new ArrayList<>();
@@ -7021,6 +8971,13 @@ Output: [1,2,2,3,5,6]
         return 0;
     }
 
+    /*
+     * PROBLEM: Remove Trailing Zeros From a String (LeetCode 2710)
+     * Remove all trailing zero characters from the numeric string.
+     *
+     * ALGORITHM: Regex replacement
+     * TC: O(n) | SC: O(n)
+     */
     public String removeTrailingZeros(String num) {
         return num.replaceAll("0+$", "");
     }
@@ -7043,6 +9000,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Check if the Number is Fascinating (LeetCode 2729)
+     * Return true if n concatenated with 2n and 3n contains digits 1-9 each exactly once.
+     *
+     * ALGORITHM: Frequency count via string concatenation
+     * TC: O(1) | SC: O(1)
+     */
     public boolean isFascinating(int n) {
         String number = n + "" + 2 * n + "" + 3 * n;
         Set<Integer> all = new HashSet<>();
@@ -7055,6 +9019,13 @@ Output: [1,2,2,3,5,6]
         return all.isEmpty();
     }
 
+    /*
+     * PROBLEM: Find the Longest Semi-Repetitive Substring (LeetCode 2730)
+     * Find the longest substring that contains at most one pair of adjacent equal characters.
+     *
+     * ALGORITHM: Brute force — enumerate all substrings and check semi-repetitive property
+     * TC: O(n³) | SC: O(n)
+     */
     public int longestSemiRepetitiveSubstring(String s) {
         int maxLen = 1;
         Set<String> ss = new HashSet<>();
@@ -7072,6 +9043,13 @@ Output: [1,2,2,3,5,6]
         return maxLen;
     }
 
+    /*
+     * PROBLEM: repetitive (Helper)
+     * Return true if the string has at most one pair of consecutive identical digits.
+     *
+     * ALGORITHM: Single linear scan with a flag
+     * TC: O(n) | SC: O(1)
+     */
     private boolean repetitive(String str) {
         boolean flag = false;
         for (int i = 1; i < str.length(); i++) {
@@ -7087,6 +9065,13 @@ Output: [1,2,2,3,5,6]
         return true;
     }
 
+    /*
+     * PROBLEM: Movement of Robots (LeetCode 2731)
+     * Return the sum of pairwise distances of robots after d seconds (robots pass through each other).
+     *
+     * ALGORITHM: Sort final positions, then compute prefix-sum-based pairwise distance formula
+     * TC: O(n log n) | SC: O(n)
+     */
     public int sumDistance(int[] nums, String s, int d) {
         final int modulo = (int) 1e9 + 7;
         final int n = nums.length;
@@ -7106,12 +9091,26 @@ Output: [1,2,2,3,5,6]
         return (int) distance;
     }
 
+    /*
+     * PROBLEM: Neither Minimum nor Maximum (LeetCode 2733)
+     * Return any element that is neither the minimum nor maximum of the array, or -1 if none exists.
+     *
+     * ALGORITHM: Sort + return second element
+     * TC: O(n log n) | SC: O(1)
+     */
     public int findNonMinOrMax(int[] nums) {
         if (nums.length <= 2) return -1;
         Arrays.sort(nums);
         return nums[1];
     }
 
+    /*
+     * PROBLEM: Lexicographically Smallest String After Substring Operation (LeetCode 2734)
+     * Decrement each non-'a' character in exactly one contiguous segment to get the smallest string.
+     *
+     * ALGORITHM: Greedy — find the first non-'a' run and decrement all characters in it
+     * TC: O(n) | SC: O(n)
+     */
     public String smallestString(String s) {
         boolean operation = false;
         StringBuilder sb = new StringBuilder();
@@ -7135,6 +9134,13 @@ Output: [1,2,2,3,5,6]
 
     // ----------------------------------------------------------------------------------------------------
     // 21st May LC
+    /*
+     * PROBLEM: Minimum String Length After Removing Substrings (LeetCode 2696)
+     * Repeatedly remove 'AB' and 'CD' from the string and return its minimum possible length.
+     *
+     * ALGORITHM: Iterative string replacement
+     * TC: O(n²) worst case | SC: O(n)
+     */
     public int minLength(String s) {
         while (s.contains("AB") || s.contains("CD")) {
             s = s.replaceAll("AB", "");
@@ -7144,6 +9150,13 @@ Output: [1,2,2,3,5,6]
     }
 
     //TODO: Correct solution
+    /*
+     * PROBLEM: Find the Punishment Number of an Integer (LeetCode 2698)
+     * Sum the squares of all i in [1,n] whose decimal square can be partitioned to sum to i.
+     *
+     * ALGORITHM: Backtracking — try all partitions of the decimal representation of i²
+     * TC: O(n · 2^d) where d = digits in n² | SC: O(d)
+     */
     public int punishmentNumber(int n) {
 
         int pn = 0;
@@ -7159,6 +9172,13 @@ Output: [1,2,2,3,5,6]
     }
 
     //checks if square of number can be partioned such that sum of partitioned is equal to number itself
+    /*
+     * PROBLEM: helper — Partition Validator (Helper)
+     * Return true if num's decimal string can be split into parts that sum to sqrt(num).
+     *
+     * ALGORITHM: Backtracking with StringBuilder partitioning
+     * TC: O(2^d) where d = len(num) | SC: O(d)
+     */
     private boolean helper(String num, int sum, StringBuilder sb, int ind) {
 
         // base case
@@ -7192,12 +9212,26 @@ Output: [1,2,2,3,5,6]
         return false;
     }
 
+    /*
+     * PROBLEM: Minimize String Length (LeetCode 2716)
+     * Return the minimum possible length by removing duplicate characters from the string.
+     *
+     * ALGORITHM: HashSet to count distinct characters
+     * TC: O(n) | SC: O(1)
+     */
     public int minimizedStringLength(String s) {
         Set<Character> set = new HashSet<>();
         for (char c : s.toCharArray()) set.add(c);
         return set.size();
     }
 
+    /*
+     * PROBLEM: Semi-Ordered Permutation (LeetCode 2717)
+     * Return minimum adjacent swaps to move 1 to front and n to back in a permutation.
+     *
+     * ALGORITHM: Find positions of 1 and n, simulate swaps
+     * TC: O(n) | SC: O(1)
+     */
     public int semiOrderedPermutation(int[] nums) {
 
         int n = nums.length;
@@ -7227,6 +9261,13 @@ Output: [1,2,2,3,5,6]
     }
 
     //TLE
+    /*
+     * PROBLEM: Sum of Matrix After Queries (LeetCode 2718)
+     * Apply row/column assignment queries (later ones override) and return the total matrix sum.
+     *
+     * ALGORITHM: Process queries in reverse; track last row/column assignments via HashMap
+     * TC: O(q + n²) | SC: O(q)
+     */
     public long matrixSumQueries(int n, int[][] queries) {
 
 
@@ -7273,6 +9314,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Total Distance Traveled (LeetCode 2739)
+     * Return total km traveled: every 5 units of main fuel refills 1 unit from additional tank.
+     *
+     * ALGORITHM: Simulation — consume main tank 5 units at a time and conditionally refill
+     * TC: O(mainTank) | SC: O(1)
+     */
     public int distanceTraveled(int mainTank, int additionalTank) {
 
         int distance = 0;
@@ -7293,6 +9341,13 @@ Output: [1,2,2,3,5,6]
         return distance;
     }
 
+    /*
+     * PROBLEM: Find the Value of the Partition (LeetCode 2740)
+     * Return the minimum absolute difference between any element of one partition and any element of the other.
+     *
+     * ALGORITHM: Sort + check adjacent element differences
+     * TC: O(n log n) | SC: O(1)
+     */
     public int findValueOfPartition(int[] nums) {
         int min = Integer.MAX_VALUE;
         Arrays.sort(nums);
@@ -7303,6 +9358,13 @@ Output: [1,2,2,3,5,6]
         return min;
     }
 
+    /*
+     * PROBLEM: Find Maximum Number of String Pairs (LeetCode 2744)
+     * Return the max number of pairs (i,j) where words[i] is the reverse of words[j].
+     *
+     * ALGORITHM: HashSet — for each word check if its reverse was seen before
+     * TC: O(n · L) | SC: O(n)
+     */
     public int maximumNumberOfStringPairs(String[] words) {
 
         int cnt = 0;
@@ -7322,6 +9384,13 @@ Output: [1,2,2,3,5,6]
     }
 
     //TBD
+    /*
+     * PROBLEM: Construct the Longest New String (LeetCode 2745)
+     * Build the longest string from x 'AA', y 'BB', z 'AB' pieces with no 'AAA' or 'BBB' substrings.
+     *
+     * ALGORITHM: Backtracking / DFS exploring all valid placements
+     * TC: O(3^(x+y+z)) | SC: O(x+y+z)
+     */
     public int longestString(int x, int y, int z) {
 
         return Math.max(Math.max(ml(new StringBuilder().append("AA"), x - 1, y, z, 2),
@@ -7329,6 +9398,13 @@ Output: [1,2,2,3,5,6]
                 ml(new StringBuilder().append("AB"), x, y, z - 1, 2));
     }
 
+    /*
+     * PROBLEM: ml — Longest String Builder (Helper)
+     * Recursively build the longest valid string from remaining AA/BB/AB counts.
+     *
+     * ALGORITHM: Backtracking with memoization via maxLen tracking
+     * TC: O(3^(x+y+z)) | SC: O(x+y+z)
+     */
     private int ml(StringBuilder sb, int x, int y, int z, int maxLen) {
         // base case
         if (x <= 0 && y <= 0 && z <= 0) {
@@ -7362,6 +9438,13 @@ Output: [1,2,2,3,5,6]
         }
     }
 
+    /*
+     * PROBLEM: Number of Beautiful Pairs (LeetCode 2748)
+     * Count pairs (i,j) where gcd(first digit of nums[i], last digit of nums[j]) == 1.
+     *
+     * ALGORITHM: Brute force + GCD check
+     * TC: O(n² · log(max)) | SC: O(1)
+     */
     public int countBeautifulPairs(int[] nums) {
 
         int cnt = 0;
@@ -7378,6 +9461,13 @@ Output: [1,2,2,3,5,6]
     }
 
     //int version for gcd
+    /*
+     * PROBLEM: gcd (Helper)
+     * Compute the greatest common divisor of two integers using the Euclidean algorithm.
+     *
+     * ALGORITHM: Euclidean algorithm (recursive)
+     * TC: O(log(min(a,b))) | SC: O(log(min(a,b)))
+     */
     public int gcd(int a, int b) {
         if (b == 0)
             return a;
@@ -7385,6 +9475,13 @@ Output: [1,2,2,3,5,6]
         return gcd(b, a % b);
     }
 
+    /*
+     * PROBLEM: Minimum Operations to Make the Integer Zero (LeetCode 2749)
+     * Return minimum operations to reduce num1 to 0, where each op subtracts 2^i + num2.
+     *
+     * ALGORITHM: Backtracking / BFS over reachable values
+     * TC: O(60 · states) | SC: O(states)
+     */
     public int makeTheIntegerZero(int num1, int num2) {
         int ans = helper(num1, num2, 0, 0, new HashSet<Integer>());
         return ans == Integer.MAX_VALUE ? -1 : ans;
@@ -7392,6 +9489,13 @@ Output: [1,2,2,3,5,6]
 
     /*
         Return min operations to make num1 = 0
+     */
+    /*
+     * PROBLEM: helper — Make Integer Zero (Helper)
+     * Recursively find the min ops to reduce num1 to 0 by subtracting 2^i + num2 each step.
+     *
+     * ALGORITHM: Backtracking with visited set to prune cycles
+     * TC: O(60 · states) | SC: O(states)
      */
     private int helper(int num1, int num2, int op, int ind, Set<Integer> vis) {
 
@@ -7423,6 +9527,13 @@ Output: [1,2,2,3,5,6]
     Hence, the answer is the length of the subarray, 3. We can show that 3 is the maximum possible achievable length.
 
      */
+    /*
+     * PROBLEM: Longest Even Odd Subarray With Threshold (LeetCode 2760)
+     * Find the longest subarray starting with an even element ≤ threshold where elements alternate parity.
+     *
+     * ALGORITHM: Two pointers / sliding window — extend while alternating parity and ≤ threshold
+     * TC: O(n²) | SC: O(1)
+     */
     public int longestAlternatingSubarray(int[] nums, int threshold) {
 
         int max = 0;
@@ -7443,6 +9554,13 @@ Output: [1,2,2,3,5,6]
         return max;
     }
 
+    /*
+     * PROBLEM: sieveOfEratosthenes (Helper)
+     * Populate array s where s[i] = smallest prime factor of i, up to num.
+     *
+     * ALGORITHM: Sieve of Eratosthenes variant for smallest prime factors
+     * TC: O(n log log n) | SC: O(n)
+     */
     private void sieveOfEratosthenes(long num, int[] s) {
         // Create a boolean array
         // "prime[0..n]"  and initialize
@@ -7478,6 +9596,13 @@ Output: [1,2,2,3,5,6]
         }
     }
 
+    /*
+     * PROBLEM: Sum of Imbalance Numbers of All Subarrays (LeetCode 2763)
+     * Return the sum of imbalance numbers across all subarrays of nums.
+     *
+     * ALGORITHM: TreeMap to track sorted unique elements and count gaps > 1 per subarray
+     * TC: O(n² log n) | SC: O(n)
+     */
     public int sumImbalanceNumbers(int[] nums) {
         int cnt = 0;
         for (int i = 0; i < nums.length; i++) {
@@ -7564,6 +9689,13 @@ Output: [1,2,2,3,5,6]
         return Math.max(cnt, 0);
     }
 
+    /*
+     * PROBLEM: lower (Helper)
+     * Binary search: return the index of the first element ≥ target in a sorted array.
+     *
+     * ALGORITHM: Binary search lower bound
+     * TC: O(log n) | SC: O(1)
+     */
     private int lower(int[] arr, int target) {
         if (arr == null || arr.length == 0) {
             return 0;
@@ -7588,12 +9720,26 @@ Output: [1,2,2,3,5,6]
         return r;
     }
 
+    /*
+     * PROBLEM: Sum of Squares of Special Elements (LeetCode 2778)
+     * Sum the squares of nums[i] where (i+1) divides n.
+     *
+     * ALGORITHM: Linear scan with divisibility check
+     * TC: O(n) | SC: O(1)
+     */
     public int sumOfSquares(int[] nums) {
         int ind = 1, n = nums.length, ans = 0;
         for (int num : nums) if (n % ind++ == 0) ans += num * num;
         return ans;
     }
 
+    /*
+     * PROBLEM: Check if Array is Good (LeetCode 2784)
+     * Return true if nums is a permutation of [1, n-1, n, n] (base array).
+     *
+     * ALGORITHM: Frequency array — verify each value 1..n-1 appears once and n appears twice
+     * TC: O(n) | SC: O(n)
+     */
     public boolean isGood(int[] nums) {
         int[] counter = new int[201];
         if (nums.length == 1) return false;
@@ -7605,6 +9751,13 @@ Output: [1,2,2,3,5,6]
         return true;
     }
 
+    /*
+     * PROBLEM: Sort Vowels in a String (LeetCode 2785)
+     * Sort only the vowels in s in-place while keeping consonants at their positions.
+     *
+     * ALGORITHM: Collect vowels, sort them, then reinserting at vowel positions
+     * TC: O(n log n) | SC: O(n)
+     */
     public String sortVowels(String s) {
 
 
@@ -7644,6 +9797,13 @@ Output: [1,2,2,3,5,6]
 
     // 23rd  july
 
+    /*
+     * PROBLEM: Split Strings by Separator (LeetCode 2788)
+     * Split each word by the given separator character, discarding empty parts, and return all parts.
+     *
+     * ALGORITHM: Linear scan with StringBuilder accumulation
+     * TC: O(n · L) | SC: O(n · L)
+     */
     public List<String> splitWordsBySeparator(List<String> words, char separator) {
         List<String> ans = new ArrayList<>();
         for (String word : words) {
@@ -7667,6 +9827,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Make the Prefix Sum Non-negative (LeetCode 2599)
+     * Return the minimum number of elements to move to the end so every prefix sum ≥ 0.
+     *
+     * ALGORITHM: Greedy with min-heap — when prefix sum goes negative, remove the most negative element seen
+     * TC: O(n log n) | SC: O(n)
+     */
     public int makePrefSumNonNegative(int[] nums) {
         int cnt = 0;
 
@@ -7685,7 +9852,7 @@ Output: [1,2,2,3,5,6]
                 if (num + ps < 0) {
                     int removed = neg.firstKey();
                     ps -= removed;
-                    queue.remove(new Integer(removed));
+                    queue.remove(Integer.valueOf(removed));
                     displaced.add(removed);
                     dis = true;
                     neg.put(removed, neg.get(removed) - 1);
@@ -7704,12 +9871,26 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+    /*
+     * PROBLEM: Number of Employees Who Met the Target (LeetCode 2798)
+     * Return the count of employees whose working hours meet or exceed the target.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(n) | SC: O(1)
+     */
     public int numberOfEmployeesWhoMetTarget(int[] hours, int target) {
         int cnt = 0;
         for (int hour : hours) if (hour >= target) cnt++;
         return cnt;
     }
 
+    /*
+     * PROBLEM: Count Complete Subarrays in an Array (LeetCode 2799)
+     * Return the number of subarrays containing all distinct elements present in the full array.
+     *
+     * ALGORITHM: Sliding window with HashSet tracking distinct count
+     * TC: O(n²) | SC: O(n)
+     */
     public int countCompleteSubarrays(int[] nums) {
 
         int cnt = 0;
@@ -7725,6 +9906,13 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+    /*
+     * PROBLEM: Shortest String That Contains Three Strings (LeetCode 2800)
+     * Return the shortest (lexicographically smallest on tie) string containing a, b, and c as substrings.
+     *
+     * ALGORITHM: Try all 6 permutations of {a,b,c}, greedily merge each pair via suffix-prefix overlap
+     * TC: O(|a|·|b|·|c|) | SC: O(|a|+|b|+|c|)
+     */
     public String minimumString(String a, String b, String c) {
 
         List<List<String>> order = new ArrayList<>();
@@ -7812,6 +10000,13 @@ Output: [1,2,2,3,5,6]
     }
 
     //TODO: Find better approach
+    /*
+     * PROBLEM: Maximum Beauty of an Array After Applying Operation (LeetCode 2779)
+     * Return the max size of a subsequence where each element can be replaced by any value in [num-k, num+k].
+     *
+     * ALGORITHM: Sort + sliding window — count elements within a 2k window
+     * TC: O(n log n) | SC: O(n)
+     */
     public int maximumBeauty(int[] nums, int k) {
         Arrays.sort(nums);
         int max = 0;
@@ -7868,6 +10063,13 @@ Output: [1,2,2,3,5,6]
     After the second operation, nums is sorted in strictly increasing order, so the answer is true.
      */
 
+    /*
+     * PROBLEM: bs — Binary Search (Helper)
+     * Return the lower or upper bound index of `bus` in sorted array `ps`.
+     *
+     * ALGORITHM: Binary search
+     * TC: O(log n) | SC: O(1)
+     */
     private int bs(int[] ps, int bus, boolean lower) {
         int l = 0, h = ps.length - 1;
         while (l <= h) {
@@ -7889,6 +10091,13 @@ Output: [1,2,2,3,5,6]
         return l;
     }
 
+    /*
+     * PROBLEM: Account Balance After Rounded Purchase (LeetCode 2806)
+     * Return the account balance after rounding the purchase to the nearest 10 and deducting from 100.
+     *
+     * ALGORITHM: Round to nearest ten using integer arithmetic
+     * TC: O(1) | SC: O(1)
+     */
     public int accountBalanceAfterPurchase(int purchaseAmount) {
         int roundedAmount = purchaseAmount / 10;
         int multiple = purchaseAmount % 10;
@@ -7896,6 +10105,13 @@ Output: [1,2,2,3,5,6]
         else return Math.abs(100 - 10 * (roundedAmount));
     }
 
+    /*
+     * PROBLEM: Prime Subtraction Operation (LeetCode 2601)
+     * Return true if you can subtract a prime < nums[i] from each element to make the array strictly increasing.
+     *
+     * ALGORITHM: Greedy — for each element find the largest valid prime to subtract using a prime sieve
+     * TC: O(n · π(max)) | SC: O(max)
+     */
     public boolean primeSubOperation(int[] nums) {
 
         primeSieve(1000);
@@ -7930,6 +10146,13 @@ Output: [1,2,2,3,5,6]
     }
 
     //Optimise solution
+    /*
+     * PROBLEM: Minimum Seconds to Equalize a Circular Array (LeetCode 2808)
+     * Return the minimum seconds to make all elements equal via circular propagation.
+     *
+     * ALGORITHM: Frequency sort + greedy simulation of spreading dominant element
+     * TC: O(n²) | SC: O(n)
+     */
     public int minimumSeconds(List<Integer> nums) {
 
         Map<Integer, Integer> freq = new HashMap();
@@ -7980,6 +10203,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Faulty Keyboard (LeetCode 2810)
+     * Simulate typing on a faulty keyboard where 'i' reverses the current string.
+     *
+     * ALGORITHM: StringBuilder with conditional reverse
+     * TC: O(n²) worst case due to reverse | SC: O(n)
+     */
     public String finalString(String s) {
 
         StringBuilder sb = new StringBuilder();
@@ -7990,6 +10220,13 @@ Output: [1,2,2,3,5,6]
         return sb.toString();
     }
 
+    /*
+     * PROBLEM: Check if it is Possible to Split Array (LeetCode 2811)
+     * Return true if the array can be fully split into single-element subarrays by repeatedly splitting subarrays with sum ≥ m.
+     *
+     * ALGORITHM: Recursive splitting simulation with subarray sum validation
+     * TC: O(n²) | SC: O(n)
+     */
     public boolean canSplitArray(List<Integer> nums, int m) {
         int n = nums.size();
         while (true) {
@@ -8019,6 +10256,13 @@ Output: [1,2,2,3,5,6]
         }
     }
 
+    /*
+     * PROBLEM: split (Helper)
+     * Try to split a list into two non-empty parts where both parts have sum ≥ m.
+     *
+     * ALGORITHM: Linear scan checking prefix/suffix sums
+     * TC: O(n) | SC: O(1)
+     */
     private boolean split(List<Integer> nums, int m, List<List<Integer>> subArrays) {
         int ts = Arrays.stream(nums.stream().mapToInt(x -> x).toArray()).sum();
         int ssf = 0;
@@ -8035,6 +10279,13 @@ Output: [1,2,2,3,5,6]
         return false;
     }
 
+    /*
+     * PROBLEM: Minimum Right Shifts to Sort the Array (LeetCode 2855)
+     * Return the minimum right shifts to sort the list, or -1 if impossible.
+     *
+     * ALGORITHM: Simulate right shifts and check sorted after each
+     * TC: O(n²) | SC: O(n)
+     */
     public int minimumRightShifts(List<Integer> nums) {
         int op = 0;
         List<Integer> nl = new ArrayList<>();
@@ -8051,6 +10302,13 @@ Output: [1,2,2,3,5,6]
         }
     }
 
+    /*
+     * PROBLEM: rs — Right Shift (Helper)
+     * Perform one right circular shift on the list in-place.
+     *
+     * ALGORITHM: Linear shift + wrap-around
+     * TC: O(n) | SC: O(1)
+     */
     private void rs(List<Integer> nl) {
         int n = nl.size();
         int l = nl.get(n - 1);
@@ -8058,6 +10316,13 @@ Output: [1,2,2,3,5,6]
         nl.set(0, l);
     }
 
+    /*
+     * PROBLEM: sorted — Sorted Check (Helper)
+     * Return true if the list is non-decreasing.
+     *
+     * ALGORITHM: Linear scan
+     * TC: O(n) | SC: O(1)
+     */
     private boolean sorted(List<Integer> nl) {
         for (int i = 1; i < nl.size(); i++) if (nl.get(i) < nl.get(i - 1)) return false;
         return true;
@@ -8091,14 +10356,14 @@ Output: [1,2,2,3,5,6]
     boolean solveKT() {
         int[][] sol = new int[8][8];
 
+        /* xMove[] and yMove[] define next move of Knight.
+           xMove[] is for next value of x coordinate
+           yMove[] is for next value of y coordinate */
         /* Initialization of solution matrix */
         for (int x = 0; x < N; x++)
             for (int y = 0; y < N; y++)
                 sol[x][y] = -1;
 
-        /* xMove[] and yMove[] define next move of Knight.
-           xMove[] is for next value of x coordinate
-           yMove[] is for next value of y coordinate */
         int[] xMove = {2, 1, -1, -2, -2, -1, 1, 2};
         int[] yMove = {1, 2, 2, 1, -1, -2, -2, -1};
 
@@ -8145,6 +10410,13 @@ Output: [1,2,2,3,5,6]
     }
 
 
+    /*
+     * PROBLEM: Check Knight Tour Configuration (LeetCode 2596)
+     * Return true if the grid represents a valid knight's tour visiting every cell exactly once.
+     *
+     * ALGORITHM: Backtracking knight tour simulation starting from cell 0
+     * TC: O(8^(N²)) | SC: O(N²)
+     */
     public boolean checkValidGrid(int[][] grid) {
 
         this.N = grid.length;
@@ -8153,6 +10425,13 @@ Output: [1,2,2,3,5,6]
 
     }
 
+    /*
+     * PROBLEM: Sum of Values at Indices With K Set Bits (LeetCode 2859)
+     * Return the sum of nums[i] for all indices i whose binary representation has exactly k set bits.
+     *
+     * ALGORITHM: Linear scan with Integer.bitCount
+     * TC: O(n) | SC: O(1)
+     */
     public int sumIndicesWithKSetBits(List<Integer> nums, int k) {
         int sum = 0;
         int ind = 0;
@@ -8162,6 +10441,13 @@ Output: [1,2,2,3,5,6]
         return sum;
     }
 
+    /*
+     * PROBLEM: Happy Students (LeetCode 2860)
+     * Count the number of ways to select students such that each selected student is happy.
+     *
+     * ALGORITHM: Sort + greedy — check boundary conditions for each possible group size
+     * TC: O(n log n) | SC: O(1)
+     */
     public int countWays(List<Integer> nums) {
         PriorityQueue<Integer> pq = new PriorityQueue<>();
         for (int num : nums) pq.add(num);
@@ -8187,6 +10473,13 @@ Output: [1,2,2,3,5,6]
 
     // 24th september
 
+    /*
+     * PROBLEM: Maximum Odd Binary Number (LeetCode 2864)
+     * Rearrange bits to form the largest odd binary number (must end in '1').
+     *
+     * ALGORITHM: Count 1-bits, fill prefix with 1s, pad with 0s, end with one 1
+     * TC: O(n) | SC: O(n)
+     */
     public String maximumOddBinaryNumber(String s) {
         long one = s.chars().filter(c -> c == '1').count();
         int len = s.length();
@@ -8201,6 +10494,13 @@ Output: [1,2,2,3,5,6]
         return sb.toString();
     }
 
+    /*
+     * PROBLEM: Maximum Sum of Heights in a Mountain-Shaped Array (LeetCode 2865)
+     * Pick a peak index and compute the maximum total height sum with the mountain constraint.
+     *
+     * ALGORITHM: Brute force — for each candidate peak compute mountain sum via helper
+     * TC: O(n²) | SC: O(1)
+     */
     public long maximumSumOfHeights(List<Integer> maxHeights) {
         long ans = 0;
         for (int idx = 0; idx < maxHeights.size(); idx++)
@@ -8208,6 +10508,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: mr — Mountain Sum (Helper)
+     * Compute the mountain-shaped sum centered at ind: constrain heights left and right.
+     *
+     * ALGORITHM: Linear scan left and right from peak, taking running minimum
+     * TC: O(n) | SC: O(1)
+     */
     private long mr(List<Integer> maxHeights, int ind) {
 
         long res = 0;
@@ -8237,6 +10544,13 @@ Output: [1,2,2,3,5,6]
     }
 
     // 30th Sep
+    /*
+     * PROBLEM: Minimum Number of Operations to Make Elements in Range (LeetCode 2869)
+     * Return the minimum tail-operations to collect all values 1..k in a circular scan from the end.
+     *
+     * ALGORITHM: Reverse linear scan with a HashMap to track collected values
+     * TC: O(n) | SC: O(k)
+     */
     public int minOperations(List<Integer> nums, int k) {
         int op = 0;
         Map<Integer, Boolean> tm = new HashMap<>();
@@ -8251,6 +10565,13 @@ Output: [1,2,2,3,5,6]
     }
 
 
+    /*
+     * PROBLEM: Minimum Number of Operations to Make Array Empty (LeetCode 2870)
+     * Return the minimum operations (delete 2 or 3 equal elements) to empty the array, or -1 if impossible.
+     *
+     * ALGORITHM: Frequency count — for each frequency compute ceil(freq/3) ops; return -1 if freq==1
+     * TC: O(n) | SC: O(n)
+     */
     public int minOperations(int[] nums) {
         Map<Integer, Integer> freq = new HashMap<>();
         for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
@@ -8265,6 +10586,13 @@ Output: [1,2,2,3,5,6]
 
     //TODO: Complete this
     class Solution {
+    /*
+     * PROBLEM: Maximum Number of Non-Overlapping Subarrays (Helper / incomplete)
+     * Split nums into max non-overlapping subarrays each with AND equal to overall AND.
+     *
+     * ALGORITHM: Greedy scan tracking running AND; split when AND reaches global minimum
+     * TC: O(n) | SC: O(n)
+     */
         public int maxSubarrays(int[] nums) {
 
             int split = 0;
@@ -8318,6 +10646,13 @@ Output: [1,2,2,3,5,6]
         The idea is to calculate maximum from the left, {max, min} to the right and evaluate
         maximum value for the expression (A[i]-A[j])*A[k] where i < j < k for all {i,j,k} E [0,n-1] where n = size of array
      */
+    /*
+     * PROBLEM: Maximum Value of an Ordered Triplet I (LeetCode 2873)
+     * Return the max (nums[i]-nums[j])*nums[k] over all i<j<k, or 0 if all values are negative.
+     *
+     * ALGORITHM: Prefix max array + suffix max array, evaluate all j in O(n)
+     * TC: O(n) | SC: O(n)
+     */
     public long maximumTripletValue(int[] nums) {
         long ans = 0L;
 
@@ -8335,6 +10670,13 @@ Output: [1,2,2,3,5,6]
     }
 
 
+    /*
+     * PROBLEM: Divisible and Non-divisible Sums Difference (LeetCode 2894)
+     * Return (sum of non-multiples of m) - (sum of multiples of m) in [1,n].
+     *
+     * ALGORITHM: Math: total sum n*(n+1)/2 minus 2*(sum of multiples of m)
+     * TC: O(n/m) | SC: O(1)
+     */
     public int differenceOfSums(int n, int m) {
         int ts = n * (n + 1) / 2;
         int ds = 0;
@@ -8348,6 +10690,13 @@ Output: [1,2,2,3,5,6]
         return ts - 2 * ds;
     }
 
+    /*
+     * PROBLEM: Minimum Processing Time (LeetCode 2895)
+     * Return the minimum time to process all tasks given each processor handles 4 tasks.
+     *
+     * ALGORITHM: Sort processors ascending, sort tasks descending; assign top-4 tasks to earliest free processor
+     * TC: O(n log n) | SC: O(1)
+     */
     public int minProcessingTime(List<Integer> processorTime, List<Integer> tasks) {
 
         Collections.sort(processorTime);
@@ -8364,6 +10713,13 @@ Output: [1,2,2,3,5,6]
     }
 
     // 14th Oct
+    /*
+     * PROBLEM: Last Visited Integers (LeetCode 2899)
+     * Return the list of integers pointed to by each 'prev' command (k-th most recent integer).
+     *
+     * ALGORITHM: Linear scan maintaining a digits list and consecutive prev counter
+     * TC: O(n) | SC: O(n)
+     */
     public List<Integer> lastVisitedIntegers(List<String> words) {
         List<Integer> ans = new ArrayList<>();
         List<String> digits = new ArrayList<>();
@@ -8380,6 +10736,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Longest Unequal Adjacent Groups Subsequence I (LeetCode 2900)
+     * Return the longest subsequence of words where adjacent elements are from different groups.
+     *
+     * ALGORITHM: Greedy — pick the first start from each group, recurse for group-0 and group-1 starts
+     * TC: O(n) | SC: O(n)
+     */
     public List<String> getWordsInLongestSubsequence(int n, String[] words, int[] groups) {
 
         int zero = -1, one = -1;
@@ -8399,6 +10762,13 @@ Output: [1,2,2,3,5,6]
         return o;
     }
 
+    /*
+     * PROBLEM: helper — Subsequence Builder (Helper)
+     * Build the longest alternating-group subsequence starting from index ind.
+     *
+     * ALGORITHM: Linear scan with group-change detection
+     * TC: O(n) | SC: O(n)
+     */
     private List<String> helper(int ind, String[] words, int[] groups) {
         int prev = -1;
         List<String> ans = new ArrayList<>();
@@ -8434,6 +10804,13 @@ Output: [1,2,2,3,5,6]
         int val = Integer.MIN_VALUE, freq = 0, maxFreq = 0;
 
         // Author: Anand
+    /*
+     * PROBLEM: Find Mode in Binary Search Tree (LeetCode 501)
+     * Return all mode(s) (most frequently occurring values) in a BST.
+     *
+     * ALGORITHM: In-order DFS — track current value frequency and update mode list
+     * TC: O(n) | SC: O(n)
+     */
         public int[] findMode(TreeNode root) {
 
             ans = new ArrayList<>();
@@ -8443,6 +10820,13 @@ Output: [1,2,2,3,5,6]
             return ans.stream().mapToInt(x -> x).toArray();
         }
 
+    /*
+     * PROBLEM: helper — In-order Mode Collector (Helper)
+     * In-order traversal that tracks value frequencies and collects all modes.
+     *
+     * ALGORITHM: Recursive in-order DFS with running frequency counters
+     * TC: O(n) | SC: O(h) stack
+     */
         private void helper(TreeNode root) {
             // base case
             if (root == null) return;
@@ -8464,6 +10848,13 @@ Output: [1,2,2,3,5,6]
     }
 
 
+    /*
+     * PROBLEM: Shortest and Lexicographically Smallest Beautiful String (LeetCode 2904)
+     * Find the shortest (lex-smallest on tie) substring of s containing exactly k '1' bits.
+     *
+     * ALGORITHM: Brute force — enumerate all substrings with exactly k ones
+     * TC: O(n²) | SC: O(n)
+     */
     public String shortestBeautifulSubstring(String s, int k) {
         String ans = "";
         for (int i = 0; i < s.length(); i++) {
@@ -8482,6 +10873,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Find Indices With Index and Value Difference I (LeetCode 2903)
+     * Find indices [i,j] where |i-j|>=indexDifference and |nums[i]-nums[j]|>=valueDifference.
+     *
+     * ALGORITHM: Reverse scan with TreeMap storing max/min indices for suffix
+     * TC: O(n log n) | SC: O(n)
+     */
     public int[] findIndices(int[] nums, int indexDifference, int valueDifference) {
         TreeMap<Integer, int[]> tm = new TreeMap<>();//{index, new int[]{largI, smallI}}
         for (int i = nums.length - 1; i >= 0; i--) {
@@ -8501,6 +10899,13 @@ Output: [1,2,2,3,5,6]
     }
 
 
+    /*
+     * PROBLEM: Construct Product Matrix (LeetCode 2906)
+     * Return grid where each cell = product of all other cells mod 12345.
+     *
+     * ALGORITHM: Flatten to 1D, compute prefix and suffix products mod 12345
+     * TC: O(m·n) | SC: O(m·n)
+     */
     public int[][] constructProductMatrix(int[][] grid) {
 
         int m = grid.length, n = grid[0].length;
@@ -8533,6 +10938,13 @@ Output: [1,2,2,3,5,6]
     }
 
 
+    /*
+     * PROBLEM: Minimum Sum of Mountain Triplets I (LeetCode 2908)
+     * Find the minimum sum nums[i]+nums[j]+nums[k] where i<j<k and nums[i]<nums[j]>nums[k].
+     *
+     * ALGORITHM: Prefix min (left) + suffix min (right) arrays; evaluate all valid peaks j
+     * TC: O(n) | SC: O(n)
+     */
     public int minimumSum(int[] nums) {
         int[] left = new int[nums.length], right = new int[nums.length];
         Arrays.fill(left, Integer.MAX_VALUE);
@@ -8555,6 +10967,13 @@ Output: [1,2,2,3,5,6]
     }
     // 28th oct
 
+    /*
+     * PROBLEM: Subarrays Distinct Element Sum of Squares I (LeetCode 2913)
+     * Return sum of squares of distinct element counts across all subarrays (List<Integer> version).
+     *
+     * ALGORITHM: Brute force — enumerate subarrays with a HashSet tracking distinct elements
+     * TC: O(n²) | SC: O(n)
+     */
     public int sumCounts(List<Integer> nums) {
 
         int ans = 0;
@@ -8570,6 +10989,13 @@ Output: [1,2,2,3,5,6]
     }
 
 
+    /*
+     * PROBLEM: Minimum Number of Changes to Make Binary String Beautiful (LeetCode 2914)
+     * Return the minimum changes to partition the binary string into even-length substrings of equal characters.
+     *
+     * ALGORITHM: Greedy — process pairs of characters, count mismatches within each partition segment
+     * TC: O(n) | SC: O(1)
+     */
     public int minChanges(String s) {
         int c1 = 0, c0 = 0, ans = 0, len = 0;
         for (int i = 0; i < s.length(); i++) {
@@ -8617,6 +11043,13 @@ Output: [1,2,2,3,5,6]
 
 
     //TLE
+    /*
+     * PROBLEM: Subarrays Distinct Element Sum of Squares I (LeetCode 2913)
+     * Return sum of squares of distinct element counts across all subarrays (int[] version, modulo 1e9+7).
+     *
+     * ALGORITHM: Brute force — enumerate subarrays with a HashSet tracking distinct elements
+     * TC: O(n²) | SC: O(n)
+     */
     public int sumCounts(int[] nums) {
 
         int ans = 0;
@@ -8634,6 +11067,13 @@ Output: [1,2,2,3,5,6]
     }
 
     // 29th oct
+    /*
+     * PROBLEM: Find the K-Or of an Array (LeetCode 2917)
+     * Return the K-Or: set bit b in result iff at least k elements have bit b set.
+     *
+     * ALGORITHM: Bit-by-bit counting — for each bit position count elements with that bit set
+     * TC: O(n · B) where B=bit-width | SC: O(1)
+     */
     public int findKOr(int[] nums, int k) {
         int largest = -1;
         for (int num : nums) largest = Math.max(largest, num);
@@ -8658,6 +11098,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Sort Integers by The Number of 1 Bits (LeetCode 1356)
+     * Sort integers in ascending order of their bit count, breaking ties by value.
+     *
+     * ALGORITHM: TreeMap keyed by bit count, values sorted; flatten to result array
+     * TC: O(n log n) | SC: O(n)
+     */
     public int[] sortByBits(int[] arr) {
         int[] ans = new int[arr.length];
 
@@ -8678,6 +11125,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Minimum Equal Sum of Two Arrays After Replacing Zeros (LeetCode 2918)
+     * Replace zeros with positive integers so both arrays have the same minimum possible sum.
+     *
+     * ALGORITHM: Compute sums + zero counts; determine feasibility and equalize
+     * TC: O(n+m) | SC: O(1)
+     */
     public long minSum(int[] nums1, int[] nums2) {
         BigInteger bigsum1 = BigInteger.valueOf(0L);
         BigInteger bigsum2 = BigInteger.valueOf(0L);
@@ -8736,6 +11190,13 @@ Output: [1,2,2,3,5,6]
         }
     }
 
+    /*
+     * PROBLEM: Build Array from Permutation (LeetCode 1920)
+     * Build ans[i] = nums[nums[i]] using stack Push/Pop simulation on a stream 1..n.
+     *
+     * ALGORITHM: Greedy simulation — push/pop non-target values to position stream pointer
+     * TC: O(n) | SC: O(n)
+     */
     public List<String> buildArray(int[] target, int n) {
 
         int start = 1;
@@ -8753,6 +11214,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Last Moment Before All Ants Fall Out of a Plank (LeetCode 1503)
+     * Return the last moment when all ants have fallen off a plank of length n.
+     *
+     * ALGORITHM: Key insight: ants pass through each other, so answer = max(left ants pos, n - min(right ants pos))
+     * TC: O(n) | SC: O(1)
+     */
     public int getLastMoment(int n, int[] left, int[] right) {
         int lm = -1, rm = Integer.MAX_VALUE;
         for (int l : left) lm = Math.max(l, lm);
@@ -8761,6 +11229,13 @@ Output: [1,2,2,3,5,6]
     }
 
     // 5th November
+    /*
+     * PROBLEM: Find Champion I (LeetCode 2923)
+     * Return the team that beats every other team given an n×n dominance grid.
+     *
+     * ALGORITHM: Scan the grid: track which row dominates all columns
+     * TC: O(n²) | SC: O(1)
+     */
     public int findChampion(int[][] grid) {
         int ans = -1;
         for (int i = 0; i < grid.length; i++) {
@@ -8776,6 +11251,13 @@ Output: [1,2,2,3,5,6]
     }
     //Compute max by traversing wisely
 
+    /*
+     * PROBLEM: Find Champion II (LeetCode 2924)
+     * Return the unique champion node (in-degree 0) in a DAG, or -1 if none or multiple exist.
+     *
+     * ALGORITHM: Build adjacency list, find node with no incoming edges; verify uniqueness
+     * TC: O(n + e) | SC: O(n + e)
+     */
     public int findChampion(int n, int[][] edges) {
 
         TreeMap<Integer, List<Integer>> graph = new TreeMap<>();
@@ -8821,6 +11303,13 @@ Output: [1,2,2,3,5,6]
 
     //Daily LC
     //TODO: Solve in O(N) time
+    /*
+     * PROBLEM: Eliminate Maximum Number of Monsters (LeetCode 1921)
+     * Return the maximum number of monsters you can eliminate before any reaches the city.
+     *
+     * ALGORITHM: Greedy + sort by arrival time (dist/speed); eliminate each monster if weapon ready in time
+     * TC: O(n log n) | SC: O(n)
+     */
     public int eliminateMaximum(int[] dist, int[] speed) {
         // Sort the monster based on the abiltiies to reach city earliest
         PriorityQueue<Pair<Integer, Integer>> pq = new PriorityQueue<>(Comparator.comparingDouble(a -> (double) a.getKey() / a.getValue()));
@@ -8842,6 +11331,13 @@ Output: [1,2,2,3,5,6]
         return cnt;
     }
 
+    /*
+     * PROBLEM: Maximum Strong Pair XOR I (LeetCode 2932)
+     * Return the maximum XOR of a strong pair (x,y) where |x-y| <= min(x,y).
+     *
+     * ALGORITHM: Brute force — check all pairs satisfying the strong-pair condition
+     * TC: O(n²) | SC: O(1)
+     */
     public int maximumStrongPairXor(int[] nums) {
 
         int ans = 0;
@@ -8856,6 +11352,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: High-Access Employees (LeetCode 2933)
+     * Return employees who accessed the system 3 or more times within any 1-hour window.
+     *
+     * ALGORITHM: Group access times per employee, sort times, slide a window of size 3
+     * TC: O(n log n) | SC: O(n)
+     */
     public List<String> findHighAccessEmployees(List<List<String>> access_times) {
 
         List<String> ans = new ArrayList<>();
@@ -8895,6 +11398,13 @@ Output: [1,2,2,3,5,6]
 
     // To compute min maximum sum of a pair in the array
     // we need to maintain count of min,max, element of array
+    /*
+     * PROBLEM: Minimize Maximum Pair Sum in Array (LeetCode 1877)
+     * Minimize the maximum pair sum by pairing smallest with largest elements.
+     *
+     * ALGORITHM: Sort + two-pointer hash-frequency scan for min/max pairs
+     * TC: O(n + max) | SC: O(max)
+     */
     public int minPairSum(int[] nums) {
         int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
 
@@ -8920,6 +11430,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Reduction Operations to Make the Array Elements Equal (LeetCode 1887)
+     * Return the total number of reduction operations to make all elements equal to the minimum.
+     *
+     * ALGORITHM: Frequency array — accumulate ops top-down, each level pays cost of all elements above it
+     * TC: O(n + max) | SC: O(max)
+     */
     public int reductionOperations(int[] nums) {
         int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
 
@@ -8950,6 +11467,13 @@ Output: [1,2,2,3,5,6]
 
     //19th Nov
     //Continue to delete character from behind and count the number of operations needed
+    /*
+     * PROBLEM: Minimum Number of Operations to Make Strings Equal (LeetCode 2937)
+     * Return minimum deletions from the ends of s1/s2/s3 so all three share the same non-empty prefix.
+     *
+     * ALGORITHM: Find longest common prefix of all three; remaining characters must be trimmed
+     * TC: O(n) | SC: O(n)
+     */
     public int findMinimumOperations(String s1, String s2, String s3) {
         if (s1.length() == s2.length() && s2.length() == s3.length()) {
             int sz = 0;
@@ -8982,6 +11506,13 @@ Output: [1,2,2,3,5,6]
         return op;
     }
 
+    /*
+     * PROBLEM: Maximum Coins Heroes Can Collect (LeetCode 2943)
+     * Maximize coins collected: give min and max to enemies, keep second-max per triplet.
+     *
+     * ALGORITHM: Greedy with hash-frequency array — pair smallest and largest, collect second-largest
+     * TC: O(n + max) | SC: O(max)
+     */
     public int maxCoins(int[] nums) {
         int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
 
@@ -9022,6 +11553,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Sum of Absolute Differences in a Sorted Array (LeetCode 1685)
+     * For each index i return sum of |nums[i] - nums[j]| for all j.
+     *
+     * ALGORITHM: Prefix sums — formula: nums[i]*(2i+1-n) + (prefix[n-1] - 2*prefix[i])
+     * TC: O(n) | SC: O(n)
+     */
     public int[] getSumAbsoluteDifferences(int[] nums) {
         int n = nums.length;
         int[] prefix = new int[n], ans = new int[n];
@@ -9036,6 +11574,13 @@ Output: [1,2,2,3,5,6]
     }
 
 
+    /*
+     * PROBLEM: Find the Winner of an Array Game (LeetCode 1535)
+     * Return the integer that wins k consecutive comparisons in the sliding-window game.
+     *
+     * ALGORITHM: Linear scan tracking current max and its consecutive win count
+     * TC: O(n) | SC: O(n)
+     */
     public int getWinner(int[] arr, int k) {
         Map<Integer, Integer> freq = new LinkedHashMap<>();
         int max = arr[0];
@@ -9051,6 +11596,13 @@ Output: [1,2,2,3,5,6]
 
 
     //TODO: write better code
+    /*
+     * PROBLEM: Diagonal Traverse II (LeetCode 1424)
+     * Return all elements of a jagged 2D list in diagonal (anti-diagonal) order.
+     *
+     * ALGORITHM: BFS/adjacency map grouping elements by anti-diagonal index
+     * TC: O(m·n) | SC: O(m·n)
+     */
     public int[] findDiagonalOrder(List<List<Integer>> nums) {
         ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
         Map<Integer, List<Integer>> map = new LinkedHashMap<>();
@@ -9089,6 +11641,13 @@ Output: [1,2,2,3,5,6]
         return result.stream().mapToInt(x -> x).toArray();
     }
 
+    /*
+     * PROBLEM: Find Words Containing Character (LeetCode 2942)
+     * Return indices of all words that contain the character x.
+     *
+     * ALGORITHM: Linear scan with String.contains
+     * TC: O(n · L) | SC: O(n)
+     */
     public List<Integer> findWordsContaining(String[] words, char x) {
         int ind = 0;
         List<Integer> ans = new ArrayList<>();
@@ -9100,6 +11659,13 @@ Output: [1,2,2,3,5,6]
         return ans;
     }
 
+    /*
+     * PROBLEM: Check If Two String Arrays are Equivalent (LeetCode 1662)
+     * Return true if the concatenation of word1 equals the concatenation of word2.
+     *
+     * ALGORITHM: Concatenate both arrays and compare
+     * TC: O(n · L) | SC: O(n · L)
+     */
     public boolean arrayStringsAreEqual(String[] word1, String[] word2) {
         StringBuilder sb1 = new StringBuilder();
         StringBuilder sb2 = new StringBuilder();
@@ -9108,6 +11674,13 @@ Output: [1,2,2,3,5,6]
         return sb1.toString().equals(sb2.toString());
     }
 
+    /*
+     * PROBLEM: Find Words That Can Be Formed by Characters (LeetCode 1160)
+     * Return the total length of words that can be formed using characters from chars (with repetition).
+     *
+     * ALGORITHM: Frequency map for chars; check each word against a copy of the frequency map
+     * TC: O(n · L) | SC: O(1)
+     */
     public int countCharacters(String[] words, String chars) {
         Map<Character, Integer> freq = new HashMap<>();
         for (Character c : chars.toCharArray()) freq.put(c, freq.getOrDefault(c, 0) + 1);
@@ -9654,6 +12227,15 @@ Output: [1,2,2,3,5,6]
         }
 
 
+    }
+    // ── Internal generic Pair used throughout this class ──────────────
+    static class Pair<K, V> {
+        private final K key;
+        private final V value;
+        public Pair(K key, V value) { this.key = key; this.value = value; }
+        public K getKey()   { return key; }
+        public V getValue() { return value; }
+        @Override public String toString() { return "(" + key + ", " + value + ")"; }
     }
 }
 /*

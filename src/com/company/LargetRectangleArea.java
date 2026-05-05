@@ -3,6 +3,13 @@ package com.company;
 import java.util.Stack;
 
 class LargetRectangleArea {
+    /*
+     * PROBLEM: Maximal Rectangle (LeetCode 85)
+     * Find the largest rectangle containing only 1s in a binary matrix.
+     *
+     * ALGORITHM: Stack-based histogram area (reduce to LC 84)
+     * TC: O(mn) | SC: O(n)
+     */
     public int maximalRectangle(char[][] matrix) {
         if (matrix == null || matrix.length == 0)
             return 0;
@@ -25,6 +32,13 @@ class LargetRectangleArea {
 
     }
 
+    /*
+     * PROBLEM: Largest Rectangle in Histogram (LeetCode 84)
+     * Find the area of the largest rectangle that can be formed in a histogram.
+     *
+     * ALGORITHM: Monotonic Stack
+     * TC: O(n) | SC: O(n)
+     */
     int largestRectangleArea(int[] heights) {
         Stack<Integer> st = new Stack<>();
         int maxArea = 0;

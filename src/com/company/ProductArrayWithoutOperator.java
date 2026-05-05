@@ -4,6 +4,13 @@ import java.util.HashMap;
 
 public class ProductArrayWithoutOperator {
     /*
+     * PROBLEM: Product Array Without Division (GFG)
+     * For each element, compute the product of all other elements without using division.
+     *
+     * ALGORITHM: Prefix + Suffix product with HashMap
+     * TC: O(n) | SC: O(n)
+     */
+    /*
      {1, 2, 3, 4};
      */
     public static void productArray(int[] arr) {

@@ -14,11 +14,25 @@ public class ObjectOrientedDesign {
             sb = new StringBuilder();
         }
 
+        /*
+         * PROBLEM: Design a Text Editor (LeetCode 2296)
+         * Insert the given text at the current cursor position.
+         *
+         * ALGORITHM: StringBuilder with cursor index
+         * TC: O(n) | SC: O(n)
+         */
         public void addText(String text) {
             sb.insert(cursorPos, text);
             cursorPos += text.length();
         }
 
+        /*
+         * PROBLEM: Design a Text Editor (LeetCode 2296)
+         * Delete k characters to the left of the cursor; return the number of characters actually deleted.
+         *
+         * ALGORITHM: StringBuilder delete with bounded cursor
+         * TC: O(k) | SC: O(1)
+         */
         public int deleteText(int k) {
             int min = Math.min(k, cursorPos);
             cursorPos -= min;
@@ -26,12 +40,26 @@ public class ObjectOrientedDesign {
             return min;
         }
 
+        /*
+         * PROBLEM: Design a Text Editor (LeetCode 2296)
+         * Move the cursor k steps to the left; return the last min(10, cursor) characters to the left of the cursor.
+         *
+         * ALGORITHM: Bounded cursor movement on StringBuilder
+         * TC: O(k) | SC: O(1)
+         */
         public String cursorLeft(int k) {
             int min = Math.min(k, cursorPos);
             cursorPos -= min;
             return cursorPos < 10 ? sb.substring(0, cursorPos) : sb.substring(cursorPos - 10, cursorPos);
         }
 
+        /*
+         * PROBLEM: Design a Text Editor (LeetCode 2296)
+         * Move the cursor k steps to the right; return the last min(10, cursor) characters to the left of the cursor.
+         *
+         * ALGORITHM: Bounded cursor movement on StringBuilder
+         * TC: O(k) | SC: O(1)
+         */
         public String cursorRight(int k) {
             cursorPos = Math.min(sb.length(), cursorPos + k);
             return cursorPos < 10 ? sb.substring(0, cursorPos) : sb.substring(cursorPos - 10, cursorPos);
@@ -58,6 +86,13 @@ public class ObjectOrientedDesign {
             set = new TreeSet<>();
         }
 
+        /*
+         * PROBLEM: Design Video Sharing Platform (LeetCode 2254)
+         * Upload a video and update the longest consecutive uploaded prefix starting from 1.
+         *
+         * ALGORITHM: TreeSet + linear prefix scan
+         * TC: O(log n) | SC: O(n)
+         */
         public void upload(int video) {
             set.add(video);
             if (video == 1 && l == 0) l = 1;
@@ -67,6 +102,13 @@ public class ObjectOrientedDesign {
             l = --prev;
         }
 
+        /*
+         * PROBLEM: Design Video Sharing Platform (LeetCode 2254)
+         * Return the length of the longest uploaded prefix (longest sequence 1..l all uploaded).
+         *
+         * ALGORITHM: Cached prefix length field
+         * TC: O(1) | SC: O(1)
+         */
         public int longest() {
             return l;
         }
@@ -94,6 +136,13 @@ public class ObjectOrientedDesign {
             for (int num : nums2) map2.put(num, map2.getOrDefault(num, 0) + 1);
         }
 
+        /*
+         * PROBLEM: Finding Pairs With a Certain Sum (LeetCode 1865)
+         * Add val to nums2[index] and update the frequency map to reflect the change.
+         *
+         * ALGORITHM: Frequency HashMap update
+         * TC: O(1) | SC: O(1)
+         */
         public void add(int index, int val) {
             map2.put(nums2[index], map2.getOrDefault(nums2[index], 0) - 1);
             if (map2.get(nums2[index]) <= 0) map2.remove(nums2[index]);
@@ -101,6 +150,13 @@ public class ObjectOrientedDesign {
             map2.put(nums2[index], map2.getOrDefault(nums2[index], 0) + 1);
         }
 
+        /*
+         * PROBLEM: Finding Pairs With a Certain Sum (LeetCode 1865)
+         * Count pairs (i, j) such that nums1[i] + nums2[j] == tot.
+         *
+         * ALGORITHM: Frequency HashMap lookup
+         * TC: O(n) | SC: O(1)
+         */
         public int count(int tot) {
             int cnt = 0;
             for (int num : nums1) {
@@ -132,6 +188,13 @@ class Allocator {
         tm.put(0, n);
     }
 
+    /*
+     * PROBLEM: Design Memory Allocator (LeetCode 2502)
+     * Allocate the first contiguous free block of the given size and tag it with mID; return its start index or -1.
+     *
+     * ALGORITHM: TreeMap of free ranges
+     * TC: O(n) | SC: O(n)
+     */
     public int allocate(int size, int mID) {
         int ind = -1;
         for (Map.Entry<Integer, Integer> entry : tm.entrySet()) {
@@ -165,6 +228,13 @@ class Allocator {
         return ind;
     }
 
+    /*
+     * PROBLEM: Design Memory Allocator (LeetCode 2502)
+     * Free all memory blocks tagged with mID, merge adjacent free ranges, and return the count of freed units.
+     *
+     * ALGORITHM: Linear scan + TreeMap range merge
+     * TC: O(n) | SC: O(n)
+     */
     public int free(int mID) {
         int cnt = 0;
         System.out.println(Arrays.toString(allocator) + "size=" + allocator.length);
@@ -217,6 +287,13 @@ class Allocator {
             this.k = k;
         }
 
+        /*
+         * PROBLEM: Find Consecutive Integers from a Data Stream (LeetCode 2526)
+         * Return true if the last k integers in the stream all equal the target value.
+         *
+         * ALGORITHM: Running counter reset on mismatch
+         * TC: O(1) | SC: O(1)
+         */
         public boolean consec(int num) {
 
             if (num == value) cntK++;

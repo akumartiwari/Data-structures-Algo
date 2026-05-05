@@ -4,6 +4,13 @@ import java.util.HashMap;
 
 class FourSumCount {
 
+    /*
+     * PROBLEM: 4Sum II (LeetCode 454)
+     * Count tuples (i,j,k,l) such that nums1[i]+nums2[j]+nums3[k]+nums4[l]==0.
+     *
+     * ALGORITHM: HashMap - store sums of pairs from nums3+nums4
+     * TC: O(n^2) | SC: O(n^2)
+     */
     public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
         int n = nums1.length;
         if (n == 1) {

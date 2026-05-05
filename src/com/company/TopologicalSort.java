@@ -14,7 +14,13 @@ public class TopologicalSort {
     // TOPO Sort algorithm using DFS
     // The idea is to do dfs for all nodes after marking them visited,
     // after returning from recursion calls add them to stack
-
+    /*
+     * PROBLEM: Topological Sort (GFG)
+     * Return a topological ordering of nodes in a directed acyclic graph.
+     *
+     * ALGORITHM: DFS-based Topological Sort (recursive post-order with stack)
+     * TC: O(V+E) | SC: O(V)
+     */
     public int[] topoSort(int N, List<List<Integer>> graph) {
         Stack<Integer> stk = new Stack<>();
         int[] vis = new int[N];
@@ -36,6 +42,13 @@ public class TopologicalSort {
     }
 
 
+    /*
+     * PROBLEM: DFS helper for Topological Sort (Helper)
+     * Recursively visit a node and push it to stack after all descendants are visited.
+     *
+     * ALGORITHM: Recursive DFS with post-order stack push
+     * TC: O(V+E) | SC: O(V)
+     */
     //TC = O(N+E), SC = O(N), ASS = O(N)
     private void findTopoSort(int node, int[] vis, List<List<Integer>> graph, Stack<Integer> stk) {
         vis[node] = 1;
@@ -57,6 +70,13 @@ public class TopologicalSort {
         fill the matrix using the sorting order given by topological sort.
      */
 
+    /*
+     * PROBLEM: BFS Topological Sort (Helper)
+     * Generate topological order of k nodes using Kahn's BFS algorithm.
+     *
+     * ALGORITHM: Kahn's Algorithm (BFS with in-degree tracking)
+     * TC: O(V+E) | SC: O(V)
+     */
     //TC  = O(N+E), SC = O(N) + O(N)
     // TOPO Sort using BFS algorithm
     public List<Integer> generateTopoSort(int[][] conditions, int k) {
@@ -88,6 +108,13 @@ public class TopologicalSort {
         return ans;
     }
 
+    /*
+     * PROBLEM: Build a Matrix With Conditions (LeetCode 2392)
+     * Build a k×k matrix where row and column conditions define element ordering.
+     *
+     * ALGORITHM: Topological Sort (BFS) on row and column conditions + matrix fill
+     * TC: O(k² + E) | SC: O(k²)
+     */
     public int[][] buildMatrix(int k, int[][] rowConditions, int[][] colConditions) {
         List<Integer> order1 = generateTopoSort(rowConditions, k);
         List<Integer> order2 = generateTopoSort(colConditions, k);
@@ -106,6 +133,13 @@ public class TopologicalSort {
         return ans;
     }
 
+    /*
+     * PROBLEM: Parallel Courses III (LeetCode 2050)
+     * Find the minimum time to complete all courses given dependencies and individual times.
+     *
+     * ALGORITHM: Topological Sort with Min Priority Queue (critical path)
+     * TC: O((V+E) log V) | SC: O(V+E)
+     */
     public int minimumTime(int n, int[][] relations, int[] time) {
         // create adjancy list of graph
         List<List<Integer>> graph = new ArrayList<>();

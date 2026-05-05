@@ -41,6 +41,13 @@ class AhoCorasick {
 //         in the text.
 // Returns the number of states that the built machine has.
 // States are numbered 0 up to the return value - 1, inclusive.
+/*
+ * PROBLEM: Aho-Corasick Build Matching Machine (Helper)
+ * Build the goto, failure, and output functions for the Aho-Corasick string matching automaton.
+ *
+ * ALGORITHM: Aho-Corasick (Trie + BFS for failure links)
+ * TC: O(MAXS * MAXC) | SC: O(MAXS * MAXC)
+ */
     static int buildMatchingMachine(String arr[], int k) {
 
         // Initialize all values in output function as 0.
@@ -151,6 +158,13 @@ class AhoCorasick {
 // currentState - The current state of the machine. Must be between
 //                0 and the number of states - 1, inclusive.
 // nextInput - The next character that enters into the machine.
+/*
+ * PROBLEM: Aho-Corasick Find Next State (Helper)
+ * Transition to the next state given the current state and next input character.
+ *
+ * ALGORITHM: Aho-Corasick (goto + failure function lookup)
+ * TC: O(1) amortized | SC: O(1)
+ */
     static int findNextState(int currentState, char nextInput) {
         int answer = currentState;
         int ch = nextInput - 'a';
@@ -165,6 +179,13 @@ class AhoCorasick {
 
     // This function finds all occurrences of
 // all array words in text.
+/*
+ * PROBLEM: Aho-Corasick Search Words (Helper)
+ * Search for all occurrences of all keywords in the given text using the automaton.
+ *
+ * ALGORITHM: Aho-Corasick (automaton traversal + output function)
+ * TC: O(n + m) | SC: O(1)
+ */
     static void searchWords(String arr[], int k,
                             String text) {
 
@@ -201,6 +222,13 @@ class AhoCorasick {
         }
     }
 
+    /*
+     * PROBLEM: Aho-Corasick Driver (Main)
+     * Demonstrate Aho-Corasick string matching with a sample text and pattern set.
+     *
+     * ALGORITHM: Entry point
+     * TC: O(n + m) | SC: O(MAXS * MAXC)
+     */
     // Driver code
     public static void main(String[] args) {
         String arr[] = {"he", "she", "hers", "his"};
@@ -214,6 +242,13 @@ class AhoCorasick {
 // This code is contributed by Princi Singh
 class Solution {
 
+    /*
+     * PROBLEM: Using Points As Keys Demo (Helper)
+     * Demonstrate that java.awt.Point works correctly as a HashMap key.
+     *
+     * ALGORITHM: HashMap with Point keys
+     * TC: O(n) | SC: O(n)
+     */
     public static void usingPointsAsKeys() {
         Point points[] =
                 {
@@ -240,6 +275,13 @@ class Solution {
     }
 
 
+    /*
+     * PROBLEM: Using Arrays As Keys Demo (Helper)
+     * Demonstrate that int[] does NOT work correctly as a HashMap key (identity-based equality).
+     *
+     * ALGORITHM: HashMap with int[] keys
+     * TC: O(n) | SC: O(n)
+     */
     public static void usingArraysAsKeys() {
         int[][] points =
                 {
@@ -270,6 +312,13 @@ class Solution {
     }
 
 
+    /*
+     * PROBLEM: Find Nearest Valid Point (LeetCode 1779)
+     * Find the index of the nearest valid point that shares the same x or y coordinate.
+     *
+     * ALGORITHM: Linear scan + sorted map by Manhattan distance
+     * TC: O(n log n) | SC: O(n)
+     */
     public int nearestValidPoint(int x, int y, int[][] points) {
 
         Map<Point, Integer> sanityMap = new HashMap<Point, Integer>();
@@ -325,6 +374,13 @@ class Solution {
 }
 
 class SolutionMaxSliding {
+/*
+ * PROBLEM: Sliding Window Maximum (LeetCode 239)
+ * Return the max of each window of size k as it slides across the array.
+ *
+ * ALGORITHM: Max-Heap (PriorityQueue) — brute force O(n^2 logn)
+ * TC: O(n^2 log n) | SC: O(k)
+ */
     // O(n2*logn)
     public int[] maxSlidingWindow(int[] nums, int k) {
         int n = nums.length;
@@ -347,6 +403,13 @@ class SolutionMaxSliding {
 
 
 class Solution1 {
+    /*
+     * PROBLEM: Find Nearest Valid Point (LeetCode 1779)
+     * Find the closest valid point sharing the same row or column as (x,y).
+     *
+     * ALGORITHM: Linear scan tracking minimum Manhattan distance
+     * TC: O(n) | SC: O(1)
+     */
     public int nearestValidPoint(int x, int y, int[][] points) {
 
         Map<Point, Double> distMap = new HashMap<Point, Double>();
@@ -391,6 +454,13 @@ class Solution1 {
     }
 
     /*
+     * PROBLEM: Sort Characters By Frequency (LeetCode 451)
+     * Return a string where characters are sorted by their frequency in descending order.
+     *
+     * ALGORITHM: HashMap frequency count + sort by value
+     * TC: O(n log n) | SC: O(n)
+     */
+    /*
 input
 - [1,3,-1,-3,5,3,6,7]
 - 3
@@ -426,6 +496,13 @@ output
     }
 }
 
+/*
+ * PROBLEM: Sliding Window Maximum (LeetCode 239)
+ * Return max element of each sliding window of size k using a priority queue with index tracking.
+ *
+ * ALGORITHM: Max-Heap (PriorityQueue with Pair<index,value>)
+ * TC: O(n log n) | SC: O(k)
+ */
 // nums = [1,3,-1,-3,5,3,6,7], k = 3
 class SlidingWindowMax {
     public int[] maxSlidingWindow(int[] nums, int k) {
@@ -496,6 +573,13 @@ class SlidingWindowMax {
     }
 
     class SolutionIsSumEqual {
+        /*
+         * PROBLEM: Check Sum Equal Via Alphabet Values (Helper)
+         * Verify if the numeric values of two words sum to the third word.
+         *
+         * ALGORITHM: String-to-number conversion using character indices
+         * TC: O(n) | SC: O(n)
+         */
         public boolean isSumEqual(String firstWord, String secondWord, String targetWord) {
 
             StringBuilder firstSum = new StringBuilder("");
@@ -522,6 +606,13 @@ class SlidingWindowMax {
 
 
     class Solution {
+        /*
+         * PROBLEM: Maximum Value After Inserting a Digit (LeetCode 1881)
+         * Insert digit x into integer n to maximise (positive) or minimise (negative) its value.
+         *
+         * ALGORITHM: PriorityQueue with BigInteger permutations
+         * TC: O(n^2) | SC: O(n)
+         */
         public String maxValue(String n, int x) {
 
             // max pq
@@ -555,6 +646,13 @@ class SlidingWindowMax {
 
          */
 
+        /*
+         * PROBLEM: Assign Tasks To Servers Insert PQ (Helper)
+         * Build a min-heap of servers ordered by weight for task assignment.
+         *
+         * ALGORITHM: Min-Heap construction
+         * TC: O(n log n) | SC: O(n)
+         */
         public PriorityQueue<Pair> insertPQ(int[] servers) {
             PriorityQueue<Pair> pq = new PriorityQueue<>(); // min-heap
             for (int i = 0; i < servers.length; i++) {
@@ -563,6 +661,13 @@ class SlidingWindowMax {
             return pq;
         }
 
+        /*
+         * PROBLEM: Assign Tasks to Servers (Helper)
+         * Assign each task to the least-loaded server using a priority queue.
+         *
+         * ALGORITHM: Greedy + Min-Heap
+         * TC: O(n log n) | SC: O(n)
+         */
         public int[] assignTasks(int[] servers, int[] tasks) {
             int index = 0;
             int[] ans = new int[tasks.length];
@@ -621,6 +726,13 @@ class SlidingWindowMax {
 
 
     class SolutionTriplet {
+        /*
+         * PROBLEM: 3Sum (LeetCode 15)
+         * Find all unique triplets in the array that sum to zero.
+         *
+         * ALGORITHM: Sort + Two Pointers
+         * TC: O(n^2) | SC: O(n)
+         */
         public List<List<Integer>> threeSum(int[] nums) {
             int n = nums.length;
             int l, r;
@@ -643,6 +755,13 @@ class SlidingWindowMax {
             return ans;
         }
 
+        /*
+         * PROBLEM: QuickSort Partition (Helper)
+         * Partition array around a pivot element for QuickSort.
+         *
+         * ALGORITHM: Hoare partition scheme
+         * TC: O(n) | SC: O(1)
+         */
         int partition(int A[], int si, int ei) {
             int x = A[ei];
             int i = (si - 1);
@@ -662,6 +781,13 @@ class SlidingWindowMax {
             return (i + 1);
         }
 
+        /*
+         * PROBLEM: QuickSort (Helper)
+         * Sort an integer array in-place using the QuickSort algorithm.
+         *
+         * ALGORITHM: QuickSort (recursive)
+         * TC: O(n log n) avg | SC: O(log n)
+         */
         /* Implementation of Quick Sort
    A[] --> Array to be sorted
    si  --> Starting index
@@ -680,6 +806,13 @@ class SlidingWindowMax {
 
         HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
 
+        /*
+         * PROBLEM: Scramble String (LeetCode 87)
+         * Determine if s2 is a scrambled form of s1 via random splits and swaps.
+         *
+         * ALGORITHM: Randomized recursion + memoization
+         * TC: O(n^4) | SC: O(n^2)
+         */
         public boolean isScramble(String s1, String s2) {
             if (s1.length() == 1 || s2.length() == 0) return false;
             int randomNum = new Random().nextInt((s1.length()) + 1);
@@ -698,6 +831,13 @@ class SlidingWindowMax {
 Output: 32
 
          */
+        /*
+         * PROBLEM: Nth Super Ugly Number Init PQ (Helper)
+         * Build a max-heap with 1 and given primes for super ugly number generation.
+         *
+         * ALGORITHM: Max-Heap construction
+         * TC: O(k log k) | SC: O(k)
+         */
         public PriorityQueue<Integer> insertPq(int[] primes) {
             PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());// max-heap
             pq.add(1);
@@ -708,6 +848,13 @@ Output: 32
             return pq;
         }
 
+        /*
+         * PROBLEM: Check Prime (Helper)
+         * Check whether a given long integer is prime using BigInteger.isProbablePrime.
+         *
+         * ALGORITHM: Probabilistic primality test
+         * TC: O(log^2 n) | SC: O(1)
+         */
         //Function to check and return prime numbers
         boolean checkPrime(long n) {
             // Converting long to BigInteger
@@ -716,6 +863,13 @@ Output: 32
             return b.isProbablePrime(1);
         }
 
+        /*
+         * PROBLEM: Count Primes (LeetCode 204)
+         * Count the number of prime numbers less than or equal to n.
+         *
+         * ALGORITHM: Trial division using checkPrime helper
+         * TC: O(n sqrt(n)) | SC: O(1)
+         */
         public int countPrimes(int n) {
             int count = 0;
             for (int i = 2; i <= n; i++) {
@@ -726,6 +880,13 @@ Output: 32
             return count;
         }
 
+        /*
+         * PROBLEM: Nth Super Ugly Number V1 (Helper)
+         * Return the nth super ugly number whose prime factors are all in primes[].
+         *
+         * ALGORITHM: Min-Heap expansion
+         * TC: O(n log k) | SC: O(n)
+         */
         public int nthSuperUglyNumber1(int n, int[] primes) {
 
 
@@ -750,6 +911,13 @@ Output: 32
             return (int) ans;
         }
 
+        /*
+         * PROBLEM: Nth Super Ugly Number V2 (Helper)
+         * Alternate approach using max-heap with factor decomposition.
+         *
+         * ALGORITHM: Max-Heap with prime factor iteration
+         * TC: O(n log k) | SC: O(n)
+         */
         public int nthSuperUglyNumber(int n, int[] primes) {
 
             PriorityQueue<Integer> ans = new PriorityQueue<>(Collections.reverseOrder());// max-heap
@@ -805,6 +973,13 @@ Output: 32
 
         HashMap<Integer, Boolean> map = new HashMap<>();
 
+        /*
+         * PROBLEM: Check Prime (LeetCode 204 Helper)
+         * Check if n is prime by trial division up to sqrt(n).
+         *
+         * ALGORITHM: Trial division
+         * TC: O(sqrt(n)) | SC: O(1)
+         */
         //Function to check and return prime numbers
         boolean checkPrime(int n) {
 
@@ -830,6 +1005,13 @@ Output: 32
         }
 
 
+        /*
+         * PROBLEM: Count Primes (LeetCode 204)
+         * Count primes below n using Sieve-like composite marking with a HashMap.
+         *
+         * ALGORITHM: Sieve of Eratosthenes variant (HashMap)
+         * TC: O(n log log n) | SC: O(n)
+         */
         public int countPrimes(int n) {
             for (int i = 2; i < n; i++) {
                 int multiple = 1;
@@ -852,6 +1034,13 @@ Output: 32
             return count;
         }
 
+        /*
+         * PROBLEM: Burst Balloons (LeetCode 312)
+         * Maximise coins collected by bursting balloons in optimal order.
+         *
+         * ALGORITHM: Greedy simulation (non-optimal; see DP for correct approach)
+         * TC: O(n^2) | SC: O(n)
+         */
         public int maxCoins(int[] nums) {
             int n = nums.length;
             if (n == 0) return 0;
@@ -878,6 +1067,13 @@ Output: 32
             return sum;
         }
 
+        /*
+         * PROBLEM: Perfect Squares DP (LeetCode 279)
+         * Find the minimum number of perfect squares that sum to n, using DP.
+         *
+         * ALGORITHM: Bottom-up DP
+         * TC: O(n * sqrt(n)) | SC: O(n)
+         */
         int numSquaresDp(int n) {
             //O(n*sqrt(n))
 
@@ -896,6 +1092,13 @@ Output: 32
         }
 
 
+        /*
+         * PROBLEM: Perfect Squares Greedy (LeetCode 279)
+         * Greedy approach using a max-heap of perfect squares (suboptimal).
+         *
+         * ALGORITHM: Greedy with PriorityQueue
+         * TC: O(sqrt(n) log n) | SC: O(sqrt(n))
+         */
         public int numSquares(int n) {
             PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
             int min = 0;
@@ -926,16 +1129,37 @@ Output: 32
         int[] dx8 = {-1, 0, 1, 0, 1, 1, -1, -1};
         int[] dy8 = {0, -1, 0, 1, -1, 1, -1, 1};
 
+        /*
+         * PROBLEM: Shortest Path in Binary Matrix (LeetCode 1091)
+         * Find the shortest path from top-left to bottom-right in a binary matrix.
+         *
+         * ALGORITHM: BFS (8-directional)
+         * TC: O(n^2) | SC: O(n^2)
+         */
         public int shortestPathBinaryMatrix(int[][] grid) {
             return bfs(grid);
         }
 
+        /*
+         * PROBLEM: Is Safe Cell (Helper)
+         * Check if cell (i,j) is in-bounds and not blocked (value == 0).
+         *
+         * ALGORITHM: Boundary check
+         * TC: O(1) | SC: O(1)
+         */
         private boolean isSafe(int[][] grid, int i, int j) {
             int n = grid.length;
 
             return i >= 0 && i < n && j >= 0 && j < n && grid[i][j] == 0;
         }
 
+        /*
+         * PROBLEM: Shortest Binary Matrix Path BFS (Helper)
+         * BFS traversal of the grid to find the shortest 8-directional path.
+         *
+         * ALGORITHM: BFS with priority queue sorted by distance
+         * TC: O(n^2 log n) | SC: O(n^2)
+         */
         //  bfs of matrix to count the number of islands
         private int bfs(int[][] grid) {
             int n = grid.length, cnt = 0;
@@ -975,6 +1199,13 @@ Output: 32
         int[] dy = {0, -1, 0, 1};
 
 
+        /*
+         * PROBLEM: Minimum Pushes to Move Box to Target (LeetCode 1263)
+         * Find the minimum number of pushes to move a box to the target in a grid.
+         *
+         * ALGORITHM: BFS + reachability check
+         * TC: O((m*n)^2) | SC: O(m*n)
+         */
         public int minPushBox(char[][] grid) {
             int m = grid.length;
             int n = grid[0].length;
@@ -1002,6 +1233,13 @@ Output: 32
             return bfs(grid, player, ball, target);
         }
 
+        /*
+         * PROBLEM: Is Safe Grid Cell (Helper)
+         * Check if (i,j) is in-bounds and not a wall ('#').
+         *
+         * ALGORITHM: Boundary and value check
+         * TC: O(1) | SC: O(1)
+         */
         private boolean isSafe(char[][] grid, int i, int j) {
             int m = grid.length;
             int n = grid[0].length;
@@ -1009,6 +1247,13 @@ Output: 32
             return i >= 0 && i < m && j >= 0 && j < n && (grid[i][j] != '#');
         }
 
+        /*
+         * PROBLEM: BFS to Move Box to Target (Helper)
+         * BFS that explores pushing the box in 4 directions, checking player reachability.
+         *
+         * ALGORITHM: BFS + reachability sub-BFS
+         * TC: O((m*n)^2) | SC: O(m*n)
+         */
         //  bfs of matrix to count the number of islands
         private int bfs(char[][] grid, Point player, Point ball, Point target) {
             int m = grid.length;
@@ -1046,6 +1291,13 @@ Output: 32
         }
 
 
+        /*
+         * PROBLEM: Is Player Position Reachable (Helper)
+         * BFS check whether the player can reach the target position without crossing the ball.
+         *
+         * ALGORITHM: BFS reachability
+         * TC: O(m*n) | SC: O(m*n)
+         */
         private boolean isReachable(char[][] grid, Point ball, Point player) {
             int m = grid.length;
             int n = grid[0].length;
@@ -1075,6 +1327,13 @@ Output: 32
         }
     }
 
+    /*
+     * PROBLEM: Kth Largest Element in an Array (LeetCode 215)
+     * Find the kth largest element in an unsorted array.
+     *
+     * ALGORITHM: QuickSelect
+     * TC: O(n) avg | SC: O(1)
+     */
     // Quick sort algorithm to find out Kth largest element from the array 
     public int findKthLargest(int[] nums, int k) {
         int n = nums.length;
@@ -1082,6 +1341,13 @@ Output: 32
         return quickSelect(nums, 0, n - 1, k);
     }
 
+    /*
+     * PROBLEM: QuickSelect (Helper)
+     * Recursively narrow the search range to find the kth smallest element.
+     *
+     * ALGORITHM: QuickSelect
+     * TC: O(n) avg | SC: O(log n)
+     */
     // Quick select function to find the partition index
     private int quickSelect(int[] nums, int l, int h, int k) {
         if (l == h) return nums[k];
@@ -1093,6 +1359,13 @@ Output: 32
         }
     }
 
+    /*
+     * PROBLEM: QuickSelect Partition (Helper)
+     * Partition array around a midpoint pivot for QuickSelect.
+     *
+     * ALGORITHM: Two-pointer partition (Hoare-like)
+     * TC: O(n) | SC: O(1)
+     */
     // Find pIndex based on input provided
     private int partition(int[] nums, int l, int h) {
         int i = l - 1, j = h + 1;
@@ -1106,6 +1379,13 @@ Output: 32
         }
     }
 
+    /*
+     * PROBLEM: Swap Elements in Array (Helper)
+     * Swap elements at indices i and j in the array.
+     *
+     * ALGORITHM: In-place swap
+     * TC: O(1) | SC: O(1)
+     */
     // swap indexes in array
     private void swap(int[] nums, int i, int j) {
         int temp = nums[i];
@@ -1113,6 +1393,13 @@ Output: 32
         nums[j] = temp;
     }
 
+    /*
+     * PROBLEM: Minimum Moves to Seat Everyone (LeetCode 2037)
+     * Find the minimum total moves to seat students in given seats.
+     *
+     * ALGORITHM: Sort both arrays + pairwise sum of absolute differences
+     * TC: O(n log n) | SC: O(1)
+     */
     public int minMovesToSeat(int[] seats, int[] students) {
         int moves = 0;
         Arrays.sort(seats);
@@ -1125,6 +1412,13 @@ Output: 32
 
     static long INF = (long) 1e10;
 
+    /*
+     * PROBLEM: Kth Smallest Product of Two Sorted Arrays (LeetCode 2040)
+     * Find the kth smallest product formed by one element from each array.
+     *
+     * ALGORITHM: Binary Search on value range + counting
+     * TC: O((m + n) log(INF)) | SC: O(1)
+     */
     public long kthSmallestProduct(int[] nums1, int[] nums2, long k) {
         int m = nums1.length, n = nums2.length;
         long l = -INF - 1, h = INF + 1;
@@ -1164,6 +1458,13 @@ Output: 32
         return l;
     }
 
+    /*
+     * PROBLEM: Majority Element (LeetCode 169)
+     * Find the element that appears more than n/2 times.
+     *
+     * ALGORITHM: Boyer-Moore Voting Algorithm
+     * TC: O(n) | SC: O(1)
+     */
     // The element with greater than n/2 occurrence will have count at least 1 for the its existence vs non-existence
     public int majorityElement(int[] nums) {
         int candidate = Integer.MIN_VALUE;
@@ -1207,6 +1508,13 @@ class Solution {
         return cnt;
     }
 
+    /*
+     * PROBLEM: Count Max OR Subsets Recursive (Helper)
+     * Recursively include/exclude each element, tracking OR accumulation.
+     *
+     * ALGORITHM: Backtracking
+     * TC: O(2^n) | SC: O(n)
+     */
     private void subset(int[] nums, int ind, int OR) {
         // base case 
         int n = nums.length;
@@ -1236,6 +1544,13 @@ class Bank {
         this.n = this.balance.length;
     }
 
+    /*
+     * PROBLEM: Bank Transfer (LeetCode 2043)
+     * Transfer money between two valid accounts if sufficient balance exists.
+     *
+     * ALGORITHM: Validation + direct balance manipulation
+     * TC: O(1) | SC: O(1)
+     */
     public boolean transfer(int account1, int account2, long money) {
         // validation of accounts
         if (!(account1 >= 1 && account1 <= n) || (!(account2 >= 1 && account2 <= n))) return false;
@@ -1249,6 +1564,13 @@ class Bank {
         return false;
     }
 
+    /*
+     * PROBLEM: Bank Deposit (LeetCode 2043)
+     * Deposit money into a valid account.
+     *
+     * ALGORITHM: Validation + balance update
+     * TC: O(1) | SC: O(1)
+     */
     public boolean deposit(int account, long money) {
         //  validation of accounts
         if (!(account >= 1 && account <= n)) return false;
@@ -1257,6 +1579,13 @@ class Bank {
         return true;
     }
 
+    /*
+     * PROBLEM: Bank Withdraw (LeetCode 2043)
+     * Withdraw money from a valid account if sufficient balance exists.
+     *
+     * ALGORITHM: Validation + balance update
+     * TC: O(1) | SC: O(1)
+     */
     public boolean withdraw(int account, long money) {
         // validation of account
         if (!(account >= 1 && account <= n)) return false;

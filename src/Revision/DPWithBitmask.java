@@ -12,9 +12,14 @@ public class DPWithBitmask {
     long[][][] dp = new long[10][1 << 10][2];//
 
     /*
-    Input: n = 20
-    Output: 19
-    Explanation: All the integers from 1 to 20, except 11, are special. Thus, there are 19 special integers.
+     * PROBLEM: Count Special Numbers (LeetCode 2376)
+     * Count integers in [1, n] where all digits are distinct (no repeated digit).
+     *
+     * ALGORITHM: Digit DP with bitmask – counts numbers with distinct digits shorter than n's length,
+     *            then adds digit-DP count for numbers of the same length as n.
+     * TC: O(D * 2^10 * 10) where D = number of digits in n | SC: O(D * 2^10 * 2)
+     *
+     * Example: n = 20 → Output: 19 (all integers 1–20 except 11 have distinct digits)
      */
     //Author: Anand
     public int countSpecialNumbers(int n) {
@@ -53,6 +58,17 @@ public class DPWithBitmask {
         return (int) ans;
     }
 
+    /*
+     * PROBLEM: Count Special Numbers – bitmask DFS traversal (Helper)
+     * Recursively fills digits of the number being formed, tracking which digits are already used via a bitmask.
+     *
+     * ALGORITHM: Digit DP with bitmask memoization
+     *   ind     – current digit position (0-indexed from most significant)
+     *   mask    – bitmask where bit d=1 means digit d is already used
+     *   greater – 1 if the number formed so far is already strictly less than n (free to use any digit);
+     *             0 means we are still tight with n's prefix
+     * TC: O(D * 2^10 * 2 * 10) | SC: O(D * 2^10 * 2)
+     */
     private long dfs(int ind, int mask, int greater) {
         // base case
         if (ind == s.length()) return 1;
@@ -79,6 +95,13 @@ public class DPWithBitmask {
     }
 
 
+    /*
+     * PROBLEM: Max Product of Two Elements Whose Bitwise AND is Zero (LeetCode 2044)
+     * Find the maximum product nums[i] * nums[j] over all pairs (i < j) such that nums[i] & nums[j] == 0.
+     *
+     * ALGORITHM: Brute-force enumeration of all pairs with bitwise AND check
+     * TC: O(N^2) | SC: O(1)
+     */
     //Solve using DP with bitmask
     public long maxProduct(int[] nums) {
         long mp = 0L;

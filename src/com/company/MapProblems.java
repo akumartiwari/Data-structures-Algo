@@ -7,6 +7,13 @@ import java.util.HashMap;
 public class MapProblems {
 
     /*
+     * PROBLEM: Subarray Beauty (LeetCode 2653)
+     * Find the x-th smallest negative integer in every subarray of size k.
+     *
+     * ALGORITHM: Sliding Window + Frequency Array
+     * TC: O(n * 50) | SC: O(50)
+     */
+    /*
         In question given -50 <= nums[i] <= 50 So, we have only -50 to -1 negative element
         and we need to calculate xth smallest negative element so we only deal with negative element in k size of sliding window.
        But one question like that How to calculate xth smallest negative element in current sliding windows bcz each time smallest element change?
@@ -45,6 +52,13 @@ public class MapProblems {
     }
 
     /*
+     * PROBLEM: Array Change (LeetCode 2295)
+     * Apply operations that replace one value with another; return the final array.
+     *
+     * ALGORITHM: HashMap (value → index tracking)
+     * TC: O(n + m) | SC: O(n)
+     */
+    /*
     Input: nums = [1,2,4,6], operations = [[1,3],[4,7],[6,1]]
     Output: [3,2,7,1]
     Explanation: We perform the following operations on nums:
@@ -78,6 +92,13 @@ public class MapProblems {
         return ans;
     }
 
+    /*
+     * PROBLEM: Find Players With Zero or One Losses (LeetCode 2225)
+     * Return players who have never lost and players who have lost exactly once.
+     *
+     * ALGORITHM: HashMap (counting wins/losses per player)
+     * TC: O(n log n) | SC: O(n)
+     */
         /*
     Input: matches = [[1,3],[2,3],[3,6],[5,6],[5,7],[4,5],[4,8],[4,9],[10,4],[10,9]]
     Output: [[1,2,10],[4,5,7,8]]
@@ -120,6 +141,13 @@ public class MapProblems {
         ans.add(loseOne);
         return ans;
     }
+    /*
+     * PROBLEM: Rearrange Characters to Make Target String (LeetCode 2287)
+     * Find the maximum number of copies of target that can be formed from characters of s.
+     *
+     * ALGORITHM: HashMap (character frequency counting)
+     * TC: O(n * m) | SC: O(26)
+     */
     /*
     Input: s = "ilovecodingonleetcode", target = "code"
     Output: 2
@@ -164,6 +192,13 @@ public class MapProblems {
 
 
 
+    /*
+     * PROBLEM: First Unique Character in a String (LeetCode 387)
+     * Find the index of the first non-repeating character in a string.
+     *
+     * ALGORITHM: LinkedHashMap (frequency tracking with insertion order)
+     * TC: O(n) | SC: O(26)
+     */
     // Author: Anand
     public int firstUniqChar(String s) {
         Map<Character, List<Integer>> freq = new LinkedHashMap<>();
@@ -183,6 +218,13 @@ public class MapProblems {
         return -1;
     }
 
+    /*
+     * PROBLEM: Find the Difference (LeetCode 389)
+     * Find the character added to string t that is not in string s.
+     *
+     * ALGORITHM: HashMap (character frequency difference)
+     * TC: O(n) | SC: O(26)
+     */
     // Author: Anand
     public char findTheDifference(String s, String t) {
 

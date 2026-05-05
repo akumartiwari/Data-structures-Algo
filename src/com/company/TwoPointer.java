@@ -36,6 +36,13 @@ public class TwoPointer {
             }
         }
 
+        /*
+         * PROBLEM: Make String a Subsequence (LeetCode 2486)
+         * Check if str2 can become a subsequence of str1 by cyclically incrementing some chars.
+         *
+         * ALGORITHM: Recursive Two Pointers with LinkedHashMap for char positions
+         * TC: O(n + constant) | SC: O(n * 26)
+         */
         public boolean canMakeSubsequence(String str1, String str2) {
             Map<Character, RelativePos> map = new LinkedHashMap<>();
             for (int i = 0; i < str1.length(); i++) {
@@ -53,6 +60,13 @@ public class TwoPointer {
             return recursion(str1, str2, map, 0);
         }
 
+        /*
+         * PROBLEM: Recursion helper for subsequence (Helper)
+         * Recursively try to match str2[ind..] characters against str1 using map-tracked positions.
+         *
+         * ALGORITHM: Recursive Backtracking with character position map
+         * TC: O(n²) | SC: O(n)
+         */
         /**
          * This function return if possible or not
          *
@@ -104,6 +118,13 @@ public class TwoPointer {
     - (4, 5) since 4 < 5 and nums[4] + nums[5] = -8 < target
     - (4, 6) since 4 < 6 and nums[4] + nums[6] = -4 < target
 
+     */
+    /*
+     * PROBLEM: Count Pairs Whose Sum is Less Than Target (LeetCode 2824)
+     * Count pairs (i, j) where i < j and nums[i] + nums[j] < target.
+     *
+     * ALGORITHM: Two Pointers after Sort
+     * TC: O(n log n) | SC: O(1)
      */
     public int countPairs(List<Integer> nums, int target) {
         Collections.sort(nums); // sort the vector nums

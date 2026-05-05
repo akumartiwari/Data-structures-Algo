@@ -6,12 +6,26 @@ import java.util.*;
 public class Tree {
     int res = 0;
 
+    /*
+     * PROBLEM: Count Nodes Equal to Average of Subtree (LeetCode 2265)
+     * Count nodes whose value equals the integer average of their subtree.
+     *
+     * ALGORITHM: DFS Post-order (return sum and count)
+     * TC: O(n) | SC: O(n)
+     */
     public int averageOfSubtree(TreeNode root) {
         if (root == null) return 0;
         dfs(root);
         return res;
     }
 
+    /*
+     * PROBLEM: DFS helper for average of subtree (Helper)
+     * Returns [subtreeSum, nodeCount] for each subtree and increments global counter.
+     *
+     * ALGORITHM: Recursive DFS Post-order
+     * TC: O(n) | SC: O(n)
+     */
     private int[] dfs(TreeNode root) {
         // base case
         if (root == null) return new int[]{0, 0};
@@ -27,10 +41,24 @@ public class Tree {
         return new int[]{currentSum, currentCount};
     }
 
+    /*
+     * PROBLEM: Count Nodes Equal to Average of Subtree, no global (LeetCode 2265)
+     * Same as averageOfSubtree but without using a global variable.
+     *
+     * ALGORITHM: DFS with Tuple (sum, count, result)
+     * TC: O(n) | SC: O(n)
+     */
     public int averageOfSubtreeWithoutGlobalVariable(TreeNode root) {
         return helper(root).countAvg;
     }
 
+    /*
+     * PROBLEM: Tuple-based DFS helper (Helper)
+     * Returns Tuple(sum, count, countAvg) for each subtree without global state.
+     *
+     * ALGORITHM: Recursive DFS Post-order with Tuple
+     * TC: O(n) | SC: O(n)
+     */
     private Tuple helper(TreeNode root) {
         // base case
         if (root == null) return new Tuple(0, 0, 0);
@@ -68,6 +96,13 @@ public class Tree {
         }
     }
 
+    /*
+     * PROBLEM: Sum of Left Leaves (LeetCode 404)
+     * Compute the sum of all left leaf node values in the binary tree.
+     *
+     * ALGORITHM: Recursive DFS
+     * TC: O(n) | SC: O(n)
+     */
     public int sumOfLeftLeaves(TreeNode root) {
         //Base cases
         if (root == null) return 0;
@@ -85,11 +120,25 @@ public class Tree {
         return res;
     }
 
+    /*
+     * PROBLEM: Check if Node is Leaf (Helper)
+     * Return true if node is non-null and has no children.
+     *
+     * ALGORITHM: Null/child check
+     * TC: O(1) | SC: O(1)
+     */
     public boolean isLeafNode(TreeNode node) {
         if (node == null) return false;
         return node.left == null && node.right == null;
     }
 
+    /*
+     * PROBLEM: Reverse Odd Levels of Binary Tree (LeetCode 2415)
+     * Reverse the values of nodes at every odd level of a perfect binary tree.
+     *
+     * ALGORITHM: DFS level traversal (mirror pairs at odd levels)
+     * TC: O(n) | SC: O(log n)
+     */
     /*
     Input: root = [2,3,5,8,13,21,34]
     Output: [2,5,3,8,13,21,34]
@@ -102,6 +151,13 @@ public class Tree {
         return root;
     }
 
+    /*
+     * PROBLEM: Reverse Odd Levels helper (Helper)
+     * Recursively swap node values at odd levels for mirror node pairs.
+     *
+     * ALGORITHM: Recursive DFS with mirror pointers
+     * TC: O(n) | SC: O(log n)
+     */
     private void rol(TreeNode left, TreeNode right, int level) {
 
         // base case
@@ -170,6 +226,13 @@ public class Tree {
     // To store the vline and nodes with level on that vline
     HashMap<Integer, PriorityQueue<Pair>> map = new HashMap<>();
 
+    /*
+     * PROBLEM: Vertical Order Traversal (LeetCode 987)
+     * Return vertical order traversal of binary tree sorted by column, level, then value.
+     *
+     * ALGORITHM: DFS with sorted HashMap (column → PriorityQueue of (level, value))
+     * TC: O(n log n) | SC: O(n)
+     */
     public List<List<Integer>> verticalTraversal(TreeNode root) {
         if (root == null) return null;
         inorder(root, 0, 0);
@@ -204,6 +267,13 @@ public class Tree {
         return ans;
     }
 
+    /*
+     * PROBLEM: Inorder DFS for vertical traversal (Helper)
+     * Perform inorder DFS recording each node's level and vertical line for vertical traversal.
+     *
+     * ALGORITHM: Recursive DFS (inorder)
+     * TC: O(n log n) | SC: O(n)
+     */
     private void inorder(TreeNode root, int level, int vline) {
         if (root == null) return;
 
@@ -227,6 +297,13 @@ public class Tree {
 
     boolean possible = false;
 
+    /*
+     * PROBLEM: Check if Tree Can be Split Equally (LeetCode 663)
+     * Determine if removing one edge can split the tree into two subtrees with equal sum.
+     *
+     * ALGORITHM: DFS sum checking (find subtree with sum = total/2)
+     * TC: O(n) | SC: O(n)
+     */
     public boolean checkEqualTree(TreeNode root) {
         SumAndCount t = tuple(root);
         if (t.sum % 2 != 0) return false;
@@ -250,6 +327,13 @@ public class Tree {
         }
     }
 
+    /*
+     * PROBLEM: Check Equal Split Feasibility (Helper)
+     * Recursively check if any subtree has sum equal to half the total.
+     *
+     * ALGORITHM: Recursive DFS returning (subtreeSum, nodeCount)
+     * TC: O(n) | SC: O(n)
+     */
     private SumAndCount isPossible(TreeNode root, long sum, int cnt) {
         if (root == null) return new SumAndCount(0L, 0);
 
@@ -263,6 +347,13 @@ public class Tree {
         return new SumAndCount(currsum, nodes);
     }
 
+    /*
+     * PROBLEM: Compute tree sum and count (Helper)
+     * Return total sum and node count of the entire tree.
+     *
+     * ALGORITHM: Recursive DFS post-order
+     * TC: O(n) | SC: O(n)
+     */
     private SumAndCount tuple(TreeNode root) {
 
         if (root == null) return new SumAndCount(0L, 0);

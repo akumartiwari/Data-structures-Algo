@@ -4,20 +4,16 @@ import java.util.*;
 
 public class MonotonicStack {
 
-
     /*
-    Input: nums = [1,3,4,3,1], threshold = 6
-    Output: 3
-    Explanation: The subarray [3,4,3] has a size of 3, and every element is greater than 6 / 3 = 2.
-    Note that this is the only valid subarray.
-
-    Algorithm :-
-    - ArrayDeque is used a stack.
-    - Iterate through all elements of array
-    - check if stack top consist of greater element OR Last element it means all element to left  are also greater
-     It means it can be a valid subArray
-    - To check if its valid we need get smallest element *  size of subArray > threshold --> return Valid Subarray
-    */
+     * PROBLEM: Subarray With Elements Greater Than Varying Threshold (LeetCode 2334)
+     * Find the length of the smallest subarray where every element > threshold/subarray_length; return -1 if none.
+     *
+     * ALGORITHM: Monotonic Decreasing Stack
+     * TC: O(N) | SC: O(N)
+     *
+     * Each pop identifies the largest window for which that element is the minimum.
+     * Window width = i (empty stack) or i - stack.peek() - 1.
+     */
     public int validSubarraySize(int[] nums, int threshold) {
         Stack<Integer> stack = new Stack<>();
         int subArraySize = -1;
@@ -33,19 +29,15 @@ public class MonotonicStack {
     }
 
 
-    //Author: Anand
     /*
-     Input: nums = [5,3,4,4,7,3,6,11,8,5,11]
-    Output: 3
-    Explanation: The following are the steps performed:
-    - Step 1: [5,3,4,4,7,3,6,11,8,5,11] becomes [5,4,4,7,6,11,11]
-    - Step 2: [5,4,4,7,6,11,11] becomes [5,4,7,11,11]
-    - Step 3: [5,4,7,11,11] becomes [5,7,11,11]
-    [5,7,11,11] is a non-decreasing array. Therefore, we return 3.
-
-    Algorithm :-
-    The Idea is to calculate distance between the closest left strictly greater element for every index i
-    Return maximum of distance (As distance refers to numbers of steps needed to remove that element )
+     * PROBLEM: Steps to Make Array Non-decreasing (LeetCode 2289)
+     * Repeatedly remove elements smaller than their left neighbour; return the number of steps until non-decreasing.
+     *
+     * ALGORITHM: Monotonic Stack (right to left), tracking [value, steps] pairs
+     * TC: O(N) | SC: O(N)
+     *
+     * For each element, count how many right-side elements will be removed before it.
+     * Answer = max steps value ever pushed onto the stack.
      */
     public int totalSteps(int[] nums) {
         int ans = 0;
@@ -68,8 +60,16 @@ public class MonotonicStack {
         return ans;
     }
 
-    // monotonic increasing stack
-    // runtime o(n)
+    /*
+     * PROBLEM: Count Valid Subarrays (GFG)
+     * Count subarrays where the leftmost element is the minimum of the subarray.
+     *
+     * ALGORITHM: Monotonic Increasing Stack (contribution counting)
+     * TC: O(N) | SC: O(N)
+     *
+     * When nums[top] < nums[i], pop and add (i - popped_index) subarrays.
+     * Remaining stack elements each contribute (n - index) subarrays.
+     */
     public int validSubarraysStack(int[] nums) {
         Stack<Integer> stack = new Stack<>();
         int count = 0;
@@ -87,13 +87,22 @@ public class MonotonicStack {
 
     private static final int mod = 1_000_000_000 + 7;
 
+    /*
+     * PROBLEM: Sum of Subarray Minimums (LeetCode 907)
+     * Find the sum of min(subarray) for every contiguous subarray, modulo 1e9+7.
+     *
+     * ALGORITHM: Contribution Technique + two-pass Monotonic Stack
+     * TC: O(N) | SC: O(N)
+     *
+     * For each a[i]: left[i] = span to the left where a[i] is minimum (non-strict),
+     * right[i] = span to the right where a[i] is minimum (strict).
+     * Contribution = a[i] * (left[i]+1) * (right[i]+1).
+     */
     // TODO :- Need to solved again
     public int sumSubarrayMins(int[] a) {
         int sum = 0, n = a.length;
         int[] left = new int[n], right = new int[n];
         Stack<Integer> s = new Stack<>();
-        //for each i, first right side number less than me
-        //monotonically increasing stack
         for (int i = 0, j = 0; i < n; i++) {
             while (!s.isEmpty() && a[s.peek()] > a[i]) {
                 j = s.pop();
@@ -105,8 +114,6 @@ public class MonotonicStack {
             int j = s.pop();
             right[j] = n - 1 - (j + 1) + 1;
         }
-        //for each i, first left side number less than me
-        //monotonically increasing stack from back
         for (int i = n - 1, j = 0; i >= 0; i--) {
             while (!s.isEmpty() && a[s.peek()] >= a[i]) {
                 j = s.pop();
@@ -124,10 +131,30 @@ public class MonotonicStack {
     }
 
 
+    /*
+     * PROBLEM: Maximum Subarray Min-Product (LeetCode 1856)
+     * Find the maximum value of min(subarray) * sum(subarray) over all non-empty subarrays; return mod 1e9+7.
+     *
+     * ALGORITHM: Prefix Sum + Monotonic Stack (histogram-style)
+     * TC: O(N) | SC: O(N)
+     *
+     * For each popped element (minimum of its window): window_sum = pref_sum[i] - pref_sum[peek].
+     * Maximise min * window_sum across all pops.
+     */
     //TODO: Complete this
     class Solution {
         private static final int mod = 1000000007;
 
+        /*
+         * PROBLEM: Maximum Subarray Min-Product (LeetCode 1856)
+         * Find the maximum value of min(subarray) * sum(subarray) over all non-empty subarrays; return mod 1e9+7.
+         *
+         * ALGORITHM: Prefix Sum + Monotonic Stack (histogram-style)
+         * TC: O(N) | SC: O(N)
+         *
+         * For each popped element (minimum of its window): window_sum = pref_sum[i] - pref_sum[peek].
+         * Maximise min * window_sum across all pops.
+         */
         public int maxSumMinProduct(int[] nums) {
             int ind = 0;
             int[] pref_sum = new int[nums.length];
@@ -135,8 +162,6 @@ public class MonotonicStack {
                 pref_sum[ind] = ind == 0 ? num : pref_sum[ind - 1] + num;
                 ind++;
             }
-
-
             Stack<Integer> stack = new Stack<>();
             int subArraySize = Integer.MIN_VALUE;
             for (int i = 0; i <= nums.length; i++) {
@@ -151,19 +176,30 @@ public class MonotonicStack {
         }
     }
 
+    /*
+     * PROBLEM: Maximum Sum of Heights (LeetCode 2865)
+     * Choose one peak index; build a mountain array ≤ maxHeights that maximises the total sum.
+     *
+     * ALGORITHM: Two-pass Monotonic Stack (left pass + right pass)
+     * TC: O(N) | SC: O(N)
+     *
+     * left[i] = max sum contribution from left side when i is peak.
+     * right[i] = max sum contribution from right side when i is peak.
+     * Answer = max over all i of (left[i] + right[i] - maxHeights[i]).
+     */
     //Use monotonic stack
     public long maximumSumOfHeights(List<Integer> maxHeights) {
         return 0L;
     }
 
     /*
-    This is a good problem,
-    Basically we can evaluate prefix max and suffix min array and then do the evalution.
-
-     Approach
-    The Idea is that if we have a max value to the left of current element then for sure that is the answer,
-    but if max value till now is greater than min value to right the right of next index It means we can jump to then next right min value
-    and then jump left to max value (that is max value to the right index).
+     * PROBLEM: Max Value After Jumping Left or Right (Helper)
+     * For each index, compute the maximum reachable value using prefix-max chaining to the right.
+     *
+     * ALGORITHM: Prefix Max + Suffix Min arrays, right-to-left result propagation
+     * TC: O(N) | SC: O(N)
+     *
+     * If pref[i] > suff[i+1], the prefix max at i can chain to the next result rightward.
      */
     public int[] maxValue(int[] nums) {
         int n = nums.length;
