@@ -36,7 +36,7 @@ class SubSet2 {
             int num = nums[i];
             res.add(num);
             bfs(nums, i + 1, result, res);
-            res.remove(new Integer(num));
+            res.remove(num);
         }
     }
 
